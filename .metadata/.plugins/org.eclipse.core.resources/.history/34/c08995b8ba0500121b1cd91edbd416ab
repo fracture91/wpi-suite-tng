@@ -1,0 +1,9 @@
+package wpisuite.models;
+
+public class MockDataStore {
+
+	public MockDataStore()
+	{
+		
+	}
+}

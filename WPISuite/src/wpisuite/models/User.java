@@ -1,5 +1,6 @@
 package wpisuite.models;
 
+import com.google.gson.*;
 public class User {
 
 	private String name;
@@ -27,7 +28,7 @@ public class User {
 		
 		json = "{";
 		json += "name:"+ name +",";
-		json += "idNum:"+ idNum +",";
+		json += "idNum:"+ idNum;
 		json += "}";
 		
 		return json;

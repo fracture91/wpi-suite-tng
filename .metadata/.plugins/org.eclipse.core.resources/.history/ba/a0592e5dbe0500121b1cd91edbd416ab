@@ -1,0 +1,32 @@
+package wpisuite.models;
+
+import com.google.gson.*;
+public class User {
+
+	private String name;
+	private int idNum;
+	
+	public User(String name, int idNum)
+	{
+		this.name = name;
+		this.idNum = idNum;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public int getIdNum()
+	{
+		return idNum;
+	}
+	
+	public String toJSON()
+	{
+		Gson gson = new Gson();
+		
+		return gson.toJson(this);
+		
+	}
+}
