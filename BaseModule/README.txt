@@ -1,0 +1,1 @@
+The BaseModule project is made to hold things that all projects depend on.  All modules including the defect tracker module will depend on this.
