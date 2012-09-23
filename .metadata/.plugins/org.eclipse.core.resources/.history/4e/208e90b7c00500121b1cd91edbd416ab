@@ -20,9 +20,7 @@ public class HelloServlet extends HttpServlet
                        HttpServletResponse res) throws ServletException, IOException
 	{
         PrintWriter out = res.getWriter();
-        User u = data.getDude(Integer.parseInt(req.getPathInfo().substring(6)));
-        
-        out.println(u.toJSON());
+        out.println(data.getDude(Integer.parseInt(req.getPathInfo().substring(1))).toJSON());
         out.close();
 	}
 	

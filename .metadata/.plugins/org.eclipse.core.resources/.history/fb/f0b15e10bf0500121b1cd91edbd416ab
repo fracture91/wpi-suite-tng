@@ -26,15 +26,10 @@ public class User {
 	{
 		String json;
 		
-		Gson gson = new Gson();
-		
-		json = gson.toJson(this, User.class);
-		/*
 		json = "{";
 		json += "name:"+ name +",";
 		json += "idNum:"+ idNum;
 		json += "}";
-		*/
 		
 		return json;
 		
