@@ -21,7 +21,7 @@ function addUser()
 	User.name = document.getElementById("name").value;
 	User.idNum = document.getElementById("id").value;
 	putUser(JSON.stringify(User));
-	
+	getUser(User.idNum);
 }
 
 

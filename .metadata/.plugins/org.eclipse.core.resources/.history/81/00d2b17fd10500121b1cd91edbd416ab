@@ -8,20 +8,7 @@
 
 function showUser()
 {
-	 getUser(document.getElementById("showid").value);
-}
-function display(text)
-{
-	document.getElementById("display").value = text;
-}
-
-function addUser()
-{
-	User = new Object();
-	User.name = document.getElementById("name").value;
-	User.idNum = document.getElementById("id").value;
-	putUser(JSON.stringify(User));
-	
+	(getUser(document.getElementById("showid").value));
 }
 
 
@@ -32,7 +19,7 @@ function getUser(user)
 	    {
 		    if(request.readyState == 4 && request.status == 200) 
 		    {
-		        display(request.responseText);
+		        display(request.responseText)
 		    }
 	    }
     request.open('GET', "API/user/"+user, true);
@@ -42,7 +29,7 @@ function getUser(user)
 function putUser(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/user/", true);
+    request.open('PUT', "/API/user/", true);
     request.send(user);
 }
 </script>
@@ -60,7 +47,7 @@ function putUser(user)
             <br />
            
             <button onclick="showUser()">Show User</button><label> ID: </label><input id="showid" maxlength="15" /> <br />
-            <textarea id="display" rows="10" cols="80"></textarea>
+            <div id="display"></div>
 
         </section>
 

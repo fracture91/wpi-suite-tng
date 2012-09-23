@@ -26,7 +26,7 @@ public class HelloServlet extends HttpServlet
         out.close();
 	}
 	
-	public void doPut (HttpServletRequest req,
+	public void doPost (HttpServletRequest req,
             HttpServletResponse res) throws ServletException, IOException
     {
 		BufferedReader in = req.getReader();

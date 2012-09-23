@@ -10,18 +10,10 @@ function showUser()
 {
 	 getUser(document.getElementById("showid").value);
 }
+
 function display(text)
 {
 	document.getElementById("display").value = text;
-}
-
-function addUser()
-{
-	User = new Object();
-	User.name = document.getElementById("name").value;
-	User.idNum = document.getElementById("id").value;
-	putUser(JSON.stringify(User));
-	
 }
 
 
@@ -42,7 +34,7 @@ function getUser(user)
 function putUser(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/user/", true);
+    request.open('PUT', "/API/user/", true);
     request.send(user);
 }
 </script>

@@ -4,27 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>WPI Suite Temp Admin Console</title>
 
-<script type="text/javascript" >
+<script type="text/javascript">
 
-function showUser()
-{
-	 getUser(document.getElementById("showid").value);
-}
-function display(text)
-{
-	document.getElementById("display").value = text;
-}
-
-function addUser()
-{
-	User = new Object();
-	User.name = document.getElementById("name").value;
-	User.idNum = document.getElementById("id").value;
-	putUser(JSON.stringify(User));
-	
-}
-
-
+//uses AJAX to get all the entries in the DB
 function getUser(user)
 {
 	var request = new XMLHttpRequest();
@@ -32,17 +14,18 @@ function getUser(user)
 	    {
 		    if(request.readyState == 4 && request.status == 200) 
 		    {
-		        display(request.responseText);
+		        display(request.responseText)
 		    }
 	    }
-    request.open('GET', "API/user/"+user, true);
+    request.open('GET', "/API/user/"+user, true);
     request.send();
 }
 
+//uses AJAX to submit a new recipe to the server in JSON format
 function putUser(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/user/", true);
+    request.open('PUT', "/API/user/", true);
     request.send(user);
 }
 </script>
@@ -60,7 +43,7 @@ function putUser(user)
             <br />
            
             <button onclick="showUser()">Show User</button><label> ID: </label><input id="showid" maxlength="15" /> <br />
-            <textarea id="display" rows="10" cols="80"></textarea>
+            <div id="display"></div>
 
         </section>
 

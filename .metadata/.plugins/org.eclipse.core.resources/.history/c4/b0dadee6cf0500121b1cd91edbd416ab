@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>WPI Suite Temp Admin Console</title>
+
+<script type="text/javascript">
+
+//uses AJAX to get all the entries in the DB
+function getUser(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText)
+		    }
+	    }
+    request.open('GET', "/API/user/"+user, true);
+    request.send();
+}
+
+//uses AJAX to submit a new recipe to the server in JSON format
+function putUser(user)
+{
+    var request = new XMLHttpRequest();
+    request.open('PUT', "/API/user/", true);
+    request.send(user);
+}
+</script>
+
+</head>
+<body>
+<h1>WPI Suite Temporary Admin Console</h1>
+<br />
+
+        <section>
+            <header>Submit a Recipe</header>
+            
+            <label>Name: </label><input id="name" maxlength="40" /> <br />
+            <label>Author: </label><input id="author" maxlength="15" /> <br />
+            <label>Servings: </label><input id="servings" maxlength="15" /> <br />
+            <span id="ingrediantHolder"></span><br />
+            <button onclick="addIngrediant()">Add Ingredient</button><br />
+            <label>Directions: </label><br /><textarea id="directions" rows="10" cols="80"></textarea> <br />
+            <button onclick="addRecipe()">Add Recipe</button>
+            <br>
+            <!--<label>Delete ID: </label><input id="deleteID" maxlength="3"/><br />
+            <button onclick="deleteRecipe()">Delete recipe</button>-->
+            <div id="display"></div>
+
+        </section>
+
+</body>
+</html>
