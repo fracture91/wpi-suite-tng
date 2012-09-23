@@ -1,0 +1,2 @@
+INDEX VERSION 1.122+D:\Workspaces\wpi-suite-tng\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+886166079.index
