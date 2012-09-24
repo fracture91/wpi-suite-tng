@@ -1,6 +1,6 @@
 package edu.wpi.cs.wpisuitetng.janeway.models;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A module being used in Janeway must implement this interface.
@@ -16,6 +16,6 @@ public interface IJanewayModule {
 	/**
 	 * @return The list of tab models associated with this module.
 	 */
-	public ArrayList<JanewayTabModel> getTabs();
+	public List<JanewayTabModel> getTabs();
 	
 }

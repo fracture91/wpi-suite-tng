@@ -1,7 +1,7 @@
 package edu.wpi.cs.wpisuitetng.janeway.models;
 
 import javax.swing.Icon;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
 /**
  * Represents a tab in the Janeway interface.
@@ -11,13 +11,13 @@ public class JanewayTabModel {
 	
 	private String name;
 	private Icon icon;
-	private JPanel ribbon;
-	private JPanel mainPanel;
+	private JComponent ribbon;
+	private JComponent mainPanel;
 	
 	/**
 	 * Construct a tab model with the given properties.
 	 */
-	public JanewayTabModel(String name, Icon icon, JPanel ribbon, JPanel mainPanel) {
+	public JanewayTabModel(String name, Icon icon, JComponent ribbon, JComponent mainPanel) {
 		this.name = name;
 		this.icon = icon;
 		this.ribbon = ribbon;
@@ -41,14 +41,14 @@ public class JanewayTabModel {
 	/**
 	 * @return The JPanel that will appear in the "ribbon" menu below the tab bar.
 	 */
-	public JPanel getRibbon() {
+	public JComponent getRibbon() {
 		return ribbon;
 	}
 	
 	/**
 	 * @return The main JPanel that appears below the ribbon menu.
 	 */
-	public JPanel getMainPanel() {
+	public JComponent getMainPanel() {
 		return mainPanel;
 	}
 	
