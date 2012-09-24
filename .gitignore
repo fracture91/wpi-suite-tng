@@ -1,5 +1,5 @@
 *.class
-.metadata\
+.metadata\*
 
 # Package Files #
 *.jar
