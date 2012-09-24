@@ -48,8 +48,12 @@ public class JanewayGUILauncher {
 		// Defect tracker
 		IJanewayModule defectTracker = new JanewayModule();
 		
+		// Dummy module
+		IJanewayModule dummyModule = new DummyModule();
+		
 		// Fill the list
 		retVal.add(defectTracker);
+		retVal.add(dummyModule);
 		
 		return retVal;
 	}
