@@ -5,33 +5,69 @@ import com.google.gson.*;
 
 public class MockDataStore {
 
-	private ArrayList<User> list;
+	private ArrayList<Project> projects;
+	private ArrayList<User> users;
 	
-	public MockDataStore()
+	private static MockDataStore myself = null;
+	
+	public static MockDataStore getMockDataStore()
 	{
-		list = new ArrayList<>();
-		list.add(new User("steve",0));
-		list.add(new User("fred",1));
-		list.add(new User("jeff",2));
-		list.add(new User("tyler",3));
+		if(myself == null)
+			myself = new MockDataStore();
+		return myself;
 	}
 	
-	public void addDude(String json)
+	private MockDataStore()
+	{
+		users = new ArrayList<User>();
+		users.add(new User("steve",0));
+		users.add(new User("fred",1));
+		users.add(new User("jeff",2));
+		users.add(new User("tyler",3));
+		
+		projects = new ArrayList<Project>();
+		projects.add(new Project("WPISUITE",0));
+		projects.add(new Project("ANDROID:BEARCLAW",1));
+		projects.add(new Project("WINDOWS9",2));
+		projects.add(new Project("OSX:HOUSECAT",3));
+		projects.add(new Project("UBUNTU_RABID_RHINO",4));
+	}
+	
+	public void addUser(String json)
 	{
 		Gson gson = new Gson();
 		User u = gson.fromJson(json, User.class);
-		list.add(u);
+		users.add(u);
 	}
 	
-	public User getDude(int idNum)
+	public User getUser(int idNum)
 	{
 		int index = 0;
-		for(User u : list)
+		for(User u : users)
 		{
 			if(u.getIdNum() == idNum)
 				break;
 			index++;
 		}
-		return list.get(index);
+		return users.get(index);
+	}
+	
+	public void addProject(String json)
+	{
+		Gson gson = new Gson();
+		Project p = gson.fromJson(json, Project.class);
+		projects.add(p);
+	}
+	
+	public Project getProject(int idNum)
+	{
+		int index = 0;
+		for(Project p : projects)
+		{
+			if(p.getIdNum() == idNum)
+				break;
+			index++;
+		}
+		return projects.get(index);
 	}
 }

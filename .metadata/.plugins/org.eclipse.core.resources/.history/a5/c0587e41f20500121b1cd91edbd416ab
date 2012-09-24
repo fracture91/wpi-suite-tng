@@ -45,53 +45,14 @@ function putUser(user)
     request.open('PUT', "API/user/", true);
     request.send(user);
 }
-
-function showProject()
-{
-	 getProject(document.getElementById("showidp").value);
-}
-function displayp(text)
-{
-	document.getElementById("displayp").value = text;
-}
-
-function addProject()
-{
-	User = new Object();
-	User.name = document.getElementById("namep").value;
-	User.idNum = document.getElementById("idp").value;
-	putProject(JSON.stringify(User));
-	
-}
-
-
-function getProject(user)
-{
-	var request = new XMLHttpRequest();
-	request.onreadystatechange = function() 
-	    {
-		    if(request.readyState == 4 && request.status == 200) 
-		    {
-		        displayp(request.responseText);
-		    }
-	    }
-    request.open('GET', "API/project/"+user, true);
-    request.send();
-}
-
-function putProject(user)
-{
-    var request = new XMLHttpRequest();
-    request.open('PUT', "API/project/", true);
-    request.send(user);
-}
 </script>
 
 </head>
 <body>
 <h1>WPI Suite Temporary Admin Console</h1>
 <br />
-         
+
+        <section>            
             <label>Name: </label><input id="name" maxlength="40" /> <br />
             <label>ID: </label><input id="id" maxlength="15" /> <br />
             <button onclick="addUser()">Add User</button>
@@ -100,16 +61,8 @@ function putProject(user)
            
             <button onclick="showUser()">Show User</button><label> ID: </label><input id="showid" maxlength="15" /> <br />
             <textarea id="display" rows="10" cols="80"></textarea>
-            
-			<hr>
-			
-            <label>Name: </label><input id="namep" maxlength="40" /> <br />
-            <label>ID: </label><input id="idp" maxlength="15" /> <br />
-            <button onclick="addProject()">Add Project</button>
-            
-            <br />
-           
-            <button onclick="showProject()">Show Project</button><label> ID: </label><input id="showidp" maxlength="15" /> <br />
-            <textarea id="displayp" rows="10" cols="80"></textarea>
+
+        </section>
+
 </body>
 </html>

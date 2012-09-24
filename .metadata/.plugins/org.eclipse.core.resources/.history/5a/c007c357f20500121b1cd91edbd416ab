@@ -48,7 +48,7 @@ function putUser(user)
 
 function showProject()
 {
-	 getProject(document.getElementById("showidp").value);
+	 getUser(document.getElementById("showidp").value);
 }
 function displayp(text)
 {
@@ -58,8 +58,8 @@ function displayp(text)
 function addProject()
 {
 	User = new Object();
-	User.name = document.getElementById("namep").value;
-	User.idNum = document.getElementById("idp").value;
+	User.name = document.getElementById("name").value;
+	User.idNum = document.getElementById("id").value;
 	putProject(JSON.stringify(User));
 	
 }

@@ -1,0 +1,5 @@
+package wpisuite.models;
+
+public class Project {
+
+}

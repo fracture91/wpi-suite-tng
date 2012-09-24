@@ -22,14 +22,14 @@ public class HelloServlet extends HttpServlet
         PrintWriter out = res.getWriter();
         String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
-        if(path[1].equalsIgnoreCase("user"))
+        if(path[0].equalsIgnoreCase("user"))
         {
-        	User u = data.getUser(Integer.parseInt(path[2]));
+        	User u = data.getUser(Integer.parseInt(path[1]));
         	out.println(u.toJSON());
         }
         else
         {
-        	Project p = data.getProject(Integer.parseInt(path[2]));
+        	Project p = data.getProject(Integer.parseInt(path[1]));
         	out.println(p.toJSON());
         }
         out.close();
@@ -41,7 +41,7 @@ public class HelloServlet extends HttpServlet
 		BufferedReader in = req.getReader();
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
-        if(path[1].equalsIgnoreCase("user"))
+        if(path[0].equalsIgnoreCase("user"))
         {
     		data.addUser(in.readLine());
 
