@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
  * 
  * TODO handle button clicks
  */
+@SuppressWarnings("serial")
 public class LoginView extends JFrame {
 	private JTextField usernameText;
 	private JPasswordField passwordText;
@@ -91,5 +92,13 @@ public class LoginView extends JFrame {
 		
 		// Pack this
 		this.pack();
+	}
+	
+	/**
+	 * Getter for the connect button
+	 * @return
+	 */
+	public JButton getConnectButton() {
+		return connectButton;
 	}
 }

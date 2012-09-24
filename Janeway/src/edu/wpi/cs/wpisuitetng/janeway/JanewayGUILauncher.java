@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.janeway;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.views.JanewayFrame;
+import edu.wpi.cs.wpisuitetng.janeway.views.LoginView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
 
 /**
@@ -30,8 +33,16 @@ public class JanewayGUILauncher {
 		// 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JanewayFrame gui = new JanewayFrame(modules);
-				gui.setVisible(true);
+				final JanewayFrame gui = new JanewayFrame(modules);
+				final LoginView loginGui = new LoginView("Janeway");
+				loginGui.setVisible(true);
+				gui.setVisible(false);
+				loginGui.getConnectButton().addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						gui.setVisible(true);
+						loginGui.dispose();
+					}
+				});
 			}
 		});
 	}
