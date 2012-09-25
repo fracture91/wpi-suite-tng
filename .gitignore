@@ -1,6 +1,7 @@
 *.class
 .metadata
 .metadata\*
+.metadata/*
 
 # Package Files #
 *.jar
