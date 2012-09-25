@@ -24,13 +24,30 @@ public class HelloServlet extends HttpServlet
         String[] path = req.getPathInfo().split(delims);
         if(path[1].equalsIgnoreCase("user"))
         {
-        	User u = data.getUser(Integer.parseInt(path[2]));
-        	out.println(u.toJSON());
+        	if(path.length < 3)
+        	{
+        		User[] u = data.getUser("");
+            	out.println(User.toJSON(u));
+        	}
+        	else
+        	{
+	        	User[] u = data.getUser(path[2]);
+	        	out.println(u[0].toJSON());
+        	}
         }
         else
         {
-        	Project p = data.getProject(Integer.parseInt(path[2]));
-        	out.println(p.toJSON());
+        	if(path.length < 3)
+        	{
+        		Project[] u = data.getProject(-1);
+            	out.println(Project.toJSON(u));
+        	}
+        	else
+        	{
+	        	Project[] u = data.getProject(Integer.parseInt(path[2]));
+	        	out.println(u[0].toJSON());
+        	}
+
         }
         out.close();
 	}

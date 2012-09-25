@@ -33,4 +33,26 @@ public class Project
 		return json;
 		
 	}
+	
+	public static String toJSON(Project[] u)
+	{
+		String json ="";
+		
+		Gson gson = new Gson();
+		
+		for(Project a : u)
+		{
+			json += gson.toJson(a, Project.class);
+		}
+		
+		/*
+		json = "{";
+		json += "name:"+ name +",";
+		json += "idNum:"+ idNum;
+		json += "}";
+		*/
+		
+		return json;
+		
+	}
 }
