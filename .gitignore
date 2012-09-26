@@ -2,7 +2,7 @@
 .metadata
 .metadata\*
 .metadata/*
-.metadata\.plugin
+.metadata\.plugins
 
 # Package Files #
 *.war
