@@ -53,6 +53,8 @@ public class User {
 		
 		Gson gson = new Gson();
 		
+		json = gson.toJson(u, User[].class);
+		/*
 		for(User a : u)
 		{
 			json += gson.toJson(a, User.class);

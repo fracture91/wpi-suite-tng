@@ -32,7 +32,7 @@ public class HelloServlet extends HttpServlet
         	else
         	{
 	        	User[] u = data.getUser(path[2]);
-	        	out.println(u[0].toJSON());
+	        	out.println(User.toJSON(u));
         	}
         }
         else
@@ -45,7 +45,7 @@ public class HelloServlet extends HttpServlet
         	else
         	{
 	        	Project[] u = data.getProject(Integer.parseInt(path[2]));
-	        	out.println(u[0].toJSON());
+	        	out.println(Project.toJSON(u));
         	}
 
         }

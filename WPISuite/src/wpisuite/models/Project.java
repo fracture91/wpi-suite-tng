@@ -40,6 +40,9 @@ public class Project
 		
 		Gson gson = new Gson();
 		
+		json = gson.toJson(u, Project[].class);
+		
+		/*
 		for(Project a : u)
 		{
 			json += gson.toJson(a, Project.class);

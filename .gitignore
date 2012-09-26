@@ -2,8 +2,8 @@
 .metadata
 .metadata\*
 .metadata/*
+.metadata\.plugin
 
 # Package Files #
-*.jar
 *.war
 *.ear
