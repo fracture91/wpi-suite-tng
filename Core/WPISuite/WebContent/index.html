@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>WPI Suite Temp Admin Console</title>
+
+<script type="text/javascript" >
+
+function showUser()
+{
+	 getUser(document.getElementById("showid").value);
+}
+function display(text)
+{
+	document.getElementById("display").value = text;
+}
+
+function addUser()
+{
+	User = new Object();
+	User.name = document.getElementById("name").value;
+	User.username = document.getElementById("id").value;
+	putUser(JSON.stringify(User));
+	
+}
+
+
+function getUser(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('GET', "API/user/"+user, true);
+    request.send();
+}
+
+function putUser(user)
+{
+    var request = new XMLHttpRequest();
+    request.open('PUT', "API/user/", true);
+    request.send(user);
+}
+
+function showProject()
+{
+	 getProject(document.getElementById("showidp").value);
+}
+function displayp(text)
+{
+	document.getElementById("displayp").value = text;
+}
+
+function addProject()
+{
+	User = new Object();
+	User.name = document.getElementById("namep").value;
+	User.idNum = document.getElementById("idp").value;
+	putProject(JSON.stringify(User));
+	
+}
+
+
+function getProject(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        displayp(request.responseText);
+		    }
+	    }
+    request.open('GET', "API/project/"+user, true);
+    request.send();
+}
+
+function putProject(user)
+{
+    var request = new XMLHttpRequest();
+    request.open('PUT', "API/project/", true);
+    request.send(user);
+}
+</script>
+
+</head>
+<body>
+<h1>WPI Suite Temporary Admin Console</h1>
+<br />
+         
+            <label>Name: </label><input id="name" maxlength="40" /> <br />
+            <label>username: </label><input id="id" maxlength="15" /> <br />
+            <button onclick="addUser()">Add User</button>
+            
+            <br />
+           
+            <button onclick="showUser()">Show User</button><label> username: </label><input id="showid" maxlength="15" /> <br />
+            <textarea id="display" rows="10" cols="80"></textarea>
+            
+			<hr>
+			
+            <label>Name: </label><input id="namep" maxlength="40" /> <br />
+            <label>ID: </label><input id="idp" maxlength="15" /> <br />
+            <button onclick="addProject()">Add Project</button>
+            
+            <br />
+           
+            <button onclick="showProject()">Show Project</button><label> ID: </label><input id="showidp" maxlength="15" /> <br />
+            <textarea id="displayp" rows="10" cols="80"></textarea>
+</body>
+</html>
