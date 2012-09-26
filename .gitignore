@@ -1,6 +1,11 @@
 *.class
+.metadata
+.metadata\*
+.metadata/*
+.metadata\.plugins\*
+Servers\.settings\*
+Servers\.settings
 
 # Package Files #
-*.jar
 *.war
 *.ear
