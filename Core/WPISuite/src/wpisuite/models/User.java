@@ -1,12 +1,33 @@
+/**
+ * WPI Suite TNG
+ * 	models package
+ * 		User model
+ * 
+ * 	author(s): mdelladonna, twack 
+ *  9/27/12
+ */
+
 package wpisuite.models;
 
 import com.google.gson.*;
-public class User {
 
+/**
+ * The Data Model representation of a User. Implements
+ * 	database interaction and serializing.
+ * @author mdelladonna (sp?), twack
+ */
+public class User implements Model 
+{
 	private String name;
 	private String username;
 	private int idNum;
 	
+	/**
+	 * The primary constructor for a User
+	 * @param name	User's full name
+	 * @param username	User's username (nickname)
+	 * @param idNum	User's ID number
+	 */
 	public User(String name, String username, int idNum)
 	{
 		this.name = name;
@@ -14,6 +35,7 @@ public class User {
 		this.idNum = idNum;
 	}
 	
+	/* Accessors */
 	public String getName()
 	{
 		return name;
@@ -29,6 +51,24 @@ public class User {
 		return username;
 	}
 	
+	/* database interaction */
+	public void save()
+	{
+		return;
+	}
+	
+	public void delete()
+	{
+		return;
+	}
+	
+	/* Serializing */
+	
+	/**
+	 * Serializes this User model into a JSON string.
+	 * 
+	 * @return	the JSON representation of this User
+	 */
 	public String toJSON()
 	{
 		String json;
@@ -47,6 +87,12 @@ public class User {
 		
 	}
 	
+	/**
+	 * Static method offering comma-delimited JSON
+	 * 	serializing of User lists
+	 * @param u	an array of Users
+	 * @return	the serialized array of Users
+	 */
 	public static String toJSON(User[] u)
 	{
 		String json ="";
@@ -70,4 +116,16 @@ public class User {
 		return json;
 		
 	}
+	
+	/* Built-in overrides/overloads */
+	
+	/**
+	 * Override of toString() to return a JSON string for now.
+	 * 	May override in the future.
+	 */
+	public String toString()
+	{
+		return this.toJSON();
+	}
+
 }
