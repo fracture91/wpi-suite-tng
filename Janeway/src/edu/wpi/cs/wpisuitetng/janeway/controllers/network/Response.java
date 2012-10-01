@@ -70,6 +70,7 @@ public class Response {
 	
 	/**
 	 * Returns a String representing the response message received in the response from the server.
+	 * 
 	 * @return	A String representing the response message received in the response.
 	 */
 	public String getResponseMessage() {
