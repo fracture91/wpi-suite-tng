@@ -6,12 +6,12 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 
 import wpisuite.models.*;
-public class HelloServlet extends HttpServlet 
+public class WPICoreServlet extends HttpServlet 
 {
 
 	MockDataStore data;
 	
-	public HelloServlet()
+	public WPICoreServlet()
 	{
 		data = MockDataStore.getMockDataStore();
 	}
