@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * This class represents a Request. It can be Observed by one or more RequestObservers.
@@ -75,15 +74,6 @@ public class Request extends Observable {
 		
 		RequestActor requestActor = new RequestActor(this);
 		requestActor.start();
-	}
-	
-	/**
-	 * Adds a RequestObserver to this request.
-	 * 
-	 * @param observer	A RequestObserver to be notified upon server response.
-	 */
-	public void addObserver(Observer observer) {
-		super.addObserver(observer);
 	}
 	
 	/**
