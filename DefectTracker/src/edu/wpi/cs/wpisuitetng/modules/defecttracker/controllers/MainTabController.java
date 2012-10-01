@@ -1,8 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers;
 
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.CreateDefectView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.MainTabView;
 
 /**
@@ -11,7 +12,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.MainTabView;
  */
 public class MainTabController {
 	
-	MainTabView view;
+	private MainTabView view;
 	
 	public MainTabController(MainTabView view) {
 		this.view = view;
@@ -21,7 +22,7 @@ public class MainTabController {
 	 * Create a tab that shows the form for creating a new defect.
 	 */
 	public void addCreateDefectTab() {
-		this.view.addTab("Create Defect", new ImageIcon(), new JPanel(), "Create a new defect");
+		this.view.addTab("Create Defect", new ImageIcon(), new CreateDefectView(), "Create a new defect");
 		this.view.setSelectedIndex(this.view.getTabCount() - 1);
 	}
 	
@@ -31,6 +32,14 @@ public class MainTabController {
 	 */
 	public void addDefectTab(int id) {
 		// TODO
+	}
+	
+	/**
+	 * Add a change listener to the view this is controlling.
+	 * @param listener the ChangeListener that should receive ChangeEvents
+	 */
+	public void addChangeListener(ChangeListener listener) {
+		this.view.addChangeListener(listener);
 	}
 	
 }
