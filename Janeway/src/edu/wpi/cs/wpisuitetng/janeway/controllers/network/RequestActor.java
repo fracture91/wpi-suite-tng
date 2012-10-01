@@ -17,7 +17,7 @@ public class RequestActor extends Thread {
 	private List<ResponseListener> listeners;
 	private URL url;
 	private String method;
-	private String inputbody;
+	private String requestBody;
 	
 	/**
 	 * Constructor.
@@ -29,7 +29,7 @@ public class RequestActor extends Thread {
 	public RequestActor(List<ResponseListener> listeners, URL url, String method) {
 		this.url = url;
 		this.method = method;
-		this.inputbody = null;
+		this.requestBody = null;
 	}
 	
 	/**
@@ -38,12 +38,12 @@ public class RequestActor extends Thread {
 	 * @param listeners		A List of ResponseListeners which will be called when a Response is received.
 	 * @param url			The full URL to connect to.
 	 * @param method		A String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
-	 * @param inputbody		A String containing data to be sent to the server in the body of the request.
+	 * @param requestBody	A String containing data to be sent to the server in the body of the request.
 	 */
-	public RequestActor(List<ResponseListener> listeners, URL url, String method, String inputbody) {
+	public RequestActor(List<ResponseListener> listeners, URL url, String method, String requestBody) {
 		this.url = url;
 		this.method = method;
-		this.inputbody = inputbody;
+		this.requestBody = requestBody;
 	}
 	
 	/**
@@ -62,34 +62,37 @@ public class RequestActor extends Thread {
 			connection.setDoInput(true);
 			
 			// if there is a body to send, send it
-			if (inputbody != null) {
+			if (requestBody != null) {
 				connection.setDoOutput(true);
 				DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-				out.writeBytes(inputbody);
+				out.writeBytes(requestBody);
 				out.flush();
 				out.close();
 			}
 
-			// read the response
+			// get the response body
 			InputStream in = connection.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			String line;
-			String responsebody = ""; 
+			String responseBody = ""; 
 			while((line = reader.readLine()) != null) {
-				responsebody += line + "\n";
+				responseBody += line + "\n";
 			}
 			reader.close();
 			
 			// get the response headers
-			Map<String, List<String>> headers = connection.getHeaderFields();
+			Map<String, List<String>> responseHeaders = connection.getHeaderFields();
 			
 			// get the response code
-			int responsecode = connection.getResponseCode();
+			int responseCode = connection.getResponseCode();
 			
 			// get the response message
-			String responsemsg = connection.getResponseMessage();
+			String responseMessage = connection.getResponseMessage();
 			
-			// TODO create response and pass to handlers
+			// create Response
+			Response response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
+			
+			// TODO pass response to handlers
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
