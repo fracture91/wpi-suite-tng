@@ -94,6 +94,10 @@ public class RequestActor extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.disconnect(); 
+			}
 		}
 	}
 }
