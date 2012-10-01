@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * This class represents a Request. It can be Observed by one or more RequestObservers.
+ * This class represents a Request. It can be observed by one or more Observers.
  */
 public class Request extends Observable {
 	/**
