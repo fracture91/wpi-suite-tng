@@ -22,33 +22,15 @@ public class WPICoreServlet extends HttpServlet
         PrintWriter out = res.getWriter();
         String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
-        if(path[1].equalsIgnoreCase("user"))
-        {
-        	if(path.length < 3)
-        	{
-        		User[] u = data.getUser("");
-            	out.println(User.toJSON(u));
-        	}
-        	else
-        	{
-	        	User[] u = data.getUser(path[2]);
-	        	out.println(User.toJSON(u));
-        	}
-        }
-        else
-        {
-        	if(path.length < 3)
-        	{
-        		Project[] u = data.getProject(-1);
-            	out.println(Project.toJSON(u));
-        	}
-        	else
-        	{
-	        	Project[] u = data.getProject(Integer.parseInt(path[2]));
-	        	out.println(Project.toJSON(u));
-        	}
+        
+        System.arraycopy(path, 1, path, 0, path.length-1);
+        path[path.length-1] = null;
+        
+        Model[] m = data.getModel(path);
+        
+        out.println(m[0].toJSON());
+       
 
-        }
         out.close();
 	}
 	

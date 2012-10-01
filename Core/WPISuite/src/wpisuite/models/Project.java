@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mdelladonna (sp?), twack
+ * @author mpdelladonna (sp?), twack
  */
 public class Project implements Model
  {
