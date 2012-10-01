@@ -36,7 +36,6 @@ public class Request extends Observable {
 	 * 
 	 * @throw NullPointerException	If the requestURL is null.
 	 * @throw NullPointerException	If the requestMethod is null.
-	 * @throw NullPointerException If the requestBody is null.
 	 */
 	public Request(URL requestURL, RequestMethod requestMethod, String requestBody) {
 		// check to see if the requestURL is null
