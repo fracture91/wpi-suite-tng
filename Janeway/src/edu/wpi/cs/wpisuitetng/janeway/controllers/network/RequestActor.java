@@ -6,55 +6,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * This class makes a request asynchronously.
  */
 public class RequestActor extends Thread {
-	private List<ResponseListener> responseListeners;
-	private URL url;
-	private String method;
-	private String requestBody;
-	private Map<String, List<String>> requestHeaders;
+	private Request request;
 	
 	/**
 	 * Constructor.
 	 * 
-	 * @param listeners			A List of ResponseListeners which will be called when a Response is received.
-	 * @param url				The full URL to connect to.
-	 * @param method			A String representing the HTTP request method. Ex: "GET", "POST", 
-	 * 							"PUT", "DELETE"
-	 * @param requestBody		A String containing data to be sent to the server in the body of the 
-	 * 							request. May be null.
-	 * @param requestHeaders	A Map of header keys and Lists of their values to be sent to the 
-	 * 							server. May be null.
+	 * @param request
 	 */
-	public RequestActor(List<ResponseListener> responseListeners, URL url, String method, String requestBody, Map<String, List<String>> requestHeaders) {
-		// null check for listeners
-		if (responseListeners == null) {
-			// TODO throw Exception
-		}
-		
-		// null check for url
-		if (url == null) {
-			// TODO throw Exception
-		}
-		
-		// null check for method
-		if (method == null) {
-			// TODO throw Exception
-		}
-		
-		this.responseListeners = responseListeners;
-		this.url = url;
-		this.method = method;
-		this.requestBody = requestBody;
-		this.requestHeaders = requestHeaders;
+	public RequestActor(Request request) {
+		this.request = request;
 	}
 	
 	/**
@@ -67,16 +35,15 @@ public class RequestActor extends Thread {
 		
 		try {
 			// setup connection
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod(method);
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection = (HttpURLConnection) request.getURL().openConnection();
+			connection.setRequestMethod(request.getRequestMethod());
 			connection.setDoInput(true);
 			
 			// set request headers
-			Iterator<String> requestHeaderKeysI = requestHeaders.keySet().iterator();
+			Iterator<String> requestHeaderKeysI = request.getRequestHeaders().keySet().iterator();
 			while (requestHeaderKeysI.hasNext()) {
 				String requestHeaderKey = requestHeaderKeysI.next();
-				Iterator<String> requestHeaderValuesI = requestHeaders.get(requestHeaderKey).iterator();
+				Iterator<String> requestHeaderValuesI = request.getRequestHeaders().get(requestHeaderKey).iterator();
 				
 				while (requestHeaderValuesI.hasNext()) {
 					connection.setRequestProperty(requestHeaderKey, requestHeaderValuesI.next());
@@ -84,10 +51,10 @@ public class RequestActor extends Thread {
 			}
 			
 			// if there is a body to send, send it
-			if (requestBody != null) {
+			if (request.getRequestBody() != null) {
 				connection.setDoOutput(true);
 				DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-				out.writeBytes(requestBody);
+				out.writeBytes(request.getRequestBody());
 				out.flush();
 				out.close();
 			}
@@ -118,12 +85,13 @@ public class RequestActor extends Thread {
 			// create Response
 			Response response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
 			
-			// TODO pass response to handlers
-			
+			// set the Request's response to the newly created response
+			request.setResponse(response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			// close the connection
 			if (connection != null) {
 				connection.disconnect(); 
 			}
