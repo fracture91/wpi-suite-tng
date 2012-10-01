@@ -83,10 +83,7 @@ public class Request extends Observable {
 	 * @param observer	A RequestObserver to be notified upon server response.
 	 */
 	public void addObserver(Observer observer) {
-		// If the given Observer is a RequestObserver, add it to the list of RequestObservers
-		if (RequestObserver.class.getName() == observer.getClass().getName()) {
-			super.addObserver(observer);
-		}
+		super.addObserver(observer);
 	}
 	
 	/**
