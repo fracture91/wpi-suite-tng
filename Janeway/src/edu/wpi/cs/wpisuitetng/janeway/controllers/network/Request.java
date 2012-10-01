@@ -48,11 +48,6 @@ public class Request extends Observable {
 		if (requestMethod == null) {
 			throw new NullPointerException("The requestMethod must not be null.");
 		}
-
-		// check to see if the requestBody is null
-		if (requestBody == null) {
-			throw new NullPointerException("The requestBody must not be null.");
-		}
 		
 		this.requestURL = requestURL;
 		this.requestMethod = requestMethod;
