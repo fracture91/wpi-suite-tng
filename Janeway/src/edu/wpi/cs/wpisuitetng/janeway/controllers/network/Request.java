@@ -66,7 +66,7 @@ public class Request extends Observable {
 	 * 
 	 * @throws IllegalStateException	If the request has already been sent.
 	 */
-	public void send() throws Exception {
+	public void send() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
