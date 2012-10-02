@@ -95,6 +95,14 @@ public class LoginView extends JFrame {
 	}
 	
 	/**
+	 * Getter for the url text field
+	 * @return the url text field
+	 */
+	public JTextField getUrlTextField() {
+		return urlText;
+	}
+	
+	/**
 	 * Getter for the connect button
 	 * @return
 	 */

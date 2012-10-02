@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.models.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers.MainTabController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.MainTabView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.RibbonView;
 
@@ -15,11 +16,15 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.RibbonView;
 public class JanewayModule implements IJanewayModule {
 
 	private ArrayList<JanewayTabModel> tabs;
+	public MainTabController mainTabController;
 	
 	public JanewayModule() {
+		MainTabView mainTabView = new MainTabView();
+		mainTabController = new MainTabController(mainTabView);
+		
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel("Defects", new ImageIcon(),
-		                                          new RibbonView(), new MainTabView());
+		                                          new RibbonView(this), mainTabView);
 		tabs.add(tab);
 	}
 	
