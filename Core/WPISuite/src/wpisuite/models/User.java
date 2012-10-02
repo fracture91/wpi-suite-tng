@@ -1,7 +1,9 @@
 package wpisuite.models;
 
+import placeholderFiles.TNG;
+
 import com.google.gson.*;
-public class User {
+public class User implements TNG{
 
 	private String name;
 	private String username;
@@ -69,5 +71,12 @@ public class User {
 		
 		return json;
 		
+	}
+	
+	public boolean equals(User aUser){
+		return this.idNum == aUser.getIdNum() &&
+				this.name.equalsIgnoreCase(aUser.getName()) &&
+				this.username.equalsIgnoreCase(aUser.getUsername());
+				
 	}
 }

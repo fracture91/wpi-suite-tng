@@ -3,6 +3,7 @@ package wpisuite.models;
 import java.util.ArrayList;
 import com.google.gson.*;
 
+
 public class MockDataStore {
 
 	private ArrayList<Project> projects;
@@ -45,15 +46,15 @@ public class MockDataStore {
 		User[] list = new User[1];
 		if(!username.equalsIgnoreCase(""))
 		{
-		int index = 0;
-		for(User u : users)
-		{
-			if(u.getUsername().equalsIgnoreCase(username))
-				break;
-			index++;
-		}
-		list[0] =  users.get(index);
-		return list;
+			int index = 0;
+			for(User u : users)
+			{
+				if(u.getUsername().equalsIgnoreCase(username))
+					break;
+				index++;
+			}
+			list[0] =  users.get(index);
+			return list;
 		}
 		return users.toArray(list);
 	}

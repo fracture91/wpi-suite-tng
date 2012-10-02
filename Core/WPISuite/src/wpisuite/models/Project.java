@@ -1,8 +1,10 @@
 package wpisuite.models;
 
+import placeholderFiles.TNG;
+
 import com.google.gson.Gson;
 
-public class Project 
+public class Project implements TNG
 {
 	private String name;
 	private int idNum;

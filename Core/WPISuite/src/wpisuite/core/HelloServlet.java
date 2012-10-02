@@ -9,11 +9,12 @@ import wpisuite.models.*;
 public class HelloServlet extends HttpServlet 
 {
 
-	MockDataStore data;
+	DataStore data;
 	
 	public HelloServlet()
 	{
-		data = MockDataStore.getMockDataStore();
+		//data = MockDataStore.getMockDataStore();
+		data = DataStore.getDataStore();
 	}
 	
 	public void doGet (HttpServletRequest req,
@@ -26,7 +27,7 @@ public class HelloServlet extends HttpServlet
         {
         	if(path.length < 3)
         	{
-        		User[] u = data.getUser("");
+        		User[] u = data.getUser("Gaffey");
             	out.println(User.toJSON(u));
         	}
         	else
