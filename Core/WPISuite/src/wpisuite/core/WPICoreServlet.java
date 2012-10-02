@@ -5,6 +5,8 @@ import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
+import com.google.gson.Gson;
+
 import wpisuite.models.*;
 public class WPICoreServlet extends HttpServlet 
 {
@@ -28,7 +30,9 @@ public class WPICoreServlet extends HttpServlet
         
         Model[] m = data.getModel(path);
         
-        out.println(m[0].toJSON());
+        Gson gson = new Gson();
+        
+        out.println(gson.toJson(m, m.getClass()));
        
 
         out.close();
