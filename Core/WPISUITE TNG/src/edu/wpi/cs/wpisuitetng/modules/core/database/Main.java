@@ -1,4 +1,4 @@
-package database;
+package edu.wpi.cs.wpisuitetng.modules.core.database;
 
 import java.util.Calendar;
 import java.util.Date;

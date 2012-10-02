@@ -1,4 +1,4 @@
-package database;
+package edu.wpi.cs.wpisuitetng.modules.core.database;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

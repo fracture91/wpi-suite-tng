@@ -1,4 +1,4 @@
-package wpisuite.models;
+package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import java.util.ArrayList;
 import com.google.gson.*;

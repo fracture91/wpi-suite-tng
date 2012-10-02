@@ -1,13 +1,4 @@
-/**
- * WPI Suite TNG
- * 	models package
- * 		Model interface
- * 
- * 	author(s): twack
- *  9/27/12
- */
-
-package wpisuite.models;
+package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import java.lang.String;
 

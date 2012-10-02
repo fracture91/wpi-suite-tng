@@ -1,11 +1,12 @@
-package wpisuite.core;
+package edu.wpi.cs.wpisuitetng.modules.core;
 
 import java.io.*;
 
 import javax.servlet.http.*;
 import javax.servlet.*;
 
-import wpisuite.models.*;
+import edu.wpi.cs.wpisuitetng.modules.core.models.*;
+
 public class HelloServlet extends HttpServlet 
 {
 
