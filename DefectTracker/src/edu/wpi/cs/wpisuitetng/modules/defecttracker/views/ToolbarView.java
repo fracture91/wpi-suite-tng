@@ -13,17 +13,17 @@ import javax.swing.event.ChangeListener;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
 
 /**
- * The Defect tab's Ribbon panel.
+ * The Defect tab's toolbar panel.
  */
 @SuppressWarnings("serial")
-public class RibbonView extends JPanel implements ActionListener, ChangeListener {
+public class ToolbarView extends JPanel implements ActionListener, ChangeListener {
 
 	private JButton createDefect;
 	private JButton searchDefects;
 	private JPanel providedButtons;
 	private JanewayModule module;
 	
-	public RibbonView(JanewayModule module) {
+	public ToolbarView(JanewayModule module) {
 		this.setLayout(new FlowLayout(FlowLayout.LEADING));
 		this.module = module;
 		createDefect = new JButton("Create Defect");
@@ -59,8 +59,8 @@ public class RibbonView extends JPanel implements ActionListener, ChangeListener
 		if(e.getSource() instanceof MainTabView) {
 			MainTabView view = (MainTabView) e.getSource();
 			Component selectedComponent = view.getSelectedComponent();
-			if(selectedComponent instanceof IRibbonButtonProvider) {
-				IRibbonButtonProvider provider = (IRibbonButtonProvider) selectedComponent;
+			if(selectedComponent instanceof IToolbarButtonProvider) {
+				IToolbarButtonProvider provider = (IToolbarButtonProvider) selectedComponent;
 				this.setProvidedButtons(provider.getButtonPanel());
 			} else {
 				this.setProvidedButtons(null);

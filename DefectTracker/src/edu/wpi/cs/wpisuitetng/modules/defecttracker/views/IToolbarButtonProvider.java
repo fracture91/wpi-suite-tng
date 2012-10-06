@@ -6,7 +6,7 @@ import javax.swing.JPanel;
  * Implementations of this interface provide buttons to display when they are relevant.
  * For example, defect views might provide buttons to save or discard changes.
  */
-public interface IRibbonButtonProvider {
+public interface IToolbarButtonProvider {
 	/**
 	 * @return a JPanel containing buttons to display.
 	 */

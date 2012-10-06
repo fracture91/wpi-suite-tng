@@ -5,23 +5,23 @@ import javax.swing.JComponent;
 
 /**
  * Represents a tab in the Janeway interface.
- * Tabs have a name, icon, ribbon JPanel, and main JPanel.
+ * Tabs have a name, icon, toolbar JComponent, and main JComponent.
  */
 public class JanewayTabModel {
 	
 	private String name;
 	private Icon icon;
-	private JComponent ribbon;
-	private JComponent mainPanel;
+	private JComponent toolbar;
+	private JComponent mainComponent;
 	
 	/**
 	 * Construct a tab model with the given properties.
 	 */
-	public JanewayTabModel(String name, Icon icon, JComponent ribbon, JComponent mainPanel) {
+	public JanewayTabModel(String name, Icon icon, JComponent toolbar, JComponent mainComponent) {
 		this.name = name;
 		this.icon = icon;
-		this.ribbon = ribbon;
-		this.mainPanel = mainPanel;
+		this.toolbar = toolbar;
+		this.mainComponent = mainComponent;
 	}
 	
 	/**
@@ -39,17 +39,17 @@ public class JanewayTabModel {
 	}
 	
 	/**
-	 * @return The JPanel that will appear in the "ribbon" menu below the tab bar.
+	 * @return The JComponent that will appear in the toolbar below the tab bar.
 	 */
-	public JComponent getRibbon() {
-		return ribbon;
+	public JComponent getToolbar() {
+		return toolbar;
 	}
 	
 	/**
-	 * @return The main JPanel that appears below the ribbon menu.
+	 * @return The main JComponent that appears below the toolbar menu.
 	 */
-	public JComponent getMainPanel() {
-		return mainPanel;
+	public JComponent getMainComponent() {
+		return mainComponent;
 	}
 	
 }

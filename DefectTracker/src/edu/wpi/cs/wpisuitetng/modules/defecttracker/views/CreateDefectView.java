@@ -12,7 +12,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers.SaveDefectContro
  * This view is responsible for showing the form for creating a new defect. 
  */
 @SuppressWarnings("serial")
-public class CreateDefectView extends JPanel implements IRibbonButtonProvider {
+public class CreateDefectView extends JPanel implements IToolbarButtonProvider {
 
 	private JPanel buttonPanel;
 	private JButton saveButton;
