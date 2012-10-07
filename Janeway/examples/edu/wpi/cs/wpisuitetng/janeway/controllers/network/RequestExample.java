@@ -21,8 +21,8 @@ public class RequestExample {
 			
 			String host = "http://localhost:8080/";
 			
-			// Make a new Request. TODO fix this so that the body can be ignored.
-			Request request = new Request(new URL(host), Request.RequestMethod.GET, defect.toJSON());
+			// Make a new POST Request.
+			Request request = new Request(new URL(host), Request.RequestMethod.POST, defect.toJSON());
 			
 			// Add the requestObserver to the request's set of Observers
 			request.addObserver(requestObserver);
