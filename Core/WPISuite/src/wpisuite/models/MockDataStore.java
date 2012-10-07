@@ -1,6 +1,9 @@
 package wpisuite.models;
 
 import java.util.ArrayList;
+
+import wpisuite.models.core.*;
+
 import com.google.gson.*;
 
 public class MockDataStore {
@@ -33,11 +36,12 @@ public class MockDataStore {
 		projects.add(new Project("UBUNTU_RABID_RHINO",4));
 	}
 	
-	public void addUser(String json)
+	public User addUser(String json)
 	{
 		Gson gson = new Gson();
 		User u = gson.fromJson(json, User.class);
 		users.add(u);
+		return u;
 	}
 	
 	public User[] getUser(String username)
@@ -58,11 +62,12 @@ public class MockDataStore {
 		return users.toArray(list);
 	}
 	
-	public void addProject(String json)
+	public Project addProject(String json)
 	{
 		Gson gson = new Gson();
 		Project p = gson.fromJson(json, Project.class);
 		projects.add(p);
+		return p;
 	}
 	
 	public Project[] getProject(int idNum)

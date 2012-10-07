@@ -8,16 +8,29 @@ import javax.servlet.*;
 import com.google.gson.Gson;
 
 import wpisuite.models.*;
+
+/**
+ * Primary servlet for the WPISuite service
+ * 
+ * This class handles incoming API requests over HTTP
+ * 
+ * @author Mike Della Donna
+ *
+ */
 public class WPICoreServlet extends HttpServlet 
 {
-
-	MockDataStore data;
+	private static final long serialVersionUID = -7156601241025735047L;
 	
+	/**
+	 * Empty Constructor
+	 */
 	public WPICoreServlet()
 	{
-		data = MockDataStore.getMockDataStore();
 	}
 	
+	/**
+	 * Forwards get requests and restful parameters to the ManagerLayer singleton
+	 */
 	public void doGet (HttpServletRequest req,
                        HttpServletResponse res) throws ServletException, IOException
 	{
@@ -28,31 +41,24 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        Model[] m = data.getModel(path);
-        
-        Gson gson = new Gson();
-        
-        out.println(gson.toJson(m, m.getClass()));
+        out.println(ManagerLayer.getInstance().read(path));
        
-
         out.close();
 	}
 	
+	/**
+	 * Forwards put requests and restful parameters to the ManagerLayer singleton
+	 */
 	public void doPut (HttpServletRequest req,
             HttpServletResponse res) throws ServletException, IOException
     {
 		BufferedReader in = req.getReader();
+		PrintWriter out = res.getWriter();
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
-        if(path[1].equalsIgnoreCase("user"))
-        {
-    		data.addUser(in.readLine());
-
-        }
-        else
-        {
-    		data.addProject(in.readLine());
-
-        }
+        
+        out.println(ManagerLayer.getInstance().create(path,in.readLine()));
+        
+        out.close();
     }
 }

@@ -7,7 +7,9 @@
  *  9/27/12
  */
 
-package wpisuite.models;
+package wpisuite.models.core;
+
+import wpisuite.models.Model;
 
 import com.google.gson.*;
 
