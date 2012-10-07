@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class RequestActor extends Thread {
 		try {
 			// setup connection
 			connection = (HttpURLConnection) request.getURL().openConnection();
+			connection.setConnectTimeout(20*1000);
+			connection.setReadTimeout(5*1000);
+			System.out.println("Req method: " + request.getRequestMethod());
 			connection.setRequestMethod(request.getRequestMethod());
 			connection.setDoInput(true);
 			
@@ -65,13 +69,23 @@ public class RequestActor extends Thread {
 
 			// get the response body
 			InputStream in = connection.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
 			String line;
-			String responseBody = ""; 
-			while((line = reader.readLine()) != null) {
-				responseBody += line + "\n";
+			String responseBody = "";
+			try {
+				while((line = reader.readLine()) != null) {
+					responseBody += line + "\n";
+				}
+			} catch (SocketTimeoutException e) {
+				// Note: this will be thrown if a read takes longer than 5 seconds
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			reader.close();
+			finally {
+				if (reader != null) {
+					reader.close();
+				}
+			}
 			
 			// get the response headers
 			Map<String, List<String>> responseHeaders = connection.getHeaderFields();
