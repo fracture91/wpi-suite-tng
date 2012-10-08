@@ -9,12 +9,14 @@ import java.util.Observable;
 
 /**
  * This class represents a Request. It can be observed by one or more Observers.
+ * 
+ * TODO add setRequestData (for url data, etc)
  */
 public class Request extends Observable {
 	/**
 	 * Represents an HTTP request method.
 	 */
-	public enum RequestMethod {
+	public static enum RequestMethod {
 		GET, POST, PUT, DELETE
 	}
 	
@@ -32,25 +34,17 @@ public class Request extends Observable {
 	 * 
 	 * @param requestURL		The URL to make the HTTP request to.
 	 * @param requestMethod		The HTTP RequestMethod to use.
-	 * @param requestBody		The data to send to the server in the request body.
 	 * 
 	 * @throw NullPointerException	If the requestURL is null.
-	 * @throw NullPointerException	If the requestMethod is null.
 	 */
-	public Request(URL requestURL, RequestMethod requestMethod, String requestBody) {
+	public Request(URL requestURL) throws NullPointerException {
 		// check to see if the requestURL is null
 		if (requestURL == null) {
 			throw new NullPointerException("The requestURL must not be null.");
 		}
 		
-		// check to see if the requestMethod is null
-		if (requestMethod == null) {
-			throw new NullPointerException("The requestMethod must not be null.");
-		}
-		
 		this.requestURL = requestURL;
-		this.requestMethod = requestMethod;
-		this.requestBody = requestBody;
+		this.requestMethod = RequestMethod.GET; // default is GET
 		
 		requestHeaders = new HashMap<String, List<String>>();
 	}
@@ -79,7 +73,7 @@ public class Request extends Observable {
 	 * @throws IllegalStateException	If the request has already been sent.
 	 * @throws NullPointerException		If the key is null.
 	 */
-	public void addRequestHeader(String key, String value) {
+	public void addRequestHeader(String key, String value) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
@@ -103,6 +97,52 @@ public class Request extends Observable {
 		
 		// store the updated List of current values in the Map
 		requestHeaders.put(key, currentValues);
+	}
+	
+	/**
+	 * Sets the body of the request.
+	 * TODO elaborate
+	 * 
+	 * @param requestBody	The body of the request to send to the server.
+	 * 
+	 * @throws IllegalStateException	If the request has already been sent.
+	 * @throws NullPointerException		If the requestBody is null.
+	 */
+	public void setRequestBody(String requestBody) throws IllegalStateException, NullPointerException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request already sent.");
+		}
+
+		// check to see if the key is null
+		if (requestBody == null) {
+			throw new NullPointerException("The requestBody parameter must not be null.");
+		}
+
+		this.requestBody = requestBody;
+	}
+	
+	/**
+	 * Sets the HTTP method for the Request.
+	 * TODO elaborate
+	 * 
+	 * @param requestMethod
+	 * 
+	 * @throws IllegalStateException	If the request has already been sent.
+	 * @throws NullPointerException		If the requestMethod is null.
+	 */
+	public void setRequestMethod(RequestMethod requestMethod) throws IllegalStateException, NullPointerException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request already sent.");
+		}
+
+		// check to see if the requestMethod is null
+		if (requestMethod == null) {
+			throw new NullPointerException("The requestMethod parameter must not be null.");
+		}
+		
+		this.requestMethod = requestMethod;
 	}
 	
 	/**

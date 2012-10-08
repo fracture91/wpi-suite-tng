@@ -28,6 +28,7 @@ public class RequestActor extends Thread {
 	
 	/**
 	 * Overrides Thread's run method. This will be called when the thread is started.
+	 * TODO handle 400 and 500 error exceptions and whatnot
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
@@ -39,7 +40,6 @@ public class RequestActor extends Thread {
 			connection = (HttpURLConnection) request.getURL().openConnection();
 			connection.setConnectTimeout(20*1000);
 			connection.setReadTimeout(5*1000);
-			System.out.println("Req method: " + request.getRequestMethod());
 			connection.setRequestMethod(request.getRequestMethod());
 			connection.setDoInput(true);
 			
