@@ -29,8 +29,14 @@ public class JanewayGUILauncher {
 	 */
 	public static void main(String[] args) {
 		
-		// Build list of modules
-		modules = getModules();
+		// Load modules
+		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
+		modules = moduleLoader.getModules();
+		
+		// Check for modules
+		if (modules.size() < 1) {
+			System.out.println("WARNING: No modules were loaded, be sure the correct config file\nis referenced and jar files have been created.");
+		}
 		
 		// Start the GUI
 		SwingUtilities.invokeLater(new Runnable() {
