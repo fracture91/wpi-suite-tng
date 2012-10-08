@@ -1,4 +1,4 @@
-package database;
+package edu.wpi.cs.wpisuitetng.modules.core.database;
 
 public class TNGMatcher<T> {
 

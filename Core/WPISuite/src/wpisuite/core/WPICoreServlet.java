@@ -61,4 +61,36 @@ public class WPICoreServlet extends HttpServlet
         
         out.close();
     }
+	
+	/**
+	 * Forwards post requests and restful parameters to the ManagerLayer singleton
+	 */
+	public void doPost (HttpServletRequest req,
+            HttpServletResponse res) throws ServletException, IOException
+    {
+		BufferedReader in = req.getReader();
+		PrintWriter out = res.getWriter();
+		String delims = "[/]+";
+        String[] path = req.getPathInfo().split(delims);
+        
+        out.println(ManagerLayer.getInstance().update(path,in.readLine()));
+        
+        out.close();
+    }
+	
+	/**
+	 * Forwards put requests and restful parameters to the ManagerLayer singleton
+	 */
+	public void doDelete (HttpServletRequest req,
+            HttpServletResponse res) throws ServletException, IOException
+    {
+		BufferedReader in = req.getReader();
+		PrintWriter out = res.getWriter();
+		String delims = "[/]+";
+        String[] path = req.getPathInfo().split(delims);
+        
+        out.println(ManagerLayer.getInstance().delete(path));
+        
+        out.close();
+    }
 }
