@@ -10,7 +10,10 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
+import com.db4o.cs.config.ClientConfiguration;
+import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.query.Predicate;
+import com.db4o.reflect.jdk.JdkReflector;
 import com.google.gson.Gson;
 
 import placeholderFiles.Defect;
@@ -18,33 +21,24 @@ import placeholderFiles.TNG;
 
 public class DataStore {
 	
-	static String WPI_TNG_DB ="WPISuite_TNG_new";
+	static String WPI_TNG_DB ="WPISuite_TNG";
 	private static DataStore myself = null;
 	static ObjectContainer theDB;
 	static ObjectServer server;
+	static ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
+	static int PORT = 8088;
+	static String DB4oUser = "bgaffey";
+	static String DB4oPass = "password";
+	static String DB4oServer = "localhost";
+		  
 	
 	public static DataStore getDataStore()
 	{
 		if(myself == null)
 			myself = new DataStore();
 		// accessLocalServer
-		server = Db4oClientServer.openServer(Db4oClientServer
-				.newServerConfiguration(), WPI_TNG_DB, 8081);
-		server.grantAccess("bgaffey", "password");
-	//	try {
-		/*ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
-		        .newClientConfiguration(), "localhost", 8081, "bgaffey", "password");
-		        */
-		//ObjectContainer client = server.openClient();
-		   
-		/*   // Do something with this client, or open more clients
-		   client.close();
-		} finally {
-		   server.close();
-		}
-		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), WPI_TNG_DB); 
-		*/
-		//theDB = client;
+		 server = Db4oClientServer.openServer(serverConfig, WPI_TNG_DB, PORT);
+		server.grantAccess(DB4oUser,DB4oPass);
 		return myself;
 	}
 	
@@ -68,11 +62,12 @@ public class DataStore {
 	}
 	
 	public boolean save(ObjectContainer db, TNG aTNG){
-		ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
-		        .newClientConfiguration(), "localhost", 8081, "bgaffey", "password");
-		client.store(aTNG);
-		System.out.println("Stored " + aTNG);
-		client.close();
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+			ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
+			client.store(aTNG);
+			System.out.println("Stored " + aTNG);
+			client.close();
 		return true;
 	}
 	
@@ -94,8 +89,9 @@ public class DataStore {
 	 */
 	public <T> List<?> retrieve(ObjectContainer db, final Class<?> anObjectQueried, String aFieldName, 
 			final T theGivenValue){
-		ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
-		        .newClientConfiguration(), "localhost", 8081, "bgaffey", "password");
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		for(Method m: allMethods){
@@ -140,8 +136,10 @@ public class DataStore {
 			new IllegalArgumentException("The length of the two given arrays does not match");
 		}
 		
-		ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
-		        .newClientConfiguration(), "localhost", 8081, "bgaffey", "password");
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
+		
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		Method[] methodsToBeExecuted = new Method[fieldNameLength];
@@ -205,9 +203,11 @@ public class DataStore {
 	}
 	
 	public boolean delete(ObjectContainer db, Defect aDefect){
-		ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
-		        .newClientConfiguration(), "localhost", 8081, "bgaffey", "password");
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
 		client.delete(aDefect);
+		client.close();
 		System.out.println("Deleted "+aDefect);
 		return true;
 	}
@@ -215,7 +215,8 @@ public class DataStore {
 	public User[] getUser(String username)
 	{
 		User[] ret = new User[1];
-		return retrieve(theDB,new User("","",0).getClass(), "username", username).toArray(ret);
+		retrieve(theDB,new User("","",0).getClass(), "username", username).toArray(ret);
+		return ret;
 		
 	}
 	
@@ -224,7 +225,6 @@ public class DataStore {
 		Gson gson = new Gson();
 		User u = gson.fromJson(json, User.class);
 		save(theDB, u);
-		//users.add(u);
 	}
 	
 	public void addProject(String json)
@@ -232,7 +232,6 @@ public class DataStore {
 		Gson gson = new Gson();
 		Project p = gson.fromJson(json, Project.class);
 		save(theDB, p);
-		//projects.add(p);
 	}
 	
 	public Project[] getProject(int idNum)
@@ -240,10 +239,6 @@ public class DataStore {
 		Project[] ret = new Project[1];
 		return retrieve(theDB,new Project("",0).getClass(), "idnum", idNum).toArray(ret);
 		
-	}
-	
-	public void finalize(){
-		server.close();
 	}
 
 }
