@@ -47,7 +47,7 @@ function postUser(user, id)
 		        display(request.responseText);
 		    }
 	    }
-    request.open('POST', "API/user/"+id, true);
+    request.open('POST', "API/core/user/"+id, true);
     request.send(user);
 }
 
@@ -61,7 +61,7 @@ function deleteUser(user)
 		        display(request.responseText);
 		    }
 	    }
-    request.open('DELETE', "API/user/"+user, true);
+    request.open('DELETE', "API/core/user/"+user, true);
     request.send();
 }
 
@@ -75,14 +75,14 @@ function getUser(user)
 		        display(request.responseText);
 		    }
 	    }
-    request.open('GET', "API/user/"+user, true);
+    request.open('GET', "API/core/user/"+user, true);
     request.send();
 }
 
 function putUser(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/user/", true);
+    request.open('PUT', "API/core/user/", true);
     request.send(user);
 }
 

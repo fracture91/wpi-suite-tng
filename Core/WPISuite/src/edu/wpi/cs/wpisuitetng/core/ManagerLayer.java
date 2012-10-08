@@ -65,7 +65,7 @@ public class ManagerLayer {
 		//TODO - Reevaluate synchronization on this method, only need to protect writes
 		//especially if DB40 already handles concurrency
 		
-		Model[] m = data.retrieve(map.get(args[0]), args[1]);
+		Model[] m = data.retrieve(map.get(args[1]), args[2]);
 		
         return (m == null) ? "null" : gson.toJson(m, m.getClass());
 	}
@@ -80,7 +80,7 @@ public class ManagerLayer {
 	{
 		Model m;
         
-		m = data.save(content, map.get(args[0]));
+		m = data.save(content, map.get(args[1]));
         
         return gson.toJson(m, m.getClass());
 	}
@@ -111,7 +111,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String delete(String[] args)
 	{
-		String message = data.remove(map.get(args[0]), args[1]);
+		String message = data.remove(map.get(args[1]), args[2]);
 		
         return message;
         
