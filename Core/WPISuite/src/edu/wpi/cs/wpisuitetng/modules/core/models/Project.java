@@ -110,9 +110,22 @@ public class Project implements Model
 	public Boolean identify(Object o)
 	{
 		Boolean b  = false;
+		
+		if(o instanceof Project)
+		{
+			if(Integer.toString((((Project) o).idNum))
+					.equalsIgnoreCase(
+							Integer.toString(this.idNum)))
+				{
+					b = true;
+				}
+		}
+		
 		if(o instanceof String)
 			if(((String) o).equalsIgnoreCase(Integer.toString(this.idNum)))
 				b = true;
+		
+		
 		return b;
 	}
 }

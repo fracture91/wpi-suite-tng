@@ -125,6 +125,11 @@ public class User implements Model
 	public Boolean identify(Object o)
 	{
 		Boolean b  = false;
+		
+		if(o instanceof User)
+			if(((User) o).username.equalsIgnoreCase(this.username))
+				b = true;
+		
 		if(o instanceof String)
 			if(((String) o).equalsIgnoreCase(this.username))
 				b = true;

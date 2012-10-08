@@ -40,8 +40,10 @@ public class MockDataStore {
 	{
 		Gson gson = new Gson();
 		Model m = gson.fromJson(json, type);
-		models.add(m);
-		return m;
+		Model[] n = retrieve(type, m);
+		if(n == null)
+			models.add(m);
+		return (n == null) ? m : n[0];
 	}
 	
 	public Model[] retrieve(Class<? extends Model> type, Object id)
@@ -52,7 +54,7 @@ public class MockDataStore {
 		{
 			for(Model m : models)
 			{
-				if(m.identify(id) && m.getClass() == type)
+				if(m.getClass() == type && m.identify(id))
 				{
 					list.add(m);
 					return list.toArray(mlist);
@@ -84,9 +86,8 @@ public class MockDataStore {
 					else
 						return "entry not found";
 				}
-				return "entry not found";
 			}
-			return null;
+			return "entry not found";
 		}
 		return "id not specified";
 	}

@@ -10,12 +10,12 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
     <servlet>
-    <servlet-name>hello</servlet-name>
+    <servlet-name>wpisuite</servlet-name>
     <servlet-class>edu.wpi.cs.wpisuitetng.core.WPICoreServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>hello</servlet-name>
+    <servlet-name>wpisuite</servlet-name>
     <url-pattern>/API/*</url-pattern>
   </servlet-mapping>
 </web-app>

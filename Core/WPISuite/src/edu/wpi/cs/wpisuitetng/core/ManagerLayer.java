@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * This singleton class responds to API requests directed at 
  * models by contacting their respective entity managers
  * 
- * eagerly initialized
+ * eagerly initialized, the instance of this class is thread safe, provided all methods are thread safe
  * 
  * REMEMBER THREAD SAFETY
  * ALL METHODS MUST BE THREAD SAFE
@@ -41,7 +41,7 @@ public class ManagerLayer {
 		map = new HashMap<String, Class<? extends Model>>();
 		
 		
-		//TODO pull these mappings from some config file
+		//TODO pull these mappings from some config file and reflect them
 		map.put("project", Project.class);
 		map.put("user", User.class);
 		
@@ -69,7 +69,7 @@ public class ManagerLayer {
 		
 		Model[] m = data.retrieve(map.get(args[0]), args[1]);
 		
-        return gson.toJson(m, m.getClass());
+        return (m == null) ? "null" : gson.toJson(m, m.getClass());
 	}
 	
 	/**create()
@@ -95,8 +95,14 @@ public class ManagerLayer {
 	 */
 	public synchronized String update(String[] args, String content)
 	{
+		String result = delete(args);
 		
-		return null;
+		if(result == null)
+		{
+			result = create(args,content);
+		}
+		
+		return result;
 	
 	}
 	

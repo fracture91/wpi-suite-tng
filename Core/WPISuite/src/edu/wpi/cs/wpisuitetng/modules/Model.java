@@ -29,8 +29,11 @@ public interface Model {
 	public String toString();
 	
 	/**
-	 * identify: if the argument o is equal this object's unique identifier
+	 * identify: true if the argument o is equal this object's unique identifier or this object
 	 * this method was created for use with the mock database
+	 * 
+	 * implementations overriding this method should check if o is either a unique identifier, or an instance of this class
+	 * if o is an instance of this class, this method should check if it contains the same unique identifier
 	 * 
 	 * @param o - a unique identifier belonging to an object
 	 * @return true if the o is equal to this Model's unique identifier, else false
