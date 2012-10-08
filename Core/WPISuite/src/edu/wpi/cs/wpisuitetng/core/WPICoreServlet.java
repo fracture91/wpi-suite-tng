@@ -1,4 +1,4 @@
-package wpisuite.core;
+package edu.wpi.cs.wpisuitetng.core;
 
 import java.io.*;
 
@@ -7,6 +7,7 @@ import javax.servlet.*;
 
 import com.google.gson.Gson;
 
+import wpisuite.core.ManagerLayer;
 import wpisuite.models.*;
 
 /**
