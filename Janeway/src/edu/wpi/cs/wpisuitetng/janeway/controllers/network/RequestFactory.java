@@ -7,7 +7,7 @@ import java.net.URL;
  * A Factory for making Requests.
  * 
  * TODO Add set default headers method
- * TODO Add default observer method?
+ * TODO Add add default observer method?
  * TODO Methods for GET, POST, PUT, DELETE request creation?
  * TODO Maybe change module name to command? Consult team (maybe core team) about this.
  */
