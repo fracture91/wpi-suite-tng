@@ -105,4 +105,14 @@ public class Project implements Model
 	{
 		return this.toJSON();
 	}
+	
+	@Override
+	public Boolean identify(Object o)
+	{
+		Boolean b  = false;
+		if(o instanceof String)
+			if(((String) o).equalsIgnoreCase(Integer.toString(this.idNum)))
+				b = true;
+		return b;
+	}
 }

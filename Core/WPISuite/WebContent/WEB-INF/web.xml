@@ -11,7 +11,7 @@
   </welcome-file-list>
     <servlet>
     <servlet-name>hello</servlet-name>
-    <servlet-class>wpisuite.core.WPICoreServlet</servlet-class>
+    <servlet-class>edu.wpi.cs.wpisuitetng.core.WPICoreServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

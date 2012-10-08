@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.*;
 
@@ -10,8 +11,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class MockDataStore {
 
-	private ArrayList<Project> projects;
-	private ArrayList<User> users;
+	private ArrayList<Model> models;
 	
 	private static MockDataStore myself = null;
 	
@@ -24,88 +24,70 @@ public class MockDataStore {
 	
 	private MockDataStore()
 	{
-		users = new ArrayList<User>();
-		users.add(new User("steve", "steve",0));
-		users.add(new User("fred","fred",1));
-		users.add(new User("jeff","jeff",2));
-		users.add(new User("tyler","tyler",3));
-		
-		projects = new ArrayList<Project>();
-		projects.add(new Project("WPISUITE",0));
-		projects.add(new Project("ANDROID:BEARCLAW",1));
-		projects.add(new Project("WINDOWS9",2));
-		projects.add(new Project("OSX:HOUSECAT",3));
-		projects.add(new Project("UBUNTU_RABID_RHINO",4));
+		models = new ArrayList<Model>();
+		models.add(new User("steve", "steve",0));
+		models.add(new User("fred","fred",1));
+		models.add(new User("jeff","jeff",2));
+		models.add(new User("tyler","tyler",3));
+		models.add(new Project("WPISUITE",0));
+		models.add(new Project("ANDROID:BEARCLAW",1));
+		models.add(new Project("WINDOWS9",2));
+		models.add(new Project("OSX:HOUSECAT",3));
+		models.add(new Project("UBUNTU_RABID_RHINO",4));
 	}
 	
-	public User addUser(String json)
+	public Model save(String json, Class<? extends Model> type)
 	{
 		Gson gson = new Gson();
-		User u = gson.fromJson(json, User.class);
-		users.add(u);
-		return u;
+		Model m = gson.fromJson(json, type);
+		models.add(m);
+		return m;
 	}
 	
-	public User[] getUser(String username)
+	public Model[] retrieve(Class<? extends Model> type, Object id)
 	{
-		User[] list = new User[1];
-		if(username != null)
+		List<Model> list = new ArrayList<Model>();
+		Model[] mlist = new Model[1];
+		if(id != null)
 		{
-			int index = 0;
-			for(User u : users)
+			for(Model m : models)
 			{
-				if(u.getUsername().equalsIgnoreCase(username))
-					break;
-				index++;
+				if(m.identify(id) && m.getClass() == type)
+				{
+					list.add(m);
+					return list.toArray(mlist);
+				}
 			}
-			list[0] =  users.get(index);
-			return list;
-		}
-		return users.toArray(list);
-	}
-	
-	public Project addProject(String json)
-	{
-		Gson gson = new Gson();
-		Project p = gson.fromJson(json, Project.class);
-		projects.add(p);
-		return p;
-	}
-	
-	public Project[] getProject(int idNum)
-	{
-		Project[] list = new Project[1];
-		int index = 0;
-		if((Integer)idNum != null)
-		{
-		for(Project p : projects)
-		{
-			if(p.getIdNum() == idNum)
-				break;
-			index++;
-		}
-		list[0] =  projects.get(index);
-		return list;
-		}
-		return projects.toArray(list);
-	}
-	
-	public Model[] getModel(String[] path)
-	{
-		Model[] ret;
-
-		if(path[0].equalsIgnoreCase("project"))
-		{
-			ret = getProject(Integer.parseInt(path[1]));
-		}
-		else if(path[0].equalsIgnoreCase("user"))
-		{
-			ret = getUser((String) path[1]);
+			return null;
 		}
 		else
 		{
-			ret = null;
+			for(Model m : models)
+			{
+				if(m.getClass() == type)
+					list.add(m);
+			}
+			return list.toArray(mlist);
 		}
-		return ret;
+	}
+	
+	public String remove(Class<? extends Model> type, Object id)
+	{
+		if(id != null)
+		{
+			for(Model m : models)
+			{
+				if(m.identify(id) && m.getClass() == type)
+				{
+					if(models.remove(m))
+						return null;
+					else
+						return "entry not found";
+				}
+				return "entry not found";
+			}
+			return null;
+		}
+		return "id not specified";
 	}
 }

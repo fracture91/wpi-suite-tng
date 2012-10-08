@@ -1,8 +1,15 @@
 package edu.wpi.cs.wpisuitetng.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 
 
@@ -21,6 +28,7 @@ public class ManagerLayer {
 	private static final ManagerLayer layer = new ManagerLayer();
 	private MockDataStore data;
 	private Gson gson;
+	private Map<String, Class<? extends Model>> map;
 	
 	/**
 	 * initializes the database
@@ -30,6 +38,13 @@ public class ManagerLayer {
 	{
 		data = MockDataStore.getMockDataStore();
 		gson = new Gson();
+		map = new HashMap<String, Class<? extends Model>>();
+		
+		
+		//TODO pull these mappings from some config file
+		map.put("project", Project.class);
+		map.put("user", User.class);
+		
 	}
 	
 	/**
@@ -42,19 +57,22 @@ public class ManagerLayer {
 		return layer;
 	}
 	
-	/**
+	/**read()
 	 * 
 	 * @param args - a string array of the parameters, where args[length-1] == null
 	 * @return a JSON String representing the requested data
 	 */
 	public synchronized String read(String[] args)
 	{		
-		Model[] m = data.getModel(args);
+		//TODO - Reevaluate synchronization on this method, only need to protect writes
+		//especially if DB40 already handles concurrency
+		
+		Model[] m = data.retrieve(map.get(args[0]), args[1]);
 		
         return gson.toJson(m, m.getClass());
 	}
 	
-	/**
+	/**create()
 	 * 
 	 * @param args - a string array of the parameters
 	 * @param content - the content of the create request
@@ -63,21 +81,13 @@ public class ManagerLayer {
 	public synchronized String create(String[] args, String content)
 	{
 		Model m;
-        if(args[1].equalsIgnoreCase("user"))
-        {
-    		m = data.addUser(content);
-
-        }
-        else
-        {
-    		m = data.addProject(content);
-
-        }
+        
+		m = data.save(content, map.get(args[0]));
         
         return gson.toJson(m, m.getClass());
 	}
 	
-	/**
+	/**update
 	 * 
 	 * @param args - A string array of the parameters
 	 * @param content - a JSON String of the content to update
@@ -90,14 +100,17 @@ public class ManagerLayer {
 	
 	}
 	
-	/**
+	/**delete
 	 * 
 	 * @param args - A String array of the parameters 
 	 * @return null if the delete was successful, a message otherwise
 	 */
 	public synchronized String delete(String[] args)
 	{
-		return null;
+		String message = data.remove(map.get(args[0]), args[1]);
+		
+        return message;
+        
 	}
 	
 }

@@ -53,6 +53,9 @@ public class WPICoreServlet extends HttpServlet
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
         
+        System.arraycopy(path, 1, path, 0, path.length-1);
+        path[path.length-1] = null;
+        
         out.println(ManagerLayer.getInstance().create(path,in.readLine()));
         
         out.close();
@@ -69,6 +72,9 @@ public class WPICoreServlet extends HttpServlet
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
         
+        System.arraycopy(path, 1, path, 0, path.length-1);
+        path[path.length-1] = null;
+        
         out.println(ManagerLayer.getInstance().update(path,in.readLine()));
         
         out.close();
@@ -83,6 +89,9 @@ public class WPICoreServlet extends HttpServlet
 		PrintWriter out = res.getWriter();
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);
+        
+        System.arraycopy(path, 1, path, 0, path.length-1);
+        path[path.length-1] = null;
         
         out.println(ManagerLayer.getInstance().delete(path));
         

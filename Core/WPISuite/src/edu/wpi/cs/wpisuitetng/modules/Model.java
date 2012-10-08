@@ -27,4 +27,13 @@ public interface Model {
 	 * @return	The string representation of this Model
 	 */
 	public String toString();
+	
+	/**
+	 * identify: if the argument o is equal this object's unique identifier
+	 * this method was created for use with the mock database
+	 * 
+	 * @param o - a unique identifier belonging to an object
+	 * @return true if the o is equal to this Model's unique identifier, else false
+	 */
+	public Boolean identify(Object o);
 }

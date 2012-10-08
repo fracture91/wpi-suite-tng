@@ -121,4 +121,13 @@ public class User implements Model
 		return this.toJSON();
 	}
 
+	@Override
+	public Boolean identify(Object o)
+	{
+		Boolean b  = false;
+		if(o instanceof String)
+			if(((String) o).equalsIgnoreCase(this.username))
+				b = true;
+		return b;
+	}
 }
