@@ -1,10 +1,12 @@
-package edu.wpi.cs.wpisuitetng.modules.core.models;
+package edu.wpi.cs.wpisuitetng.core;
 
 import java.util.ArrayList;
 
-import wpisuite.models.core.*;
-
 import com.google.gson.*;
+
+import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class MockDataStore {
 

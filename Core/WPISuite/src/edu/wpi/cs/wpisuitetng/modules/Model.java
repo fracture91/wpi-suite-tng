@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.core.models;
+package edu.wpi.cs.wpisuitetng.modules;
 
 import java.lang.String;
 

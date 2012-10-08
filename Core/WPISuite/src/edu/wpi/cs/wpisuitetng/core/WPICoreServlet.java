@@ -5,11 +5,6 @@ import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
-import com.google.gson.Gson;
-
-import wpisuite.core.ManagerLayer;
-import wpisuite.models.*;
-
 /**
  * Primary servlet for the WPISuite service
  * 
@@ -80,12 +75,11 @@ public class WPICoreServlet extends HttpServlet
     }
 	
 	/**
-	 * Forwards put requests and restful parameters to the ManagerLayer singleton
+	 * Forwards delete requests and restful parameters to the ManagerLayer singleton
 	 */
 	public void doDelete (HttpServletRequest req,
             HttpServletResponse res) throws ServletException, IOException
     {
-		BufferedReader in = req.getReader();
 		PrintWriter out = res.getWriter();
 		String delims = "[/]+";
         String[] path = req.getPathInfo().split(delims);

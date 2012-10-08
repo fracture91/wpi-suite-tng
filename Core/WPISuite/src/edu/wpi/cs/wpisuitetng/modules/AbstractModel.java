@@ -1,4 +1,5 @@
-package wpisuite.models;
+package edu.wpi.cs.wpisuitetng.modules;
+
 
 public abstract class AbstractModel implements Model {
 

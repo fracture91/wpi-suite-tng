@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
@@ -84,18 +86,6 @@ public class Project implements Model
 		
 		json = gson.toJson(u, Project[].class);
 		
-		/*
-		for(Project a : u)
-		{
-			json += gson.toJson(a, Project.class);
-		}
-		
-		/*
-		json = "{";
-		json += "name:"+ name +",";
-		json += "idNum:"+ idNum;
-		json += "}";
-		*/
 		
 		return json;
 		

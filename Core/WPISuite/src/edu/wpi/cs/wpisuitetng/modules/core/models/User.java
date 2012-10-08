@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.

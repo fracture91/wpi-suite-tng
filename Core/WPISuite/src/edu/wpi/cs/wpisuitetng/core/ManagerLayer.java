@@ -1,9 +1,10 @@
-package wpisuite.core;
+package edu.wpi.cs.wpisuitetng.core;
 
 import com.google.gson.Gson;
 
-import wpisuite.models.MockDataStore;
-import wpisuite.models.Model;
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
+
 
 
 /**
@@ -12,7 +13,6 @@ import wpisuite.models.Model;
  * 
  * eagerly initialized
  * 
- * @author Mike Della Donna
  * REMEMBER THREAD SAFETY
  * ALL METHODS MUST BE THREAD SAFE
  */
@@ -48,9 +48,7 @@ public class ManagerLayer {
 	 * @return a JSON String representing the requested data
 	 */
 	public synchronized String read(String[] args)
-	{
-		new wpisuite.models.core.Project(null, 4);
-		
+	{		
 		Model[] m = data.getModel(args);
 		
         return gson.toJson(m, m.getClass());
