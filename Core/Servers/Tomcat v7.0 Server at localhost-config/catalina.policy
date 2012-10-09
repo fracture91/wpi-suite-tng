@@ -215,6 +215,18 @@ grant codeBase "file:${catalina.home}/webapps/manager/-" {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.util";
 };
 
+// The permissions granted to the context WEB-INF/classes directory
+grant codeBase "file:${catalina.home}/webapps/Db4oSite/WEB-INF/classes/-" {
+   permission java.util.PropertyPermission "user.home", "read";  
+   permission java.util.PropertyPermission "java.fullversion", "read";
+   permission java.io.FilePermission "${user.home}${file.separator}db4o${file.separator}data", "read";
+   permission java.io.FilePermission "${user.home}${file.separator}db4o${file.separator}data${file.separator}test.db4o.yap", "read, write";
+};
+
+
+grant codeBase "file:${catalina.home}/webapps/Db4oSite/WEB-INF/lib/-" {
+   permission java.io.FilePermission "${user.home}${file.separator}db4o${file.separator}data${file.separator}test.db4o.yap", "read, write";
+};
 // You can assign additional permissions to particular web applications by
 // adding additional "grant" entries here, based on the code base for that
 // application, /WEB-INF/classes/, or /WEB-INF/lib/ jar files.

@@ -1,14 +1,16 @@
-package wpisuite.models;
+package edu.wpi.cs.wpisuitetng.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
+import com.db4o.ObjectSet;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ClientConfiguration;
 import com.db4o.cs.config.ServerConfiguration;
@@ -16,17 +18,21 @@ import com.db4o.query.Predicate;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.TNG;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+
 import placeholderFiles.Defect;
-import placeholderFiles.TNG;
 
 public class DataStore {
 	
-	static String WPI_TNG_DB ="WPISuite_TNG";
+	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;
 	static ObjectContainer theDB;
 	static ObjectServer server;
-	static ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
-	static int PORT = 8088;
+	//static ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
+	static int PORT = 0;
 	static String DB4oUser = "bgaffey";
 	static String DB4oPass = "password";
 	static String DB4oServer = "localhost";
@@ -37,34 +43,18 @@ public class DataStore {
 		if(myself == null)
 			myself = new DataStore();
 		// accessLocalServer
-		 server = Db4oClientServer.openServer(serverConfig, WPI_TNG_DB, PORT);
+		ServerConfiguration config = Db4oClientServer.newServerConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		 server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
 		server.grantAccess(DB4oUser,DB4oPass);
 		return myself;
 	}
 	
-	public void dbTest(){
-		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded
-		        .newConfiguration(), WPI_TNG_DB);
-		theDB = db;
-		Date theDate = Calendar.getInstance().getTime();
-		TNG defect1 = new Defect(1,"Gaffey",theDate, "It's broken");
-		try {
-
-			save(db, (Defect)defect1);
-			retrieve(db, defect1.getClass(), "ID", 1);
-			retrieve(db, defect1.getClass(), "ReportedBy", "Gaffey");
-			retrieve(db, defect1.getClass(), "Submited", theDate);
-			//delete(db, defect1);
-		    // do something with db4o
-		} finally {
-		    db.close();
-		}
-	}
-	
-	public boolean save(ObjectContainer db, TNG aTNG){
+	public boolean save(Model aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-			ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
+		
+			ObjectContainer client = server.openClient();
 			client.store(aTNG);
 			System.out.println("Stored " + aTNG);
 			client.close();
@@ -87,11 +77,12 @@ public class DataStore {
 	 * @param theGivenValue The value that you want all returned objects to have
 	 * @return a List of objects of the given type that have the given field match the given value
 	 */
-	public <T> List<?> retrieve(ObjectContainer db, final Class<?> anObjectQueried, String aFieldName, 
+	public <T> List<?> retrieve(final Class<?> anObjectQueried, String aFieldName, 
 			final T theGivenValue){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
+		
+		ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		for(Method m: allMethods){
@@ -102,10 +93,10 @@ public class DataStore {
 		//TODO: IF Null solve this problem...
 		final Method theGetter = methodToBeSaved;
 		
-		List<TNG> result = client.query(new Predicate<TNG>(){
-			public boolean match(TNG aDefect){
+		List<Model> result = client.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
 				try {
-					return theGetter.invoke(aDefect).equals(theGivenValue);
+					return theGetter.invoke(anObject).equals(theGivenValue);
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -127,7 +118,7 @@ public class DataStore {
 		return result;
 	}
 	
-	public <T> List<?> retrieve(ObjectContainer db, final Class<?> anObjectQueried, String[] aFieldName, 
+	public <T> List<?> retrieve(final Class<?> anObjectQueried, String[] aFieldName, 
 			final T[] theGivenValue, final String operator) throws IllegalArgumentException {
 		final int fieldNameLength = aFieldName.length;
 		int theGivenValueLength = theGivenValue.length;
@@ -138,7 +129,7 @@ public class DataStore {
 		
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
+		ObjectContainer client = server.openClient();
 		
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -198,46 +189,51 @@ public class DataStore {
 		});
 	
 		System.out.println(result);
-		client.close();
+		//client.close();
 		return result;
 	}
 	
-	public boolean delete(ObjectContainer db, Defect aDefect){
+	public <T> String delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		ObjectContainer client = Db4oClientServer.openClient(config, DB4oServer, PORT, DB4oUser, DB4oPass);
-		client.delete(aDefect);
+		
+		ObjectContainer client = server.openClient();
+		ObjectSet result = client.queryByExample(aTNG);
+	    T found = (T) result.next();
+	    client.delete(found);
 		client.close();
-		System.out.println("Deleted "+aDefect);
-		return true;
+		return "Deleted "+aTNG;
+		
 	}
 	
 	public User[] getUser(String username)
 	{
 		User[] ret = new User[1];
-		retrieve(theDB,new User("","",0).getClass(), "username", username).toArray(ret);
+		retrieve(new User("","",0).getClass(), "username", username).toArray(ret);
 		return ret;
 		
 	}
 	
-	public void addUser(String json)
+	public Model addUser(String json, Class<? extends Model> type)
 	{
 		Gson gson = new Gson();
-		User u = gson.fromJson(json, User.class);
-		save(theDB, u);
+		Model u = gson.fromJson(json, type);
+		save(u);
+		return u;
 	}
 	
-	public void addProject(String json)
+	public Model addProject(String json)
 	{
 		Gson gson = new Gson();
 		Project p = gson.fromJson(json, Project.class);
-		save(theDB, p);
+		save(p);
+		return p;
 	}
 	
 	public Project[] getProject(int idNum)
 	{
 		Project[] ret = new Project[1];
-		return retrieve(theDB,new Project("",0).getClass(), "idnum", idNum).toArray(ret);
+		return retrieve(new Project("",0).getClass(), "idnum", idNum).toArray(ret);
 		
 	}
 

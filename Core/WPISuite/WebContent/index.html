@@ -24,6 +24,46 @@ function addUser()
 	
 }
 
+function delUser()
+{
+	deleteUser(document.getElementById("delid").value);
+}
+
+function updateUser()
+{
+	User = new Object();
+	User.name = document.getElementById("uname").value;
+	User.username = document.getElementById("uid").value;
+	postUser(JSON.stringify(User), User.username);
+}
+
+function postUser(user, id)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('POST', "API/core/user/"+id, true);
+    request.send(user);
+}
+
+function deleteUser(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('DELETE', "API/core/user/"+user, true);
+    request.send();
+}
 
 function getUser(user)
 {
@@ -35,14 +75,14 @@ function getUser(user)
 		        display(request.responseText);
 		    }
 	    }
-    request.open('GET', "API/user/"+user, true);
+    request.open('GET', "API/core/user/"+user, true);
     request.send();
 }
 
 function putUser(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/user/", true);
+    request.open('PUT', "API/core/user/", true);
     request.send(user);
 }
 
@@ -96,6 +136,15 @@ function putProject(user)
             <label>username: </label><input id="id" maxlength="15" /> <br />
             <button onclick="addUser()">Add User</button>
             
+            <br />
+            
+            <label>Name: </label><input id="uname" maxlength="40" /> <br />
+            <label>username: </label><input id="uid" maxlength="15" /> <br />
+            <button onclick="updateUser()">update User</button>
+            
+            <br />
+           
+            <button onclick="delUser()">delete User</button><label> username: </label><input id="delid" maxlength="15" /> <br />
             <br />
            
             <button onclick="showUser()">Show User</button><label> username: </label><input id="showid" maxlength="15" /> <br />
