@@ -9,7 +9,11 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * 	serialization and database interaction.
  * @author mdelladonna (sp?), twack
  */
+<<<<<<< HEAD
 public class Project implements Model, TNG
+=======
+public class Project implements Model
+>>>>>>> origin/dev-core-feature-fullCRUD
  {
 	private String name;
 	private int idNum;
