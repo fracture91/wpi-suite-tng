@@ -11,23 +11,21 @@ import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.models.JanewayTabModel;
 
 /**
- * The main application panel, containing the ribbon bar
- * and a main panel for each module.
- *
+ * The main application panel.
+ * Holds each modules' tabs, each of which contain a toolbar and main component.
  */
 @SuppressWarnings("serial")
-public class RibbonPanel extends JPanel {
+public class TabPanel extends JPanel {
 
 	/** The tab pane */
 	protected JTabbedPane tabbedPane;
 	protected List<IJanewayModule> modules;
 	
-	public RibbonPanel(List<IJanewayModule> modules) {
-		// Set fields
+	public TabPanel(List<IJanewayModule> modules) {
 		this.modules = modules;
 		this.tabbedPane = new JTabbedPane();
 		
-		// Populate ribbon
+		// Populate tabs
 		addModules();
 		
 		// Set the layout and add the tabs to the panel
@@ -42,12 +40,12 @@ public class RibbonPanel extends JPanel {
 				JPanel newPanel = new JPanel();
 				newPanel.setLayout(new BorderLayout());
 				
-				// Set the height of the ribbon bar to 100px
-				jtm.getRibbon().setPreferredSize(new Dimension(RibbonPanel.WIDTH, 100));
+				// Set the height of the toolbar to 100px
+				jtm.getToolbar().setPreferredSize(new Dimension(TabPanel.WIDTH, 100));
 				
-				// Add the ribbon panel and main panel for the module to the new panel
-				newPanel.add(jtm.getRibbon(), BorderLayout.PAGE_START);
-				newPanel.add(jtm.getMainPanel(), BorderLayout.CENTER);
+				// Add the toolbar panel and main panel for the module to the new panel
+				newPanel.add(jtm.getToolbar(), BorderLayout.PAGE_START);
+				newPanel.add(jtm.getMainComponent(), BorderLayout.CENTER);
 				
 				// Add a tab to the tabbed pane containing the new panel
 				tabbedPane.addTab(jtm.getName(), jtm.getIcon(), newPanel);

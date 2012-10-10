@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.janeway;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+import edu.wpi.cs.wpisuitetng.janeway.controllers.local.LoginController;
 import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.views.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.views.LoginView;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
 
 /**
  * The client launcher class, contains the main method that
@@ -31,22 +30,33 @@ public class JanewayGUILauncher {
 	 */
 	public static void main(String[] args) {
 		
-		// Build list of modules
-		modules = getModules();
+		// Set the look and feel to cross-platform so the UI looks
+		// the same across operating systems
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} 
+		catch (Exception e) {
+			System.out.println("Error setting UI manager to cross-platform!");
+			e.printStackTrace();
+		} 
 		
-		// 
+		// Load modules
+		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
+		modules = moduleLoader.getModules();
+		
+		// Check for modules
+		if (modules.size() < 1) {
+			System.out.println("WARNING: No modules were loaded, be sure the correct config file\nis referenced and jar files have been created.");
+		}
+		
+		// Start the GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				final JanewayFrame gui = new JanewayFrame(modules);
 				final LoginView loginGui = new LoginView("Janeway");
 				loginGui.setVisible(true);
 				gui.setVisible(false);
-				loginGui.getConnectButton().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						gui.setVisible(true);
-						loginGui.dispose();
-					}
-				});
+				loginGui.getConnectButton().addActionListener(new LoginController(gui, loginGui));
 			}
 		});
 	}

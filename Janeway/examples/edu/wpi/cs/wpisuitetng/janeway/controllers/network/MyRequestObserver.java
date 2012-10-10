@@ -24,9 +24,7 @@ public class MyRequestObserver implements Observer {
 			Response response = request.getResponse();
 			
 			// print the body
-			System.out.println("Start response body");
-			System.out.println(response.getBody());
-			System.out.println("End response body");
+			System.out.println("Received response: " + response.getBody());
 		}
 		// Otherwise...
 		else {

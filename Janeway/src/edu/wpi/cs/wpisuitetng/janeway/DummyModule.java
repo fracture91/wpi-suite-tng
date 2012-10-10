@@ -20,7 +20,7 @@ import edu.wpi.cs.wpisuitetng.janeway.models.JanewayTabModel;
  */
 public class DummyModule implements IJanewayModule {
 	
-	/** The ribbon tabs used by this module */
+	/** The tabs used by this module */
 	private ArrayList<JanewayTabModel> tabs;
 	
 	/**
