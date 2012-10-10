@@ -26,6 +26,8 @@ public class DefaultToolbarView extends JToolBar {
 	/**
 	 * Insert a ToolbarGroupView into the toolbar at the specified index.
 	 * If the group is already at the specified index, nothing happens.
+	 * If the group is already in the toolbar but at the wrong index, a RuntimeException is thrown
+	 * since the index value becomes meaningless after the existing group is removed.
 	 * @param group The group to insert
 	 * @param index The index to insert the group at, which counts separators.
 	 */
@@ -34,7 +36,7 @@ public class DefaultToolbarView extends JToolBar {
 			if(getComponentAtIndex(index) == group) {
 				return;  // do nothing, this is already in the desired position
 			} else {
-				removeGroup(group);
+				throw new RuntimeException("Group already exists at different index, remove it first");
 			}
 		}
 		// TODO: make separators draw as visible lines
@@ -42,7 +44,7 @@ public class DefaultToolbarView extends JToolBar {
 			add(new Separator(), index);
 			index++;
 		}
-		if(index < getComponentIndex(glue) && getComponentAtIndex(index + 1) instanceof ToolbarGroupView) {
+		if(index < getComponentIndex(glue) && getComponentAtIndex(index) instanceof ToolbarGroupView) {
 			add(new Separator(), index);
 		}
 		add(group, index);
