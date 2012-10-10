@@ -115,14 +115,14 @@ function getProject(user)
 		        displayp(request.responseText);
 		    }
 	    }
-    request.open('GET', "API/project/"+user, true);
+    request.open('GET', "API/core/project/"+user, true);
     request.send();
 }
 
 function putProject(user)
 {
     var request = new XMLHttpRequest();
-    request.open('PUT', "API/project/", true);
+    request.open('PUT', "API/core/project/", true);
     request.send(user);
 }
 </script>
