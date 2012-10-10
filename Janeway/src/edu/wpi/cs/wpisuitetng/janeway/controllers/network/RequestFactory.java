@@ -25,7 +25,7 @@ public class RequestFactory {
 	/**
 	 * Shorthand makesRequest method. This method makes a Request using the defaultModuleName, if set.
 	 * 
-	 * TODO improve javadoc
+	 * TODO improve javadoc, null pointer checks
 	 * 
 	 * @param modelName		The name of the model which you want to GET, POST, PUT, or DELETE.
 	 * 
@@ -44,7 +44,7 @@ public class RequestFactory {
 	/**
 	 * Makes a Request using the moduleName and the modelName.
 	 * 
-	 * TODO improve javadoc
+	 * TODO improve javadoc, null pointer checks
 	 * 
 	 * @param moduleName	The name of the module which the model belongs to.
 	 * @param modelName		The name of the model which you want to GET, POST, PUT, or DELETE.
