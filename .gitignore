@@ -17,3 +17,5 @@ Servers\.settings
 /Core/Servers3/Tomcat v7.0 Server at localhost-config/server.xml
 /Core/Servers3/Tomcat v7.0 Server at localhost-config/tomcat-users.xml
 /Core/Servers3/Tomcat v7.0 Server at localhost-config/web.xml
+/Core/WPISuite/build/classes/META-INF/MANIFEST.MF
+/Core/WPISuite/src/META-INF/MANIFEST.MF
