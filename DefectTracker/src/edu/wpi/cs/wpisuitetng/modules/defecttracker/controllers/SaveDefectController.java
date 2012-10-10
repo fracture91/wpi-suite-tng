@@ -7,6 +7,7 @@ import java.net.URL;
 
 import edu.wpi.cs.wpisuitetng.janeway.controllers.network.MyRequestObserver;
 import edu.wpi.cs.wpisuitetng.janeway.controllers.network.Request;
+import edu.wpi.cs.wpisuitetng.janeway.controllers.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.janeway.models.Configuration;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.CreateDefectPanel;
 
@@ -32,7 +33,9 @@ public class SaveDefectController implements ActionListener {
 		final MyRequestObserver requestObserver = new MyRequestObserver();
 		try {
 			URL host = new URL(Configuration.getCoreURL());
-			Request request = new Request(host, Request.RequestMethod.POST, view.getModel().toJSON());
+			Request request = new Request(host);
+			request.setRequestMethod(RequestMethod.POST);
+			request.setRequestBody(view.getModel().toJSON());
 			request.addObserver(requestObserver);
 			request.send();
 		} catch (MalformedURLException e) {
