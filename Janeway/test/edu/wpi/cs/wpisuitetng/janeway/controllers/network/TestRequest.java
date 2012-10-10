@@ -8,7 +8,6 @@ import java.util.Observable;
 import java.util.Observer;
 import org.junit.*;
 
-import com.sun.net.httpserver.HttpServer;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
@@ -50,7 +49,6 @@ public class TestRequest{
 		}
 	}
 	
-	private static HttpServer server;
 	private static int port = 8080;
 	
 	/**
