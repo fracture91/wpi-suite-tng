@@ -24,7 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ManagerLayer {
 	
 	private static final ManagerLayer layer = new ManagerLayer();
-	private MockDataStore data;
+	private DataStore data;
 	private Gson gson;
 	private Map<String, Class<? extends Model>> map;
 	
@@ -34,7 +34,7 @@ public class ManagerLayer {
 	 */
 	private ManagerLayer()
 	{
-		data = MockDataStore.getMockDataStore();
+		data = DataStore.getDataStore();
 		gson = new Gson();
 		map = new HashMap<String, Class<? extends Model>>();
 		
@@ -65,7 +65,10 @@ public class ManagerLayer {
 		//TODO - Reevaluate synchronization on this method, only need to protect writes
 		//especially if DB40 already handles concurrency
 		
-		Model[] m = data.retrieve(map.get(args[1]), args[2]);
+		//Model[] m = data.retrieve(map.get(args[1]), args[2]);
+		Model[] m = new Model[1];
+		//TODO: Move the toArray inside the retrieve method
+		data.retrieve(map.get(args[1]), "username", args[2]).toArray(m);
 		
         return (m == null) ? "null" : gson.toJson(m, m.getClass());
 	}
@@ -80,7 +83,13 @@ public class ManagerLayer {
 	{
 		Model m;
         
-		m = data.save(content, map.get(args[1]));
+
+		if(args[0].equalsIgnoreCase("project")){
+			m = data.addProject(content);
+		}
+		else{
+			m = data.addUser(content, map.get(args[1]));
+		}
         
         return gson.toJson(m, m.getClass());
 	}
@@ -111,8 +120,9 @@ public class ManagerLayer {
 	 */
 	public synchronized String delete(String[] args)
 	{
-		String message = data.remove(map.get(args[1]), args[2]);
-		
+		//String message = data.remove(map.get(args[1]), args[2]);
+		User toBeDeleted = (User) data.retrieve(map.get(args[1]), "username", args[2]).get(0);		
+		String message = data.delete(toBeDeleted);
         return message;
         
 	}
