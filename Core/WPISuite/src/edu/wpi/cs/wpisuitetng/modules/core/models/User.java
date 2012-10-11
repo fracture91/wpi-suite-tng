@@ -9,11 +9,8 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * 	database interaction and serializing.
  * @author mdelladonna (sp?), twack
  */
-<<<<<<< HEAD
+
 public class User implements Model, TNG
-=======
-public class User implements Model 
->>>>>>> origin/dev-core-feature-fullCRUD
 {
 	private String name;
 	private String username;

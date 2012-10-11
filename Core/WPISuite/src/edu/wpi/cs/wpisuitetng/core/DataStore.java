@@ -96,7 +96,7 @@ public class DataStore {
 		List<Model> result = client.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
-					return theGetter.invoke(anObject).equals(theGivenValue);
+					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
