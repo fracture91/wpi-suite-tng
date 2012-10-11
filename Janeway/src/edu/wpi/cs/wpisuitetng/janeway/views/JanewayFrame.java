@@ -14,8 +14,8 @@ import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
 @SuppressWarnings("serial")
 public class JanewayFrame extends JFrame {
 	
-	/** A panel to contain the ribbon */
-	protected RibbonPanel ribbonPanel;
+	/** A panel to contain the tabs */
+	protected TabPanel tabPanel;
 	
 	/**
 	 * Construct a new JanewayFrame
@@ -30,9 +30,8 @@ public class JanewayFrame extends JFrame {
 		// Setup the layout manager
 		this.setLayout(new BorderLayout());
 		
-		// Add the ribbon tab panel
-		ribbonPanel = new RibbonPanel(modules);
-		//ribbonPanel.setPreferredSize(new Dimension(JanewayFrame.WIDTH, 100));
-		this.add(ribbonPanel, BorderLayout.CENTER);		
+		// Add the tab panel
+		tabPanel = new TabPanel(modules);
+		this.add(tabPanel, BorderLayout.CENTER);		
 	}
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import edu.wpi.cs.wpisuitetng.janeway.controllers.local.LoginController;
 import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
@@ -29,8 +30,24 @@ public class JanewayGUILauncher {
 	 */
 	public static void main(String[] args) {
 		
-		// Build list of modules
-		modules = getModules();
+		// Set the look and feel to cross-platform so the UI looks
+		// the same across operating systems
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} 
+		catch (Exception e) {
+			System.out.println("Error setting UI manager to cross-platform!");
+			e.printStackTrace();
+		} 
+		
+		// Load modules
+		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
+		modules = moduleLoader.getModules();
+		
+		// Check for modules
+		if (modules.size() < 1) {
+			System.out.println("WARNING: No modules were loaded, be sure the correct config file\nis referenced and jar files have been created.");
+		}
 		
 		// Start the GUI
 		SwingUtilities.invokeLater(new Runnable() {

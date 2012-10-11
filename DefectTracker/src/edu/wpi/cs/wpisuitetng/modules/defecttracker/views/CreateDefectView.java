@@ -1,20 +1,21 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.views;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.janeway.views.IToolbarGroupProvider;
+import edu.wpi.cs.wpisuitetng.janeway.views.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers.SaveDefectController;
 
 /**
  * This view is responsible for showing the form for creating a new defect. 
  */
 @SuppressWarnings("serial")
-public class CreateDefectView extends JPanel implements IRibbonButtonProvider {
+public class CreateDefectView extends JPanel implements IToolbarGroupProvider {
 
-	private JPanel buttonPanel;
+	private ToolbarGroupView buttonGroup;
 	private JButton saveButton;
 	private JPanel mainPanel;
 	
@@ -25,11 +26,12 @@ public class CreateDefectView extends JPanel implements IRibbonButtonProvider {
 	public CreateDefectView() {
 		
 		// Instantiate the button panel
-		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
+		buttonGroup = new ToolbarGroupView("Create Defect");
 		
 		// Instantiate the save button and add it to the button panel
 		saveButton = new JButton("Save Changes");
-		buttonPanel.add(saveButton);
+		buttonGroup.getContent().add(saveButton);
+		buttonGroup.setPreferredWidth(150);
 		
 		// Instantiate the main create defect panel
 		mainPanel = new CreateDefectPanel();
@@ -49,7 +51,7 @@ public class CreateDefectView extends JPanel implements IRibbonButtonProvider {
 	}
 	
 	@Override
-	public JPanel getButtonPanel() {
-		return buttonPanel;
+	public ToolbarGroupView getGroup() {
+		return buttonGroup;
 	}
 }
