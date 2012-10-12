@@ -9,3 +9,8 @@ Servers\.settings
 # Package Files #
 *.war
 *.ear
+
+# Module jar files #
+Janeway/modules/*.jar
+!Janeway/modules/DummyModule.jar
+
