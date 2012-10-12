@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import edu.wpi.cs.wpisuitetng.janeway.controllers.network.MyRequestObserver;
 import edu.wpi.cs.wpisuitetng.janeway.controllers.network.Request;
 import edu.wpi.cs.wpisuitetng.janeway.controllers.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.janeway.models.Configuration;

@@ -60,12 +60,14 @@ public class ModuleLoader<T> {
 		
 		// Instantiate the class loader
 		urlArray = jarNames.toArray(urlArray);
-		classLoader = URLClassLoader.newInstance(urlArray);
+		classLoader = new URLClassLoader(urlArray, this.getClass().getClassLoader());
 		
 		// Instantiate all of the modules and add them to the module array
 		for (String modClass : classNames) {
 			Class<?> currClass;
 			try {
+				System.out.println("Trying to load module: " + modClass);
+				System.out.flush();
 				currClass = classLoader.loadClass(modClass);
 				System.out.println("Loaded module " + currClass.getName());
 				modules.add((T) currClass.newInstance());
@@ -105,7 +107,8 @@ public class ModuleLoader<T> {
 		String[] children = jarDir.list();
 		for (String currJar : children) {
 			try {
-				retVal.add(new URL("jar", "", "file:" + path + "/" + currJar));
+				// NOTE: The exclamation point at the end of the path is VERY necessary
+				retVal.add(new URL("jar", "", "file:" + path + "/" + currJar + "!/"));
 			} catch (MalformedURLException e) {
 				System.out.println("Could not open jar file: " + currJar);
 				e.printStackTrace();
