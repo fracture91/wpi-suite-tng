@@ -9,13 +9,13 @@ import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarController;
 import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarView;
 import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.IToolbarGroupProvider;
 import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabView;
 
 
 /**
  * Controller for the defect tracker toolbar.
- * Keeps track of the displayed tab in the module's MainTabController and displays the
+ * Keeps track of the displayed tab in a MainTabController and displays the
  * group of controls provided by the displayed components' getGroup method, if it
  * is an instance of IToolbarGroupProvider.
  * If the current tab has no associated toolbar group, no additional group is shown in the toolbar.
@@ -25,13 +25,13 @@ public class ToolbarController extends DefaultToolbarController implements Chang
 	private ToolbarGroupView relevantTabGroup;
 	
 	/**
-	 * Control the given DefaultToolbarView based on the state of the tabs in module.mainTabController.
+	 * Control the given DefaultToolbarView based on the state of the tabs in tabController.
 	 * @param toolbarView The toolbar to add/remove groups from
-	 * @param module The JanewayModule to get the tab controller from
+	 * @param tabController The MainTabController to listen to for changes
 	 */
-	public ToolbarController(DefaultToolbarView toolbarView, JanewayModule module) {
+	public ToolbarController(DefaultToolbarView toolbarView, MainTabController tabController) {
 		super(toolbarView);
-		module.mainTabController.addChangeListener(this);
+		tabController.addChangeListener(this);
 	}
 
 	private void setRelevantTabGroup(ToolbarGroupView group) {

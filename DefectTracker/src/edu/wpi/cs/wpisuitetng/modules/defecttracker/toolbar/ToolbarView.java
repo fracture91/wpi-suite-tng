@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarView;
 import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
  * The Defect tab's toolbar panel.
@@ -17,14 +18,14 @@ public class ToolbarView extends DefaultToolbarView implements ActionListener {
 
 	private JButton createDefect;
 	private JButton searchDefects;
-	private JanewayModule module;
+	private MainTabController tabController;
 	
 	/**
 	 * Create a ToolbarView.
-	 * @param module The module this is associated with.
+	 * @param tabController The MainTabController this view should open tabs with
 	 */
-	public ToolbarView(JanewayModule module) {
-		this.module = module;
+	public ToolbarView(MainTabController tabController) {
+		this.tabController = tabController;
 		
 		ToolbarGroupView toolbarGroup = new ToolbarGroupView("Global");
 		createDefect = new JButton("Create Defect");
@@ -40,7 +41,7 @@ public class ToolbarView extends DefaultToolbarView implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == createDefect) {
-			module.mainTabController.addCreateDefectTab();
+			tabController.addCreateDefectTab();
 		}
 	}
 

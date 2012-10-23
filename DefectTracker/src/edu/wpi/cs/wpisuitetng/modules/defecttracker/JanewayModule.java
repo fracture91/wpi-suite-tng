@@ -24,8 +24,8 @@ public class JanewayModule implements IJanewayModule {
 		MainTabView mainTabView = new MainTabView();
 		mainTabController = new MainTabController(mainTabView);
 		
-		ToolbarView toolbarView = new ToolbarView(this);
-		toolbarController = new ToolbarController(toolbarView, this);
+		ToolbarView toolbarView = new ToolbarView(mainTabController);
+		toolbarController = new ToolbarController(toolbarView, mainTabController);
 		
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel("Defects", new ImageIcon(), toolbarView, mainTabView);
