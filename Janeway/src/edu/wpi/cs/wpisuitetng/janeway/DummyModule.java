@@ -11,8 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.models.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.janeway.IJanewayModule;
+import edu.wpi.cs.wpisuitetng.janeway.JanewayTabModel;
 
 /**
  * A dummy module to demonstrate the Janeway client
