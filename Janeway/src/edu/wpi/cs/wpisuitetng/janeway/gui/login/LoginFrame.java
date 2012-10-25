@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
  * TODO handle button clicks
  */
 @SuppressWarnings("serial")
-public class LoginView extends JFrame {
+public class LoginFrame extends JFrame {
 	private JTextField usernameText;
 	private JPasswordField passwordText;
 	private JTextField	projectText;
@@ -25,11 +25,11 @@ public class LoginView extends JFrame {
 	private JButton connectButton;
 	
 	/**
-	 * Constructor for LoginView. Populates the JFrame with all of the relevant controls and packs them.
+	 * Constructs a login JFrame with all of the relevant controls and packs them.
 	 * 
 	 * @param applicationName	The name of the application. This will be used to construct the window title.
 	 */
-	public LoginView(String applicationName) {
+	public LoginFrame(String applicationName) {
 		super("Login - " + applicationName);
 		
 		// Create and populate usernamePanel

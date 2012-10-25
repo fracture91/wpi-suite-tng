@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
-import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginFrame;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.ModuleLoader;
 
@@ -21,7 +21,7 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.ModuleLoader;
  * constructs the GUI.
  *
  */
-public class JanewayGUILauncher {
+public class Janeway {
 	
 	/** List containing all modules */
 	protected static List<IJanewayModule> modules;
@@ -54,7 +54,7 @@ public class JanewayGUILauncher {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				final JanewayFrame gui = new JanewayFrame(modules);
-				final LoginView loginGui = new LoginView("Janeway");
+				final LoginFrame loginGui = new LoginFrame("Janeway");
 				loginGui.setVisible(true);
 				gui.setVisible(false);
 				loginGui.getConnectButton().addActionListener(new LoginController(gui, loginGui));
@@ -77,7 +77,7 @@ public class JanewayGUILauncher {
 		BufferedReader inFile; /* the module config file */
 		String modPackage; /* the location of the current class to load */
 		IJanewayModule currMod; /* the current module object */
-		ClassLoader classLoader = JanewayGUILauncher.class.getClassLoader();
+		ClassLoader classLoader = Janeway.class.getClassLoader();
 		List<IJanewayModule> retVal = new ArrayList<IJanewayModule>(); /* The list of modules to be returned */
 		
 		// Attempt to dynamically load the modules, based on the contents of

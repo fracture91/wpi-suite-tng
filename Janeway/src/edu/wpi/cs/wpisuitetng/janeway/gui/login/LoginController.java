@@ -16,7 +16,7 @@ import edu.wpi.cs.wpisuitetng.janeway.Configuration;
 public class LoginController implements ActionListener {
 	
 	/** The view containing the login form */
-	protected LoginView view;
+	protected LoginFrame view;
 	
 	/** The main application GUI to load after login */
 	protected JFrame mainGUI;
@@ -26,7 +26,7 @@ public class LoginController implements ActionListener {
 	 * @param mainGUI the main application GUI to load after login
 	 * @param view the view containing the login form
 	 */
-	public LoginController(JFrame mainGUI, LoginView view) {
+	public LoginController(JFrame mainGUI, LoginFrame view) {
 		this.view = view;
 		this.mainGUI = mainGUI;
 	}
