@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.startup;
+package edu.wpi.cs.wpisuitetng.janeway;
 
 /**
  * A Singleton to keep track of the configuration

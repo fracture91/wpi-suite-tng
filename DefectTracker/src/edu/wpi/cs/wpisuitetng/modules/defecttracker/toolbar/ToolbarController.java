@@ -5,10 +5,10 @@ import java.awt.Component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarController;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarView;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.IToolbarGroupProvider;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarController;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabView;
 

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway;
+package edu.wpi.cs.wpisuitetng.janeway.modules;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;

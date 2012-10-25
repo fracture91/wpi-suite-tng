@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar;
+package edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar;
 
 import static org.junit.Assert.*;
 
@@ -12,8 +12,8 @@ import javax.swing.JToolBar.Separator;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarView;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 
 public class DefaultToolbarViewTest {
 

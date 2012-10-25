@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.startup;
+package edu.wpi.cs.wpisuitetng.janeway;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,8 +10,11 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import edu.wpi.cs.wpisuitetng.janeway.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.JanewayFrame;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
+import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
+import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginView;
+import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
+import edu.wpi.cs.wpisuitetng.janeway.modules.ModuleLoader;
 
 /**
  * The client launcher class, contains the main method that

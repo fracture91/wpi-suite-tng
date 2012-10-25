@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.maingui;
+package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -7,8 +7,8 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import edu.wpi.cs.wpisuitetng.janeway.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
+import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
 /**
  * The main application panel.

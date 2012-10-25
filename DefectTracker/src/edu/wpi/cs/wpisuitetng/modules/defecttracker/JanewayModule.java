@@ -3,8 +3,8 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import edu.wpi.cs.wpisuitetng.janeway.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
+import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar.ToolbarController;

@@ -1,10 +1,12 @@
-package edu.wpi.cs.wpisuitetng.janeway.startup;
+package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import edu.wpi.cs.wpisuitetng.janeway.Configuration;
 
 
 /**

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar;
+package edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar;
 
 import java.awt.Component;
 import javax.swing.Box;

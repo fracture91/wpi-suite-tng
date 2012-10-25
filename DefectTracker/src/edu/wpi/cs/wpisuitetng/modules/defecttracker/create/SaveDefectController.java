@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import edu.wpi.cs.wpisuitetng.janeway.Configuration;
 import edu.wpi.cs.wpisuitetng.janeway.network.Request;
 import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
-import edu.wpi.cs.wpisuitetng.janeway.startup.Configuration;
 
 /**
  * Controller to handle the saving of a defect

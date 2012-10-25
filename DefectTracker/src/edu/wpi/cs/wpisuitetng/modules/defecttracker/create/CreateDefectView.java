@@ -5,8 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.IToolbarGroupProvider;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 
 /**
  * This view is responsible for showing the form for creating a new defect. 

@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.DefaultToolbarView;
-import edu.wpi.cs.wpisuitetng.janeway.maingui.toolbar.ToolbarGroupView;
+
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarView;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.JanewayModule;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.startup;
+package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

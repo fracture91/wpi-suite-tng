@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.startup;
+package edu.wpi.cs.wpisuitetng.janeway.modules;
 
 import java.io.BufferedReader;
 import java.io.File;

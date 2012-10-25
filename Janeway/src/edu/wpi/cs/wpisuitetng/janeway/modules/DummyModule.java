@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway;
+package edu.wpi.cs.wpisuitetng.janeway.modules;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.wpi.cs.wpisuitetng.janeway.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.JanewayTabModel;
 
 /**
  * A dummy module to demonstrate the Janeway client
