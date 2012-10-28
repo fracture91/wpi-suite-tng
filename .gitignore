@@ -9,6 +9,11 @@ Servers\.settings
 # Package Files #
 *.war
 *.ear
+
+# Module jar files #
+Janeway/modules/*.jar
+!Janeway/modules/DummyModule.jar
+
 /Core/Servers3/.project
 /Core/Servers3/.settings/org.eclipse.wst.server.core.prefs
 /Core/Servers3/Tomcat v7.0 Server at localhost-config/catalina.policy
