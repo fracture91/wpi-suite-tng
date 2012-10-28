@@ -14,3 +14,13 @@ Servers\.settings
 Janeway/modules/*.jar
 !Janeway/modules/DummyModule.jar
 
+/Core/Servers3/.project
+/Core/Servers3/.settings/org.eclipse.wst.server.core.prefs
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/catalina.policy
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/catalina.properties
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/context.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/server.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/tomcat-users.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/web.xml
+/Core/WPISuite/build/classes/META-INF/MANIFEST.MF
+/Core/WPISuite/src/META-INF/MANIFEST.MF

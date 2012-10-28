@@ -16,4 +16,5 @@ Bundle-ManifestVersion: 2
 Bundle-Description: Google Gson library
 Bundle-SymbolicName: com.google.gson
 Archiver-Version: Plexus Archiver
+Import-Package: com.google.gson
 
