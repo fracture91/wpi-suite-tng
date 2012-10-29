@@ -6,6 +6,10 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -26,22 +30,23 @@ public class ManagerLayer {
 	private static final ManagerLayer layer = new ManagerLayer();
 	private DataStore data;
 	private Gson gson;
-	private Map<String, Class<? extends Model>> map;
+	private Map<String, EntityManager> map;
 	
 	/**
 	 * initializes the database
 	 * initializes the JSON serializer
 	 */
+	@SuppressWarnings("rawtypes")
 	private ManagerLayer()
 	{
 		data = DataStore.getDataStore();
 		gson = new Gson();
-		map = new HashMap<String, Class<? extends Model>>();
+		map = new HashMap<String, EntityManager>();
 		
 		
 		//TODO pull these mappings from some config file and reflect them
-		map.put("project", Project.class);
-		map.put("user", User.class);
+		map.put("coreproject", new ProjectManager());
+		map.put("coreuser", new UserManager());
 		
 	}
 	
@@ -62,13 +67,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String read(String[] args)
 	{		
-		//TODO - Reevaluate synchronization on this method, only need to protect writes
-		//especially if DB40 already handles concurrency
-		
-		//Model[] m = data.retrieve(map.get(args[1]), args[2]);
-		Model[] m = new Model[1];
-		//TODO: Move the toArray inside the retrieve method
-		data.retrieve(map.get(args[1]), "username", args[2]).toArray(m);
+		Model[] m = map.get(args[0]+args[1]).getEntity(args[2]);
 		
         return (m == null) ? "null" : gson.toJson(m, m.getClass());
 	}
@@ -82,14 +81,8 @@ public class ManagerLayer {
 	public synchronized String create(String[] args, String content)
 	{
 		Model m;
-        
-
-		if(args[0].equalsIgnoreCase("project")){
-			m = data.addProject(content);
-		}
-		else{
-			m = data.addUser(content, map.get(args[1]));
-		}
+		
+		m = (Model) map.get(args[0]+args[1]).makeEntity(content);
         
         return gson.toJson(m, m.getClass());
 	}
@@ -120,9 +113,11 @@ public class ManagerLayer {
 	 */
 	public synchronized String delete(String[] args)
 	{
-		//String message = data.remove(map.get(args[1]), args[2]);
-		User toBeDeleted = (User) data.retrieve(map.get(args[1]), "username", args[2]).get(0);		
-		String message = data.delete(toBeDeleted);
+				
+		String message = "null";
+		
+		map.get(args[0]+args[1]).deleteEntity(args[2]);
+		
         return message;
         
 	}

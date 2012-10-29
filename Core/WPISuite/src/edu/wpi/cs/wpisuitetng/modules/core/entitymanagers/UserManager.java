@@ -10,29 +10,29 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class ProjectManager implements EntityManager<Project>{
+public class UserManager implements EntityManager<User> {
 
-	Class<Project> project = Project.class;
+	Class<User> user = User.class;
 	Gson gson;
 	
-	public ProjectManager()
+	public UserManager()
 	{
 		gson = new Gson();
 	}
 	
 	@Override
-	public Project makeEntity(String content) {
+	public User makeEntity(String content) {
 		
-		Project p;
+		User p;
 		
-		p = gson.fromJson(content, project);
+		p = gson.fromJson(content, user);
 		save(p);
 		
 		return p;
 	}
 
 	@Override
-	public Project[] getEntity(String id) 
+	public User[] getEntity(String id) 
 	{
 		Model[] m = new Model[1];
 		if(id.equalsIgnoreCase(""))
@@ -41,18 +41,18 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			return (Project[]) DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
+			return (User[]) DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
 		}
 	}
 
 	@Override
-	public Project[] getAll() {
+	public User[] getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void save(Project model) {
+	public void save(User model) {
 		DataStore.getDataStore().save(model);
 		
 	}
@@ -60,8 +60,9 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public void deleteEntity(String id) {
 		// TODO Auto-generated method stub
+		
 	}
-	
+
 	@Override
 	public void deleteAll() {
 		// TODO Auto-generated method stub
@@ -73,8 +74,5 @@ public class ProjectManager implements EntityManager<Project>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-	
 
 }
