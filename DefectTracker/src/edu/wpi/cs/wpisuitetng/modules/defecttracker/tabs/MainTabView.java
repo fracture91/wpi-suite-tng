@@ -22,4 +22,12 @@ public class MainTabView extends JTabbedPane {
 		addTab("#113", new ImageIcon(), new JPanel(), "Defect #113");
 	}
 	
+	@Override
+	public void removeTabAt(int index) {
+		// the Dashboard tab should never get removed
+		if(!(getComponentAt(index) instanceof DashboardView)) {
+			super.removeTabAt(index);
+		}
+	}
+	
 }
