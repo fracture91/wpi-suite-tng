@@ -97,7 +97,7 @@ public class ManagerLayer {
 	{
 		String result = delete(args);
 		
-		if(result == null)
+		if(result == "null")
 		{
 			result = create(args,content);
 		}
@@ -109,16 +109,16 @@ public class ManagerLayer {
 	/**delete
 	 * 
 	 * @param args - A String array of the parameters 
-	 * @return null if the delete was successful, a message otherwise
+	 * @return String "null" if the delete was successful, a message otherwise
 	 */
 	public synchronized String delete(String[] args)
 	{
 				
-		String message = "null";
 		
-		map.get(args[0]+args[1]).deleteEntity(args[2]);
 		
-        return message;
+		boolean status = map.get(args[0]+args[1]).deleteEntity(args[2]);
+		
+        return (status) ? "null" : "problem";
         
 	}
 	

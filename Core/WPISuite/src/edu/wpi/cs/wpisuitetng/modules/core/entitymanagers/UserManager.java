@@ -26,7 +26,11 @@ public class UserManager implements EntityManager<User> {
 		User p;
 		
 		p = gson.fromJson(content, user);
-		save(p);
+		
+		if(getEntity(p.getUsername())[0] == null)
+		{
+			save(p);
+		}
 		
 		return p;
 	}

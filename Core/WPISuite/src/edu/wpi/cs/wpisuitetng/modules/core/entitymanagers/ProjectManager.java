@@ -26,7 +26,11 @@ public class ProjectManager implements EntityManager<Project>{
 		Project p;
 		
 		p = gson.fromJson(content, project);
-		save(p);
+		
+		if(getEntity( ((Integer) p.getIdNum()).toString() ).length == 0)
+		{
+			save(p);
+		}
 		
 		return p;
 	}

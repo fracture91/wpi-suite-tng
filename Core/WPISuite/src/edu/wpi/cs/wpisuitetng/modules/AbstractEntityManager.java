@@ -28,7 +28,8 @@ public abstract class AbstractEntityManager implements EntityManager<Model>
 	}
 
 	@Override
-	public void deleteEntity(String id) {
+	public boolean deleteEntity(String id) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
