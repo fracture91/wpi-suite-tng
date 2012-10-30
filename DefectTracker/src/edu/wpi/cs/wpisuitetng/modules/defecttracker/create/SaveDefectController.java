@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -13,7 +11,7 @@ import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
  * Controller to handle the saving of a defect
  *
  */
-public class SaveDefectController implements ActionListener {
+public class SaveDefectController {
 
 	/** The view object containing the request fields */
 	protected CreateDefectPanel view;
@@ -26,8 +24,10 @@ public class SaveDefectController implements ActionListener {
 		this.view = view;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent ae) {
+	/**
+	 * Save the view's Defect model to the server (asynchronous).
+	 */
+	public void save() {
 		final SaveRequestObserver requestObserver = new SaveRequestObserver();
 		try {
 			URL host = new URL(Configuration.getCoreURL());
@@ -39,6 +39,6 @@ public class SaveDefectController implements ActionListener {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
 }
