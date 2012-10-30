@@ -34,14 +34,14 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public Project[] getEntity(String id) 
 	{
-		Model[] m = new Model[1];
+		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
 		{
 			return getAll();
 		}
 		else
 		{
-			return (Project[]) DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
+			return DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
 		}
 	}
 
@@ -58,8 +58,13 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 
 	@Override
-	public void deleteEntity(String id) {
-		// TODO Auto-generated method stub
+	public boolean deleteEntity(String id)
+	{
+		DataStore data = DataStore.getDataStore();
+		
+		String s = data.delete(data.retrieve(project, "idNum", id).get(0));
+		
+		return (s.startsWith("Deleted")) ? true : false;
 	}
 	
 	@Override

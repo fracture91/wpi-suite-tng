@@ -34,14 +34,14 @@ public class UserManager implements EntityManager<User> {
 	@Override
 	public User[] getEntity(String id) 
 	{
-		Model[] m = new Model[1];
+		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
 		{
 			return getAll();
 		}
 		else
 		{
-			return (User[]) DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
 		}
 	}
 
@@ -58,8 +58,13 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public void deleteEntity(String id) {
-		// TODO Auto-generated method stub
+	public boolean deleteEntity(String id) {
+		
+		DataStore data = DataStore.getDataStore();
+		
+		String s = data.delete(data.retrieve(user, "username", id).get(0));
+		
+		return (s.startsWith("Deleted")) ? true : false;
 		
 	}
 

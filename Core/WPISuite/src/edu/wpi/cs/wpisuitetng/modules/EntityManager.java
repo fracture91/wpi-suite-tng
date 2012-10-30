@@ -45,7 +45,7 @@ public interface EntityManager<T extends Model>
 	 * Deletes the entity with the given unique identifier, id.
 	 * @param id	the unique identifier for the entity
 	 */
-	public void deleteEntity(String id);
+	public boolean deleteEntity(String id);
 	
 	/**
 	 * Deletes all entities of Model class T
