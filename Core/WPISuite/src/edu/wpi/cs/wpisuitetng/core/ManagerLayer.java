@@ -51,6 +51,21 @@ public class ManagerLayer {
 	}
 	
 	/**
+	 * initializes the database
+	 * initializes the JSON serializer
+	 * 
+	 * Accepts a map that will be used instead of the automatically generated map
+	 * 
+	 * THIS IS FOR TESTING PURPOSES ONLY
+	 */
+	@SuppressWarnings("rawtypes")
+	private ManagerLayer(Map<String, EntityManager> map)
+	{
+		gson = new Gson();
+		this.map = map;		
+	}
+	
+	/**
 	 * Returns the single ManagerLayer instance
 	 * 
 	 * @return ManagerLayer
@@ -58,6 +73,17 @@ public class ManagerLayer {
 	public static ManagerLayer getInstance()
 	{
 		return layer;
+	}
+	
+	/**
+	 * Returns the single ManagerLayer instance
+	 * This is a test managerlayer with dummy EntityManagers
+	 * This call is not a true singleton call, and will return a new managerlayer everytime it is accessed
+	 * @return ManagerLayer
+	 */
+	protected static ManagerLayer getTestInstance(@SuppressWarnings("rawtypes") Map<String, EntityManager> map)
+	{
+		return new ManagerLayer(map);
 	}
 	
 	/**read()
