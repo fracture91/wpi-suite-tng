@@ -12,6 +12,8 @@ import edu.wpi.cs.wpisuitetng.janeway.network.Response;
  * TODO Make this example more thorough.
  */
 public class SaveRequestObserver implements Observer {
+	
+	protected Response response;
 
 	/**
 	 * @see java.util.Observable#update
@@ -24,7 +26,7 @@ public class SaveRequestObserver implements Observer {
 			Request request = (Request) observable;
 			
 			// get the response from the request
-			Response response = request.getResponse();
+			response = request.getResponse();
 			
 			// print the body
 			System.out.println("Received response: " + response.getBody());

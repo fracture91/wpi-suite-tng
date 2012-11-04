@@ -15,7 +15,7 @@ import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 public class CreateDefectView extends JPanel implements IToolbarGroupProvider {
 
 	private ToolbarGroupView buttonGroup;
-	private JButton saveButton;
+	protected JButton saveButton;
 	private JPanel mainPanel;
 	
 	/**
