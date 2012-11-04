@@ -12,17 +12,17 @@ import java.net.URL;
 public class Configuration {
 
 	/** The Singleton Configuration instance */
-	protected static Configuration instance = null;
-	
-	/** The URL of the core server */
-	protected static URL coreURL;
+	private static final Configuration instance = new Configuration();
 	
 	private static final String defaultURL = "http://localhost:8080/";
+	
+	/** The URL of the core server */
+	private URL coreURL;
 	
 	/**
 	 * Construct a new Configuration with the default settings
 	 */
-	protected Configuration() {
+	private Configuration() {
 		try {
 			coreURL = new URL(defaultURL);
 		} catch (MalformedURLException e) {
@@ -32,13 +32,9 @@ public class Configuration {
 	}
 	
 	/**
-	 * Returns the Configuration instance and initializes it if necessary
 	 * @return the Configuration instance
 	 */
 	public static Configuration getInstance() {
-		if (instance == null) {
-			instance = new Configuration();
-		}
 		return instance;
 	}
 	
@@ -46,15 +42,14 @@ public class Configuration {
 	 * Sets the core URL to the given value
 	 * @param value the core URL
 	 */
-	public static void setCoreURL(URL value) {
+	public void setCoreURL(URL value) {
 		coreURL = value;
 	}
 	
 	/**
-	 * Returns the core URL
 	 * @return the core URL
 	 */
-	public static URL getCoreURL() {
+	public URL getCoreURL() {
 		return coreURL;
 	}
 }

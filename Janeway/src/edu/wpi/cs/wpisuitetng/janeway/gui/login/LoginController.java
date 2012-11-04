@@ -43,7 +43,7 @@ public class LoginController implements ActionListener {
 			final URL coreURL;
 			try {
 				coreURL = new URL(URLText);
-				Configuration.setCoreURL(coreURL);
+				Configuration.getInstance().setCoreURL(coreURL);
 				mainGUI.setVisible(true);
 				view.dispose();
 			} catch (MalformedURLException e1) {

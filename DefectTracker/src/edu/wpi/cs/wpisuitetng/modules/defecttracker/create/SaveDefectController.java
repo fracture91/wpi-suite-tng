@@ -27,7 +27,7 @@ public class SaveDefectController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		final SaveRequestObserver requestObserver = new SaveRequestObserver();
-		Request request = new Request(Configuration.getCoreURL());
+		Request request = new Request(Configuration.getInstance().getCoreURL());
 		request.setRequestMethod(RequestMethod.POST);
 		request.setRequestBody(view.getModel().toJSON());
 		request.addObserver(requestObserver);
