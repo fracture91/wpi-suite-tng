@@ -11,6 +11,7 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.janeway.network.Request;
 import edu.wpi.cs.wpisuitetng.janeway.network.Response;
+import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
 
 public class TestRequest {
 	class MockObserver implements Observer {
@@ -54,11 +55,19 @@ public class TestRequest {
 	
 	/**
 	 * Test that a NullPointerException is thrown when a null url is passed to the Request constructor.
+	 * @throws MalformedURLException 
 	 */
 	@Test
-	public void testRequestConstructorNullPointerException() {
+	public void testRequestConstructorNullPointerException() throws MalformedURLException {
 		try {
-			Request r = new Request(null);
+			Request r = new Request(null, null);
+			fail("No exception thrown.");
+		} catch (NullPointerException e) {
+			// Do nothing
+		}
+		
+		try {
+			Request r = new Request(new URL("http://wpi.edu"), null);
 			fail("No exception thrown.");
 		} catch (NullPointerException e) {
 			// Do nothing
@@ -71,7 +80,7 @@ public class TestRequest {
 	@Test
 	public void testRequestSetRequestMethodNullPointerException() {
 		try {
-			Request r = new Request(new URL("http://localhost:8080"));
+			Request r = new Request(new URL("http://localhost:8080"), RequestMethod.POST);
 			r.setRequestMethod(null);
 			fail("No exception thrown.");
 		} catch (NullPointerException e) {
@@ -88,7 +97,7 @@ public class TestRequest {
 	@Test
 	public void testRequestSetRequestBodyNullPointerException() {
 		try {
-			Request r = new Request(new URL("http://localhost:8080"));
+			Request r = new Request(new URL("http://localhost:8080"), RequestMethod.POST);
 			r.setRequestBody(null);
 			fail("No exception thrown.");
 		} catch (NullPointerException e) {
@@ -116,10 +125,9 @@ public class TestRequest {
 
 
 			// Make a new POST Request.
-			Request manualRequest = new Request(url);	// construct the Request
+			Request manualRequest = new Request(url, RequestMethod.POST);	// construct the Request
 
 			// Configure the request
-			manualRequest.setRequestMethod(Request.RequestMethod.POST);	// set the request method to POST
 			manualRequest.setRequestBody(body);	// set the request body to send to the server
 			manualRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 
