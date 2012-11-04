@@ -1,5 +1,8 @@
 package edu.wpi.cs.wpisuitetng.janeway;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * A Singleton to keep track of the configuration
  * of the Janeway client. Right now it just stores
@@ -9,26 +12,29 @@ package edu.wpi.cs.wpisuitetng.janeway;
 public class Configuration {
 
 	/** The Singleton Configuration instance */
-	protected static Configuration instance = null;
+	private static final Configuration instance = new Configuration();
+	
+	private static final String defaultURL = "http://localhost:8080/";
 	
 	/** The URL of the core server */
-	protected static String coreURL;
+	private URL coreURL;
 	
 	/**
 	 * Construct a new Configuration with the default settings
 	 */
-	protected Configuration() {
-		coreURL = "http://localhost:8080/";
+	private Configuration() {
+		try {
+			coreURL = new URL(defaultURL);
+		} catch (MalformedURLException e) {
+			// if this throws, we're gonna have a bad time
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * Returns the Configuration instance and initializes it if necessary
 	 * @return the Configuration instance
 	 */
 	public static Configuration getInstance() {
-		if (instance == null) {
-			instance = new Configuration();
-		}
 		return instance;
 	}
 	
@@ -36,15 +42,14 @@ public class Configuration {
 	 * Sets the core URL to the given value
 	 * @param value the core URL
 	 */
-	public static void setCoreURL(String value) {
+	public void setCoreURL(URL value) {
 		coreURL = value;
 	}
 	
 	/**
-	 * Returns the core URL
 	 * @return the core URL
 	 */
-	public static String getCoreURL() {
+	public URL getCoreURL() {
 		return coreURL;
 	}
 }

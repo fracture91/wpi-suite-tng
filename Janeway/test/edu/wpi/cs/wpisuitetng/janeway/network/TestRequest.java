@@ -9,9 +9,10 @@ import java.util.Observer;
 import org.junit.*;
 
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.janeway.network.Request;
+import edu.wpi.cs.wpisuitetng.janeway.network.Response;
 
-public class TestRequest{
+public class TestRequest {
 	class MockObserver implements Observer {
 		
 		private boolean updateCalled;
@@ -99,16 +100,16 @@ public class TestRequest{
 	}
 	
 	/**
-	 * Test that communciation works. DummyServer must be running on port 8080 for this test to work.
+	 * Test that communication works. DummyServer must be running on port 8080 for this test to work.
 	 */
 	@Test
 	public void testRequestCommunication() {
 		// Make a new instance of the MyRequestObserver class.
 		final MockObserver requestObserver = new MockObserver();
 
-		// Create a Defect
-		Defect defect = new Defect(1, "This is the description of a defect sent in a manually created Request.", "Defect 1", "JJ");
-
+		// The request body
+		String body = "This is the request body!";
+		
 		// Create the URL
 		try {
 			URL url = new URL("http", "localhost", port, "/myModule/myModel");
@@ -119,7 +120,7 @@ public class TestRequest{
 
 			// Configure the request
 			manualRequest.setRequestMethod(Request.RequestMethod.POST);	// set the request method to POST
-			manualRequest.setRequestBody("test request");//defect.toJSON());	// set the request body to send to the server
+			manualRequest.setRequestBody(body);	// set the request body to send to the server
 			manualRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 
 			// Send the request!
@@ -128,7 +129,7 @@ public class TestRequest{
 				requestObserver.wait(2000);
 		    }
 			
-			assertEquals(true, "test request\n".equals(manualRequest.getResponse().getBody()));
+			assertEquals(true, (body+"\n").equals(manualRequest.getResponse().getBody()));
 			assertEquals(200, manualRequest.getResponse().getResponseCode());
 			assertEquals(true, "OK".equalsIgnoreCase(manualRequest.getResponse().getResponseMessage()));
 		} catch (MalformedURLException e) {

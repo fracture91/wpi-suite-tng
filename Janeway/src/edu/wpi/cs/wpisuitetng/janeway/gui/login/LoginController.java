@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +23,9 @@ public class LoginController implements ActionListener {
 	/** The main application GUI to load after login */
 	protected JFrame mainGUI;
 	
+	/** The title of error dialogs */
+	private static final String errorTitle = "Login Error";
+	
 	/**
 	 * Construct a new login controller
 	 * @param mainGUI the main application GUI to load after login
@@ -33,14 +38,23 @@ public class LoginController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// For now, just set local core URL variable
 		if (view.getUrlTextField().getText().length() > 0) {
-			Configuration.setCoreURL(view.getUrlTextField().getText());
-			mainGUI.setVisible(true);
-			view.dispose();
+			final String URLText = view.getUrlTextField().getText();
+			final URL coreURL;
+			try {
+				coreURL = new URL(URLText);
+				Configuration.getInstance().setCoreURL(coreURL);
+				mainGUI.setVisible(true);
+				view.dispose();
+			} catch (MalformedURLException e1) {
+				JOptionPane.showMessageDialog(view,
+				                              "The server address \"" + URLText + "\" is not a valid URL!",
+				                              errorTitle, JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else {
-			JOptionPane.showMessageDialog(view, "You must specify the server address!", "Login Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(view, "You must specify the server address!", errorTitle,
+			                              JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}

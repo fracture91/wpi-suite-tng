@@ -1,9 +1,10 @@
-package edu.wpi.cs.wpisuitetng.janeway.controllers.network;
+package edu.wpi.cs.wpisuitetng.janeway.network;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.janeway.network.Request;
+import edu.wpi.cs.wpisuitetng.janeway.network.RequestFactory;
 
 /**
  * This is a preliminary example for making request using the Request class.
@@ -28,8 +29,8 @@ public class RequestExample {
 			
 			/* ~~~ Below shows how to create a defect manually. ~~~ */
 			
-			// Create a Defect
-			Defect defect = new Defect(1, "This is the description of a defect sent in a manually created Request.", "Defect 1", "JJ");
+			// The first Request's body
+			String body = "body 1";
 			
 			// Create the URL
 			URL url = new URL("http", host, port, "/myModule/myModel"); //TODO switch to https
@@ -39,7 +40,7 @@ public class RequestExample {
 			
 			// Configure the request
 			manualRequest.setRequestMethod(Request.RequestMethod.POST);	// set the request method to POST
-			manualRequest.setRequestBody(defect.toJSON());	// set the request body to send to the server
+			manualRequest.setRequestBody(body);	// set the request body to send to the server
 			manualRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 			
 			// Send the request!
@@ -52,10 +53,10 @@ public class RequestExample {
 			
 			
 			
-			/* ~~~ Below shows how to create a defect using a RequestFactory. ~~~ */
+			/* ~~~ Below shows how to create a Request using a RequestFactory. ~~~ */
 			
-			// Create a Defect
-			Defect defect2 = new Defect(1, "This is the description of a defect sent in a manufactured Request.", "Defect 2", "JJ");
+			// The second request's body
+			String body2 = "body 2";
 			
 			// create a new RequestFactory
 			RequestFactory factory = new RequestFactory(host, port);
@@ -65,7 +66,7 @@ public class RequestExample {
 			
 			// Configure the Request
 			manufacturedRequest.setRequestMethod(Request.RequestMethod.POST);	// set the request method to POST
-			manufacturedRequest.setRequestBody(defect2.toJSON());	// set the request body to send to the server
+			manufacturedRequest.setRequestBody(body2);	// set the request body to send to the server
 			manufacturedRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 			
 			// Send the request!
