@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.controllers.network;
+package edu.wpi.cs.wpisuitetng.janeway.network;
 
 import java.util.Observable;
 import java.util.Observer;
