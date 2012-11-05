@@ -1,12 +1,16 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.create.CreateDefectView;
 
 /**
- * This class provides convenient methods for controlling the given MainTabView.
+ * Controls the behavior of a given MainTabView.
+ * Provides convenient public methods for controlling the MainTabView.
  * Keep in mind that this controller is visible as a public field in the module.
  */
 public class MainTabController {
@@ -15,6 +19,12 @@ public class MainTabController {
 	
 	public MainTabController(MainTabView view) {
 		this.view = view;
+		this.view.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				MainTabController.this.onMouseClick(event);
+			}
+		});
 	}
 	
 	/**
@@ -39,6 +49,20 @@ public class MainTabController {
 	 */
 	public void addChangeListener(ChangeListener listener) {
 		this.view.addChangeListener(listener);
+	}
+	
+	/**
+	 * Close tabs upon middle clicks.
+	 * @param event MouseEvent that happened on this.view
+	 */
+	private void onMouseClick(MouseEvent event) {
+		// only want middle mouse button
+		if(event.getButton() == MouseEvent.BUTTON2) {
+			final int clickedIndex = view.indexAtLocation(event.getX(), event.getY());
+			if(clickedIndex > -1) {
+				view.removeTabAt(clickedIndex);
+			}
+		}
 	}
 	
 }

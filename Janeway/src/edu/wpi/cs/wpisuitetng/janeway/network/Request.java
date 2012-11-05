@@ -35,16 +35,21 @@ public class Request extends Observable {
 	 * @param requestURL		The URL to make the HTTP request to.
 	 * @param requestMethod		The HTTP RequestMethod to use.
 	 * 
-	 * @throw NullPointerException	If the requestURL is null.
+	 * @throw NullPointerException	If the requestURL or requestMethod is null.
 	 */
-	public Request(URL requestURL) throws NullPointerException {
+	public Request(URL requestURL, RequestMethod requestMethod) throws NullPointerException {
 		// check to see if the requestURL is null
 		if (requestURL == null) {
 			throw new NullPointerException("The requestURL must not be null.");
 		}
+
+		// check to see if the requestMethod is null
+		if (requestMethod == null) {
+			throw new NullPointerException("The requestMethod must not be null.");
+		}
 		
 		this.requestURL = requestURL;
-		this.requestMethod = RequestMethod.GET; // default is GET
+		this.requestMethod = requestMethod;
 		
 		requestHeaders = new HashMap<String, List<String>>();
 	}
