@@ -38,10 +38,10 @@ public class ClosableTabComponent extends JPanel implements ActionListener {
 				return index > -1 ? tabbedPane.getTitleAt(index) : "";
 			}
 		};
-		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
+		label.setBorder(BorderFactory.createEmptyBorder(3, 0, 2, 7));
 		add(label);
 		
-		final JButton closeButton = new JButton("X");
+		final JButton closeButton = new JButton("\u2716");
 		closeButton.setFont(closeButton.getFont().deriveFont((float) 8));
 		closeButton.setMargin(new Insets(0, 0, 0, 0));
 		closeButton.addActionListener(this);

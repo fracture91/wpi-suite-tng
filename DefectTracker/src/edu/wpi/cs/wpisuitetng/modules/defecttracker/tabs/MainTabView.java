@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs;
 
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ public class MainTabView extends JTabbedPane {
 	public MainTabView() {
 		setTabPlacement(TOP);
 		setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
+		setBorder(BorderFactory.createEmptyBorder(5, 3, 3, 3));
 		addTab("Dashboard", new ImageIcon(), new DashboardView(),
 		       "Your Dashboard - notifications, etc.");
 		addTab("Search", new ImageIcon(), new JPanel(), "Search");
