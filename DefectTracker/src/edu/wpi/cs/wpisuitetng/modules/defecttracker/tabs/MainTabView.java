@@ -1,5 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs;
 
+import java.awt.Component;
+
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -23,9 +26,18 @@ public class MainTabView extends JTabbedPane {
 	}
 	
 	@Override
+	public void insertTab(String title, Icon icon, Component component, String tip, int index) {
+		super.insertTab(title, icon, component, tip, index);
+		// the Dashboard tab cannot be closed
+		if(!(component instanceof DashboardView)) {
+			setTabComponentAt(index, new ClosableTabComponent(this));
+		}
+	}
+	
+	@Override
 	public void removeTabAt(int index) {
-		// the Dashboard tab should never get removed
-		if(!(getComponentAt(index) instanceof DashboardView)) {
+		// if a tab does not have the close button UI, it cannot be removed
+		if(getTabComponentAt(index) instanceof ClosableTabComponent) {
 			super.removeTabAt(index);
 		}
 	}
