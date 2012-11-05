@@ -22,7 +22,7 @@ public class DummyModule implements IJanewayModule {
 	private ArrayList<JanewayTabModel> tabs;
 	
 	/**
-	 * Construct a new DummyModule for demonstartion purposes
+	 * Construct a new DummyModule for demonstration purposes
 	 */
 	public DummyModule() {
 		

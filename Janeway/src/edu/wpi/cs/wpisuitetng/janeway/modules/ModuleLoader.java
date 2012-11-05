@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarFile;
 
 /**
  * Loads modules of the given type from JAR files
@@ -50,13 +52,16 @@ public class ModuleLoader<T> {
 	public ModuleLoader(String configPath) {
 		this.configPath = configPath;
 		
-		// Read the module configuration file to get paths and class names
+		// Read the module configuration file to get module folder locations
 		readConfig();
 		
 		// Find all the jar files
 		for (String path : modPaths) {
 			jarNames.addAll(getJarNames(path));
 		}
+		
+		// Get the names of the classes to load
+		getModuleClassNames();
 		
 		// Instantiate the class loader
 		urlArray = jarNames.toArray(urlArray);
@@ -81,11 +86,49 @@ public class ModuleLoader<T> {
 			} catch (IllegalAccessException e) {
 				System.out.println("Could not access constructor for class " + modClass + "!");
 				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("An error occurred loading class: " + modClass);
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Looks at the manifest.txt file in each JAR file and adds the class names
+	 * contained in each to the list of class names to load. 
+	 */
+	private void getModuleClassNames() {
+		for (URL url : jarNames) {
+			try {				
+				JarFile jarFile = new JarFile(url.getFile().substring(5, url.getFile().length() - 2));
+				BufferedReader br = new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarFile.getJarEntry("manifest.txt"))));
+				
+				String currLine;
+				while ((currLine = br.readLine()) != null) {
+					if (currLine.startsWith("#")) { // make sure this line is not a comment
+						// this line is a comment, do nothing
+					}
+					else if (currLine.toLowerCase().startsWith("module_class")) {
+						String[] tokens = currLine.split(" ");
+						for (int i = 1; i < tokens.length; i++) {
+							classNames.add(tokens[i]);
+						}
+					}
+					else {
+						// do nothing - line not recognized
+					}
+				}
+				br.close();
+				jarFile.close();
+			}
+			catch (IOException ioe) {
+				System.out.println("Could not open the manifest file for: " + url.getFile());
+				ioe.printStackTrace();
 			}
 			
 		}
 	}
-	
+
 	/**
 	 * Returns the list of instantiated modules
 	 * @return the list of instantiated modules
@@ -135,12 +178,6 @@ public class ModuleLoader<T> {
 					String[] tokens = currLine.split(" ");
 					for (int i = 1; i < tokens.length; i++) {
 						modPaths.add(tokens[i]);
-					}
-				}
-				else if (currLine.toLowerCase().startsWith("module_class")) {
-					String[] tokens = currLine.split(" ");
-					for (int i = 1; i < tokens.length; i++) {
-						classNames.add(tokens[i]);
 					}
 				}
 				else {
