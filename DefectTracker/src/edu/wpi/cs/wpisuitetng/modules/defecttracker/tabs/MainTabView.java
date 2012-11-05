@@ -17,7 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.dashboard.DashboardView;
 public class MainTabView extends JTabbedPane {
 	
 	public MainTabView() {
-		setTabPlacement(LEFT);
+		setTabPlacement(TOP);
 		setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
 		addTab("Dashboard", new ImageIcon(), new DashboardView(),
 		       "Your Dashboard - notifications, etc.");

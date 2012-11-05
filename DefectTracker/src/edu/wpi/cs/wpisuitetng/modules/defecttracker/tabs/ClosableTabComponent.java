@@ -29,12 +29,6 @@ public class ClosableTabComponent extends JPanel implements ActionListener {
 		this.tabbedPane = tabbedPane;
 		setOpaque(false);
 		
-		final JButton closeButton = new JButton("X");
-		closeButton.setFont(closeButton.getFont().deriveFont((float) 8));
-		closeButton.setMargin(new Insets(0, 0, 0, 0));
-		closeButton.addActionListener(this);
-		add(closeButton);
-		
 		final JLabel label = new JLabel() {
 			// display the title according to what's set on our JTabbedPane
 			@Override
@@ -44,8 +38,14 @@ public class ClosableTabComponent extends JPanel implements ActionListener {
 				return index > -1 ? tabbedPane.getTitleAt(index) : "";
 			}
 		};
-		label.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
 		add(label);
+		
+		final JButton closeButton = new JButton("X");
+		closeButton.setFont(closeButton.getFont().deriveFont((float) 8));
+		closeButton.setMargin(new Insets(0, 0, 0, 0));
+		closeButton.addActionListener(this);
+		add(closeButton);
 	}
 
 	@Override
