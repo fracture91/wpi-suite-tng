@@ -21,7 +21,7 @@ public class TestSaveDefectController extends SaveDefectController {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		request = new Request(Configuration.getInstance().getCoreURL()) {
+		request = new Request(Configuration.getInstance().getCoreURL(), RequestMethod.GET) {
 			public void send() throws IllegalStateException {
 				running = false;
 				this.setResponse(new Response(200, "Success", new HashMap<String, List<String>>(), "Response body"));
