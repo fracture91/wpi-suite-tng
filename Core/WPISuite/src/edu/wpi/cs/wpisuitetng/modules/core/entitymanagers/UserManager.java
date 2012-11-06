@@ -1,13 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
-import java.util.ArrayList;
-
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.core.DataStore;
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class UserManager implements EntityManager<User> {

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng;
 
 import java.io.*;
 

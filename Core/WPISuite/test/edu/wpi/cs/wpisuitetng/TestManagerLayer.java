@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import edu.wpi.cs.wpisuitetng.ManagerLayer;
 import edu.wpi.cs.wpisuitetng.core.entitymanagers.MockUserManager;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 

@@ -1,17 +1,16 @@
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 
 
