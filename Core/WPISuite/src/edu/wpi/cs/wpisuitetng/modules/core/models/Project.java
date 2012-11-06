@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.database.TNG;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**

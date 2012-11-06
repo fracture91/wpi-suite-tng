@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules;
 
-import java.util.ArrayList;
-
 /**
  * Interface for all EntityManagers. Enforces standards for interaction
  * 	with the Model class T.
