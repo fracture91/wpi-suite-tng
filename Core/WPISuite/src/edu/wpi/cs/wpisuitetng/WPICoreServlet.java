@@ -59,6 +59,7 @@ public class WPICoreServlet extends HttpServlet
         out.println(ManagerLayer.getInstance().create(path,in.readLine()));
         
         out.close();
+        res.setStatus(HttpServletResponse.SC_CREATED);
     }
 	
 	/**
