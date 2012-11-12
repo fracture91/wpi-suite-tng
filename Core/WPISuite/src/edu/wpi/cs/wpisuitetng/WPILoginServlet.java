@@ -41,6 +41,7 @@ public class WPILoginServlet extends HttpServlet {
 		
 		Cookie userCookie = ses.toCookie();
 		response.addCookie(userCookie);
+		response.setStatus(HttpServletResponse.SC_CONTINUE);  //100 - Client can continue
 	}
 
 	@Override
