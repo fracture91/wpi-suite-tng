@@ -2,6 +2,9 @@ package edu.wpi.cs.wpisuitetng.modules;
 
 import java.lang.String;
 
+import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+
 /**
  * Model : The interface for all data models. Prototypes methods for model handling
  * 		and serializing.
@@ -39,4 +42,14 @@ public interface Model {
 	 * @return true if the o is equal to this Model's unique identifier, else false
 	 */
 	public Boolean identify(Object o);
+	
+	/**
+	 * 
+	 * @return the permission associated with this model
+	 */
+	public Permission getPermission(User u);
+	
+	public void setPermission(Permission p, User u);
+	
+	
 }
