@@ -3,6 +3,8 @@ package edu.wpi.cs.wpisuitetng;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.catalina.filters.ExpiresFilter;
+
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -13,14 +15,14 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class SessionManager {
 	
-	private Map<User, Session> sessions;
+	private Map<String, Session> sessions; // key: cookie value, value: Session
 	
 	/**
 	 * The default constructor. 
 	 */
 	public SessionManager()
 	{
-		sessions = new HashMap<User, Session>();
+		sessions = new HashMap<String, Session>();
 	}
 	
 	/**
@@ -28,31 +30,30 @@ public class SessionManager {
 	 * @param u	
 	 * @return	True if the map contains a Session for this user, False otherwise.
 	 */
-	public boolean sessionExists(User u)
+	public boolean sessionExists(String sessionToken)
 	{
-		return sessions.containsKey(u.getUsername());
+		return sessions.containsKey(sessionToken);
 	}
 	
 	/**
 	 * Retrieves the Session for the user with the given name.
 	 * 
-	 * 
-	 * @param username
-	 * @return
+	 * @param sessionToken	the tokenize cookie given from the client
+	 * @return	The session matching the token.
 	 */
-	public Session getSession(User username)
+	public Session getSession(String sessionToken)
 	{
-		return sessions.get(username);
+		return sessions.get(sessionToken);
 		//TODO: determine how to handle 'not found' case
 	}
 	
 	/**
 	 * Removes the session with the given username
-	 * @param username	the username of the Session to be removed.
+	 * @param sessionToken	
 	 */
-	public void removeSession(User username)
+	public void removeSession(String sessionToken)
 	{
-		sessions.remove(username); 
+		sessions.remove(sessionToken); 
 	}
 	
 	/**
@@ -61,18 +62,23 @@ public class SessionManager {
 	 * @param username
 	 * @return	the new Session for the user.
 	 */
-	public Session createOrRenewSession(User user)
+	public Session createSession(User user)
 	{
-		// clear the Session for this user, if it exists.
-		if(sessionExists(user))
-		{
-			sessions.remove(user.getUsername());
-		}
+		// TODO: find a practical way to handle duplicate sessions per-user
 		
 		// add session
 		Session ses = new Session(user);
-		sessions.put(user, ses);
+		sessions.put(ses.toCookie().getValue(), ses);
 		
 		return ses;
 	}
+	
+	/*
+	public Session renewSession(String sessionToken)
+	{
+		// parse username from sessionToken
+		// retrieve user with given user name
+		// return createSession(user);
+	} */
+
 }

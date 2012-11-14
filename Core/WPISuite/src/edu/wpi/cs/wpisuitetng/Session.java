@@ -37,18 +37,22 @@ public class Session {
 		return loginTime;
 	}
 	
+	@Override
+	public String toString()
+	{
+		String json ="";
+		
+		Gson gson = new Gson();
+		
+		return gson.toJson(this, Session.class);
+	}
+	
 	/**
 	 * Converts this Session into a Cookie object.
 	 * @return	a Cookie object representing this Session
 	 */
 	public Cookie toCookie()
 	{
-		String json ="";
-		
-		Gson gson = new Gson();
-		
-		json = gson.toJson(this, Session.class);
-		
-		return new Cookie(getUsername(), json);
+		return new Cookie(getUsername(), this.toString());
 	}
 }

@@ -61,8 +61,8 @@ public class WPILoginServlet extends HttpServlet {
 	 */
 	private Session loginUser(String username, String password)
 	{
-		ManagerLayer man = ManagerLayer.getInstance();
-		User[] u = man.getUsers().getEntity(username);
+		ManagerLayer manager = ManagerLayer.getInstance();
+		User[] u = manager.getUsers().getEntity(username);
 		
 		if(u.length == 0)
 		{
@@ -77,7 +77,7 @@ public class WPILoginServlet extends HttpServlet {
 		}
 		
 		// create a Session mapping in the ManagerLayer
-		Session ses = man.getSessions().createOrRenewSession(user);
+		Session ses = manager.getSessions().createSession(user);
 		
 		//TODO: handle Sessions that already exist. Renewing sessions, etc.
 		
