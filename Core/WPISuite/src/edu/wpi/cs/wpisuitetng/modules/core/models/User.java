@@ -16,6 +16,7 @@ public class User extends AbstractModel implements TNG
 {
 	private String name;
 	private String username;
+	private String password;
 	private int idNum;
 	private Role role;
 	
@@ -31,6 +32,16 @@ public class User extends AbstractModel implements TNG
 		this.username = username;
 		this.idNum = idNum;
 		this.role = Role.USER;
+	}
+	
+	/**
+	 * Performs password checking logic. In the future, this may implement hashing.
+	 * @param pass	the password String to compare
+	 * @return	True if the password matches, False otherwise.
+	 */
+	public boolean matchPassword(String pass)
+	{
+		return password.equals(pass);
 	}
 	
 	/* Accessors */

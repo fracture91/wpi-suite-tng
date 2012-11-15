@@ -30,6 +30,7 @@ public class ManagerLayer {
 	private DataStore data;
 	private Gson gson;
 	private Map<String, EntityManager> map;
+	private SessionManager sessions;
 	
 	/**
 	 * initializes the database
@@ -41,7 +42,7 @@ public class ManagerLayer {
 		data = DataStore.getDataStore();
 		gson = new Gson();
 		map = new HashMap<String, EntityManager>();
-		
+		sessions = new SessionManager();
 		
 		//TODO pull these mappings from some config file and reflect them
 		map.put("coreproject", new ProjectManager());
@@ -83,6 +84,24 @@ public class ManagerLayer {
 	protected static ManagerLayer getTestInstance(@SuppressWarnings("rawtypes") Map<String, EntityManager> map)
 	{
 		return new ManagerLayer(map);
+	}
+	
+	/**
+	 * Exposes the SessionManager for this ManagerLayer.
+	 * @return	sessions
+	 */
+	public synchronized SessionManager getSessions()
+	{
+		return sessions;
+	}
+	
+	/**
+	 * Exposes the Users in the database for direct access.
+	 * @return	The UserManager instance
+	 */
+	public UserManager getUsers()
+	{
+		return (UserManager)map.get("coreuser");
 	}
 	
 	/**read()
