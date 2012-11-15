@@ -17,6 +17,7 @@ public class User extends AbstractModel implements TNG
 	private String name;
 	private String username;
 	private int idNum;
+	private Role role;
 	
 	/**
 	 * The primary constructor for a User
@@ -29,6 +30,7 @@ public class User extends AbstractModel implements TNG
 		this.name = name;
 		this.username = username;
 		this.idNum = idNum;
+		this.role = Role.USER;
 	}
 	
 	/* Accessors */
@@ -137,5 +139,15 @@ public class User extends AbstractModel implements TNG
 			if(((String) o).equalsIgnoreCase(this.username))
 				b = true;
 		return b;
+	}
+	
+	public Role getRole()
+	{
+		return role;
+	}
+	
+	public void setRole(Role r)
+	{
+		role = r;
 	}
 }

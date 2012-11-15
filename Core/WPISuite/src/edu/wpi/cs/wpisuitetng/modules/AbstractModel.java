@@ -16,17 +16,7 @@ public abstract class AbstractModel implements Model {
 		permission = new HashMap<User, Permission>();
 	}
 	
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public abstract String toJSON();
