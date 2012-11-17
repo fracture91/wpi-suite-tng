@@ -38,21 +38,21 @@ public class LoginController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (view.getUrlTextField().getText().length() > 0) {
+		if (view.getUrlTextField().getText().length() > 0) { // ensure the URL field has content
 			final String URLText = view.getUrlTextField().getText();
 			final URL coreURL;
-			try {
+			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
 				Configuration.getInstance().setCoreURL(coreURL);
 				mainGUI.setVisible(true);
 				view.dispose();
-			} catch (MalformedURLException e1) {
+			} catch (MalformedURLException e1) { // failed, bad URL
 				JOptionPane.showMessageDialog(view,
 				                              "The server address \"" + URLText + "\" is not a valid URL!",
 				                              errorTitle, JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		else {
+		else { // a URL was not entered
 			JOptionPane.showMessageDialog(view, "You must specify the server address!", errorTitle,
 			                              JOptionPane.ERROR_MESSAGE);
 		}

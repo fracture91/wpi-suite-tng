@@ -1,28 +1,27 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.BoxLayout;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+import javax.swing.SpringLayout;
 
 /**
  * This is the login window for Janeway.
- * 
- * TODO handle button clicks
+ *
  */
 @SuppressWarnings("serial")
 public class LoginFrame extends JFrame {
-	private JTextField usernameText;
-	private JPasswordField passwordText;
-	private JTextField	projectText;
-	private JTextField urlText;
-	private JButton connectButton;
+	
+	protected JPanel contentPane;
+	protected LoginHeaderPanel loginHeaderPanel;
+	protected LoginFieldPanel loginFieldPanel;
+	protected LoginButtonPanel loginButtonPanel;
+	protected static final int WINDOW_WIDTH = 500;
+	protected static final int WINDOW_HEIGHT = 400;
 	
 	/**
 	 * Constructs a login JFrame with all of the relevant controls and packs them.
@@ -32,66 +31,44 @@ public class LoginFrame extends JFrame {
 	public LoginFrame(String applicationName) {
 		super("Login - " + applicationName);
 		
-		// Create and populate usernamePanel
-		JPanel usernamePanel = new JPanel();
-		usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
-		JLabel usernameLabel = new JLabel("Username", JLabel.TRAILING);
-		usernameText = new JTextField(20);
-		usernameLabel.setLabelFor(usernameText);
-		usernamePanel.add(usernameLabel);
-		usernamePanel.add(usernameText);
+		// Call System.exit() when the close button is clicked.
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// Create and populate passwordPanel
-		JPanel passwordPanel = new JPanel();
-		passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.X_AXIS));
-		passwordPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
-		JLabel passwordLabel = new JLabel("Password", JLabel.TRAILING);
-		passwordText = new JPasswordField(20);
-		passwordLabel.setLabelFor(passwordText);
-		passwordPanel.add(passwordLabel);
-		passwordPanel.add(passwordText);
+		// Create content pane and set layout to SpringLayout
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		SpringLayout layout = new SpringLayout();
+		contentPane.setLayout(layout);
 		
-		// Create and populate projectPanel
-		JPanel projectPanel = new JPanel();
-		projectPanel.setLayout(new BoxLayout(projectPanel, BoxLayout.X_AXIS));
-		projectPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
-		JLabel projectLabel = new JLabel("Project", JLabel.TRAILING);
-		urlText = new JTextField(40);
-		projectPanel.add(projectLabel);
-		projectText = new JTextField(20);
-		projectLabel.setLabelFor(projectText);
-		projectPanel.add(projectText);
+		// Add LoginHeaderPanel
+		loginHeaderPanel = new LoginHeaderPanel();
+		layout.putConstraint(SpringLayout.NORTH, loginHeaderPanel, 15, SpringLayout.NORTH, contentPane);
+		layout.putConstraint(SpringLayout.WEST, loginHeaderPanel, 5, SpringLayout.WEST, contentPane);
+		layout.putConstraint(SpringLayout.EAST, loginHeaderPanel, -5, SpringLayout.EAST, contentPane);
+		contentPane.add(loginHeaderPanel);
+	
+		// Add LoginFieldPanel
+		loginFieldPanel = new LoginFieldPanel();
+		layout.putConstraint(SpringLayout.NORTH, loginFieldPanel, 40, SpringLayout.SOUTH, loginHeaderPanel);
+		layout.putConstraint(SpringLayout.WEST, loginFieldPanel, 45, SpringLayout.WEST, contentPane);
+		layout.putConstraint(SpringLayout.EAST, loginFieldPanel, -45, SpringLayout.EAST, contentPane);
+		contentPane.add(loginFieldPanel);
 		
-		// Create and populate infoPanel
-		JPanel infoPanel = new JPanel();
-		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-		infoPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		infoPanel.add(usernamePanel);
-		infoPanel.add(passwordPanel);
-		infoPanel.add(projectPanel);
+		// Add LoginButtonPanel
+		loginButtonPanel = new LoginButtonPanel();
+		layout.putConstraint(SpringLayout.NORTH, loginButtonPanel, 40, SpringLayout.SOUTH, loginFieldPanel);
+		layout.putConstraint(SpringLayout.WEST, loginButtonPanel, 5, SpringLayout.WEST, contentPane);
+		layout.putConstraint(SpringLayout.EAST, loginButtonPanel, -5, SpringLayout.EAST, contentPane);
+		contentPane.add(loginButtonPanel);
 		
-		// Create and populate connectionPanel
-		JPanel connectionPanel = new JPanel();
-		connectionPanel.setLayout(new BoxLayout(connectionPanel, BoxLayout.X_AXIS));
-		connectionPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
-		JLabel urlLabel = new JLabel("URL", JLabel.TRAILING);
-		urlLabel.setLabelFor(urlText);
-		connectionPanel.add(urlLabel);
-		connectionPanel.add(urlText);
+		// Pack the frame
+		pack();
 		
-		// Create and populate buttonPanel
-		JPanel buttonPanel = new JPanel();
-		connectButton = new JButton("Connect");
-		connectButton.setPreferredSize(new Dimension(150, 25));
-		buttonPanel.add(connectButton);
-		
-		// Populate this JFrame
-		this.add(infoPanel, BorderLayout.PAGE_START);
-		this.add(connectionPanel, BorderLayout.CENTER);
-		this.add(buttonPanel, BorderLayout.PAGE_END);//*/
-		
-		// Pack this
-		this.pack();
+		// Set the window size and position
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		int xPos = (dim.width - WINDOW_WIDTH) / 2;
+		int yPos = (int)((dim.height - WINDOW_HEIGHT) / 2 * .75);
+		setBounds(xPos, yPos, WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 	
 	/**
@@ -99,14 +76,14 @@ public class LoginFrame extends JFrame {
 	 * @return the url text field
 	 */
 	public JTextField getUrlTextField() {
-		return urlText;
+		return this.loginFieldPanel.txtUrl;
 	}
 	
 	/**
 	 * Getter for the connect button
-	 * @return
+	 * @return the connect button
 	 */
 	public JButton getConnectButton() {
-		return connectButton;
+		return this.loginButtonPanel.btnConnect;
 	}
 }
