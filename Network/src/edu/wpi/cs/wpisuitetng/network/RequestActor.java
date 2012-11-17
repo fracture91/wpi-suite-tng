@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.network;
+package edu.wpi.cs.wpisuitetng.network;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
