@@ -3,6 +3,9 @@ package edu.wpi.cs.wpisuitetng.janeway.network;
 import java.util.Observable;
 import java.util.Observer;
 
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.Response;
+
 /**
  * An Observer for the Request class.
  * 
