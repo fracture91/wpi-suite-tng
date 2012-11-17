@@ -53,6 +53,6 @@ public class Session {
 	 */
 	public Cookie toCookie()
 	{
-		return new Cookie(getUsername(), this.toString());
+		return new Cookie("WPISuitelogin", this.toString());
 	}
 }
