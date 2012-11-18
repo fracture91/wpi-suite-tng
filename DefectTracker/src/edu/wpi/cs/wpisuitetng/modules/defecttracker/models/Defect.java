@@ -2,12 +2,14 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
 /**
  * Represents a defect
  *
  * TODO: Implement core model interface once the dev-core branch is merged
  */
-public class Defect {
+public class Defect implements Model {
 	protected int id;
 	protected String description, title, user;
 	
@@ -110,6 +112,26 @@ public class Defect {
 	 */
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	// note that save and delete don't do anything even in the core's models at the moment
+	
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void delete() {
+		// TODO Auto-generated method stub
+	}
+
+	// interface docs say this is necessary for the mock database
+	// not sure if this is still needed otherwise
+	@Override
+	public Boolean identify(Object o) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
