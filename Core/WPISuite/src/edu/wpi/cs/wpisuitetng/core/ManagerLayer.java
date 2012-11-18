@@ -122,7 +122,7 @@ public class ManagerLayer {
 	{
 		//String message = data.remove(map.get(args[1]), args[2]);
 		User toBeDeleted = (User) data.retrieve(map.get(args[1]), "username", args[2]).get(0);		
-		String message = data.delete(toBeDeleted);
+		String message = data.delete(toBeDeleted) + "deleted.";
         return message;
         
 	}
