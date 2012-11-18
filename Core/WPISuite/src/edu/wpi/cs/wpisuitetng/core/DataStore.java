@@ -50,7 +50,7 @@ public class DataStore {
 		return myself;
 	}
 	
-	public boolean save(Model aTNG){
+	public <T> boolean save(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -77,8 +77,7 @@ public class DataStore {
 	 * @param theGivenValue The value that you want all returned objects to have
 	 * @return a List of objects of the given type that have the given field match the given value
 	 */
-	public <T> List<?> retrieve(final Class<?> anObjectQueried, String aFieldName, 
-			final T theGivenValue){
+	public <B, C> List<B> retrieve(final Class<B> anObjectQueried, String aFieldName, final C theGivenValue){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -115,10 +114,11 @@ public class DataStore {
 	
 		System.out.println(result);
 		client.close();
-		return result;
+		return (List<B>) result;
 	}
 	
-	public <T> List<?> retrieve(final Class<?> anObjectQueried, String[] aFieldName, 
+	//Code in progress for multiquerying
+	public <T> List<T> retrieve(final Class<T> anObjectQueried, String[] aFieldName, 
 			final T[] theGivenValue, final String operator) throws IllegalArgumentException {
 		final int fieldNameLength = aFieldName.length;
 		int theGivenValueLength = theGivenValue.length;
@@ -190,10 +190,10 @@ public class DataStore {
 	
 		System.out.println(result);
 		//client.close();
-		return result;
+		return (List<T>) result;
 	}
 	
-	public <T> String delete(T aTNG){
+	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -202,8 +202,47 @@ public class DataStore {
 	    T found = (T) result.next();
 	    client.delete(found);
 		client.close();
-		return "Deleted "+aTNG;
+		//return "Deleted "+aTNG;
+		return found;
 		
+	}
+	
+	public <T, C> T delete(T objectType, String fieldName, C uniqueID){
+		return delete(objectType);
+	}
+	
+	public <T, C> void update(T objectType, String fieldName, C uniqueID, String changeField, C changeValue){
+		List<? extends Object> objectsToUpdate = retrieve(objectType.getClass(), fieldName, uniqueID);
+		T theObject;
+		for(int i = 0; i < objectsToUpdate.size(); i++){
+			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
+			Method[] allMethods = objectClass.getMethods();
+			Method methodToBeSaved = null;
+			for(Method m: allMethods){
+				if(m.getName().equalsIgnoreCase("set"+fieldName)){
+					methodToBeSaved = m;
+				}
+			}
+			//TODO: IF Null solve this problem...
+			final Method theSetter = methodToBeSaved;
+			
+			try {
+				theObject = (T) theSetter.invoke(objectsToUpdate.get(i));
+				save(theObject);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
 	}
 	
 	public User[] getUser(String username)
