@@ -34,7 +34,7 @@ public class LoginFieldPanel extends JPanel {
 	protected final SpringLayout layout;
 
 	/** The width of each label */
-	protected static final int LABEL_WIDTH = 75;
+	protected int labelWidth = 75;
 
 	/** The vertical padding of components */
 	protected static final int VERTICAL_PADDING = 10;
@@ -80,6 +80,10 @@ public class LoginFieldPanel extends JPanel {
 		JLabel lblPassword = new JLabel("Password:", LABEL_ALIGNMENT);
 		JLabel lblProject = new JLabel("Project:", LABEL_ALIGNMENT);
 		JLabel lblUrl = new JLabel("Server URL:", LABEL_ALIGNMENT);
+		
+		// Set the label width to the width of the longest label
+		// This is necessary because fonts vary across platforms
+		labelWidth = lblUrl.getPreferredSize().width;
 
 		// Construct the text fields
 		txtUsername = new JTextField(15);
@@ -101,8 +105,8 @@ public class LoginFieldPanel extends JPanel {
 
 		// Constrain user name label/field
 		layout.putConstraint(SpringLayout.WEST, lblUsername, HORIZONTAL_PADDING, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.NORTH, lblUsername, 3, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.EAST, lblUsername, LABEL_WIDTH, SpringLayout.WEST, lblUsername);
+		layout.putConstraint(SpringLayout.NORTH, lblUsername, 5, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.EAST, lblUsername, labelWidth, SpringLayout.WEST, lblUsername);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, txtUsername, 0, SpringLayout.VERTICAL_CENTER, lblUsername);
 		layout.putConstraint(SpringLayout.WEST, txtUsername, HORIZONTAL_PADDING, SpringLayout.EAST, lblUsername);
 		layout.putConstraint(SpringLayout.EAST, this, HORIZONTAL_PADDING, SpringLayout.EAST, txtUsername);
@@ -111,7 +115,7 @@ public class LoginFieldPanel extends JPanel {
 		layout.putConstraint(SpringLayout.NORTH, txtPassword, VERTICAL_PADDING, SpringLayout.SOUTH, txtUsername);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblPassword, 0, SpringLayout.VERTICAL_CENTER, txtPassword);
 		layout.putConstraint(SpringLayout.WEST, lblPassword, HORIZONTAL_PADDING, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, lblPassword, LABEL_WIDTH, SpringLayout.WEST, lblPassword);
+		layout.putConstraint(SpringLayout.EAST, lblPassword, labelWidth, SpringLayout.WEST, lblPassword);
 		layout.putConstraint(SpringLayout.WEST, txtPassword, HORIZONTAL_PADDING, SpringLayout.EAST, lblPassword);
 		layout.putConstraint(SpringLayout.EAST, txtPassword, 0, SpringLayout.EAST, txtUsername);
 
@@ -119,7 +123,7 @@ public class LoginFieldPanel extends JPanel {
 		layout.putConstraint(SpringLayout.NORTH, txtProject, VERTICAL_PADDING * 3, SpringLayout.SOUTH, txtPassword);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblProject, 0, SpringLayout.VERTICAL_CENTER, txtProject);
 		layout.putConstraint(SpringLayout.WEST, lblProject, HORIZONTAL_PADDING, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, lblProject, LABEL_WIDTH, SpringLayout.WEST, lblProject);
+		layout.putConstraint(SpringLayout.EAST, lblProject, labelWidth, SpringLayout.WEST, lblProject);
 		layout.putConstraint(SpringLayout.WEST, txtProject, HORIZONTAL_PADDING, SpringLayout.EAST, lblProject);
 		layout.putConstraint(SpringLayout.EAST, txtProject, 0, SpringLayout.EAST, txtUsername);
 
@@ -127,7 +131,7 @@ public class LoginFieldPanel extends JPanel {
 		layout.putConstraint(SpringLayout.NORTH, txtUrl, VERTICAL_PADDING * 3, SpringLayout.SOUTH, txtProject);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblUrl, 0, SpringLayout.VERTICAL_CENTER, txtUrl);
 		layout.putConstraint(SpringLayout.WEST, lblUrl, HORIZONTAL_PADDING, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, lblUrl, LABEL_WIDTH, SpringLayout.WEST, lblUrl);
+		layout.putConstraint(SpringLayout.EAST, lblUrl, labelWidth, SpringLayout.WEST, lblUrl);
 		layout.putConstraint(SpringLayout.WEST, txtUrl, HORIZONTAL_PADDING, SpringLayout.EAST, lblUrl);
 		layout.putConstraint(SpringLayout.EAST, txtUrl, 0, SpringLayout.EAST, txtUsername);
 
