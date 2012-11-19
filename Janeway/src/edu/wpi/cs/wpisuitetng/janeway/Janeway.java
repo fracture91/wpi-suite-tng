@@ -39,7 +39,7 @@ public class Janeway {
 		catch (Exception e) {
 			System.out.println("Error setting UI manager to cross-platform!");
 			e.printStackTrace();
-		} 
+		}
 		
 		// Load modules
 		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
