@@ -30,7 +30,7 @@ public interface DatabaseInterface<C, T> {
 	 * @param uniqueID - value of the field that the object is retrieved by
 	 * @param changeValue - field whose value will be changed 
 	 */
-	public void update(T objectType, String fieldName,C uniqueID, String changeField, C changeValue);
+	public void update(Class objectType, String fieldName,Object uniqueID, String changeField, Object changeValue);
 	
 	/**
 	 * Deletes the object of type objectType which has the value uniqueID in the field fieldName
@@ -43,4 +43,5 @@ public interface DatabaseInterface<C, T> {
 	 * @return The object that was deleted
 	 */
 	public T delete(T objectType, String fieldName,C uniqueID);
+
 }
