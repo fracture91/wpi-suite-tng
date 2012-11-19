@@ -8,7 +8,7 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 
 
 /**
@@ -40,8 +40,8 @@ public class LoginController implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		// Save the field values
-		ConfigMgr.setUserName(view.getUserNameField().getText());
-		ConfigMgr.setProjectName(view.getProjectField().getText());
+		ConfigManager.getConfig().setUserName(view.getUserNameField().getText());
+		ConfigManager.getConfig().setProjectName(view.getProjectField().getText());
 		
 		// Check the core URL and display the main application window
 		if (view.getUrlTextField().getText().length() > 0) { // ensure the URL field has content
@@ -49,7 +49,7 @@ public class LoginController implements ActionListener {
 			final URL coreURL;
 			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
-				ConfigMgr.setCoreUrl(coreURL);
+				ConfigManager.getConfig().setCoreUrl(coreURL);
 				mainGUI.setVisible(true);
 				view.dispose();
 			} catch (MalformedURLException e1) { // failed, bad URL

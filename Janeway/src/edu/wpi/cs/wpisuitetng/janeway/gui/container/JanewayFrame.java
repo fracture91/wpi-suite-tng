@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 
 /**
@@ -37,7 +37,7 @@ public class JanewayFrame extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent we) {
 				// write the configuration to janeway.conf
-				ConfigMgr.writeConfig();
+				ConfigManager.writeConfig();
 				
 				// dispose of this window
 				dispose();
