@@ -3,10 +3,14 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 
 /**
@@ -26,7 +30,19 @@ public class JanewayFrame extends JFrame {
 		// Set window properties
 		setTitle("Janeway - WPI Suite Desktop Client");
 		setMinimumSize(new Dimension(800, 600)); // minimum window size is 800 x 600
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		// Clean up when the window is closed
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				// write the configuration to janeway.conf
+				ConfigMgr.writeConfig();
+				
+				// dispose of this window
+				dispose();
+			}
+		});
 		
 		// Set the window size and position based on screen size
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

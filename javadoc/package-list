@@ -1,0 +1,13 @@
+edu.wpi.cs.wpisuitetng.janeway
+edu.wpi.cs.wpisuitetng.janeway.config
+edu.wpi.cs.wpisuitetng.janeway.gui.container
+edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar
+edu.wpi.cs.wpisuitetng.janeway.gui.login
+edu.wpi.cs.wpisuitetng.janeway.modules
+edu.wpi.cs.wpisuitetng.modules.defecttracker
+edu.wpi.cs.wpisuitetng.modules.defecttracker.create
+edu.wpi.cs.wpisuitetng.modules.defecttracker.dashboard
+edu.wpi.cs.wpisuitetng.modules.defecttracker.models
+edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs
+edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar
+edu.wpi.cs.wpisuitetng.network

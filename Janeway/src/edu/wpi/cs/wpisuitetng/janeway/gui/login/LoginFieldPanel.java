@@ -9,6 +9,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
+
 /**
  * The login form for the Janeway login window
  *
@@ -84,6 +86,11 @@ public class LoginFieldPanel extends JPanel {
 		txtPassword = new JPasswordField(15);
 		txtProject = new JTextField(15);
 		txtUrl = new JTextField(50);
+		
+		// Load saved field values
+		txtUsername.setText(ConfigMgr.getUserName());
+		txtUrl.setText(ConfigMgr.getCoreUrl().toString());
+		txtProject.setText(ConfigMgr.getProjectName());
 
 		// Change font of text fields
 		Font txtFont = txtUsername.getFont().deriveFont(14f);

@@ -1,6 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
 
-import edu.wpi.cs.wpisuitetng.janeway.Configuration;
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 
@@ -26,7 +26,7 @@ public class SaveDefectController {
 	 */
 	public void save() {
 		final SaveRequestObserver requestObserver = new SaveRequestObserver();
-		Request request = new Request(Configuration.getInstance().getCoreURL(), RequestMethod.POST);
+		Request request = new Request(ConfigMgr.getCoreUrl(), RequestMethod.POST);
 		request.setRequestBody(view.getModel().toJSON());
 		request.addObserver(requestObserver);
 		request.send();

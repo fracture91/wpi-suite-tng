@@ -2,8 +2,6 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -82,6 +80,22 @@ public class LoginFrame extends JFrame {
 	 */
 	public JTextField getUrlTextField() {
 		return this.loginFieldPanel.txtUrl;
+	}
+	
+	/**
+	 * Getter for the project field
+	 * @return the project text field
+	 */
+	public JTextField getProjectField() {
+		return this.loginFieldPanel.txtProject;
+	}
+	
+	/**
+	 * Getter for the user name text field
+	 * @return the user name text field
+	 */
+	public JTextField getUserNameField() {
+		return this.loginFieldPanel.txtUsername;
 	}
 	
 	/**

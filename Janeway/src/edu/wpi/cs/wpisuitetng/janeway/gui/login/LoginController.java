@@ -8,7 +8,7 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import edu.wpi.cs.wpisuitetng.janeway.Configuration;
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
 
 
 /**
@@ -38,12 +38,18 @@ public class LoginController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		// Save the field values
+		ConfigMgr.setUserName(view.getUserNameField().getText());
+		ConfigMgr.setProjectName(view.getProjectField().getText());
+		
+		// Check the core URL and display the main application window
 		if (view.getUrlTextField().getText().length() > 0) { // ensure the URL field has content
 			final String URLText = view.getUrlTextField().getText();
 			final URL coreURL;
 			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
-				Configuration.getInstance().setCoreURL(coreURL);
+				ConfigMgr.setCoreUrl(coreURL);
 				mainGUI.setVisible(true);
 				view.dispose();
 			} catch (MalformedURLException e1) { // failed, bad URL

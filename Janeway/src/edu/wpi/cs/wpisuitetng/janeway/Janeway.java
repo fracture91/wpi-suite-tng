@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginFrame;
@@ -39,7 +40,10 @@ public class Janeway {
 		catch (Exception e) {
 			System.out.println("Error setting UI manager to cross-platform!");
 			e.printStackTrace();
-		} 
+		}
+		
+		// Load the Janeway configuration from file
+		ConfigMgr.loadConfig();
 		
 		// Load modules
 		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
