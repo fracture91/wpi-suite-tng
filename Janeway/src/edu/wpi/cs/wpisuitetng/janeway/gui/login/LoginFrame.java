@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -60,6 +62,9 @@ public class LoginFrame extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, loginButtonPanel, 5, SpringLayout.WEST, contentPane);
 		layout.putConstraint(SpringLayout.EAST, loginButtonPanel, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(loginButtonPanel);
+		
+		// Add key listener for Enter to the login fields
+		loginFieldPanel.addKeyListeners(getConnectButton());
 		
 		// Pack the frame
 		pack();

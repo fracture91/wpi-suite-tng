@@ -27,7 +27,7 @@ public class LoginButtonPanel extends JPanel {
 		setLayout(layout);
 		
 		// Add the login button
-		btnConnect = new JButton("Login");
+		btnConnect = new JButton("Connect");
 		btnConnect.setPreferredSize(new Dimension(btnConnect.getPreferredSize().width + 50, btnConnect.getPreferredSize().height));
 		add(Box.createHorizontalGlue());
 		add(btnConnect);

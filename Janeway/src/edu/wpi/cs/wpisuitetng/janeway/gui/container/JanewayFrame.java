@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -25,8 +26,15 @@ public class JanewayFrame extends JFrame {
 		// Set window properties
 		setTitle("Janeway - WPI Suite Desktop Client");
 		setMinimumSize(new Dimension(800, 600)); // minimum window size is 800 x 600
-		setSize(1024, 768);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		// Set the window size and position based on screen size
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int)(dim.width * 0.85);
+		int height = (int)(dim.height * 0.85);
+		int xPos = (dim.width - width) / 2;
+		int yPos = (int)((dim.height - height) / 2 * .75);
+		setBounds(xPos, yPos, width, height);
 		
 		// Setup the layout manager
 		this.setLayout(new BorderLayout());
