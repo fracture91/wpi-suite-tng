@@ -1,0 +1,64 @@
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
+
+import com.google.gson.Gson;
+
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
+/**
+ * Persistent Model that holds and old and new value for some field.
+ */
+public class FieldChange implements Model {
+	private final Object oldValue;
+	private final Object newValue;
+	
+	/**
+	 * @param oldValue the old value of a field before it was changed
+	 * @param newValue the new value of a field after it was changed
+	 */
+	public FieldChange(Object oldValue, Object newValue) {
+		this.oldValue = oldValue;
+		this.newValue = newValue;
+	}
+
+	/**
+	 * @return the oldValue
+	 */
+	public Object getOldValue() {
+		return oldValue;
+	}
+
+	/**
+	 * @return the newValue
+	 */
+	public Object getNewValue() {
+		return newValue;
+	}
+
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String toJSON() {
+		String json;
+		Gson gson = new Gson();
+		json = gson.toJson(this, FieldChange.class);
+		return json;
+	}
+
+	@Override
+	public Boolean identify(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+}
