@@ -125,13 +125,24 @@ public class Defect implements Model {
 	public void delete() {
 		// TODO Auto-generated method stub
 	}
+	
+	@Override
+	public String toString() {
+		return toJSON();
+	}
 
-	// interface docs say this is necessary for the mock database
+	// interface documentation says this is necessary for the mock database
 	// not sure if this is still needed otherwise
 	@Override
 	public Boolean identify(Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Boolean returnValue = false;
+		if(o instanceof Defect && id == ((Defect) o).getId()) {
+			returnValue = true;
+		}
+		if(o instanceof String && Integer.toString(id).equals(o)) {
+			returnValue = true;
+		}
+		return returnValue;
 	}
 	
 }
