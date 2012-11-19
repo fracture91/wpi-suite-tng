@@ -1,11 +1,13 @@
 package edu.wpi.cs.wpisuitetng.network;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Stores configuration information for connecting to the core server API.
+ */
 public class NetworkConfiguration {
 	protected URL apiUrl;			/** The URL of the core server API */
 	protected String username;		/** The username. TODO This may not be needed, depending on how the API works. */
