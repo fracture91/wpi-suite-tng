@@ -25,6 +25,7 @@ public class Defect implements Model {
 	public Defect() {
 		id = -1;
 		title = description = status = "";
+		creator = new User("", "", -1);
 		tags = new HashSet<String>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();

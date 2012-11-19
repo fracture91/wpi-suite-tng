@@ -23,6 +23,7 @@ public class Comment implements Model {
 	public Comment() {
 		id = defectId = -1;
 		creationDate = new Date();
+		creator = new User("", "", -1);
 		body = "";
 	}
 	
