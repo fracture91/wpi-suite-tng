@@ -193,6 +193,33 @@ public class DataStore implements DatabaseInterface {
 		return (List<T>) result;
 	}
 	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public <T> List<T> retrieveAll(final T item){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		ObjectContainer client = server.openClient();
+		List<T> result = client.query(new Predicate<T>(){
+			public boolean match(T anObject){
+				try {
+					return anObject.getClass().equals(item.getClass());
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+			}
+		});
+	
+		System.out.println(result);
+		client.close();
+		return result;
+	}
+	
 	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -276,7 +303,6 @@ public class DataStore implements DatabaseInterface {
 		return retrieve(new Project("",0).getClass(), "idnum", idNum).toArray(ret);
 		
 	}
-
 	
 
 }

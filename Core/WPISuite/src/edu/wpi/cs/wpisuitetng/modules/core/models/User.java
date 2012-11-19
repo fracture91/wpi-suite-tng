@@ -137,4 +137,10 @@ public class User implements Model, TNG
 		return b;
 	}
 	
+	public boolean equals(User anotherUser){
+		return this.name.equalsIgnoreCase(anotherUser.getName()) &&
+				this.username.equalsIgnoreCase(anotherUser.getUsername()) &&
+				this.idNum == anotherUser.getIdNum();
+	}
+	
 }
