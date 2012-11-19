@@ -13,11 +13,11 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * Persistent Model that represents a Defect.
  */
 public class Defect implements Model {
-	protected int id;
-	protected String title, description, status;
-	protected User creator, assignee;
-	protected Set<String> tags;
-	protected Date creationDate, lastModifiedDate;
+	private int id;
+	private String title, description, status;
+	private User creator, assignee;
+	private Set<String> tags;
+	private Date creationDate, lastModifiedDate;
 	
 	/**
 	 * Constructs a new Defect with default properties.
@@ -25,6 +25,7 @@ public class Defect implements Model {
 	public Defect() {
 		id = -1;
 		title = description = status = "";
+		creator = new User("", "", -1);
 		tags = new HashSet<String>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
