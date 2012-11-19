@@ -9,7 +9,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigMgr;
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 
 /**
  * The login form for the Janeway login window
@@ -92,9 +92,9 @@ public class LoginFieldPanel extends JPanel {
 		txtUrl = new JTextField(50);
 		
 		// Load saved field values
-		txtUsername.setText(ConfigMgr.getUserName());
-		txtUrl.setText(ConfigMgr.getCoreUrl().toString());
-		txtProject.setText(ConfigMgr.getProjectName());
+		txtUsername.setText(ConfigManager.getConfig().getUserName());
+		txtUrl.setText(ConfigManager.getConfig().getCoreUrl().toString());
+		txtProject.setText(ConfigManager.getConfig().getProjectName());
 
 		// Change font of text fields
 		Font txtFont = txtUsername.getFont().deriveFont(14f);

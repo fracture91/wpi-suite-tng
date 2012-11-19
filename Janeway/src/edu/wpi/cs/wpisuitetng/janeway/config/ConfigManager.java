@@ -6,21 +6,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Manages the configuration of the Janeway client. Persists the configuration
  * in the form of a serialized Configuration class stored in janeway.conf
  *
  */
-public class ConfigMgr {
+public class ConfigManager {
 	
 	/** The file name to use when storing the configuration */
 	public static final String configFileName = "./janeway.conf";
 
 	/** The singleton instance of ConfigMgr */
-	private static ConfigMgr instance = null;
+	private static ConfigManager instance = null;
 
 	/** The configuration of the client */
 	private static Configuration config;
@@ -28,11 +26,31 @@ public class ConfigMgr {
 	/**
 	 * Constructs a new ConfigMgr (only one can exist)
 	 */
-	private ConfigMgr() {
+	private ConfigManager() {
 		config = new Configuration();
 
 		// Set the default core URL
-		setCoreUrl("http://localhost:8080");
+		config.setCoreUrl("http://localhost:8080");
+	}
+	
+	/**
+	 * Returns the configuration
+	 * @return the configuration
+	 */
+	public static Configuration getConfig() {
+		getInstance();
+		return config;
+	}
+	
+	/**
+	 * Returns the singleton instance of ConfigManager
+	 * @return the singleton instance of ConfigManager
+	 */
+	public static ConfigManager getInstance() {
+		if (instance == null) {
+			loadConfig();
+		}
+		return instance;
 	}
 	
 	/**
@@ -41,7 +59,7 @@ public class ConfigMgr {
 	public static void loadConfig() {
 		// if instance is null, construct the ConfigMgr
 		if (instance == null) {
-			instance = new ConfigMgr();
+			instance = new ConfigManager();
 		}
 		
 		// Load the config from the configuration file if it exists
@@ -54,7 +72,7 @@ public class ConfigMgr {
 		}
 		catch (FileNotFoundException e) { // there is no config file, create a new Configuration
 			config = new Configuration();
-			setCoreUrl("http://localhost:8080");
+			config.setCoreUrl("http://localhost:8080");
 		}
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -89,45 +107,5 @@ public class ConfigMgr {
 			e.printStackTrace();
 		}
 		
-	}
-
-	//========================================
-	// Getters for config fields
-	//========================================
-	public static String getUserName() {
-		return config.userName;
-	}
-	
-	public static URL getCoreUrl() {
-		return config.coreUrl;
-	}
-	
-	public static String getProjectName() {
-		return config.projectName;
-	}
-
-	//========================================
-	// Setters for config fields
-	//========================================
-	public static void setUserName(String userName) {
-		config.userName = userName;
-	}
-	
-	public static void setProjectName(String projectName) {
-		config.projectName = projectName;
-	}
-	
-	public static void setCoreUrl(URL url) {
-		config.coreUrl = url;
-	}
-
-	public static void setCoreUrl(String url) {
-		try {
-			config.coreUrl = new URL(url);
-		}
-		catch (MalformedURLException e) {
-			System.out.println("ERROR: Bad core url!");
-			e.printStackTrace();
-		}
 	}
 }
