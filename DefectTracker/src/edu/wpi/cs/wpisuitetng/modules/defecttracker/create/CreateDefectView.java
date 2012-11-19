@@ -22,15 +22,14 @@ public class CreateDefectView extends JPanel implements IToolbarGroupProvider {
 	/**
 	 * Constructs a new CreateDefectView where the user can
 	 * enter the data for a new defect.
-	 * 
-	 * TODO Update the controller to work with the new DefectPanel
+	 *
 	 */
 	public CreateDefectView() {
 		// Instantiate the main create defect panel
 		mainPanel = new DefectPanel();
 		this.setLayout(new BorderLayout());
 		this.add(mainPanel, BorderLayout.PAGE_START);
-		//controller = new SaveDefectController(mainPanel);
+		controller = new SaveDefectController(mainPanel);
 		
 		// Instantiate the button panel
 		buttonGroup = new ToolbarGroupView("Create Defect");

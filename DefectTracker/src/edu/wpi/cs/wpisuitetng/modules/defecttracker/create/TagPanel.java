@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+
 /**
  * Panel to manage adding and removing tags
  *
@@ -29,12 +31,17 @@ public class TagPanel extends JPanel {
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
 	
-	protected TagPanel() {
+	protected TagPanel(Defect defect) {
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
 		this.setBorder(BorderFactory.createTitledBorder("Tags"));
 		
 		addComponents(layout);
+		
+		// Populate the list of tags
+		for (String tag : defect.getTags()) {
+			lmTags.addElement(tag);
+		}
 		
 		addEventListeners();
 	}

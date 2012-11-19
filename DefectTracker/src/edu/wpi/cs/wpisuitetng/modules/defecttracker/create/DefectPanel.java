@@ -16,6 +16,8 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
 	
+	protected Defect model;
+	
 	protected JTextField txtTitle;
 	protected JTextArea txtDescription;
 	protected JTextField txtCreator;
@@ -31,10 +33,23 @@ public class DefectPanel extends JPanel {
 	}
 	
 	public DefectPanel(Defect defect) {
+		
+		this.model = defect;
+		
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
 		
 		addComponents(layout);
+		
+		// Populate the fields based on the given model
+		txtTitle.setText(defect.getTitle());
+		txtDescription.setText(defect.getDescription());
+		if (defect.getCreator() != null) {
+			txtCreator.setText(defect.getCreator().getUsername());
+		}
+		if (defect.getAssignee() != null) {
+			txtAssignee.setText(defect.getAssignee().getUsername());
+		}
 	}
 	
 	/**
@@ -49,7 +64,7 @@ public class DefectPanel extends JPanel {
 		txtDescription.setBorder(txtTitle.getBorder());
 		txtCreator = new JTextField(20);
 		txtAssignee = new JTextField(20);
-		tagPanel = new TagPanel();
+		tagPanel = new TagPanel(model);
 		
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
@@ -106,6 +121,7 @@ public class DefectPanel extends JPanel {
 	 * TODO: Change return type to the abstract class / interface
 	 * TODO: Ensure that if id field is set to -1, that a new defect is created on the server
 	 * TODO: Do some basic input verification
+	 * TODO: Deal with tags and other assignee
 	 * @return the model represented by this view
 	 */
 	public Defect getModel() {

@@ -11,13 +11,13 @@ import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 public class SaveDefectController {
 
 	/** The view object containing the request fields */
-	protected CreateDefectPanel view;
+	protected DefectPanel view;
 	
 	/**
 	 * Construct a new handler for the given view
 	 * @param view the view containing the request fields
 	 */
-	public SaveDefectController(CreateDefectPanel view) {
+	public SaveDefectController(DefectPanel view) {
 		this.view = view;
 	}
 
