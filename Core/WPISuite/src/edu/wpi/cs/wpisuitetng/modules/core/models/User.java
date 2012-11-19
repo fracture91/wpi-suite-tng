@@ -41,6 +41,15 @@ public class User implements Model, TNG
 		return password.equals(pass);
 	}
 	
+	/**
+	 * Sets password (plain text for now, crypto is in the future)
+	 * @param pass
+	 */
+	public void setPassword(String pass)
+	{
+		this.password = pass;
+	}
+	
 	/* Accessors */
 	public String getName()
 	{
