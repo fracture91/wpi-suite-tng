@@ -5,6 +5,7 @@
 .metadata\.plugins\*
 Servers\.settings\*
 Servers\.settings
+javadoc
 
 # Package Files #
 *.war
