@@ -25,7 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 import placeholderFiles.Defect;
 
-public class DataStore {
+public class DataStore implements DatabaseInterface{
 	
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;
@@ -243,6 +243,33 @@ public class DataStore {
 			
 			
 		}
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public <T> List<T> retrieveAll(final T item){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		ObjectContainer client = server.openClient();
+		List<T> result = client.query(new Predicate<T>(){
+			public boolean match(T anObject){
+				try {
+					return anObject.getClass().equals(item.getClass());
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+			}
+		});
+	
+		System.out.println(result);
+		client.close();
+		return result;
 	}
 	
 	public User[] getUser(String username)
