@@ -43,6 +43,7 @@ public class SessionManager {
 	 */
 	public Session getSession(String sessionToken)
 	{
+		
 		return sessions.get(sessionToken);
 		//TODO: determine how to handle 'not found' case
 	}
@@ -64,13 +65,21 @@ public class SessionManager {
 	 */
 	public Session createSession(User user)
 	{
-		// TODO: find a practical way to handle duplicate sessions per-user
+		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
 		Session ses = new Session(user);
 		sessions.put(ses.toCookie().getValue(), ses);
 		
 		return ses;
+	}
+	
+	/**
+	 * wipes the sessions store.
+	 */
+	public void clearSessions()
+	{
+		sessions = new HashMap<String, Session>();
 	}
 	
 	/*

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.wpi.cs.wpisuitetng.exceptions.*;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -36,12 +37,21 @@ public class WPILoginServlet extends HttpServlet {
 		
 		// TODO: find a way to avoid the BASIC_AUTH-specific 'username:password' decoded format.
 		
-		Session ses = loginUser(decoded[0], decoded[1]);
-		// post back the Session token
-		
-		Cookie userCookie = ses.toCookie();
-		response.addCookie(userCookie);
-		response.setStatus(HttpServletResponse.SC_CONTINUE);  //100 - Client can continue
+		// Authentication
+		try 
+		{	
+			Session ses = loginUser(decoded[0], decoded[1]);
+			
+			// post back the Session Cookie.
+			Cookie userCookie = ses.toCookie();
+			response.addCookie(userCookie);
+			response.setStatus(HttpServletResponse.SC_CONTINUE);  //100 - Client can continue
+		}
+		catch(WPISuiteException e) // Authentication Failed.
+		{
+			//TODO: log error
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, Authentication Failed.
+		}
 	}
 
 	@Override
@@ -59,21 +69,21 @@ public class WPILoginServlet extends HttpServlet {
 	 * @param password
 	 * @return	the Session for this user.
 	 */
-	private Session loginUser(String username, String password)
+	private Session loginUser(String username, String password) throws WPISuiteException
 	{
 		ManagerLayer manager = ManagerLayer.getInstance();
 		User[] u = manager.getUsers().getEntity(username);
 		
 		if(u.length == 0)
 		{
-			//TODO: define error behavior when user DNE
+			throw new AuthenticationException();	//"No user with the given username found");
 		}
 
 		User user = u[0];
 		
 		if(!user.matchPassword(password))
 		{
-			// TODO: handle authentication failure
+			throw new AuthenticationException();
 		}
 		
 		// create a Session mapping in the ManagerLayer

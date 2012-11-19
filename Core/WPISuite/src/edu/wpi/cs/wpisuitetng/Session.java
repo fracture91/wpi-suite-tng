@@ -49,10 +49,14 @@ public class Session {
 	
 	/**
 	 * Converts this Session into a Cookie object.
+	 *	Cookie Format:
+	 *			Header 	- 	WPISUITE-{username}
+	 *			Body	-	JSON representation of this Session @see {@link Session#toString()}
 	 * @return	a Cookie object representing this Session
 	 */
 	public Cookie toCookie()
 	{
-		return new Cookie(getUsername(), this.toString());
+		String header = "WPISUITE-" + getUsername();
+		return new Cookie(header, this.toString());
 	}
 }
