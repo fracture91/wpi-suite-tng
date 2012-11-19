@@ -6,6 +6,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
 /**
@@ -91,6 +92,6 @@ public class CreateDefectPanel extends JPanel {
 	 * @return the model represented by this view
 	 */
 	public Defect getModel() {
-		return new Defect(-1, txtDescription.getText(), txtTitle.getText(), txtUser.getText());
+		return new Defect(-1, txtTitle.getText(), txtDescription.getText(), new User("", txtUser.getText(), -1));
 	}
 }
