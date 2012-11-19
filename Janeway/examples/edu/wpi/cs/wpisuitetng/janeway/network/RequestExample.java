@@ -3,9 +3,9 @@ package edu.wpi.cs.wpisuitetng.janeway.network;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import edu.wpi.cs.wpisuitetng.janeway.network.Request;
-import edu.wpi.cs.wpisuitetng.janeway.network.RequestFactory;
-import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestFactory;
+import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 
 /**
  * This is a preliminary example for making request using the Request class.

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.janeway.network;
+package edu.wpi.cs.wpisuitetng.network;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +9,9 @@ import java.util.Observer;
 import org.junit.*;
 
 
-import edu.wpi.cs.wpisuitetng.janeway.network.Request;
-import edu.wpi.cs.wpisuitetng.janeway.network.Response;
-import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 
 public class TestRequest {
 	class MockObserver implements Observer {

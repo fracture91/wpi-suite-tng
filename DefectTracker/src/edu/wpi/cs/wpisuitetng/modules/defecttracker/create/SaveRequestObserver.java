@@ -3,8 +3,8 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
 import java.util.Observable;
 import java.util.Observer;
 
-import edu.wpi.cs.wpisuitetng.janeway.network.Request;
-import edu.wpi.cs.wpisuitetng.janeway.network.Response;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
  * An Observer for the Request class.

@@ -1,8 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
 
 import edu.wpi.cs.wpisuitetng.janeway.Configuration;
-import edu.wpi.cs.wpisuitetng.janeway.network.Request;
-import edu.wpi.cs.wpisuitetng.janeway.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 
 /**
  * Controller to handle the saving of a defect
