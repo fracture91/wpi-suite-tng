@@ -1,7 +1,12 @@
 package edu.wpi.cs.wpisuitetng.unittests;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
@@ -10,8 +15,10 @@ import edu.wpi.cs.wpisuitetng.core.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class DB4OUnitTest {
-	
-	public void testDB4O(){
+
+	@Test
+	public void testAddandRetrieve() throws Exception {
+		
 		String WPI_TNG_DB ="WPISuite_TNG_unitTest";
 		DataStore myself = null;
 		ObjectContainer theDB;
@@ -26,11 +33,9 @@ public class DB4OUnitTest {
 		myself.getDataStore();
 		userList.add(JSmith);
 		
+		myself.getDataStore();
 		myself.addUser("{\"name\":\"John Smith\",\"username\":\"jsmith\",\"idNum\":0}", JSmith.getClass());
-		assertEquals((User)myself.retrieve(JSmith.getClass(), "userName", "jsmith").get(0), JSmith);
-		
-		
-		
+		assertTrue(((User)myself.retrieve(JSmith.getClass(), "userName", "jsmith").get(0)).equals(JSmith));;
 	}
 
 }

@@ -37,7 +37,7 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().read(path));
+        //out.println(ManagerLayer.getInstance().read(path));
        
         out.close();
 	}
