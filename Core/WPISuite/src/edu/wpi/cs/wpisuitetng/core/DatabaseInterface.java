@@ -19,7 +19,7 @@ public interface DatabaseInterface<C, T> {
 	 * @param compareValue - Value of field, fieldName, that is being queried against
 	 * @return The object that is retrieved
 	 */
-	public List<T> retrieve(T objectType, String fieldName, C compareValue);
+	public List<T> retrieve(Class objectType, String fieldName, Object compareValue);
 	
 	/**
 	 * Updates the object with the value uniqueID for the field fieldName
@@ -42,6 +42,6 @@ public interface DatabaseInterface<C, T> {
 	 * @param uniqueID
 	 * @return The object that was deleted
 	 */
-	public T delete(T objectType, String fieldName,C uniqueID);
+	public T delete(Class objectType, String fieldName, Object uniqueID);
 
 }
