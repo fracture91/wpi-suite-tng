@@ -11,31 +11,31 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Persistent Model that holds information about a set of changes to a Defect.
- * Every time a Defect is changed by a user, a DefectChangeLogEntry should be created
+ * Every time a Defect is changed by a user, a DefectChangeset should be created
  * containing the changes and the user responsible for making them.
  */
-public class DefectChangeLogEntry implements Model, DefectEvent {
+public class DefectChangeset implements Model, DefectEvent {
 
 	private Date date;
 	private User user;
 	private Map<String, FieldChange> changes;
 	
 	/**
-	 * Construct a DefectChangeLogEntry with default properties.
+	 * Construct a DefectChangeset with default properties.
 	 */
-	public DefectChangeLogEntry() {
+	public DefectChangeset() {
 		date = new Date();
 		user = new User("", "", -1);
 		changes = new HashMap<String, FieldChange>();
 	}
 	
 	/**
-	 * Construct a DefectChangeLogEntry with the given properties.
+	 * Construct a DefectChangeset with the given properties.
 	 * Other properties are the same as in the default constructor.
 	 * 
 	 * @param user the User responsible for this change
 	 */
-	public DefectChangeLogEntry(User user) {
+	public DefectChangeset(User user) {
 		this();
 		this.user = user;
 	}
@@ -90,7 +90,7 @@ public class DefectChangeLogEntry implements Model, DefectEvent {
 	public String toJSON() {
 		String json;
 		Gson gson = new Gson();
-		json = gson.toJson(this, DefectChangeLogEntry.class);
+		json = gson.toJson(this, DefectChangeset.class);
 		return json;
 	}
 
