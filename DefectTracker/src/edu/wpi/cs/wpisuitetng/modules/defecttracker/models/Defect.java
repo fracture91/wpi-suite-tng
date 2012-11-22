@@ -8,13 +8,15 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
 
 /**
  * Persistent Model that represents a Defect.
  */
 public class Defect implements Model {
 	private int id;
-	private String title, description, status;
+	private String title, description;
+	private DefectStatus status;
 	private User creator, assignee;
 	private Set<String> tags;
 	private Date creationDate, lastModifiedDate;
@@ -24,7 +26,8 @@ public class Defect implements Model {
 	 */
 	public Defect() {
 		id = -1;
-		title = description = status = "";
+		title = description = "";
+		status = NEW;
 		creator = new User("", "", -1);
 		tags = new HashSet<String>();
 		creationDate = new Date();
@@ -90,18 +93,17 @@ public class Defect implements Model {
 		this.description = description;
 	}
 	
-	// TODO: enum?  how do we define acceptable statuses?
 	/**
 	 * @return the status of this Defect
 	 */
-	public String getStatus() {
+	public DefectStatus getStatus() {
 		return status;
 	}
 	
 	/**
 	 * @param status the status of this Defect
 	 */
-	public void setStatus(String status) {
+	public void setStatus(DefectStatus status) {
 		this.status = status;
 	}
 
