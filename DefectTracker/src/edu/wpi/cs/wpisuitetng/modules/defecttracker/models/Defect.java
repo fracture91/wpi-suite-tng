@@ -18,7 +18,7 @@ public class Defect implements Model {
 	private String title, description;
 	private DefectStatus status;
 	private User creator, assignee;
-	private Set<String> tags;
+	private Set<Tag> tags;
 	private Date creationDate, lastModifiedDate;
 	
 	/**
@@ -29,7 +29,7 @@ public class Defect implements Model {
 		title = description = "";
 		status = NEW;
 		creator = new User("", "", -1);
-		tags = new HashSet<String>();
+		tags = new HashSet<Tag>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
 	}
@@ -136,16 +136,16 @@ public class Defect implements Model {
 	}
 	
 	/**
-	 * @return the set of tags for this Defect
+	 * @return the set of Tags for this Defect
 	 */
-	public Set<String> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 	
 	/**
-	 * @param tags the tags for this Defect
+	 * @param tags the Tags for this Defect
 	 */
-	public void setTags(Set<String> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
 	
