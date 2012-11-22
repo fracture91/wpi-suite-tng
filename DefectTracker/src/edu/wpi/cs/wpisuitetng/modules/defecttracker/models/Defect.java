@@ -1,7 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ public class Defect implements Model {
 	private User creator, assignee;
 	private Set<Tag> tags;
 	private Date creationDate, lastModifiedDate;
+	private List<DefectEvent> events;
 	
 	/**
 	 * Constructs a new Defect with default properties.
@@ -32,6 +35,7 @@ public class Defect implements Model {
 		tags = new HashSet<Tag>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
+		events = new ArrayList<DefectEvent>();
 	}
 	
 	/**
@@ -175,6 +179,20 @@ public class Defect implements Model {
 	 */
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+	
+	/**
+	 * @return the list of events (comments, changes) for this Defect in the order they occurred
+	 */
+	public List<DefectEvent> getEvents() {
+		return events;
+	}
+	
+	/**
+	 * @param events the list of events to set, must be in the order events occurred
+	 */
+	public void setEvents(List<DefectEvent> events) {
+		this.events = events;
 	}
 
 	// note that save and delete don't do anything at the moment, even in the core's models

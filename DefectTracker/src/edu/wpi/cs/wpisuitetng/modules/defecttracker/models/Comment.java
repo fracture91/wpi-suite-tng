@@ -10,20 +10,20 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 /**
  * Persistent Model that represents a Comment on a Defect 
  */
-public class Comment implements Model {
+public class Comment implements Model, DefectEvent {
 
-	private int id, defectId;
-	private Date creationDate;
-	private User creator;
+	private int defectId;
+	private Date date;
+	private User user;
 	private String body;
 	
 	/**
 	 * Create a Comment with default properties.
 	 */
 	public Comment() {
-		id = defectId = -1;
-		creationDate = new Date();
-		creator = new User("", "", -1);
+		defectId = -1;
+		date = new Date();
+		user = new User("", "", -1);
 		body = "";
 	}
 	
@@ -32,27 +32,13 @@ public class Comment implements Model {
 	 * Other properties are the same as the default constructor.
 	 * 
 	 * @param defectId the id of the Defect the Comment is associated with
-	 * @param creator the User who created the Comment
+	 * @param user the User who created the Comment
 	 * @param body the message body of the Comment
 	 */
-	public Comment(int defectId, User creator, String body) {
+	public Comment(int defectId, User user, String body) {
 		this.defectId = defectId;
-		this.creator = creator;
+		this.user = user;
 		this.body = body;
-	}
-	
-	/**
-	 * @return the unique id of this Comment (-1 if this is a new Comment)
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/**
@@ -69,32 +55,24 @@ public class Comment implements Model {
 		this.defectId = defectId;
 	}
 
-	/**
-	 * @return the Date this Comment was created on
-	 */
-	public Date getCreationDate() {
-		return creationDate;
+	@Override
+	public Date getDate() {
+		return date;
 	}
 
-	/**
-	 * @param creationDate the creationDate to set
-	 */
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	@Override
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	/**
-	 * @return the User who created this comment
-	 */
-	public User getCreator() {
-		return creator;
+	@Override
+	public User getUser() {
+		return user;
 	}
 
-	/**
-	 * @param creator the creator to set
-	 */
-	public void setCreator(User creator) {
-		this.creator = creator;
+	@Override
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**
@@ -131,14 +109,8 @@ public class Comment implements Model {
 
 	@Override
 	public Boolean identify(Object o) {
-		Boolean returnValue = false;
-		if(o instanceof Comment && id == ((Comment) o).getId()) {
-			returnValue = true;
-		}
-		if(o instanceof String && Integer.toString(id).equals(o)) {
-			returnValue = true;
-		}
-		return returnValue;
+		// TODO
+		return false;
 	}
 
 }

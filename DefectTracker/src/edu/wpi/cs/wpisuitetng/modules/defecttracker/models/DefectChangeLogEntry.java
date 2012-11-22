@@ -14,20 +14,18 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * Every time a Defect is changed by a user, a DefectChangeLogEntry should be created
  * containing the changes and the user responsible for making them.
  */
-public class DefectChangeLogEntry implements Model {
+public class DefectChangeLogEntry implements Model, DefectEvent {
 
-	private int defectId;
-	private Date changeDate;
-	private User editor;
+	private Date date;
+	private User user;
 	private Map<String, FieldChange> changes;
 	
 	/**
 	 * Construct a DefectChangeLogEntry with default properties.
 	 */
 	public DefectChangeLogEntry() {
-		defectId = -1;
-		changeDate = new Date();
-		editor = new User("", "", -1);
+		date = new Date();
+		user = new User("", "", -1);
 		changes = new HashMap<String, FieldChange>();
 	}
 	
@@ -35,55 +33,31 @@ public class DefectChangeLogEntry implements Model {
 	 * Construct a DefectChangeLogEntry with the given properties.
 	 * Other properties are the same as in the default constructor.
 	 * 
-	 * @param defectId the id of the Defect this entry is associated with
-	 * @param editor the User responsible for this change
+	 * @param user the User responsible for this change
 	 */
-	public DefectChangeLogEntry(int defectId, User editor) {
+	public DefectChangeLogEntry(User user) {
 		this();
-		this.defectId = defectId;
-		this.editor = editor;
-	}
-	
-	/**
-	 * @return the id of the Defect this entry is associated with
-	 */
-	public int getDefectId() {
-		return defectId;
+		this.user = user;
 	}
 
-	/**
-	 * @param defectId the defectId to set
-	 */
-	public void setDefectId(int defectId) {
-		this.defectId = defectId;
+	@Override
+	public Date getDate() {
+		return date;
 	}
 
-	/**
-	 * @return the date this change occurred
-	 */
-	public Date getChangeDate() {
-		return changeDate;
+	@Override
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	/**
-	 * @param changeDate the changeDate to set
-	 */
-	public void setChangeDate(Date changeDate) {
-		this.changeDate = changeDate;
+	@Override
+	public User getUser() {
+		return user;
 	}
 
-	/**
-	 * @return the User responsible for this change
-	 */
-	public User getEditor() {
-		return editor;
-	}
-
-	/**
-	 * @param editor the editor to set
-	 */
-	public void setEditor(User editor) {
-		this.editor = editor;
+	@Override
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**
@@ -120,6 +94,8 @@ public class DefectChangeLogEntry implements Model {
 		return json;
 	}
 
+	// this model will only be created server side and then retrieved as part of a Defect in the future
+	// so I'm not sure if this is necessary
 	@Override
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
