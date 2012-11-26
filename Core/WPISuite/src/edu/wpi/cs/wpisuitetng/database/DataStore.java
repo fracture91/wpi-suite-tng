@@ -142,8 +142,8 @@ public class DataStore {
 		final Method[] theGetters = methodsToBeExecuted;
 		final String theOperator = operator;
 		
-		List<TNG> result = client.query(new Predicate<TNG>(){
-			public boolean match(TNG aDefect){
+		List<Model> result = client.query(new Predicate<Model>(){
+			public boolean match(Model aDefect){
 				try {
 					boolean matchSoFar = true;
 					if(theOperator.equalsIgnoreCase("and")){

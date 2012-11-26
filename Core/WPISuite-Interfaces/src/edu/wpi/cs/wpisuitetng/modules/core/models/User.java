@@ -2,7 +2,6 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
-import edu.wpi.cs.wpisuitetng.database.TNG;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
@@ -11,7 +10,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * @author mdelladonna (sp?), twack
  */
 
-public class User implements Model, TNG
+public class User implements Model
 {
 	private String name;
 	private String username;
