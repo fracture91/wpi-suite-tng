@@ -1,34 +1,41 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
 
 /**
  * Persistent Model that represents a Defect.
  */
 public class Defect implements Model {
 	private int id;
-	private String title, description, status;
+	private String title, description;
+	private DefectStatus status;
 	private User creator, assignee;
-	private Set<String> tags;
+	private Set<Tag> tags;
 	private Date creationDate, lastModifiedDate;
+	private List<DefectEvent> events;
 	
 	/**
 	 * Constructs a new Defect with default properties.
 	 */
 	public Defect() {
 		id = -1;
-		title = description = status = "";
+		title = description = "";
+		status = NEW;
 		creator = new User("", "", -1);
-		tags = new HashSet<String>();
+		tags = new HashSet<Tag>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
+		events = new ArrayList<DefectEvent>();
 	}
 	
 	/**
@@ -90,18 +97,17 @@ public class Defect implements Model {
 		this.description = description;
 	}
 	
-	// TODO: enum?  how do we define acceptable statuses?
 	/**
 	 * @return the status of this Defect
 	 */
-	public String getStatus() {
+	public DefectStatus getStatus() {
 		return status;
 	}
 	
 	/**
 	 * @param status the status of this Defect
 	 */
-	public void setStatus(String status) {
+	public void setStatus(DefectStatus status) {
 		this.status = status;
 	}
 
@@ -134,16 +140,16 @@ public class Defect implements Model {
 	}
 	
 	/**
-	 * @return the set of tags for this Defect
+	 * @return the set of Tags for this Defect
 	 */
-	public Set<String> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 	
 	/**
-	 * @param tags the tags for this Defect
+	 * @param tags the Tags for this Defect
 	 */
-	public void setTags(Set<String> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
 	
@@ -173,6 +179,20 @@ public class Defect implements Model {
 	 */
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+	
+	/**
+	 * @return the list of events (comments, changes) for this Defect in the order they occurred
+	 */
+	public List<DefectEvent> getEvents() {
+		return events;
+	}
+	
+	/**
+	 * @param events the list of events to set, must be in the order events occurred
+	 */
+	public void setEvents(List<DefectEvent> events) {
+		this.events = events;
 	}
 
 	// note that save and delete don't do anything at the moment, even in the core's models
