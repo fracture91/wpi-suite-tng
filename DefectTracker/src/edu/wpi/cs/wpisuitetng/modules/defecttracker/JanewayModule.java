@@ -3,12 +3,12 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import edu.wpi.cs.wpisuitetng.janeway.models.IJanewayModule;
-import edu.wpi.cs.wpisuitetng.janeway.models.JanewayTabModel;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers.MainTabController;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.controllers.ToolbarController;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.MainTabView;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.views.ToolbarView;
+import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
+import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar.ToolbarController;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar.ToolbarView;
 
 /**
  * This is where the module can define what's necessary to work correctly in Janeway.
@@ -24,8 +24,8 @@ public class JanewayModule implements IJanewayModule {
 		MainTabView mainTabView = new MainTabView();
 		mainTabController = new MainTabController(mainTabView);
 		
-		ToolbarView toolbarView = new ToolbarView(this);
-		toolbarController = new ToolbarController(toolbarView, this);
+		ToolbarView toolbarView = new ToolbarView(mainTabController);
+		toolbarController = new ToolbarController(toolbarView, mainTabController);
 		
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel("Defects", new ImageIcon(), toolbarView, mainTabView);
