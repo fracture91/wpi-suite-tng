@@ -1,13 +1,8 @@
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng.database;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
@@ -20,10 +15,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
-import edu.wpi.cs.wpisuitetng.modules.core.models.TNG;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-
-import placeholderFiles.Defect;
 
 public class DataStore {
 	
@@ -41,12 +33,14 @@ public class DataStore {
 	public static DataStore getDataStore()
 	{
 		if(myself == null)
+		{
 			myself = new DataStore();
-		// accessLocalServer
-		ServerConfiguration config = Db4oClientServer.newServerConfiguration();
-		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		 server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
-		server.grantAccess(DB4oUser,DB4oPass);
+			// accessLocalServer
+			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
+			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
+			server.grantAccess(DB4oUser,DB4oPass);
+		}
 		return myself;
 	}
 	
@@ -233,7 +227,7 @@ public class DataStore {
 	public Project[] getProject(int idNum)
 	{
 		Project[] ret = new Project[1];
-		return retrieve(new Project("",0).getClass(), "idnum", idNum).toArray(ret);
+		return retrieve(new Project("","").getClass(), "idnum", idNum).toArray(ret);
 		
 	}
 

@@ -1,6 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
-
-import java.util.ArrayList;
+package edu.wpi.cs.wpisuitetng.modules;
 
 /**
  * Interface for all EntityManagers. Enforces standards for interaction
@@ -8,16 +6,15 @@ import java.util.ArrayList;
  * @author twack
  *
  * @param <T>	The Model Class
- * @param <C>	The Datatype of this Model's unique identifier
  */
-public interface EntityManager<T, C>
+public interface EntityManager<T extends Model>
 {
 	/* Create (Entity Builder) */
 	/**
 	 * Defines Model-specific instantiation
 	 * @return	an instance of this Manager's Model class T
 	 */
-	public T makeEntity();
+	public T makeEntity(String content);
 	
 	/* Retrieve */	
 	/**
@@ -25,13 +22,13 @@ public interface EntityManager<T, C>
 	 * @param id	the unique identifier value
 	 * @return	the entity with the given ID
 	 */
-	public T getEntity(C id);
+	public T[] getEntity(String id);
 	
 	/**
 	 * Retrieves all entities of Model class T
 	 * @return	an ArrayList<T> with all instances of T
 	 */
-	public ArrayList<T> getAll();
+	public T[] getAll();
 	
 	
 	/* Update */
@@ -46,7 +43,7 @@ public interface EntityManager<T, C>
 	 * Deletes the entity with the given unique identifier, id.
 	 * @param id	the unique identifier for the entity
 	 */
-	public void deleteEntity(C id);
+	public boolean deleteEntity(String id);
 	
 	/**
 	 * Deletes all entities of Model class T

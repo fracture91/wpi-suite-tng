@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
+import edu.wpi.cs.wpisuitetng.database.TNG;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
@@ -14,6 +15,7 @@ public class User implements Model, TNG
 {
 	private String name;
 	private String username;
+	private String password;
 	private int idNum;
 	
 	/**
@@ -27,6 +29,16 @@ public class User implements Model, TNG
 		this.name = name;
 		this.username = username;
 		this.idNum = idNum;
+	}
+	
+	/**
+	 * Performs password checking logic. In the future, this may implement hashing.
+	 * @param pass	the password String to compare
+	 * @return	True if the password matches, False otherwise.
+	 */
+	public boolean matchPassword(String pass)
+	{
+		return password.equals(pass);
 	}
 	
 	/* Accessors */
