@@ -26,7 +26,8 @@ public class SaveDefectController {
 	 */
 	public void save() {
 		final SaveRequestObserver requestObserver = new SaveRequestObserver();
-		Request request = new Request(ConfigManager.getConfig().getCoreUrl(), RequestMethod.POST);
+		// TODO Change PUT/POST depending on whether this is create or update
+		Request request = new Request(ConfigManager.getConfig().getCoreUrl(), RequestMethod.PUT);
 		request.setRequestBody(view.getModel().toJSON());
 		request.addObserver(requestObserver);
 		request.send();

@@ -11,8 +11,7 @@ import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
-
-
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.DefectManager;
 
 
 /**
@@ -47,6 +46,7 @@ public class ManagerLayer {
 		//TODO pull these mappings from some config file and reflect them
 		map.put("coreproject", new ProjectManager());
 		map.put("coreuser", new UserManager());
+		map.put("defectdefect", new DefectManager());
 		
 	}
 	
