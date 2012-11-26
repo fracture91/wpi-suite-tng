@@ -23,7 +23,7 @@ public class ProjectManager implements EntityManager<Project>{
 		
 		p = gson.fromJson(content, project);
 		
-		if(getEntity( ((Integer) p.getIdNum()).toString() ).length == 0)
+		if(getEntity(p.getIdNum()).length == 0)
 		{
 			save(p);
 		}
@@ -47,7 +47,7 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project[] getAll() {
-		// TODO Auto-generated method stub
+		// TODO Implement this feature in a later release (dependant on DB interface)
 		return null;
 	}
 

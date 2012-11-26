@@ -47,7 +47,7 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public User[] getAll() {
-		// TODO Auto-generated method stub
+		// TODO Implement this feature in a later release
 		return null;
 	}
 

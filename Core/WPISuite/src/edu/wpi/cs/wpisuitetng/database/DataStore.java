@@ -227,7 +227,7 @@ public class DataStore {
 	public Project[] getProject(int idNum)
 	{
 		Project[] ret = new Project[1];
-		return retrieve(new Project("",0).getClass(), "idnum", idNum).toArray(ret);
+		return retrieve(new Project("","").getClass(), "idnum", idNum).toArray(ret);
 		
 	}
 

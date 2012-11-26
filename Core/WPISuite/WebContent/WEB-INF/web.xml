@@ -11,7 +11,7 @@
   </welcome-file-list>
   <servlet>
     <servlet-name>wpisuite</servlet-name>
-    <servlet-class>edu.wpi.cs.wpisuitetng.core.WPICoreServlet</servlet-class>
+    <servlet-class>edu.wpi.cs.wpisuitetng.WPICoreServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>wpisuite</servlet-name>
@@ -19,7 +19,7 @@
   </servlet-mapping>
   <servlet>
   	<servlet-name>login</servlet-name>
-  	<servlet-class>edu.wpi.cs.wpisuitetng.core.WPILoginServlet</servlet-class>
+  	<servlet-class>edu.wpi.cs.wpisuitetng.WPILoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>login</servlet-name>
