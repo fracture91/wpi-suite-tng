@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.network;
+package edu.wpi.cs.wpisuitetng.network.configuration;
 
 import java.net.URL;
 import java.util.ArrayList;
