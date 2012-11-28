@@ -4,26 +4,26 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class ProjectManager implements EntityManager<Project>{
+public class UserManager implements EntityManager<User> {
 
-	Class<Project> project = Project.class;
+	Class<User> user = User.class;
 	Gson gson;
 	
-	public ProjectManager()
+	public UserManager()
 	{
 		gson = new Gson();
 	}
 	
 	@Override
-	public Project makeEntity(String content) {
+	public User makeEntity(String content) {
 		
-		Project p;
+		User p;
 		
-		p = gson.fromJson(content, project);
+		p = gson.fromJson(content, user);
 		
-		if(getEntity(p.getIdNum()).length == 0)
+		if(getEntity(p.getUsername())[0] == null)
 		{
 			save(p);
 		}
@@ -32,41 +32,42 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 
 	@Override
-	public Project[] getEntity(String id) 
+	public User[] getEntity(String id) 
 	{
-		Project[] m = new Project[1];
+		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
 		{
 			return getAll();
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
+			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
 		}
 	}
 
 	@Override
-	public Project[] getAll() {
-		// TODO Implement this feature in a later release (dependant on DB interface)
+	public User[] getAll() {
+		// TODO Implement this feature in a later release
 		return null;
 	}
 
 	@Override
-	public void save(Project model) {
+	public void save(User model) {
 		DataStore.getDataStore().save(model);
 		
 	}
 
 	@Override
-	public boolean deleteEntity(String id)
-	{
+	public boolean deleteEntity(String id) {
+		
 		DataStore data = DataStore.getDataStore();
 		
-		String s = data.delete(data.retrieve(project, "idNum", id).get(0));
+		String s = data.delete(data.retrieve(user, "username", id).get(0));
 		
 		return (s.startsWith("Deleted")) ? true : false;
+		
 	}
-	
+
 	@Override
 	public void deleteAll() {
 		// TODO Auto-generated method stub
@@ -78,8 +79,5 @@ public class ProjectManager implements EntityManager<Project>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-	
 
 }

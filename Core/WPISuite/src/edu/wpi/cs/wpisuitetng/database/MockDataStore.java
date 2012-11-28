@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng.database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +29,11 @@ public class MockDataStore {
 		models.add(new User("fred","fred",1));
 		models.add(new User("jeff","jeff",2));
 		models.add(new User("tyler","tyler",3));
-		models.add(new Project("WPISUITE",0));
-		models.add(new Project("ANDROID:BEARCLAW",1));
-		models.add(new Project("WINDOWS9",2));
-		models.add(new Project("OSX:HOUSECAT",3));
-		models.add(new Project("UBUNTU_RABID_RHINO",4));
+		//models.add(new Project("WPISUITE",0));
+		//models.add(new Project("ANDROID:BEARCLAW",1));
+		//models.add(new Project("WINDOWS9",2));
+		//models.add(new Project("OSX:HOUSECAT",3));
+		//models.add(new Project("UBUNTU_RABID_RHINO",4));
 	}
 	
 	public Model save(String json, Class<? extends Model> type)

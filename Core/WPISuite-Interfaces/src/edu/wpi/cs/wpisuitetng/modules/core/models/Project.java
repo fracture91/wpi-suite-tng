@@ -7,20 +7,20 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mdelladonna (sp?), twack
+ * @author mpdelladonna (sp?), twack
  */
 
-public class Project implements Model, TNG
+public class Project implements Model
  {
 	private String name;
-	private int idNum;
+	private String idNum;
 	
 	/**
 	 * Primary constructor for a Project
 	 * @param name	the project name
 	 * @param idNum	the ID number to associate with this Project.
 	 */
-	public Project(String name, int idNum)
+	public Project(String name, String idNum)
 	{
 		this.name = name;
 		this.idNum = idNum;
@@ -32,7 +32,7 @@ public class Project implements Model, TNG
 		return name;
 	}
 	
-	public int getIdNum()
+	public String getIdNum()
 	{
 		return idNum;
 	}
@@ -114,16 +114,14 @@ public class Project implements Model, TNG
 		
 		if(o instanceof Project)
 		{
-			if(Integer.toString((((Project) o).idNum))
-					.equalsIgnoreCase(
-							Integer.toString(this.idNum)))
+			if(((Project) o).getIdNum().equalsIgnoreCase(this.idNum))
 				{
 					b = true;
 				}
 		}
 		
 		if(o instanceof String)
-			if(((String) o).equalsIgnoreCase(Integer.toString(this.idNum)))
+			if(((String) o).equalsIgnoreCase((this.idNum)))
 				b = true;
 		
 		

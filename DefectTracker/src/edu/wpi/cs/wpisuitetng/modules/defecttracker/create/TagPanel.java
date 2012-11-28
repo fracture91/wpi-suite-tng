@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 
 /**
  * Panel to manage adding and removing tags
@@ -39,7 +40,7 @@ public class TagPanel extends JPanel {
 		addComponents(layout);
 		
 		// Populate the list of tags
-		for (String tag : defect.getTags()) {
+		for (Tag tag : defect.getTags()) {
 			lmTags.addElement(tag);
 		}
 		
