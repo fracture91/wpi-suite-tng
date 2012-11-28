@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.network;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,29 @@ public class NetworkConfiguration {
 	 */
 	public NetworkConfiguration(URL apiUrl) {
 		this.apiUrl = apiUrl;
+		this.defaultRequestHeaders = new HashMap<String, List<String>>();
+	}
+	
+	/**
+	 * Creates a new NetworkConfiguration which duplicates the given NetworkConfiguration.
+	 * 
+	 * @param networkConfiguration	The NetworkConfiguration to duplicate.
+	 */
+	public NetworkConfiguration(NetworkConfiguration networkConfiguration) {
+		this(networkConfiguration.getApiUrl());
+		
+		// Copy request headers from networkConfiguration
+		Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
+		Iterator<String> valuesI;
+		String currentKey;
+		while (keysI.hasNext()) {
+			currentKey = keysI.next();
+			valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
+			
+			while (valuesI.hasNext()) {
+				this.addRequestHeader(currentKey, valuesI.next());
+			}
+		}
 	}
 	
 	/**
