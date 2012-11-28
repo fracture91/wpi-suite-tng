@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 
 /**
@@ -50,6 +52,7 @@ public class LoginController implements ActionListener {
 			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
 				ConfigManager.getConfig().setCoreUrl(coreURL);
+				Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration(URLText));
 				mainGUI.setVisible(true);
 				view.dispose();
 			} catch (MalformedURLException e1) { // failed, bad URL
