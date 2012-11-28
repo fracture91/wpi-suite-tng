@@ -1,29 +1,29 @@
 package edu.wpi.cs.wpisuitetng.network.configuration;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
 
 /**
  * Stores configuration information for connecting to the core server API.
  */
 public class NetworkConfiguration {
-	protected URL apiUrl;			/** The URL of the core server API */
-	protected String username;		/** The username. TODO This may not be needed, depending on how the API works. */
-	protected String password;		/** The password. TODO This may not be needed, depending on how the API works. */
+	protected String apiUrl;									/** The URL of the core server API */
 	protected Map<String, List<String>> defaultRequestHeaders;	/** The default request headers. */
-
+	protected List<Observer> observers;						/** The default observers. */
+	
 	/**
 	 * Constructs a NetworkConfiguration.
 	 * 
 	 * @param apiUrl	The url to the core server API.
 	 */
-	public NetworkConfiguration(URL apiUrl) {
+	public NetworkConfiguration(String apiUrl) {
 		this.apiUrl = apiUrl;
 		this.defaultRequestHeaders = new HashMap<String, List<String>>();
+		this.observers = new ArrayList<Observer>();
 	}
 	
 	/**
@@ -46,7 +46,31 @@ public class NetworkConfiguration {
 				this.addRequestHeader(currentKey, valuesI.next());
 			}
 		}
+		
+		// Copy observers from networkConfiguration
+		Iterator<Observer> observersI = networkConfiguration.observers.iterator();
+		while (observersI.hasNext()) {
+			this.addObserver(observersI.next());
+		}
 	}
+	
+	/**
+	 * Adds an observer to the observers.
+	 * 
+	 * @param observer	The observer to add to the observers.
+	 * 
+	 * @throws NullPointerException		If the observer is null.
+	 */
+	public void addObserver(Observer observer) throws NullPointerException {
+		// check to see if the observer is null
+		if (observer == null) {
+			throw new NullPointerException("The observer must not be null.");
+		}
+		
+		observers.add(observer);
+	}
+	
+	
 	
 	/**
 	 * Adds a header to the default request headers.
@@ -85,8 +109,15 @@ public class NetworkConfiguration {
 	/**
 	 * @return A URL to the core server API.
 	 */
-	public URL getApiUrl() {
+	public String getApiUrl() {
 		return apiUrl;
+	}
+	
+	/**
+	 * @return	A List of Observers.
+	 */
+	public List<Observer> getObservers() {
+		return observers;
 	}
 	
 	/**
