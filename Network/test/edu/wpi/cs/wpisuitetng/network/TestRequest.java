@@ -12,6 +12,7 @@ import org.junit.*;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Response;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 public class TestRequest {
 	class MockObserver implements Observer {
@@ -51,43 +52,41 @@ public class TestRequest {
 		}
 	}
 	
+	private NetworkConfiguration config;
 	private static int port = 8080;
 	
+	@Before
+	public void setUp() {
+		config = new NetworkConfiguration("http://localhost:" + port);
+	}
+	
 	/**
-	 * Test that a NullPointerException is thrown when a null url is passed to the Request constructor.
+	 * Test that a NullPointerException is thrown when a null networkConfiguration is passed to the Request constructor.
 	 * @throws MalformedURLException 
 	 */
 	@Test
 	public void testRequestConstructorNullPointerException() throws MalformedURLException {
 		try {
-			Request r = new Request(null, null);
-			fail("No exception thrown.");
+			Request r = new Request(null, null, null);
+			fail("No NullPointerException thrown when constructing a Request with null networkConfiguration parameter.");
 		} catch (NullPointerException e) {
-			// Do nothing
+			assertTrue("The networkConfiguration must not be null.".equals(e.getMessage()));
 		}
 		
-		try {
-			Request r = new Request(new URL("http://wpi.edu"), null);
-			fail("No exception thrown.");
-		} catch (NullPointerException e) {
-			// Do nothing
-		}
+		
 	}
 	
 	/**
 	 * Test that a NullPointerException is thrown when a null requestMethod is passed to the Request#setRequestMethod.
+	 * @throws MalformedURLException 
 	 */
 	@Test
-	public void testRequestSetRequestMethodNullPointerException() {
+	public void testRequestSetRequestMethodNullPointerException() throws MalformedURLException {
 		try {
-			Request r = new Request(new URL("http://localhost:8080"), RequestMethod.POST);
-			r.setRequestMethod(null);
-			fail("No exception thrown.");
+			Request r = new Request(config, null, null);
+			fail("No NullPointerException thrown when constructing a Request with null requestMethod parameter.");
 		} catch (NullPointerException e) {
-			// Do nothing
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("The requestMethod must not be null.".equals(e.getMessage()));
 		}
 	}
 	
@@ -97,7 +96,7 @@ public class TestRequest {
 	@Test
 	public void testRequestSetRequestBodyNullPointerException() {
 		try {
-			Request r = new Request(new URL("http://localhost:8080"), RequestMethod.POST);
+			Request r = new Request(config, null, RequestMethod.POST);
 			r.setRequestBody(null);
 			fail("No exception thrown.");
 		} catch (NullPointerException e) {
@@ -125,7 +124,7 @@ public class TestRequest {
 
 
 			// Make a new POST Request.
-			Request manualRequest = new Request(url, RequestMethod.POST);	// construct the Request
+			Request manualRequest = new Request(config, null, RequestMethod.POST);	// construct the Request
 
 			// Configure the request
 			manualRequest.setRequestBody(body);	// set the request body to send to the server
