@@ -2,6 +2,10 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -55,11 +59,44 @@ public class WPILoginServlet extends HttpServlet {
 	}
 
 	@Override
+	/**
+	 * Implements the User Logout functionality. Mapped to '/logout'
+	 */
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// sends back a test cookie
-		Cookie userCookie = new Cookie("user","test");
-		resp.addCookie(userCookie);
+		
+		// if there are no cookies, then this is an invalid logout request
+		if(req.getCookies() == null)
+		{
+			resp.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, no session cookie posted to log off with
+		}
+		else
+		{
+			// find the WPISUITE cookie in the request
+			Cookie[] cookies = req.getCookies();
+			int cookieIndex = 0;
+			boolean found = false;
+			while(found != true)
+			{
+				// if found, then logout the user with the given username.
+				if(cookies[cookieIndex].getName().startsWith("WPISUITE-"))
+				{
+					this.logoutUser(cookies[cookieIndex].getValue()); // logs out the user with the given session cookie.
+					resp.setStatus(HttpServletResponse.SC_CONTINUE); // logout successful
+					found = true;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Performs user logout logic. Removes the Session for the given sessionToken.
+	 * @param session
+	 */
+	private void logoutUser(String session)
+	{
+		ManagerLayer manager = ManagerLayer.getInstance();
+		manager.getSessions().removeSession(session);
 	}
 
 	/**
