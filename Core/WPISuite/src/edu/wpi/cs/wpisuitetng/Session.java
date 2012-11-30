@@ -24,7 +24,7 @@ public class Session {
 	public Session(User user)
 	{
 		this.user = user;
-		loginTime = new Date();
+		this.loginTime = new Date();
 	}
 	
 	public String getUsername()

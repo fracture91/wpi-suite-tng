@@ -38,6 +38,14 @@ public class SessionManager {
 	}
 	
 	/**
+	 * wipes the sessions store.
+	 */
+	public void clearSessions()
+	{
+		sessions = new HashMap<String, Session>();
+	}
+	
+	/**
 	 * Retrieves the Session for the user with the given name.
 	 * 
 	 * @param sessionToken	the tokenize cookie given from the client
@@ -77,15 +85,25 @@ public class SessionManager {
 	}
 	
 	/**
-	 * wipes the sessions store.
+	 * @return	Retrieves the number of sessions currently in the Manager
 	 */
-	public void clearSessions()
+	public int sessionCount()
 	{
-		sessions = new HashMap<String, Session>();
+		return this.sessions.size();
 	}
 	
+	/**
+	 * Renews the Session for a given sessionToken.
+	 * 	Parses the username from the token, then creates
+	 * 		a new session for the given user.
+	 * @param sessionToken
+	 * @return	the new Session
+	 */
 	public Session renewSession(String sessionToken)
 	{
+		// remove the old session
+		this.removeSession(sessionToken);
+		
 		// parse the username from the sessionToken
 		Gson gson = new Gson();
 		Session old = gson.fromJson(sessionToken, Session.class);
