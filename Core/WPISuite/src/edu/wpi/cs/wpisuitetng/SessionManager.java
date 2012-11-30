@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.catalina.filters.ExpiresFilter;
 
+import com.google.gson.Gson;
+
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -82,12 +84,18 @@ public class SessionManager {
 		sessions = new HashMap<String, Session>();
 	}
 	
-	/*
 	public Session renewSession(String sessionToken)
 	{
-		// parse username from sessionToken
-		// retrieve user with given user name
-		// return createSession(user);
-	} */
+		// parse the username from the sessionToken
+		Gson gson = new Gson();
+		Session old = gson.fromJson(sessionToken, Session.class);
+		String sessionUsername = old.getUsername();
+		
+		// retrieve the User
+		ManagerLayer manager = ManagerLayer.getInstance();
+		User sessionUser = manager.getUsers().getEntity(sessionUsername)[0]; // TODO: this looks ugly...
+		
+		return createSession(sessionUser);
+	}
 
 }
