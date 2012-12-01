@@ -29,3 +29,5 @@ Janeway/janeway.conf
 /Core/WPISuite/build/classes/META-INF/MANIFEST.MF
 /Core/WPISuite/src/META-INF/MANIFEST.MF
 /Core/WPISuite/WPISuite_TNG_local
+/Core/WPISuite/WebContent/WEB-INF/lib/DefectTracker.jar
+
