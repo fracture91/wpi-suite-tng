@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;

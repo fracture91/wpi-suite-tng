@@ -11,7 +11,7 @@ import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.DefectManager;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
 
 
 /**
