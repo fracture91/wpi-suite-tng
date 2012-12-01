@@ -46,7 +46,7 @@ public class ManagerLayer {
 		//TODO pull these mappings from some config file and reflect them
 		map.put("coreproject", new ProjectManager());
 		map.put("coreuser", new UserManager());
-		map.put("defectdefect", new DefectManager());
+		map.put("defecttrackerdefect", new DefectManager());
 		
 	}
 	
