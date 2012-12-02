@@ -25,6 +25,14 @@
   	<servlet-name>login</servlet-name>
   	<url-pattern>/login/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+  	<servlet-name>logout</servlet-name>
+  	<servlet-class>edu.wpi.cs.wpisuitetng.WPILoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>logout</servlet-name>
+  	<url-pattern>/logout/*</url-pattern>
+  </servlet-mapping>
   <security-constraint>
   	<web-resource-collection>
   		<web-resource-name>login</web-resource-name>
