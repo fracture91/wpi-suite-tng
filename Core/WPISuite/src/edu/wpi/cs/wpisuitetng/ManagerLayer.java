@@ -146,7 +146,7 @@ public class ManagerLayer {
 	 * @param content - the content of the create request
 	 * @return a JSON String of the newly created data if successful, null otherwise
 	 */
-	public synchronized String create(String[] args, String content,Cookie[] cook)
+	public synchronized String create(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = null;
 		if(cook != null)
@@ -171,7 +171,7 @@ public class ManagerLayer {
 	 * @param content - a JSON String of the content to update
 	 * @return a JSON String of the updated element
 	 */
-	public synchronized String update(String[] args, String content,Cookie[] cook)
+	public synchronized String update(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
 		String result = delete(args,cook);
 		
@@ -189,7 +189,7 @@ public class ManagerLayer {
 	 * @param args - A String array of the parameters 
 	 * @return String "null" if the delete was successful, a message otherwise
 	 */
-	public synchronized String delete(String[] args,Cookie[] cook)
+	public synchronized String delete(String[] args,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = null;
 		for(Cookie c : cook)
