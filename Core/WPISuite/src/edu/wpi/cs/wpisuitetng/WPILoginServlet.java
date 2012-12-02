@@ -62,7 +62,7 @@ public class WPILoginServlet extends HttpServlet {
 	private Session loginUser(String username, String password)
 	{
 		ManagerLayer manager = ManagerLayer.getInstance();
-		User[] u = manager.getUsers().getEntity(username);
+		User[] u = manager.getUsers(username);
 		
 		if(u.length == 0)
 		{

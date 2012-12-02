@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -17,27 +18,27 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public Project makeEntity(String content) {
+	public Project makeEntity(Session s, String content) {
 		
 		Project p;
 		
 		p = gson.fromJson(content, project);
 		
-		if(getEntity( ((Integer) p.getIdNum()).toString() ).length == 0)
+		if(getEntity(s, ((Integer) p.getIdNum()).toString() ).length == 0)
 		{
-			save(p);
+			save(s,p);
 		}
 		
 		return p;
 	}
 
 	@Override
-	public Project[] getEntity(String id) 
+	public Project[] getEntity(Session s, String id) 
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			return getAll();
+			return getAll(s);
 		}
 		else
 		{
@@ -46,19 +47,19 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 
 	@Override
-	public Project[] getAll() {
+	public Project[] getAll(Session s) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void save(Project model) {
+	public void save(Session s, Project model) {
 		DataStore.getDataStore().save(model);
 		
 	}
 
 	@Override
-	public boolean deleteEntity(String id)
+	public boolean deleteEntity(Session s1, String id)
 	{
 		DataStore data = DataStore.getDataStore();
 		
@@ -68,14 +69,14 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public void deleteAll() {
+	public void deleteAll(Session s) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int Count() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 

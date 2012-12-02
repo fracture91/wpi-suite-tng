@@ -26,10 +26,11 @@ public class User extends AbstractModel implements TNG
 	 * @param username	User's username (nickname)
 	 * @param idNum	User's ID number
 	 */
-	public User(String name, String username, int idNum)
+	public User(String name, String username, String password, int idNum)
 	{
 		this.name = name;
 		this.username = username;
+		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
 	}

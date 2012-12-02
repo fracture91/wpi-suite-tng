@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.ManagerLayer;
 import edu.wpi.cs.wpisuitetng.core.entitymanagers.MockUserManager;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
 public class TestManagerLayer {
@@ -24,7 +25,13 @@ public class TestManagerLayer {
 		testMap.put("coreuser", new MockUserManager());
 		ManagerLayer test = ManagerLayer.getTestInstance(testMap);
 		
-		String testResponse = test.read(testUserArgs);
+		String testResponse = null;
+		try {
+			testResponse = test.read(testUserArgs,null);
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		assertEquals("[{\"name\":\"fake\",\"username\":\"\",\"idNum\":0}]", testResponse);
 	}

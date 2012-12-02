@@ -5,6 +5,8 @@ import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+
 /**
  * Primary servlet for the WPISuite service
  * 
@@ -37,7 +39,11 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().read(path));
+        try {
+			out.println(ManagerLayer.getInstance().read(path,req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
        
         out.close();
 	}
@@ -56,10 +62,10 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().create(path,in.readLine()));
-        
-        out.close();
+        out.println(ManagerLayer.getInstance().create(path,in.readLine(),req.getCookies()));
         res.setStatus(HttpServletResponse.SC_CREATED);
+        out.close();
+        
     }
 	
 	/**
@@ -76,7 +82,7 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().update(path,in.readLine()));
+        out.println(ManagerLayer.getInstance().update(path,in.readLine(),req.getCookies()));
         
         out.close();
     }
@@ -94,7 +100,7 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().delete(path));
+        out.println(ManagerLayer.getInstance().delete(path,req.getCookies()));
         
         out.close();
     }
