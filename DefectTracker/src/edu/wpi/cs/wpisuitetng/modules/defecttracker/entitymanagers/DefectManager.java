@@ -1,10 +1,22 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
+
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
 
 public class DefectManager implements EntityManager<Defect> {
 
+	Gson gson;
+	
+	public DefectManager() {
+		gson = new Gson();
+	}
+	
 	@Override
 	public int Count() {
 		// TODO Auto-generated method stub
@@ -25,8 +37,9 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public Defect[] getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO: gross hack, use DataStore.retrieveAll
+		return DataStore.getDataStore().retrieve(Defect.class, "events",
+		                                         new ArrayList<DefectEvent>()).toArray(new Defect[0]);
 	}
 
 	@Override
@@ -36,9 +49,17 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 
 	@Override
-	public Defect makeEntity(String arg0) {
-		System.out.println("Make entity: " + arg0);
-		return null;
+	public Defect makeEntity(String content) {
+		final Defect newDefect = gson.fromJson(content, Defect.class);
+		
+		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
+		final Defect[] existingDefects = getAll();
+		newDefect.setId(existingDefects.length + 1);
+		
+		// TODO: validation
+		
+		DataStore.getDataStore().save(newDefect);
+		return newDefect;
 	}
 
 	@Override
