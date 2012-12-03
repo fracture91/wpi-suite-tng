@@ -6,9 +6,13 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
 
+/**
+ * Provides database interaction for Defect models.
+ */
 public class DefectManager implements EntityManager<Defect> {
 
 	DataStore db;
@@ -59,6 +63,15 @@ public class DefectManager implements EntityManager<Defect> {
 		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
 		final Defect[] existingDefects = getAll();
 		newDefect.setId(existingDefects.length + 1);
+		
+		//make sure the creator exists
+		String creator = newDefect.getCreator().getUsername();
+		User[] existingUsers = db.getUser(creator);
+		if(existingUsers.length > 0 && existingUsers[0] != null) {
+			newDefect.setCreator(existingUsers[0]);
+		} else {
+			throw new IllegalArgumentException("Defect's creator does not exist");
+		}
 		
 		// TODO: validation
 		save(newDefect);
