@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.create.CreateDefectView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.SearchDefectsView;
 
 /**
  * Controls the behavior of a given MainTabView.
@@ -32,6 +33,15 @@ public class MainTabController {
 	 */
 	public void addCreateDefectTab() {
 		this.view.addTab("Create Defect", new ImageIcon(), new CreateDefectView(), "Create a new defect");
+		this.view.setSelectedIndex(this.view.getTabCount() - 1);
+	}
+	
+	/**
+	 * Create a tab that shows the UI for searching and filtering defects
+	 */
+	public void addSearchDefectsTab() {
+		SearchDefectsView searchDefectsView = new SearchDefectsView();
+		this.view.addTab("Search Defects", new ImageIcon(), searchDefectsView, "Search for defects");
 		this.view.setSelectedIndex(this.view.getTabCount() - 1);
 	}
 	

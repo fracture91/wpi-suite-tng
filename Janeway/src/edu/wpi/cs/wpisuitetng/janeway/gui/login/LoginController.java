@@ -52,6 +52,7 @@ public class LoginController implements ActionListener {
 			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
 				ConfigManager.getConfig().setCoreUrl(coreURL);
+				ConfigManager.writeConfig();
 				Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration(URLText));
 				mainGUI.setVisible(true);
 				view.dispose();

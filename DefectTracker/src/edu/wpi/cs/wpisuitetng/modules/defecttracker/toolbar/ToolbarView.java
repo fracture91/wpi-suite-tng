@@ -22,9 +22,16 @@ public class ToolbarView extends DefaultToolbarView {
 	 */
 	public ToolbarView(MainTabController tabController) {
 		ToolbarGroupView toolbarGroup = new ToolbarGroupView("Global");
+		
+		// Construct the create defect button
 		createDefect = new JButton();
 		createDefect.setAction(new CreateDefectAction(tabController));
+		
+		// Construct the search button
 		searchDefects = new JButton("Search Defects");
+		searchDefects.setAction(new SearchDefectsAction(tabController));
+		
+		// Add the buttons to the toolbar
 		toolbarGroup.getContent().add(createDefect);
 		toolbarGroup.getContent().add(searchDefects);
 		toolbarGroup.setPreferredWidth(300);
