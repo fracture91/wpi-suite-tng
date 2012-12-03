@@ -203,8 +203,7 @@ public class DataStore {
 	public User[] getUser(String username)
 	{
 		User[] ret = new User[1];
-		retrieve(new User("","",0).getClass(), "username", username).toArray(ret);
-		return ret;
+		return retrieve(new User("","",0).getClass(), "username", username).toArray(ret);
 		
 	}
 	
