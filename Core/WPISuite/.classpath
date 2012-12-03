@@ -16,7 +16,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/WPISuite-Interfaces"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/WPISuite-Interfaces.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/DefectTracker.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/WPISuite-Interfaces.jar" sourcepath="/WPISuite-Interfaces"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/DefectTracker.jar" sourcepath="/DefectTracker"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
