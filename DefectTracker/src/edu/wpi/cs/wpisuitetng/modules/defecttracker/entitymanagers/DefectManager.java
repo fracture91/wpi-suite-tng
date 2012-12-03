@@ -11,9 +11,11 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
 
 public class DefectManager implements EntityManager<Defect> {
 
+	DataStore db;
 	Gson gson;
 	
 	public DefectManager() {
+		db = DataStore.getDataStore();
 		gson = new Gson();
 	}
 	
@@ -38,8 +40,7 @@ public class DefectManager implements EntityManager<Defect> {
 	@Override
 	public Defect[] getAll() {
 		// TODO: gross hack, use DataStore.retrieveAll
-		return DataStore.getDataStore().retrieve(Defect.class, "events",
-		                                         new ArrayList<DefectEvent>()).toArray(new Defect[0]);
+		return db.retrieve(Defect.class, "events", new ArrayList<DefectEvent>()).toArray(new Defect[0]);
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class DefectManager implements EntityManager<Defect> {
 		if(id < 1) {
 			throw new NumberFormatException("Defect ID cannot be negative");
 		}
-		return DataStore.getDataStore().retrieve(Defect.class, "id", id).toArray(new Defect[0]);
+		return db.retrieve(Defect.class, "id", id).toArray(new Defect[0]);
 	}
 
 	@Override
@@ -60,15 +61,13 @@ public class DefectManager implements EntityManager<Defect> {
 		newDefect.setId(existingDefects.length + 1);
 		
 		// TODO: validation
-		
-		DataStore.getDataStore().save(newDefect);
+		save(newDefect);
 		return newDefect;
 	}
 
 	@Override
-	public void save(Defect arg0) {
-		System.out.println("Save entity: " + arg0);
-		
+	public void save(Defect defect) {
+		db.save(defect);
 	}
 
 }
