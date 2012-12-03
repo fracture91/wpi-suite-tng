@@ -43,9 +43,12 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 
 	@Override
-	public Defect[] getEntity(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public Defect[] getEntity(String stringId) {
+		int id = Integer.parseInt(stringId);
+		if(id < 1) {
+			throw new NumberFormatException("Defect ID cannot be negative");
+		}
+		return DataStore.getDataStore().retrieve(Defect.class, "id", id).toArray(new Defect[0]);
 	}
 
 	@Override
