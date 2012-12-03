@@ -56,6 +56,23 @@ public class DefectManager implements EntityManager<Defect> {
 		return db.retrieve(Defect.class, "id", id).toArray(new Defect[0]);
 	}
 
+	/**
+	 * Return the User with the given username if they already exist in the database.
+	 * If they don't exist, throw an IllegalArgumentException.
+	 * 
+	 * @param username the username of the User
+	 * @return The User with the given username
+	 * @throws IllegalArgumentException if the user doesn't exist
+	 */
+	private User getExistingUser(String username) throws IllegalArgumentException {
+		final User[] existingUsers = db.getUser(username);
+		if(existingUsers.length > 0 && existingUsers[0] != null) {
+			return existingUsers[0];
+		} else {
+			throw new IllegalArgumentException("User " + username + " does not exist");
+		}
+	}
+	
 	@Override
 	public Defect makeEntity(String content) {
 		final Defect newDefect = gson.fromJson(content, Defect.class);
@@ -64,15 +81,11 @@ public class DefectManager implements EntityManager<Defect> {
 		final Defect[] existingDefects = getAll();
 		newDefect.setId(existingDefects.length + 1);
 		
-		//make sure the creator exists
-		String creator = newDefect.getCreator().getUsername();
-		User[] existingUsers = db.getUser(creator);
-		if(existingUsers.length > 0 && existingUsers[0] != null) {
-			newDefect.setCreator(existingUsers[0]);
-		} else {
-			throw new IllegalArgumentException("Defect's creator does not exist");
-		}
-		
+		// make sure the creator and assignee exist
+		newDefect.setCreator(getExistingUser(newDefect.getCreator().getUsername()));
+		// assignee doesn't get sent yet
+		//newDefect.setAssignee(getExistingUser(newDefect.getAssignee().getUsername()));
+
 		// TODO: validation
 		save(newDefect);
 		return newDefect;
