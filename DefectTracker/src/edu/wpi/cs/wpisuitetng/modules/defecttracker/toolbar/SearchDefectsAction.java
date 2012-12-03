@@ -1,10 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar;
 
+/**
+ * Contributors:
+ * CCasola
+ * JPage
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.SearchDefectsView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
@@ -27,7 +35,8 @@ public class SearchDefectsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		controller.addSearchDefectsTab();
+		SearchDefectsView searchDefectsView = new SearchDefectsView();
+		controller.addTab("Search Defects", new ImageIcon(), searchDefectsView, "Search for defects");
 	}
 
 }
