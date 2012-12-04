@@ -14,7 +14,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -23,10 +23,12 @@ public class ProjectManager implements EntityManager<Project>{
 
 	Class<Project> project = Project.class;
 	Gson gson;
+	Data data;
 	
-	public ProjectManager()
+	public ProjectManager(Data data)
 	{
 		gson = new Gson();
+		this.data = data;
 	}
 	
 	@Override
@@ -54,7 +56,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
+			return data.retrieve(project, "idNum", id).toArray(m);
 		}
 	}
 
@@ -66,14 +68,13 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public void save(Project model) {
-		DataStore.getDataStore().save(model);
+		data.save(model);
 		
 	}
 
 	@Override
 	public boolean deleteEntity(String id)
 	{
-		DataStore data = DataStore.getDataStore();
 		
 		Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
 		

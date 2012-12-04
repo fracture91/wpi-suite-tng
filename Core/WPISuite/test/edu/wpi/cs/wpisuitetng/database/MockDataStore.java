@@ -9,7 +9,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class MockDataStore {
+public class MockDataStore implements Data {
 
 	private ArrayList<Model> models;
 	
@@ -90,5 +90,29 @@ public class MockDataStore {
 			return "entry not found";
 		}
 		return "id not specified";
+	}
+
+	@Override
+	public <T> boolean save(T aTNG) {
+		System.out.println("DEBUG: Inside save");
+		System.out.println("DEBUG aTNG: "+ aTNG);
+		return true;
+	}
+
+	@Override
+	public List<Model> retrieve(Class anObjectQueried, String aFieldName,
+			Object theGivenValue) {
+		System.out.println("DEBUG: Inside retreive");
+		System.out.println("DEBUG anObjectQueried: "+ anObjectQueried);
+		System.out.println("DEBUG aFieldName: "+ aFieldName);
+		System.out.println("DEBUG theGivenValue: "+ theGivenValue);
+		return models;
+	}
+
+	@Override
+	public <T> T delete(T aTNG) {
+		System.out.println("DEBUG: Inside delete");
+		System.out.println("DEBUG aTNG: "+ aTNG);
+		return aTNG;
 	}
 }

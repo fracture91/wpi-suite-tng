@@ -14,6 +14,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -23,9 +24,11 @@ public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
 	Gson gson;
-	
-	public UserManager()
+	Data data;
+
+	public UserManager(Data data)
 	{
+		this.data = data;
 		gson = new Gson();
 	}
 	

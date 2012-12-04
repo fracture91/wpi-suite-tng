@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.ManagerLayer;
 import edu.wpi.cs.wpisuitetng.core.entitymanagers.MockUserManager;
+import edu.wpi.cs.wpisuitetng.database.MockDataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
 public class TestManagerLayer {
@@ -33,7 +34,7 @@ public class TestManagerLayer {
 	@Test
 	public void test() 
 	{
-		testMap.put("coreuser", new MockUserManager());
+		testMap.put("coreuser", new MockUserManager(MockDataStore.getMockDataStore()));
 		ManagerLayer test = ManagerLayer.getTestInstance(testMap);
 		
 		String testResponse = test.read(testUserArgs);

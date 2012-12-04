@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -38,7 +39,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.DefectManager;
 public class ManagerLayer {
 	
 	private static final ManagerLayer layer = new ManagerLayer();
-	private DataStore data;
+	private Data data;
 	private Gson gson;
 	private Map<String, EntityManager> map;
 	private SessionManager sessions;
@@ -56,8 +57,8 @@ public class ManagerLayer {
 		sessions = new SessionManager();
 		
 		//TODO pull these mappings from some config file and reflect them
-		map.put("coreproject", new ProjectManager());
-		map.put("coreuser", new UserManager());
+		map.put("coreproject", new ProjectManager(data));
+		map.put("coreuser", new UserManager(data));
 		map.put("defectdefect", new DefectManager());
 		
 	}
