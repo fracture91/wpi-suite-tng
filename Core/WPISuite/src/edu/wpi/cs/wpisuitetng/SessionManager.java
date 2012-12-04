@@ -15,8 +15,6 @@ package edu.wpi.cs.wpisuitetng;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.catalina.filters.ExpiresFilter;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;

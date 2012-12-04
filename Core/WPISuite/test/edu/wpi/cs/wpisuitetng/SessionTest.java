@@ -22,7 +22,6 @@ import javax.servlet.http.Cookie;
 import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.SessionManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -63,8 +62,8 @@ public class SessionTest {
 	@Test
 	public void testToString()
 	{
-		// DateFormat for the gson serializer: MMM dd, yyyy h:mm:ss a
-		SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy h:mm:ss a");
+		// DateFormat for the gson serializer: MMM d, yyyy h:mm:ss a
+		SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy h:mm:ss a");
 		Date loginTime = this.ses1.getLoginTime();
 		
 		String json = "{\"user\":" + this.u1.toString() + ",\"loginTime\":\"" + format.format(loginTime) + "\"}";

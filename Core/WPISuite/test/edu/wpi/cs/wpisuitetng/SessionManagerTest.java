@@ -14,8 +14,6 @@ package edu.wpi.cs.wpisuitetng;
 
 import static org.junit.Assert.*;
 
-import java.util.Date;
-
 import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.Session;
@@ -124,7 +122,9 @@ public class SessionManagerTest {
 		//TODO: determine if we can use a wait to push the clock forward.
 		// assertFalse(this.man.sessionExists(oldToken)); 		
 		
-		users.deleteAll(); // clear the database for the next test.
+		// clear the database for the next test.
+		users.deleteEntity(this.u1.getUsername());
+		users.deleteEntity(this.u2.getUsername());
 	}
 
 }

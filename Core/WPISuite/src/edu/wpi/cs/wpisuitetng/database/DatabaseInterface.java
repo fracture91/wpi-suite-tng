@@ -11,7 +11,7 @@
  *    rchamer
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.core;
+package edu.wpi.cs.wpisuitetng.database;
 
 import java.util.List;
 
