@@ -40,6 +40,8 @@ public class DataStore {
 			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
 			server.grantAccess(DB4oUser,DB4oPass);
+			
+			theDB = server.openClient();
 		}
 		return myself;
 	}
@@ -48,10 +50,10 @@ public class DataStore {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
-			ObjectContainer client = server.openClient();
-			client.store(aTNG);
+			//ObjectContainer client = server.openClient();
+			theDB.store(aTNG);
 			System.out.println("Stored " + aTNG);
-			client.close();
+			//client.close();
 		return true;
 	}
 	
@@ -76,7 +78,7 @@ public class DataStore {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
-		ObjectContainer client = server.openClient();
+		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		for(Method m: allMethods){
@@ -87,7 +89,7 @@ public class DataStore {
 		//TODO: IF Null solve this problem...
 		final Method theGetter = methodToBeSaved;
 		
-		List<Model> result = client.query(new Predicate<Model>(){
+		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
 					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
@@ -108,7 +110,7 @@ public class DataStore {
 		});
 	
 		System.out.println(result);
-		client.close();
+		//client.close();
 		return result;
 	}
 	
@@ -123,7 +125,7 @@ public class DataStore {
 		
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		ObjectContainer client = server.openClient();
+		//ObjectContainer client = server.openClient();
 		
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -142,7 +144,7 @@ public class DataStore {
 		final Method[] theGetters = methodsToBeExecuted;
 		final String theOperator = operator;
 		
-		List<Model> result = client.query(new Predicate<Model>(){
+		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model aDefect){
 				try {
 					boolean matchSoFar = true;
@@ -191,11 +193,11 @@ public class DataStore {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
-		ObjectContainer client = server.openClient();
-		ObjectSet result = client.queryByExample(aTNG);
+		//ObjectContainer client = server.openClient();
+		ObjectSet<T> result = theDB.queryByExample(aTNG);
 	    T found = (T) result.next();
-	    client.delete(found);
-		client.close();
+	    theDB.delete(found);
+		//client.close();
 		return "Deleted "+aTNG;
 		
 	}

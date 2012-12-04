@@ -15,6 +15,8 @@ package edu.wpi.cs.wpisuitetng.core;
 
 import java.util.List;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
+
 /**
  * Interface that dictates database behavior 
  * @author rchamer
@@ -56,4 +58,11 @@ public interface DatabaseInterface<C, T> {
 	 * @return The object that was deleted
 	 */
 	public T delete(T objectType, String fieldName,C uniqueID);
+	
+	/**
+	 * Saves the given model in the database
+	 * @param aModel
+	 * @return true if the save was successful.
+	 */
+	public boolean save(Model aModel);
 }
