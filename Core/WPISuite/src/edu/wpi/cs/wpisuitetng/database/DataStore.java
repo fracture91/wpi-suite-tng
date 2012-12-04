@@ -17,7 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class DataStore {
+public class DataStore implements DatabaseInterface {
 	
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;
@@ -46,7 +46,7 @@ public class DataStore {
 		return myself;
 	}
 	
-	public boolean save(Model aTNG){
+	public <T> boolean save(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -73,8 +73,7 @@ public class DataStore {
 	 * @param theGivenValue The value that you want all returned objects to have
 	 * @return a List of objects of the given type that have the given field match the given value
 	 */
-	public <T> List<?> retrieve(final Class<?> anObjectQueried, String aFieldName, 
-			final T theGivenValue){
+	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -114,7 +113,8 @@ public class DataStore {
 		return result;
 	}
 	
-	public <T> List<?> retrieve(final Class<?> anObjectQueried, String[] aFieldName, 
+	//Code in progress for multiquerying
+	public <T> List<T> retrieve(final Class<T> anObjectQueried, String[] aFieldName, 
 			final T[] theGivenValue, final String operator) throws IllegalArgumentException {
 		final int fieldNameLength = aFieldName.length;
 		int theGivenValueLength = theGivenValue.length;
@@ -186,10 +186,37 @@ public class DataStore {
 	
 		System.out.println(result);
 		//client.close();
+		return (List<T>) result;
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public <T> List<T> retrieveAll(final T item){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		ObjectContainer client = server.openClient();
+		List<T> result = client.query(new Predicate<T>(){
+			public boolean match(T anObject){
+				try {
+					return anObject.getClass().equals(item.getClass());
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+			}
+		});
+	
+		System.out.println(result);
+		client.close();
 		return result;
 	}
 	
-	public <T> String delete(T aTNG){
+	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
@@ -198,8 +225,48 @@ public class DataStore {
 	    T found = (T) result.next();
 	    theDB.delete(found);
 		//client.close();
-		return "Deleted "+aTNG;
+		//return "Deleted "+aTNG;
+		return found;
 		
+	}
+	
+	public Object delete(Class objectType, String fieldName, Object uniqueID){
+		return (Object) delete(objectType);
+	}
+	
+	
+	public void update(Class objectType, String fieldName, Object uniqueID, String changeField, Object changeValue){
+		List<? extends Object> objectsToUpdate = retrieve(objectType.getClass(), fieldName, uniqueID);
+		Object theObject;
+		for(int i = 0; i < objectsToUpdate.size(); i++){
+			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
+			Method[] allMethods = objectClass.getMethods();
+			Method methodToBeSaved = null;
+			for(Method m: allMethods){
+				if(m.getName().equalsIgnoreCase("set"+fieldName)){
+					methodToBeSaved = m;
+				}
+			}
+			//TODO: IF Null solve this problem...
+			final Method theSetter = methodToBeSaved;
+			
+			try {
+				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i));
+				save(theObject);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
 	}
 	
 	public User[] getUser(String username)
@@ -232,5 +299,6 @@ public class DataStore {
 		return retrieve(new Project("","").getClass(), "idnum", idNum).toArray(ret);
 		
 	}
+	
 
 }

@@ -169,4 +169,26 @@ public class User implements Model
 				b = true;
 		return b;
 	}
+	
+	public boolean equals(User anotherUser){
+		return this.name.equalsIgnoreCase(anotherUser.getName()) &&
+				this.username.equalsIgnoreCase(anotherUser.getUsername()) &&
+				this.idNum == anotherUser.getIdNum();
+	}
+	
+	public User setName(String newName){
+		this.name = newName;
+		return this;
+	}
+	
+	public User setUserName(String newUserName){
+		this.name = newUserName;
+		return this;
+	}
+	
+	public User setIdNum(String newidNum){
+		this.name = newidNum;
+		return this;
+	}
+	
 }
