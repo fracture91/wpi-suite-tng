@@ -7,27 +7,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    
+ *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-
-public abstract class AbstractModel implements Model {
-
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public abstract String toJSON();
+/**
+ *  Thrown for Authentication errors in the Login system
+ * @author twack
+ *
+ */
+public class AuthenticationException extends WPISuiteException {
 
 }

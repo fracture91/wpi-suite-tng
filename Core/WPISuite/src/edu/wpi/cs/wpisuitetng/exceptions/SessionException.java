@@ -7,27 +7,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    
+ *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-
-public abstract class AbstractModel implements Model {
-
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public abstract String toJSON();
+/**
+ * WPISuiteException class for exceptions in the Sessions system.
+ * @author twack
+ *
+ */
+public class SessionException extends WPISuiteException {
 
 }

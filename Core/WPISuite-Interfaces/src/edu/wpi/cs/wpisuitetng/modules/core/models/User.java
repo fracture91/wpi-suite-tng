@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *    mpdelladonna
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
@@ -7,7 +20,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna (sp?), twack
+ * @author mdelladonna, twack
  */
 
 public class User implements Model
@@ -38,6 +51,15 @@ public class User implements Model
 	public boolean matchPassword(String pass)
 	{
 		return password.equals(pass);
+	}
+	
+	/**
+	 * Sets password (plain text for now, crypto is in the future)
+	 * @param pass
+	 */
+	public void setPassword(String pass)
+	{
+		this.password = pass;
 	}
 	
 	/* Accessors */

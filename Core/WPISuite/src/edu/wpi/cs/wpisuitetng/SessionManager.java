@@ -1,7 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.catalina.filters.ExpiresFilter;
+
+import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -13,14 +29,14 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class SessionManager {
 	
-	private Map<User, Session> sessions;
+	private Map<String, Session> sessions; // key: cookie value, value: Session
 	
 	/**
 	 * The default constructor. 
 	 */
 	public SessionManager()
 	{
-		sessions = new HashMap<User, Session>();
+		sessions = new HashMap<String, Session>();
 	}
 	
 	/**
@@ -28,31 +44,39 @@ public class SessionManager {
 	 * @param u	
 	 * @return	True if the map contains a Session for this user, False otherwise.
 	 */
-	public boolean sessionExists(User u)
+	public boolean sessionExists(String sessionToken)
 	{
-		return sessions.containsKey(u.getUsername());
+		return sessions.containsKey(sessionToken);
+	}
+	
+	/**
+	 * wipes the sessions store.
+	 */
+	public void clearSessions()
+	{
+		sessions = new HashMap<String, Session>();
 	}
 	
 	/**
 	 * Retrieves the Session for the user with the given name.
 	 * 
-	 * 
-	 * @param username
-	 * @return
+	 * @param sessionToken	the tokenize cookie given from the client
+	 * @return	The session matching the token.
 	 */
-	public Session getSession(User username)
+	public Session getSession(String sessionToken)
 	{
-		return sessions.get(username);
+		
+		return sessions.get(sessionToken);
 		//TODO: determine how to handle 'not found' case
 	}
 	
 	/**
 	 * Removes the session with the given username
-	 * @param username	the username of the Session to be removed.
+	 * @param sessionToken	
 	 */
-	public void removeSession(User username)
+	public void removeSession(String sessionToken)
 	{
-		sessions.remove(username); 
+		sessions.remove(sessionToken); 
 	}
 	
 	/**
@@ -61,18 +85,47 @@ public class SessionManager {
 	 * @param username
 	 * @return	the new Session for the user.
 	 */
-	public Session createOrRenewSession(User user)
+	public Session createSession(User user)
 	{
-		// clear the Session for this user, if it exists.
-		if(sessionExists(user))
-		{
-			sessions.remove(user.getUsername());
-		}
+		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
 		Session ses = new Session(user);
-		sessions.put(user, ses);
+		sessions.put(ses.toCookie().getValue(), ses);
 		
 		return ses;
 	}
+	
+	/**
+	 * @return	Retrieves the number of sessions currently in the Manager
+	 */
+	public int sessionCount()
+	{
+		return this.sessions.size();
+	}
+	
+	/**
+	 * Renews the Session for a given sessionToken.
+	 * 	Parses the username from the token, then creates
+	 * 		a new session for the given user.
+	 * @param sessionToken
+	 * @return	the new Session
+	 */
+	public Session renewSession(String sessionToken)
+	{
+		// remove the old session
+		this.removeSession(sessionToken);
+		
+		// parse the username from the sessionToken
+		Gson gson = new Gson();
+		Session old = gson.fromJson(sessionToken, Session.class);
+		String sessionUsername = old.getUsername();
+		
+		// retrieve the User
+		ManagerLayer manager = ManagerLayer.getInstance();
+		User sessionUser = manager.getUsers().getEntity(sessionUsername)[0]; // TODO: this looks ugly...
+		
+		return createSession(sessionUser);
+	}
+
 }

@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *    mpdelladonna
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.Gson;
@@ -7,7 +20,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mpdelladonna (sp?), twack
+ * @author mdelladonna, twack
  */
 
 public class Project implements Model
