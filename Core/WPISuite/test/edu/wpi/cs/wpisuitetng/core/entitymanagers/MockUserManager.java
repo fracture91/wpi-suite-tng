@@ -15,7 +15,7 @@ public class MockUserManager extends UserManager {
 	{
 		User[] u = new User[1];
 		
-		u[0] = new User("fake",id,0);
+		u[0] = new User("fake",id,id, 0);
 		return u;
 	}
 }

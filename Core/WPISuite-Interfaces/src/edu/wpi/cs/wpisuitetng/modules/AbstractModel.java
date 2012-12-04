@@ -12,8 +12,23 @@
 
 package edu.wpi.cs.wpisuitetng.modules;
 
+import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+
 
 public abstract class AbstractModel implements Model {
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }
