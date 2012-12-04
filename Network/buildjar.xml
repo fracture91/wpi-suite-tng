@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<project default="jarfile">
+  <target name="jarfile" description="Compression target">
+        <jar destfile="../Janeway/Libraries/network.jar">
+        	<fileset dir="bin" />
+        </jar>
+        <jar destfile="../DefectTracker/Libraries/network.jar">
+        	<fileset dir="bin" />
+        </jar>
+  </target>
+</project>

@@ -5,6 +5,7 @@
 .metadata\.plugins\*
 Servers\.settings\*
 Servers\.settings
+javadoc
 
 # Package Files #
 *.war
@@ -13,6 +14,9 @@ Servers\.settings
 # Module jar files #
 Janeway/modules/*.jar
 !Janeway/modules/DummyModule.jar
+
+# Janeway configuration file (user specific) #
+Janeway/janeway.conf
 
 /Core/Servers3/.project
 /Core/Servers3/.settings/org.eclipse.wst.server.core.prefs
@@ -24,3 +28,4 @@ Janeway/modules/*.jar
 /Core/Servers3/Tomcat v7.0 Server at localhost-config/web.xml
 /Core/WPISuite/build/classes/META-INF/MANIFEST.MF
 /Core/WPISuite/src/META-INF/MANIFEST.MF
+/Core/WPISuite/WPISuite_TNG_local
