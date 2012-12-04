@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.ForbiddenException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -78,10 +79,11 @@ public class ManagerLayer {
 	 * THIS IS FOR TESTING PURPOSES ONLY
 	 */
 	@SuppressWarnings("rawtypes")
-	private ManagerLayer(Map<String, EntityManager> map)
+	private ManagerLayer(Map<String, EntityManager> map, SessionManager ses)
 	{
 		gson = new Gson();
 		this.map = map;		
+		this.sessions = ses;
 	}
 	
 	/**
@@ -100,9 +102,9 @@ public class ManagerLayer {
 	 * This call is not a true singleton call, and will return a new managerlayer everytime it is accessed
 	 * @return ManagerLayer
 	 */
-	protected static ManagerLayer getTestInstance(@SuppressWarnings("rawtypes") Map<String, EntityManager> map)
+	protected static ManagerLayer getTestInstance(@SuppressWarnings("rawtypes") Map<String, EntityManager> map, SessionManager ses)
 	{
-		return new ManagerLayer(map);
+		return new ManagerLayer(map, ses);
 	}
 	
 	/**
@@ -155,7 +157,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new ForbiddenException();
+			throw new AuthenticationException();
 		}
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
