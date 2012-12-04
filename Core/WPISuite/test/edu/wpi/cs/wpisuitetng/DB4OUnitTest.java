@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.unittests;
+package edu.wpi.cs.wpisuitetng;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 
-import edu.wpi.cs.wpisuitetng.core.DataStore;
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class DB4OUnitTest {

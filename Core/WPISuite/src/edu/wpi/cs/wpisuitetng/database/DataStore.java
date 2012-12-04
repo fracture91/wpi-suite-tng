@@ -17,7 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class DataStore implements DatabaseInterface {
+public class DataStore implements Data {
 	
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;

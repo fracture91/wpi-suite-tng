@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class UserManager implements EntityManager<User> {
@@ -74,9 +75,9 @@ public class UserManager implements EntityManager<User> {
 		
 		DataStore data = DataStore.getDataStore();
 		
-		String s = data.delete(data.retrieve(user, "username", id).get(0));
+		Model m = data.delete(data.retrieve(user, "username", id).get(0));
 		
-		return (s.startsWith("Deleted")) ? true : false;
+		return (m != null) ? true : false;
 		
 	}
 

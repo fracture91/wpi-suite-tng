@@ -23,8 +23,11 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * @param <C>
  *
  */
-public interface DatabaseInterface<C, T> {
-
+public interface DatabaseInterface {
+	
+	
+	
+	
 	/** Retrieves objects of type objectType when the value of the field
 	 * fieldName equals compareValue
 	 * The object type is the class of the object to be retrieved
@@ -34,7 +37,7 @@ public interface DatabaseInterface<C, T> {
 	 * @param compareValue - Value of field, fieldName, that is being queried against
 	 * @return The object that is retrieved
 	 */
-	public List<T> retrieve(Class objectType, String fieldName, Object compareValue);
+	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue);
 	
 	/**
 	 * Updates the object with the value uniqueID for the field fieldName
@@ -45,7 +48,7 @@ public interface DatabaseInterface<C, T> {
 	 * @param uniqueID - value of the field that the object is retrieved by
 	 * @param changeValue - field whose value will be changed 
 	 */
-	public void update(Class objectType, String fieldName,Object uniqueID, String changeField, Object changeValue);
+	public void update(Class objectType, String fieldName, Object uniqueID, String changeField, Object changeValue);
 	
 	/**
 	 * Deletes the object of type objectType which has the value uniqueID in the field fieldName
@@ -57,7 +60,7 @@ public interface DatabaseInterface<C, T> {
 	 * @param uniqueID
 	 * @return The object that was deleted
 	 */
-	public T delete(Class objectType, String fieldName,Object uniqueID);
+	public Model delete(Class objectType, String fieldName, Object uniqueID);
 
 	
 	/**
