@@ -52,8 +52,6 @@ public class Session {
 	@Override
 	public String toString()
 	{
-		String json ="";
-		
 		Gson gson = new Gson();
 		
 		return gson.toJson(this, Session.class);

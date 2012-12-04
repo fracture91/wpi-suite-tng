@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.wpi.cs.wpisuitetng.exceptions.*;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Servlet implementation class WPILoginServlet

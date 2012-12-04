@@ -41,6 +41,7 @@ public class ManagerLayer {
 	private static final ManagerLayer layer = new ManagerLayer();
 	private Data data;
 	private Gson gson;
+	@SuppressWarnings("rawtypes")
 	private Map<String, EntityManager> map;
 	private SessionManager sessions;
 	
