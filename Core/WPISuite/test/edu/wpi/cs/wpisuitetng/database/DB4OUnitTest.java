@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.database;
 
 import static org.junit.Assert.*;
 
