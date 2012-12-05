@@ -113,32 +113,18 @@ public class DataStore implements Data {
 		return result;
 	}
 	
-
 	
 	/**
-	 * 
-	 * @param username
-	 * @return
+	 * Retrieves all objects of the given Class. 
+	 * @param aSample an object of the class we want to retrieve All of
+	 * @return a List of all of the objects of the given class
 	 */
-	public <T> List<T> retrieveAll(final T item){
+	public <T> List<T> retrieveAll(T aSample){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
-		ObjectContainer client = server.openClient();
-		List<T> result = client.query(new Predicate<T>(){
-			public boolean match(T anObject){
-				try {
-					return anObject.getClass().equals(item.getClass());
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				}
-			}
-		});
-	
+		List<T> result = theDB.queryByExample(aSample.getClass());
+		System.out.println("RetrieveAll returned:");
 		System.out.println(result);
-		client.close();
 		return result;
 	}
 	
