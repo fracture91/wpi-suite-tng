@@ -58,7 +58,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+			return data.retrieve(user, "username", id).toArray(m);
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+			return data.retrieve(user, "username", id).toArray(m);
 		}
 	}
 
@@ -91,14 +91,12 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void save(Session s,User model) {
-		DataStore.getDataStore().save(model);
+		data.save(model);
 		
 	}
 
 	@Override
 	public boolean deleteEntity(Session s1 ,String id) {
-		
-		DataStore data = DataStore.getDataStore();
 		
 		Model m = data.delete(data.retrieve(user, "username", id).get(0));
 		

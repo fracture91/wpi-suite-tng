@@ -182,6 +182,10 @@ public class ManagerLayer {
 					s = sessions.getSession(c.getValue());
 			}
 		}
+		else
+		{
+			throw new AuthenticationException();
+		}
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
         
