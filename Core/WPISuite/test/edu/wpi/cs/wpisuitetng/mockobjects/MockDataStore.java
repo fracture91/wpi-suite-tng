@@ -124,4 +124,11 @@ public class MockDataStore implements Data {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public <T> List<T> retrieveAll(T aSample) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

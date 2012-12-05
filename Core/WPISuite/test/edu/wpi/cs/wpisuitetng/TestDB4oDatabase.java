@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -45,6 +47,27 @@ public class TestDB4oDatabase {
 		db.delete(Mjolnir);
 		
 		
+	}
+	
+	@Test
+	public void testRetrieveAll(){
+		Data db = DataStore.getDataStore();
+		User firstUser = new User("Brian", "bgaffey", "password", 0);
+		db.save(firstUser);
+		User secondUser = new User("Gaffey", "gafftron", "password", 0);
+		db.save(secondUser);
+		List<User> retrievedList = db.retrieveAll(firstUser);
+		
+		assertEquals(2, retrievedList.size());
+		assertTrue(retrievedList.contains(firstUser));
+		assertTrue(retrievedList.contains(secondUser));
+		
+		db.delete(firstUser);
+		retrievedList = db.retrieveAll(firstUser);
+		
+		assertEquals(1, retrievedList.size());
+		assertTrue(retrievedList.contains(secondUser));
+		assertFalse(retrievedList.contains(firstUser));
 	}
 
 }
