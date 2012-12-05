@@ -31,16 +31,6 @@ public class BasicAuthTest {
 		this.basic = new BasicAuth();
 	}
 	
-	private String generateBasicAuth(String username, String pass)
-	{
-		String authToken = "Authorization: Basic ";
-		String credentials = username + ":" + pass;
-		
-		authToken += Base64.encodeBase64String(credentials.getBytes());
-		
-		return authToken;
-	}
-	
 	
 	@Test(expected=AuthenticationException.class)
 	/**
@@ -79,7 +69,7 @@ public class BasicAuthTest {
 		String username = "twack";
 		String pass = "12345";
 		
-		String basicAuthToken = this.generateBasicAuth(username, pass);
+		String basicAuthToken = BasicAuth.generateBasicAuth(username, pass);
 		String[] credentials = this.basic.parsePost(basicAuthToken);
 		
 		assertEquals(credentials.length, 2);

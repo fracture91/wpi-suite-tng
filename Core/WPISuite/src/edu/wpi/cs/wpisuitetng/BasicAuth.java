@@ -78,5 +78,22 @@ public class BasicAuth extends Authenticator {
 		
 		return true;
 	}
+	
+	/**
+	 * Static utility for generating a BasicAuth token.
+	 * 		Format: "Authorization: Basic " + [Base64Encoded]username:password
+	 * @param username
+	 * @param pass
+	 * @return	a String containing a BasicAuth token for the given parameters.
+	 */
+	public static String generateBasicAuth(String username, String pass)
+	{
+		String authToken = "Authorization: Basic ";
+		String credentials = username + ":" + pass;
+		
+		authToken += Base64.encodeBase64String(credentials.getBytes());
+		
+		return authToken;
+	}
 
 }
