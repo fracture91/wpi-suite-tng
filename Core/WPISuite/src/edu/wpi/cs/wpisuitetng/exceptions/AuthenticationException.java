@@ -19,4 +19,9 @@ package edu.wpi.cs.wpisuitetng.exceptions;
  */
 public class AuthenticationException extends WPISuiteException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3607525121952037935L;
+
 }

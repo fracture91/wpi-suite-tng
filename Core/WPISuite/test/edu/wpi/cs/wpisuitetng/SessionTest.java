@@ -36,7 +36,7 @@ public class SessionTest {
 	@Before
 	public void setUp()
 	{
-		this.u1 = new User("Tyler", "twack", 0);
+		this.u1 = new User("Tyler", "twack", null, 0);
 		this.ses1 = new Session(u1);
 	}
 	

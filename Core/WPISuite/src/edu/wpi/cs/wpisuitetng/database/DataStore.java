@@ -272,7 +272,7 @@ public class DataStore implements Data {
 	public User[] getUser(String username)
 	{
 		User[] ret = new User[1];
-		retrieve(new User("","",0).getClass(), "username", username).toArray(ret);
+		retrieve(new User("","","", 0).getClass(), "username", username).toArray(ret);
 		return ret;
 		
 	}

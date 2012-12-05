@@ -14,7 +14,8 @@ package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -23,57 +24,58 @@ public class ProjectManager implements EntityManager<Project>{
 
 	Class<Project> project = Project.class;
 	Gson gson;
+	Data data;
 	
-	public ProjectManager()
+	public ProjectManager(Data data)
 	{
 		gson = new Gson();
+		this.data = data;
 	}
 	
 	@Override
-	public Project makeEntity(String content) {
+	public Project makeEntity(Session s, String content) {
 		
 		Project p;
 		
 		p = gson.fromJson(content, project);
 		
-		if(getEntity(p.getIdNum()).length == 0)
+		if(getEntity(s, p.getIdNum()).length == 0)
 		{
-			save(p);
+			save(s,p);
 		}
 		
 		return p;
 	}
 
 	@Override
-	public Project[] getEntity(String id) 
+	public Project[] getEntity(Session s, String id) 
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			return getAll();
+			return getAll(s);
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(project, "idNum", id).toArray(m);
+			return data.retrieve(project, "idNum", id).toArray(m);
 		}
 	}
 
 	@Override
-	public Project[] getAll() {
+	public Project[] getAll(Session s) {
 		// TODO Implement this feature in a later release (dependant on DB interface)
 		return null;
 	}
 
 	@Override
-	public void save(Project model) {
-		DataStore.getDataStore().save(model);
+	public void save(Session s, Project model) {
+		data.save(model);
 		
 	}
 
 	@Override
-	public boolean deleteEntity(String id)
+	public boolean deleteEntity(Session s1, String id)
 	{
-		DataStore data = DataStore.getDataStore();
 		
 		Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
 		
@@ -81,14 +83,14 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public void deleteAll() {
+	public void deleteAll(Session s) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int Count() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 

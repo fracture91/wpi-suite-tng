@@ -15,7 +15,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * The Data Model representation of a User. Implements
@@ -23,12 +23,13 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * @author mdelladonna, twack
  */
 
-public class User implements Model
+public class User extends AbstractModel
 {
 	private String name;
 	private String username;
 	private String password;
 	private int idNum;
+	private Role role;
 	
 	/**
 	 * The primary constructor for a User
@@ -36,11 +37,13 @@ public class User implements Model
 	 * @param username	User's username (nickname)
 	 * @param idNum	User's ID number
 	 */
-	public User(String name, String username, int idNum)
+	public User(String name, String username, String password, int idNum)
 	{
 		this.name = name;
 		this.username = username;
+		this.password = password;
 		this.idNum = idNum;
+		this.role = Role.USER;
 	}
 	
 	/**
@@ -191,4 +194,14 @@ public class User implements Model
 		return this;
 	}
 	
+	
+	public Role getRole()
+	{
+		return role;
+	}
+	
+	public void setRole(Role r)
+	{
+		role = r;
+	}
 }

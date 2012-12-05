@@ -7,7 +7,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 public interface Data 
 {
 	public <T> boolean save(T aTNG);
-	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue);
+	public List<Model> retrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
 	public <T> T delete(T aTNG);
 	
 }

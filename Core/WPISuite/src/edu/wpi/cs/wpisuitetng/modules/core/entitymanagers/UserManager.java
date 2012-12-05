@@ -14,6 +14,8 @@ package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -23,34 +25,57 @@ public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
 	Gson gson;
-	
-	public UserManager()
+	Data data;
+
+	public UserManager(Data data)
 	{
+		this.data = data;
 		gson = new Gson();
 	}
 	
 	@Override
-	public User makeEntity(String content) {
+	public User makeEntity(Session s, String content) {
 		
 		User p;
 		
 		p = gson.fromJson(content, user);
 		
-		if(getEntity(p.getUsername())[0] == null)
+		if(getEntity(s,p.getUsername())[0] == null)
 		{
-			save(p);
+			save(s,p);
 		}
 		
 		return p;
 	}
 
 	@Override
+	public User[] getEntity(Session s,String id) 
+	{
+		User[] m = new User[1];
+		if(id.equalsIgnoreCase(""))
+		{
+			return getAll(s);
+		}
+		else
+		{
+			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+		}
+	}
+	
+	/**
+	 * returns a user without requiring a session, 
+	 * specifically for the scenario where a session needs to be created.
+	 * only ever returns one user, "" is not a valid argument;
+	 * 
+	 * @param id - the id of the user, in this case it's the username
+	 * @return a list of matching users
+	 */
 	public User[] getEntity(String id) 
 	{
 		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			return getAll();
+			return m;
 		}
 		else
 		{
@@ -59,19 +84,19 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public User[] getAll() {
+	public User[] getAll(Session s) {
 		// TODO Implement this feature in a later release
 		return null;
 	}
 
 	@Override
-	public void save(User model) {
+	public void save(Session s,User model) {
 		DataStore.getDataStore().save(model);
 		
 	}
 
 	@Override
-	public boolean deleteEntity(String id) {
+	public boolean deleteEntity(Session s1 ,String id) {
 		
 		DataStore data = DataStore.getDataStore();
 		
@@ -82,7 +107,7 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public void deleteAll() {
+	public void deleteAll(Session s) {
 		// TODO Auto-generated method stub
 		
 	}

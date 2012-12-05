@@ -9,8 +9,9 @@
  * Contributors:
  *    twack
  *******************************************************************************/
-
 package edu.wpi.cs.wpisuitetng.exceptions;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Base WPI Suite Exception class.
@@ -19,4 +20,15 @@ package edu.wpi.cs.wpisuitetng.exceptions;
  */
 public class WPISuiteException extends Exception {
 
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5271354512939175980L;
+
+	public int getStatus()
+	{
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+	}
 }

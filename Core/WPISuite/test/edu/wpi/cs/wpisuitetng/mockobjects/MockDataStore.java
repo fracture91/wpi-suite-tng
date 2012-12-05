@@ -1,15 +1,15 @@
-package edu.wpi.cs.wpisuitetng.database;
+package edu.wpi.cs.wpisuitetng.mockobjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
 
+import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-public class MockDataStore {
+public class MockDataStore implements Data {
 
 	private ArrayList<Model> models;
 	
@@ -25,15 +25,16 @@ public class MockDataStore {
 	private MockDataStore()
 	{
 		models = new ArrayList<Model>();
-		models.add(new User("steve", "steve",0));
-		models.add(new User("fred","fred",1));
-		models.add(new User("jeff","jeff",2));
-		models.add(new User("tyler","tyler",3));
+		models.add(new User("steve", "steve",null, 0));
+		models.add(new User("fred","fred",null, 1));
+		models.add(new User("jeff","jeff",null, 2));
+		models.add(new User("tyler","tyler",null, 3));
 		//models.add(new Project("WPISUITE",0));
 		//models.add(new Project("ANDROID:BEARCLAW",1));
 		//models.add(new Project("WINDOWS9",2));
 		//models.add(new Project("OSX:HOUSECAT",3));
 		//models.add(new Project("UBUNTU_RABID_RHINO",4));
+
 	}
 	
 	public Model save(String json, Class<? extends Model> type)
@@ -90,5 +91,29 @@ public class MockDataStore {
 			return "entry not found";
 		}
 		return "id not specified";
+	}
+
+	@Override
+	public <T> boolean save(T aTNG) {
+		System.out.println("DEBUG: Inside save");
+		System.out.println("DEBUG aTNG: "+ aTNG);
+		return true;
+	}
+
+	@Override
+	public List<Model> retrieve(Class anObjectQueried, String aFieldName,
+			Object theGivenValue) {
+		System.out.println("DEBUG: Inside retreive");
+		System.out.println("DEBUG anObjectQueried: "+ anObjectQueried);
+		System.out.println("DEBUG aFieldName: "+ aFieldName);
+		System.out.println("DEBUG theGivenValue: "+ theGivenValue);
+		return models;
+	}
+
+	@Override
+	public <T> T delete(T aTNG) {
+		System.out.println("DEBUG: Inside delete");
+		System.out.println("DEBUG aTNG: "+ aTNG);
+		return aTNG;
 	}
 }
