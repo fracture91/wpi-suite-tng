@@ -221,17 +221,24 @@ public class ManagerLayer {
 	public synchronized String delete(String[] args,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = null;
-		for(Cookie c : cook)
+		if(cook != null)
 		{
-			if(c.getName().startsWith("WPISUITE-"))
-				s = sessions.getSession(c.getValue());
-				
-		}		
+			for(Cookie c : cook)
+			{
+				if(c.getName().startsWith("WPISUITE-"))
+					s = sessions.getSession(c.getValue());
+					
+			}	
+		}
+		else
+		{
+			throw new AuthenticationException();
+		}
 		
 		
 		boolean status = map.get(args[0]+args[1]).deleteEntity(s,args[2]);
 		
-        return (status) ? "null" : "problem";
+        return (status) ? "success" : "failure";
         
 	}
 	
