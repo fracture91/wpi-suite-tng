@@ -87,7 +87,12 @@ public class ManagerLayerTest {
 	public void testGetUsersString() 
 	{
 		//MockUserManager returns User[0] = new User("fake",id,id, 0)
-		User[] u = testManagerLayer.getUsers("fake");
+		User[] u = null;
+		try {
+			u = testManagerLayer.getUsers("fake");
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
 		assertEquals(u[0].getName(), "fake");
 		assertEquals(u[0].getUsername(), "fake");
 	}

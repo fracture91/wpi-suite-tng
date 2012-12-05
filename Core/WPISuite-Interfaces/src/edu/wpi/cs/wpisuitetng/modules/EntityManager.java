@@ -14,6 +14,9 @@
 package edu.wpi.cs.wpisuitetng.modules;
 
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
+import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 
 /**
@@ -29,16 +32,19 @@ public interface EntityManager<T extends Model>
 	/**
 	 * Defines Model-specific instantiation
 	 * @return	an instance of this Manager's Model class T
+	 * @throws BadRequestException if json cannot be parsed
+	 * @throws ConflictException if entity already exists with unique identifier
 	 */
-	public T makeEntity(Session s, String content) throws WPISuiteException;
+	public T makeEntity(Session s, String content) throws BadRequestException, ConflictException, WPISuiteException;
 	
 	/* Retrieve */	
 	/**
 	 * Retrieves the entity with the given unique identifier, id.
 	 * @param id	the unique identifier value
 	 * @return	the entity with the given ID
+	 * @throws NotFoundException if entity does not exist
 	 */
-	public T[] getEntity(Session s, String id) throws WPISuiteException;
+	public T[] getEntity(Session s, String id) throws NotFoundException, WPISuiteException;
 	
 	/**
 	 * Retrieves all entities of Model class T

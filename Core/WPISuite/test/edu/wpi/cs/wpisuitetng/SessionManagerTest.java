@@ -134,7 +134,12 @@ public class SessionManagerTest {
 		assertEquals(2, sessions.sessionCount());
 		
 		// renew the session
-		Session renewed = sessions.renewSession(oldToken);
+		Session renewed = null;
+		try {
+			renewed = sessions.renewSession(oldToken);
+		} catch (WPISuiteException e) {
+			fail("unexpeced exception");
+		}
 		
 		assertEquals(2, sessions.sessionCount()); // the new session has been added
 		assertTrue(sessions.sessionExists(renewed.toString()));

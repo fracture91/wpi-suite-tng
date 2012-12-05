@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 public class User extends AbstractModel
 {
+
 	private String name;
 	private String username;
 	private String password;
@@ -44,6 +45,21 @@ public class User extends AbstractModel
 		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other instanceof User)
+		{
+			if( ((User)other).idNum == this.idNum && 
+				((User)other).username.equals(this.username) &&
+				((User)other).password.equals(this.password) &&
+				((User)other).name.equals(this.name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

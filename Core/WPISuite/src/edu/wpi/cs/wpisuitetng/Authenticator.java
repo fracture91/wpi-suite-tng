@@ -14,6 +14,7 @@
 package edu.wpi.cs.wpisuitetng;
 
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -64,10 +65,10 @@ public abstract class Authenticator {
 		
 		// attempt to retrieve the User from the Manager layer
 		ManagerLayer manager = ManagerLayer.getInstance();
-		User[] u = manager.getUsers().getEntity(credentials[0]);
-		
-		if(u[0] == null)
-		{
+		User[] u;
+		try {
+			u = manager.getUsers().getEntity(credentials[0]);
+		} catch (NotFoundException e) {
 			throw new AuthenticationException();	//"No user with the given username found");
 		}
 

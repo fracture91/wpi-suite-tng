@@ -17,7 +17,9 @@ import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -42,7 +44,7 @@ public class UserManager implements EntityManager<User> {
 		try{
 			p = gson.fromJson(content, user);
 		} catch(JsonSyntaxException e){
-			throw new WPISuiteException();
+			throw new BadRequestException();
 		}
 		
 		if(getEntity(s,p.getUsername())[0] == null)
@@ -78,17 +80,27 @@ public class UserManager implements EntityManager<User> {
 	 * 
 	 * @param id - the id of the user, in this case it's the username
 	 * @return a list of matching users
+	 * @throws NotFoundException if the user cannot be found
 	 */
-	public User[] getEntity(String id) 
+	public User[] getEntity(String id) throws NotFoundException
 	{
 		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			return m;
+			throw new NotFoundException();
 		}
 		else
 		{
-			return data.retrieve(user, "username", id).toArray(m);
+			m = data.retrieve(user, "username", id).toArray(m);
+			
+			if(m[0] == null)
+			{
+				throw new NotFoundException();
+			}
+			else
+			{
+				return m;
+			}
 		}
 	}
 
