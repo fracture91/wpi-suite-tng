@@ -1,11 +1,13 @@
-package edu.wpi.cs.wpisuitetng.database;
+package edu.wpi.cs.wpisuitetng.mockobjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
 
+import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class MockDataStore implements Data {
@@ -28,11 +30,11 @@ public class MockDataStore implements Data {
 		models.add(new User("fred","fred",null, 1));
 		models.add(new User("jeff","jeff",null, 2));
 		models.add(new User("tyler","tyler",null, 3));
-		//models.add(new Project("WPISUITE",0));
-		//models.add(new Project("ANDROID:BEARCLAW",1));
-		//models.add(new Project("WINDOWS9",2));
-		//models.add(new Project("OSX:HOUSECAT",3));
-		//models.add(new Project("UBUNTU_RABID_RHINO",4));
+		models.add(new Project("WPISUITE","0"));
+		models.add(new Project("ANDROID:BEARCLAW","1"));
+		models.add(new Project("WINDOWS9","2"));
+		models.add(new Project("OSX:HOUSECAT","3"));
+		models.add(new Project("UBUNTU_RABID_RHINO","4"));
 
 	}
 	
@@ -114,5 +116,12 @@ public class MockDataStore implements Data {
 		System.out.println("DEBUG: Inside delete");
 		System.out.println("DEBUG aTNG: "+ aTNG);
 		return aTNG;
+	}
+
+	@Override
+	public void update(Class anObjectToBeModified, String fieldName,
+			Object uniqueID, String changeField, Object changeValue) {
+		// TODO Auto-generated method stub
+		
 	}
 }

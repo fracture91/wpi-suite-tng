@@ -16,10 +16,7 @@ import java.io.IOException;
 
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 
-// decoding libraries
-import org.apache.catalina.util.Base64;
-import org.apache.tomcat.util.buf.ByteChunk;
-import org.apache.tomcat.util.buf.CharChunk;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * BasicAuth implementation of the Authenticator.
@@ -35,28 +32,68 @@ public class BasicAuth extends Authenticator {
 	}
 	
 	@Override
-	protected String[] parsePost(String post) throws AuthenticationException {
-		try 
+	protected String[] parsePost(String post) throws AuthenticationException 
+	{		
+		// format: ["Authorization:", "Basic", Base64-encoded credentials]
+		String[] parts = post.split(" ");
+		
+		if(!isValidBasicAuth(parts))
 		{
-			String[] parts = post.split(" "); // split apart to get credentials in [2]
-			
-			// load the credentials into a ByteChunk
-			ByteChunk encoded = new ByteChunk();
-			byte[] postBytes = parts[2].getBytes(); // TODO: define charset
-			encoded.append(postBytes, 0, postBytes.length);
-			
-			// decode the base64 credential bytes
-			CharChunk decoded = new CharChunk();
-			Base64.decode(encoded, decoded);
-			
-			String[] credentials = decoded.toString().split(":"); // split decoded token username:password
-			
-			return credentials;
-		} 
-		catch (IOException e) 
-		{
-			throw new AuthenticationException(); // decoding error
+			throw new AuthenticationException();
 		}
+		
+		byte[] decoded = Base64.decodeBase64(parts[2]);
+		
+		String[] credentials = (new String(decoded)).split(":"); // split decoded token username:password
+		
+		// check if the credential array has space for username and password elements.
+		if(credentials.length != 2)
+		{
+			throw new AuthenticationException();
+		}
+		
+		return credentials;
+	}
+	
+	/**
+	 * Inspects the authString and determines if it is a valid BasicAuth string.
+	 * 	Checks if it has all 3 parts, then checks the validity of the parts.
+	 * @param authString	the authorization string to be validated
+	 * @return	true if valid, false otherwise.
+	 */
+	private boolean isValidBasicAuth(String[] authParts)
+	{
+		// check if the post string is in the correct format
+		if((authParts.length != 3) || (!authParts[0].equals("Authorization:")) 
+									|| (!authParts[1].equalsIgnoreCase("Basic")))
+		{
+			return false;
+		}
+		
+		// check if the credential section is encoded properly
+		if(!Base64.isBase64(authParts[2]))
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Static utility for generating a BasicAuth token.
+	 * 		Format: "Authorization: Basic " + [Base64Encoded]username:password
+	 * @param username
+	 * @param pass
+	 * @return	a String containing a BasicAuth token for the given parameters.
+	 */
+	public static String generateBasicAuth(String username, String pass)
+	{
+		String authToken = "Authorization: Basic ";
+		String credentials = username + ":" + pass;
+		
+		authToken += Base64.encodeBase64String(credentials.getBytes());
+		
+		return authToken;
 	}
 
 }

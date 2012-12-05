@@ -113,81 +113,7 @@ public class DataStore implements Data {
 		return result;
 	}
 	
-	//Code in progress for multiquerying
-	public <T> List<T> retrieve(final Class<T> anObjectQueried, String[] aFieldName, 
-			final T[] theGivenValue, final String operator) throws IllegalArgumentException {
-		final int fieldNameLength = aFieldName.length;
-		int theGivenValueLength = theGivenValue.length;
-		
-		if(fieldNameLength != theGivenValueLength){
-			new IllegalArgumentException("The length of the two given arrays does not match");
-		}
-		
-		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
-		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		//ObjectContainer client = server.openClient();
-		
-		Method[] allMethods = anObjectQueried.getMethods();
-		Method methodToBeSaved = null;
-		Method[] methodsToBeExecuted = new Method[fieldNameLength];
-		int fieldNameCount = 0;
-		for(String name: aFieldName)
-		{
-			for(Method m: allMethods){
-				if(m.getName().equalsIgnoreCase("get"+name)){
-					methodsToBeExecuted[fieldNameCount] = m;
-				}
-			}
-			fieldNameCount++;
-		}
-		//TODO: IF Null solve this problem...
-		final Method[] theGetters = methodsToBeExecuted;
-		final String theOperator = operator;
-		
-		List<Model> result = theDB.query(new Predicate<Model>(){
-			public boolean match(Model aDefect){
-				try {
-					boolean matchSoFar = true;
-					if(theOperator.equalsIgnoreCase("and")){
-						for(int i = 0; i<fieldNameLength; i++)
-						{
-							matchSoFar =  matchSoFar && theGetters[i].invoke(aDefect).equals(theGivenValue[i]);
-						}
-					}
-					else if(theOperator.equalsIgnoreCase("or")){ 
-						matchSoFar = false;
-						for(int i = 0; i<fieldNameLength; i++)
-						{
-							matchSoFar = matchSoFar || theGetters[i].invoke(aDefect).equals(theGivenValue[i]);
-						}
-					}
-					else{
-						for(int i = 0; i<fieldNameLength; i++)
-						{
-							matchSoFar = matchSoFar && theGetters[i].invoke(aDefect).equals(theGivenValue[i]);
-						}
-					}
-					return matchSoFar;
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;         
-				}
-			}
-		});
-	
-		System.out.println(result);
-		//client.close();
-		return (List<T>) result;
-	}
+
 	
 	/**
 	 * Retrieves all objects of the given Class. 
@@ -215,13 +141,10 @@ public class DataStore implements Data {
 		
 	}
 	
-	public Object delete(Class objectType, String fieldName, Object uniqueID){
-		return (Object) delete(objectType);
-	}
 	
 	
-	public void update(Class objectType, String fieldName, Object uniqueID, String changeField, Object changeValue){
-		List<? extends Object> objectsToUpdate = retrieve(objectType.getClass(), fieldName, uniqueID);
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue){
+		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID);
 		Object theObject;
 		for(int i = 0; i < objectsToUpdate.size(); i++){
 			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
@@ -236,7 +159,7 @@ public class DataStore implements Data {
 			final Method theSetter = methodToBeSaved;
 			
 			try {
-				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i));
+				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i), changeValue);
 				save(theObject);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -254,36 +177,7 @@ public class DataStore implements Data {
 		}
 	}
 	
-	public User[] getUser(String username)
-	{
-		User[] ret = new User[1];
-		retrieve(new User("","","", 0).getClass(), "username", username).toArray(ret);
-		return ret;
-		
-	}
 	
-	public Model addUser(String json, Class<? extends Model> type)
-	{
-		Gson gson = new Gson();
-		Model u = gson.fromJson(json, type);
-		save(u);
-		return u;
-	}
-	
-	public Model addProject(String json)
-	{
-		Gson gson = new Gson();
-		Project p = gson.fromJson(json, Project.class);
-		save(p);
-		return p;
-	}
-	
-	public Project[] getProject(int idNum)
-	{
-		Project[] ret = new Project[1];
-		return retrieve(new Project("","").getClass(), "idnum", idNum).toArray(ret);
-		
-	}
 	
 
 }
