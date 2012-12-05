@@ -9,5 +9,6 @@ public interface Data
 	public <T> boolean save(T aTNG);
 	public List<Model> retrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
 	public <T> T delete(T aTNG);
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue);
 	
 }

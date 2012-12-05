@@ -115,4 +115,11 @@ public class MockDataStore implements Data {
 		System.out.println("DEBUG aTNG: "+ aTNG);
 		return aTNG;
 	}
+
+	@Override
+	public void update(Class anObjectToBeModified, String fieldName,
+			Object uniqueID, String changeField, Object changeValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }
