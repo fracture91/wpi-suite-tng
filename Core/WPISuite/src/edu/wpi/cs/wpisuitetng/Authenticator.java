@@ -66,7 +66,7 @@ public abstract class Authenticator {
 		ManagerLayer manager = ManagerLayer.getInstance();
 		User[] u = manager.getUsers().getEntity(credentials[0]);
 		
-		if(u.length == 0)
+		if(u[0] == null)
 		{
 			throw new AuthenticationException();	//"No user with the given username found");
 		}
