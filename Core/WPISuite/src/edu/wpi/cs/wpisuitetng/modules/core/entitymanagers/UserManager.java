@@ -13,10 +13,12 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -34,15 +36,22 @@ public class UserManager implements EntityManager<User> {
 	}
 	
 	@Override
-	public User makeEntity(Session s, String content) {
+	public User makeEntity(Session s, String content) throws WPISuiteException{
 		
 		User p;
-		
-		p = gson.fromJson(content, user);
+		try{
+			p = gson.fromJson(content, user);
+		} catch(JsonSyntaxException e){
+			throw new WPISuiteException();
+		}
 		
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
 			save(s,p);
+		}
+		else
+		{
+			throw new ConflictException();
 		}
 		
 		return p;
@@ -90,8 +99,15 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public void save(Session s,User model) {
-		data.save(model);
+	public void save(Session s,User model) throws WPISuiteException {
+		if(data.save(model))
+		{
+			return ;
+		}
+		else
+		{
+			throw new WPISuiteException();
+		}
 		
 	}
 
@@ -106,13 +122,12 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void deleteAll(Session s) {
-		// TODO Auto-generated method stub
-		
+		// TODO pending on get all
 	}
 
 	@Override
 	public int Count() {
-		// TODO Auto-generated method stub
+		// TODO pending on get all
 		return 0;
 	}
 

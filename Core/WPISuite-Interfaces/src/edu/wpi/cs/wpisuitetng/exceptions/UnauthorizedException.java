@@ -11,7 +11,7 @@ public class UnauthorizedException extends WPISuiteException {
 
 	@Override
 	public int getStatus() {
-		return HttpServletResponse.SC_UNAUTHORIZED;
+		return HttpServletResponse.SC_UNAUTHORIZED; //401
 	}
 
 }

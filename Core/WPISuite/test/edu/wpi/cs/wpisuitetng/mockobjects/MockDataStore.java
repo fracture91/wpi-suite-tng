@@ -108,7 +108,29 @@ public class MockDataStore implements Data {
 		System.out.println("DEBUG anObjectQueried: "+ anObjectQueried);
 		System.out.println("DEBUG aFieldName: "+ aFieldName);
 		System.out.println("DEBUG theGivenValue: "+ theGivenValue);
-		return models;
+		List<Model> list = new ArrayList<Model>();
+		Model[] mlist = new Model[1];
+		if(theGivenValue != null)
+		{
+			for(Model m : models)
+			{
+				if(m.getClass() == anObjectQueried && m.identify(theGivenValue))
+				{
+					list.add(m);
+					return list;
+				}
+			}
+			return list;
+		}
+		else
+		{
+			for(Model m : models)
+			{
+				if(m.getClass() == anObjectQueried)
+					list.add(m);
+			}
+			return list;
+		}
 	}
 
 	@Override

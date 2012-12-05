@@ -29,6 +29,6 @@ public class WPISuiteException extends Exception {
 
 	public int getStatus()
 	{
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
 	}
 }
