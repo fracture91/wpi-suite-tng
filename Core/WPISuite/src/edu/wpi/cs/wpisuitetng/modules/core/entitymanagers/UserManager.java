@@ -8,7 +8,7 @@
  *
  * Contributors:
  *    mpdelladonna
- *    twack
+ *    twack - update
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
