@@ -51,11 +51,29 @@ public class User extends AbstractModel
 	public boolean equals(Object other) {
 		if(other instanceof User)
 		{
-			if( ((User)other).idNum == this.idNum && 
-				((User)other).username.equals(this.username) &&
-				((User)other).password.equals(this.password) &&
-				((User)other).name.equals(this.name))
+			if( ((User)other).idNum == this.idNum)
 			{
+				//things that can be null
+				if(this.name != null && !this.name.equals(((User)other).name))
+				{
+					return false;
+				}
+				
+				if(this.username != null && !this.username.equals(((User)other).username))
+				{
+					return false;
+				}
+				
+				if(this.password != null && !this.password.equals(((User)other).password))
+				{
+					return false;
+				}
+				
+				if(this.role != null && !this.role.equals(((User)other).role))
+				{
+					return false;
+				}
+				
 				return true;
 			}
 		}
