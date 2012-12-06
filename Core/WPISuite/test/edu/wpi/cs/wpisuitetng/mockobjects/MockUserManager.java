@@ -1,7 +1,10 @@
 package edu.wpi.cs.wpisuitetng.mockobjects;
 
+import com.google.gson.Gson;
+
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -15,12 +18,18 @@ public class MockUserManager extends UserManager {
 			return false;
 	}
 
+	@Override
+	public User makeEntity(Session s, String content) throws WPISuiteException {
+		return new User("asdf","asdf","asdf", 0);
+	}
+
 	User fake;
 	
 	public MockUserManager(Data data, User fake) {
 		super(data);
 		this.fake = fake;
 	}
+	
 
 	@Override
 	public User[] getEntity(String id)
@@ -45,7 +54,10 @@ public class MockUserManager extends UserManager {
 			u[1] = fake;
 		}
 		
-		if(!(id.equalsIgnoreCase(fake.getUsername()) || id.equalsIgnoreCase("")))
+		if(id.equalsIgnoreCase("asdf"))
+			u[0] = new User("asdf","asdf","asdf", 0);
+		
+		if(!(id.equalsIgnoreCase(fake.getUsername()) || id.equalsIgnoreCase("") || id.equalsIgnoreCase("asdf")))
 			return null;
 		System.out.println("MockUserManager retval: " + u[0]);
 		return u;
