@@ -12,22 +12,27 @@
 
 package edu.wpi.cs.wpisuitetng.modules;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 
 public abstract class AbstractModel implements Model {
 
+	private Map<User, Permission> permissionMap = new HashMap<User, Permission>();
 	@Override
-	public Permission getPermission(User u) {
-		// TODO Auto-generated method stub
-		return null;
+	public Permission getPermission(User u) 
+	{
+		
+		return permissionMap.get(u);
 	}
 
 	@Override
-	public void setPermission(Permission p, User u) {
-		// TODO Auto-generated method stub
-		
+	public void setPermission(Permission p, User u) 
+	{
+		permissionMap.put(u, p);
 	}
 
 
