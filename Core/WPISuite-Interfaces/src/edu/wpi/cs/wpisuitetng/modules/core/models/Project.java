@@ -26,6 +26,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 public class Project extends AbstractModel
  {
+
 	private String name;
 	private String idNum;
 	
@@ -140,5 +141,11 @@ public class Project extends AbstractModel
 		
 		
 		return b;
+	}
+	
+	@Override
+	public boolean equals(Object anotherProject) {
+		return this.name.equalsIgnoreCase(((Project) anotherProject).getName()) &&
+				this.idNum.equalsIgnoreCase(((Project) anotherProject).getIdNum());
 	}
 }

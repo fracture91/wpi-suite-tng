@@ -13,12 +13,18 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
+import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class ProjectManager implements EntityManager<Project>{
 
@@ -33,15 +39,22 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public Project makeEntity(Session s, String content) {
+	public Project makeEntity(Session s, String content) throws WPISuiteException {
 		
 		Project p;
+		try{
+			p = gson.fromJson(content, project);
+		} catch(JsonSyntaxException e){
+			throw new BadRequestException();
+		}
 		
-		p = gson.fromJson(content, project);
-		
-		if(getEntity(s, p.getIdNum()).length == 0)
+		if(getEntity(s,p.getIdNum())[0] == null)
 		{
 			save(s,p);
+		}
+		else
+		{
+			throw new ConflictException();
 		}
 		
 		return p;
@@ -60,6 +73,37 @@ public class ProjectManager implements EntityManager<Project>{
 			return data.retrieve(project, "idNum", id).toArray(m);
 		}
 	}
+	
+	/**
+	 * returns a project without requiring a session, 
+	 * specifically for the scenario where a session needs to be created.
+	 * only ever returns one project, "" is not a valid argument;
+	 * 
+	 * @param id - the id of the user, in this case it's the idNum
+	 * @return a list of matching projects
+	 * @throws NotFoundException if the project cannot be found
+	 */
+	public Project[] getEntity(String id) throws NotFoundException
+	{
+		Project[] m = new Project[1];
+		if(id.equalsIgnoreCase(""))
+		{
+			throw new NotFoundException();
+		}
+		else
+		{
+			m = data.retrieve(project, "idNum", id).toArray(m);
+			
+			if(m[0] == null)
+			{
+				throw new NotFoundException();
+			}
+			else
+			{
+				return m;
+			}
+		}
+	}
 
 	@Override
 	public Project[] getAll(Session s) {
@@ -68,8 +112,15 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 
 	@Override
-	public void save(Session s, Project model) {
-		data.save(model);
+	public void save(Session s, Project model) throws WPISuiteException {
+		if(data.save(model))
+		{
+			return ;
+		}
+		else
+		{
+			throw new WPISuiteException();
+		}
 		
 	}
 
@@ -80,6 +131,7 @@ public class ProjectManager implements EntityManager<Project>{
 		Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
 		
 		return (m != null) ? true : false;
+		
 	}
 	
 	@Override

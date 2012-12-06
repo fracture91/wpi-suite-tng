@@ -26,6 +26,7 @@ public class MockDataStore implements Data {
 	private MockDataStore()
 	{
 		models = new ArrayList<Model>();
+		models.add(new Project("test", "5"));
 		models.add(new User("steve", "steve",null, 0));
 		models.add(new User("fred","fred",null, 1));
 		models.add(new User("jeff","jeff",null, 2));
