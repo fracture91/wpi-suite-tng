@@ -11,6 +11,6 @@ public class ForbiddenException extends WPISuiteException {
 
 	@Override
 	public int getStatus() {
-		return HttpServletResponse.SC_FORBIDDEN;
+		return HttpServletResponse.SC_FORBIDDEN; //403
 	}
 }

@@ -7,28 +7,33 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    
+ *    mpdelladonna
+ *    twack
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
-import java.io.IOException;
 import java.util.HashMap;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+/**
+ * The EntityManager implementation for the User class. Manages interaction with the 
+ * 	set of Users in the Database defined by the constructor
+ * @author 
+ *
+ */
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
@@ -42,15 +47,22 @@ public class UserManager implements EntityManager<User> {
 	}
 	
 	@Override
-	public User makeEntity(Session s, String content) {
+	public User makeEntity(Session s, String content) throws WPISuiteException{
 		
 		User p;
-		
-		p = gson.fromJson(content, user);
+		try{
+			p = gson.fromJson(content, user);
+		} catch(JsonSyntaxException e){
+			throw new WPISuiteException();
+		}
 		
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
 			save(s,p);
+		}
+		else
+		{
+			throw new ConflictException();
 		}
 		
 		return p;
@@ -66,7 +78,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+			return data.retrieve(user, "username", id).toArray(m);
 		}
 	}
 	
@@ -87,7 +99,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			return DataStore.getDataStore().retrieve(user, "username", id).toArray(m);
+			return data.retrieve(user, "username", id).toArray(m);
 		}
 	}
 
@@ -98,15 +110,20 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public void save(Session s,User model) {
-		DataStore.getDataStore().save(model);
+	public void save(Session s,User model) throws WPISuiteException {
+		if(data.save(model))
+		{
+			return ;
+		}
+		else
+		{
+			throw new WPISuiteException();
+		}
 		
 	}
 
 	@Override
 	public boolean deleteEntity(Session s1 ,String id) {
-		
-		DataStore data = DataStore.getDataStore();
 		
 		Model m = data.delete(data.retrieve(user, "username", id).get(0));
 		
@@ -116,13 +133,12 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void deleteAll(Session s) {
-		// TODO Auto-generated method stub
-		
+		// TODO pending on get all
 	}
 
 	@Override
 	public int Count() {
-		// TODO Auto-generated method stub
+		// TODO pending on get all
 		return 0;
 	}
 	
@@ -158,12 +174,12 @@ public class UserManager implements EntityManager<User> {
 			
 			if(changeSet.containsKey("idNum"))
 			{
-				toUpdate.setIdNum((String)changeSet.get("idNum"));
+				toUpdate.setIdNum((Integer)changeSet.get("idNum"));
 			}
 			
 			if(changeSet.containsKey("role"))
 			{
-				toUpdate.setRole((Role)changeSet.get("role"));
+				toUpdate.setRole(Role.valueOf((String)changeSet.get("role")));
 			}
 		}
 		catch(Exception e)
