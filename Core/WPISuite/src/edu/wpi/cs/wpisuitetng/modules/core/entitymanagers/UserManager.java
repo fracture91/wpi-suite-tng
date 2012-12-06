@@ -145,41 +145,41 @@ public class UserManager implements EntityManager<User> {
 	/**
 	 * 	Updates a single user object based on the JSON update string provided.
 	 * 		Inflates the JSON into a User object then checks each field for differences.
-	 * @param s1	The Session to check authorization for this action
+	 * @param s	The Session to check authorization for this action
 	 * @param toUpdate	the User to update
-	 * @param updateString	a JSON string representation of a User object. Contains the fields
+	 * @param changeSet	a JSON string representation of a User object. Contains the fields
 	 * 	to be updated.
 	 * @exception WPISuiteException	thrown when the ObjectMapper fails
 	 * @return	The updated User.
 	 */
-	public User update(Session s1, User toUpdate, String updateString) throws WPISuiteException
+	public User update(Session s, User toUpdate, String changeSet) throws WPISuiteException
 	{
 		// TODO: permissions checking here
 		
 		// convert updateString into a Map, then load into the User
 		try
 		{
-			HashMap<String, Object> changeSet = new ObjectMapper().readValue(updateString, HashMap.class);
+			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
 		
 			// check if the changeSet contains each field of User
-			if(changeSet.containsKey("name"))
+			if(changeMap.containsKey("name"))
 			{
-				toUpdate.setName((String)changeSet.get("name"));
+				toUpdate.setName((String)changeMap.get("name"));
 			}
 			
-			if(changeSet.containsKey("username"))
+			if(changeMap.containsKey("username"))
 			{
-				toUpdate.setUserName((String)changeSet.get("username"));
+				toUpdate.setUserName((String)changeMap.get("username"));
 			}
 			
-			if(changeSet.containsKey("idNum"))
+			if(changeMap.containsKey("idNum"))
 			{
-				toUpdate.setIdNum((Integer)changeSet.get("idNum"));
+				toUpdate.setIdNum((Integer)changeMap.get("idNum"));
 			}
 			
-			if(changeSet.containsKey("role"))
+			if(changeMap.containsKey("role"))
 			{
-				toUpdate.setRole(Role.valueOf((String)changeSet.get("role")));
+				toUpdate.setRole(Role.valueOf((String)changeMap.get("role")));
 			}
 		}
 		catch(Exception e)
@@ -188,7 +188,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		
 		// save the changes back
-		this.save(s1, toUpdate);
+		this.save(s, toUpdate);
 		
 		// check for changes in each field
 		return toUpdate;
