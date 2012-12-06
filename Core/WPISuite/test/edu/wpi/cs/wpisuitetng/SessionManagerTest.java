@@ -19,6 +19,7 @@ import org.junit.*;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.SessionManager;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -121,7 +122,11 @@ public class SessionManagerTest {
 		
 		// log the user in (u1) using u2's session
 		BasicAuth auth = new BasicAuth();
-		users.save(u2Ses, this.u1);
+		try {
+			users.save(u2Ses, this.u1);
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
 		Session oldSession = auth.login(BasicAuth.generateBasicAuth(this.u1.getUsername(), "jayms"));
 		
 		// add the session to renew
@@ -129,7 +134,12 @@ public class SessionManagerTest {
 		assertEquals(2, sessions.sessionCount());
 		
 		// renew the session
-		Session renewed = sessions.renewSession(oldToken);
+		Session renewed = null;
+		try {
+			renewed = sessions.renewSession(oldToken);
+		} catch (WPISuiteException e) {
+			fail("unexpeced exception");
+		}
 		
 		assertEquals(2, sessions.sessionCount()); // the new session has been added
 		assertTrue(sessions.sessionExists(renewed.toString()));

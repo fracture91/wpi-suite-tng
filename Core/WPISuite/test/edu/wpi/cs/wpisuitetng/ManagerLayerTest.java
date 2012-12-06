@@ -47,7 +47,7 @@ public class ManagerLayerTest {
 	public String[] testUserArgsFakeDNE = {"core","user","steve"};
 	@SuppressWarnings("rawtypes")
 	public Map<String, EntityManager> testMap = new HashMap<String, EntityManager>();
-	public User fake;
+	public User fake, uniqueFake;
 	public User[] fakeList;
 	public User[] doubleFakeList;
 	public MockSessionManager sesMan;
@@ -62,6 +62,7 @@ public class ManagerLayerTest {
 	public void setUp() throws Exception 
 	{
 		fake = new User("fake","fake","fake", 0);
+		uniqueFake = new User("asdf","asdf","asdf", 0);
 		fakeList = new User[1];
 		doubleFakeList = new User[2];
 		fakeList[0] = fake;
@@ -87,7 +88,12 @@ public class ManagerLayerTest {
 	public void testGetUsersString() 
 	{
 		//MockUserManager returns User[0] = new User("fake",id,id, 0)
-		User[] u = testManagerLayer.getUsers("fake");
+		User[] u = null;
+		try {
+			u = testManagerLayer.getUsers("fake");
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
 		assertEquals(u[0].getName(), "fake");
 		assertEquals(u[0].getUsername(), "fake");
 	}
@@ -199,12 +205,12 @@ public class ManagerLayerTest {
 		String s = null;
 		//test case where asking for one users.
 		try {
-			s = testManagerLayer.create(testUserArgsFake,gson.toJson(fake,fake.getClass()) , testCookies);
+			s = testManagerLayer.create(testUserArgsFake,gson.toJson(uniqueFake,uniqueFake.getClass()) , testCookies);
 		} catch (WPISuiteException e) {
 			fail("Unexpected exception");
 		}
 		
-		assertEquals(s,gson.toJson(fake, fake.getClass()));
+		assertEquals(s,gson.toJson(uniqueFake, uniqueFake.getClass()));
 	}
 	/**
 	 * Test method for {@link edu.wpi.cs.wpisuitetng.ManagerLayer#create(java.lang.String[], java.lang.String, javax.servlet.http.Cookie[])}.

@@ -23,6 +23,7 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.ForbiddenException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -119,8 +120,9 @@ public class ManagerLayer {
 	/**
 	 * Exposes the Users in the database for direct access.
 	 * @return	The UserManager instance
+	 * @throws WPISuiteException 
 	 */
-	public User[] getUsers(String username)
+	public User[] getUsers(String username) throws WPISuiteException
 	{
 		UserManager u = (UserManager)map.get("coreuser");
 		return u.getEntity(username);
