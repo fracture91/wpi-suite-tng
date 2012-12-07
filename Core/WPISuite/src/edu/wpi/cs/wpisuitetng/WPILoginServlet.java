@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.wpi.cs.wpisuitetng.exceptions.*;
 
 /**
- * Servlet implementation class WPILoginServlet
+ * Servlet implementation class WPILoginServlet. Handles the login service given POST requests.
  * 
  * @author mpdelladonna, twack
  */
@@ -36,6 +36,8 @@ public class WPILoginServlet extends HttpServlet {
 	private Authenticator auth;
        
     /**
+     * Defines the Authorization type used for login.
+     * 
      * @see HttpServlet#HttpServlet()
      */
     public WPILoginServlet() {
@@ -44,6 +46,8 @@ public class WPILoginServlet extends HttpServlet {
     }
 
 	/**
+	 * Performs login service. Request is validated by the Authenticator, so the POST body
+	 * 	must be a valid authorization token for the Authenticator implementation defined by the constructor. 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,35 +78,4 @@ public class WPILoginServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, Authentication Failed.
 		}
 	}
-
-	@Override
-	/**
-	 * Implements the User Logout functionality. Mapped to '/logout'
-	 */
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		// if there are no cookies, then this is an invalid logout request
-		if(req.getCookies() == null)
-		{
-			resp.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, no session cookie posted to log off with
-		}
-		else
-		{
-			// find the WPISUITE cookie in the request
-			Cookie[] cookies = req.getCookies();
-			int cookieIndex = 0;
-			boolean found = false;
-			while(found != true)
-			{
-				// if found, then logout the user with the given username.
-				if(cookies[cookieIndex].getName().startsWith("WPISUITE-"))
-				{
-					this.auth.logout(cookies[cookieIndex].getValue()); // logs out the user with the given session cookie.
-					resp.setStatus(HttpServletResponse.SC_CONTINUE); // logout successful
-					found = true;
-				}
-			}
-		}
-	}	
 }
