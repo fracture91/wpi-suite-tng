@@ -117,8 +117,9 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public User[] getAll(Session s) {
-		// TODO Implement this feature in a later release
-		return null;
+		User[] ret = new User[1];
+		ret = data.retrieveAll(new User("","","",0)).toArray(ret);
+		return ret;
 	}
 
 	@Override
@@ -145,7 +146,7 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void deleteAll(Session s) {
-		// TODO pending on get all
+		data.deleteAll(new User("","","",0));
 	}
 
 	@Override

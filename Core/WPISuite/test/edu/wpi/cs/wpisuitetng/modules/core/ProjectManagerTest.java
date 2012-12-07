@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
@@ -27,6 +28,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ProjectManagerTest {
 
 	ProjectManager test;
+	ProjectManager testWithRealDB;
 	Project temp;
 	Project updateTemp;
 	Project conflict;
@@ -38,7 +40,8 @@ public class ProjectManagerTest {
 	public void setUp()
 	{
 		test = new ProjectManager(MockDataStore.getMockDataStore());
-		temp = new Project("test","5");
+		testWithRealDB = new ProjectManager(DataStore.getDataStore());
+		temp = new Project("test","8");
 		updateTemp = new Project("0", "proj0");
 		conflict = new Project("test", "5");
 		tempSession = new Session(tempUser);
@@ -68,7 +71,7 @@ public class ProjectManagerTest {
 		test.makeEntity(tempSession, "Garbage");
 	}
 
-	@Test
+	@Ignore
 	public void testGetEntitySessionString() {
 		fail("GetAll is not yet implemented");
 	}
@@ -94,9 +97,13 @@ public class ProjectManagerTest {
 		test.getEntity("jefferythegiraffe");
 	}
 
-	@Ignore
-	public void testGetAll() {
-		fail("Not yet implemented");
+	@Test
+	public void testGetAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, updateTemp);
+		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(2, myList.length);
+		testWithRealDB.deleteAll(new Session(tempUser));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -112,6 +119,11 @@ public class ProjectManagerTest {
 			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
 			@Override
 			public <T> List<T> retrieveAll(T arg0) {
+				return null;
+			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			}
@@ -137,6 +149,11 @@ public class ProjectManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
@@ -160,13 +177,25 @@ public class ProjectManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
 
-	@Ignore
-	public void testDeleteAll() {
-		fail("Not yet implemented");
+	@Test
+	public void testDeleteAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, updateTemp);
+		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(2, myList.length);
+		
+		testWithRealDB.deleteAll(new Session(tempUser));
+		myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(1, myList.length);
+		assertEquals(myList[0], null);
 	}
 
 	@Ignore
