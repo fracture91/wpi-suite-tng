@@ -21,7 +21,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
-import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -213,8 +212,6 @@ public class ProjectManagerTest {
 	{
 		Session ses = null;
 		String updateString = "{ \"idNum\": \"2\", \"name\": \"proj2\" }";
-		Project oldTemp = this.updateTemp;
-		
 		Project newTemp = this.test.update(ses, updateTemp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
@@ -233,7 +230,7 @@ public class ProjectManagerTest {
 		Session ses = null;
 		String updateString = "{ \"idNum\": \"2\", \"name\": \"proj2\",,,,,,,,,,, }"; // extra commas cause problems in ObjectMapper
 		
-		Project newTemp = this.test.update(ses, updateTemp, updateString);	// EXCEPTION SHOULD THROW HERE
+		this.test.update(ses, updateTemp, updateString);
 		
 		fail("Exception should have been thrown");
 	}

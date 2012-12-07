@@ -12,19 +12,10 @@
 
 package edu.wpi.cs.wpisuitetng;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.Cookie;
-
 import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
-import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
-import edu.wpi.cs.wpisuitetng.mockobjects.MockSessionManager;
-import edu.wpi.cs.wpisuitetng.mockobjects.MockUserManager;
-import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static org.junit.Assert.*;
 
@@ -118,7 +109,7 @@ public class AuthenticatorTest {
 		// generate login token with incorrect password
 		String badToken = BasicAuth.generateBasicAuth(this.u.getUsername(), "letsgetweird");
 		
-		Session ses = this.auth.login(badToken); // EXCEPTION EXPECTED FROM THIS
+		this.auth.login(badToken);
 	}
 	
 	@Test(expected = AuthenticationException.class)
@@ -134,6 +125,6 @@ public class AuthenticatorTest {
 		// generate login token with non-existent username
 		String badToken = BasicAuth.generateBasicAuth("wargarblargle", "jayms");
 		
-		Session ses = this.auth.login(badToken); // EXCEPTION EXPECTED FROM THIS
+		this.auth.login(badToken);
 	}
 }

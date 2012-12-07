@@ -12,8 +12,6 @@
 
 package edu.wpi.cs.wpisuitetng.mockobjects;
 
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;

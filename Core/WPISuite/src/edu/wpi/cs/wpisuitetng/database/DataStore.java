@@ -22,11 +22,7 @@ import com.db4o.cs.config.ClientConfiguration;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.query.Predicate;
 import com.db4o.reflect.jdk.JdkReflector;
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class DataStore implements Data {
 	

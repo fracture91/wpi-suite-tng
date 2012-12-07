@@ -17,7 +17,6 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 

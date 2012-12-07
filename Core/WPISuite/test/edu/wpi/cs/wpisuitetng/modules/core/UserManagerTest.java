@@ -32,11 +32,8 @@ import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
-import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -226,8 +223,6 @@ public class UserManagerTest {
 	{
 		Session ses = null;
 		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\" }";
-		User oldTemp = this.temp;
-		
 		User newTemp = this.test.update(ses, temp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
@@ -248,7 +243,7 @@ public class UserManagerTest {
 		Session ses = null;
 		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\",,,,,,,,,,, }"; // extra commas cause problems in ObjectMapper
 		
-		User newTemp = this.test.update(ses, temp, updateString);	// EXCEPTION SHOULD THROW HERE
+		this.test.update(ses, temp, updateString);
 		
 		fail("Exception should have been thrown");
 	}

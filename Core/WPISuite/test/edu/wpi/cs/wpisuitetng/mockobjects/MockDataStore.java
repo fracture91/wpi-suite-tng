@@ -122,7 +122,6 @@ public class MockDataStore implements Data {
 		System.out.println("DEBUG aFieldName: "+ aFieldName);
 		System.out.println("DEBUG theGivenValue: "+ theGivenValue);
 		List<Model> list = new ArrayList<Model>();
-		Model[] mlist = new Model[1];
 		if(theGivenValue != null)
 		{
 			for(Model m : models)

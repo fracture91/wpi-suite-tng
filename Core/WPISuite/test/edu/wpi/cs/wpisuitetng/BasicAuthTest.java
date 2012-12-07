@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Base32;
 
 public class BasicAuthTest {
 	String header = "Authorization: Basic "; // the static BasicAuth header

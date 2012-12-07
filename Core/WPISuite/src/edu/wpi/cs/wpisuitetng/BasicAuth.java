@@ -12,8 +12,6 @@
 
 package edu.wpi.cs.wpisuitetng;
 
-import java.io.IOException;
-
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 
 import org.apache.commons.codec.binary.Base64;
