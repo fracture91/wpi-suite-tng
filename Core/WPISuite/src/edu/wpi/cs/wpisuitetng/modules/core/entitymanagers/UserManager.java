@@ -119,10 +119,7 @@ public class UserManager implements EntityManager<User> {
 	@Override
 	public User[] getAll(Session s) {
 		User[] ret = new User[1];
-		List<User> myList = data.retrieveAll(new User("","","",0));
-		System.out.println("RetrieveAll got: "+ myList);
-		myList.toArray(ret);
-		System.out.println("Array: "+ret);
+		ret = data.retrieveAll(new User("","","",0)).toArray(ret);
 		return ret;
 	}
 

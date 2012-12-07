@@ -34,14 +34,18 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class UserManagerTest {
 
 	UserManager test;
+	UserManager testWithRealDB;
 	User temp;
+	User secondUser;
 	User conflict;
 	Gson json;
 	Session tempSession;
@@ -50,7 +54,9 @@ public class UserManagerTest {
 	public void setUp()
 	{
 		test = new UserManager(MockDataStore.getMockDataStore());
+		testWithRealDB = new UserManager(DataStore.getDataStore());
 		temp = new User("test","test","test",0);
+		secondUser = new User ("Sam", "sammy","trouty", 0);
 		conflict = new User("steve", "steve",null, 0);
 		tempSession = new Session(temp);
 		json = new Gson();
@@ -106,8 +112,12 @@ public class UserManagerTest {
 	}
 
 	@Test
-	public void testGetAll() {
-		test.getAll(new Session(temp));
+	public void testGetAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, secondUser);
+		User[] myList = testWithRealDB.getAll(new Session(temp));
+		assertEquals(2, myList.length);
+		testWithRealDB.deleteAll(new Session(temp));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -188,29 +198,17 @@ public class UserManagerTest {
 	}
 
 	@Test
-	public void testDeleteAll() {
-		new UserManager(new Data(){
-			@Override
-			public <T> boolean save(T aTNG) {return false;}
-			@Override
-			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
-				List<Model> a = new ArrayList<Model>();
-				a.add(temp);
-				return a;}
-			@Override
-			public <T> T delete(T aTNG) {return aTNG;}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
-			@Override
-			public <T> List<T> retrieveAll(T arg0) {
-				return null;
-			}
-			@Override
-			public <T> List<T> deleteAll(T aSample) {
-				return null;
-			}
-			}
-		).deleteAll(null);
+	public void testDeleteAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, secondUser);
+		User[] myList = testWithRealDB.getAll(new Session(temp));
+		assertEquals(2, myList.length);
+		testWithRealDB.deleteAll(new Session(temp));
+		
+		testWithRealDB.deleteAll(new Session(temp));
+		myList = testWithRealDB.getAll(new Session(temp));
+		assertEquals(1, myList.length);
+		assertEquals(myList[0], null);
 	}
 
 	@Ignore

@@ -112,7 +112,7 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public Project[] getAll(Session s) {
 		Project[] ret = new Project[1];
-		data.retrieveAll(new Project("","")).toArray(ret);
+		ret = data.retrieveAll(new Project("","")).toArray(ret);
 		return ret;
 	}
 

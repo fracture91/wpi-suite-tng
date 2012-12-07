@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
@@ -27,6 +28,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ProjectManagerTest {
 
 	ProjectManager test;
+	ProjectManager testWithRealDB;
 	Project temp;
 	Project updateTemp;
 	Project conflict;
@@ -38,7 +40,8 @@ public class ProjectManagerTest {
 	public void setUp()
 	{
 		test = new ProjectManager(MockDataStore.getMockDataStore());
-		temp = new Project("test","5");
+		testWithRealDB = new ProjectManager(DataStore.getDataStore());
+		temp = new Project("test","8");
 		updateTemp = new Project("0", "proj0");
 		conflict = new Project("test", "5");
 		tempSession = new Session(tempUser);
@@ -95,8 +98,12 @@ public class ProjectManagerTest {
 	}
 
 	@Test
-	public void testGetAll() {
-		test.getAll(new Session(tempUser));
+	public void testGetAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, updateTemp);
+		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(2, myList.length);
+		testWithRealDB.deleteAll(new Session(tempUser));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -179,30 +186,16 @@ public class ProjectManagerTest {
 	}
 
 	@Test
-	public void testDeleteAll() {
-		new ProjectManager(new Data(){
-			@Override
-			public <T> boolean save(T aTNG) {return false;}
-			@Override
-			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
-				List<Model> a = new ArrayList<Model>();
-				a.add(temp);
-				return a;}
-			@Override
-			public <T> T delete(T aTNG) {return aTNG;}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
-			@Override
-			public <T> List<T> retrieveAll(T arg0) {
-				return null;
-			}
-			@Override
-			public <T> List<T> deleteAll(T aSample) {
-				return null;
-			}
-			}
-		).deleteAll(tempSession);
-		//fail("Not yet implemented");
+	public void testDeleteAll() throws WPISuiteException {
+		testWithRealDB.save(tempSession, temp);
+		testWithRealDB.save(tempSession, updateTemp);
+		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(2, myList.length);
+		
+		testWithRealDB.deleteAll(new Session(tempUser));
+		myList = testWithRealDB.getAll(new Session(tempUser));
+		assertEquals(1, myList.length);
+		assertEquals(myList[0], null);
 	}
 
 	@Ignore
