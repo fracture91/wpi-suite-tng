@@ -23,4 +23,5 @@ public interface Data
 	public <T> T delete(T aTNG);
 	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue);
 	public <T> List<T> retrieveAll(T aSample);
+	public <T> List<T> deleteAll(T aSample);
 }
