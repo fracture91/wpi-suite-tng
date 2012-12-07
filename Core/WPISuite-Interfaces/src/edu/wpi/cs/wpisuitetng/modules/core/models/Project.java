@@ -52,6 +52,17 @@ public class Project extends AbstractModel
 		return idNum;
 	}
 	
+	/* Mutators */
+	public void setName(String newName)
+	{
+		this.name = newName;
+	}
+	
+	public void setIdNum(String newId)
+	{
+		this.idNum = newId;
+	}
+	
 	/* database interaction */
 	
 	/**

@@ -219,23 +219,23 @@ public class User extends AbstractModel
 	}
 	
 	public User setUserName(String newUserName){
-		this.name = newUserName;
+		this.username = newUserName;
 		return this;
 	}
 	
-	public User setIdNum(String newidNum){
-		this.name = newidNum;
+	public User setIdNum(int newidNum){
+		this.idNum = newidNum;
 		return this;
 	}
 	
 	
 	public Role getRole()
 	{
-		return role;
+		return this.role;
 	}
 	
 	public void setRole(Role r)
 	{
-		role = r;
+		this.role = r;
 	}
 }

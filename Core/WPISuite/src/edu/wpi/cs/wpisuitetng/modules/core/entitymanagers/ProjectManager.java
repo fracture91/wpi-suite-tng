@@ -7,11 +7,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    
+ * 	  rchamer
+ *    twack - update
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.util.HashMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -144,6 +148,38 @@ public class ProjectManager implements EntityManager<Project>{
 	public int Count() {
 		
 		return 0;
+	}
+	
+	public Project update(Session s, Project toUpdate, String changeSet) throws WPISuiteException
+	{
+		// TODO: permissions checking here
+		
+		// convert updateString into a Map, then load into the User
+		try
+		{
+			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
+		
+			// check if the changeSet contains each field of User
+			if(changeMap.containsKey("name"))
+			{
+				toUpdate.setName((String)changeMap.get("name"));
+			}
+			
+			if(changeMap.containsKey("idNum"))
+			{
+				toUpdate.setIdNum((String)changeMap.get("idNum"));
+			}
+		}
+		catch(Exception e)
+		{
+			throw new WPISuiteException(); // on Mapping failure
+		}
+		
+		// save the changes back
+		this.save(s, toUpdate);
+		
+		// check for changes in each field
+		return toUpdate;
 	}
 
 

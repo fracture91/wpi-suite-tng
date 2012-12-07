@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    mpdelladonna
+ *    twack - update test
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.core;
 
 import static org.junit.Assert.*;
@@ -22,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class UserManagerTest {
@@ -169,6 +183,43 @@ public class UserManagerTest {
 	@Ignore
 	public void testCount() {
 		fail("Not yet implemented");
+	}
+	
+	@Test
+	/**
+	 * Tests if the update() function properly maps the JSON string then applies
+	 * 	the changes to the given User.
+	 * @throws WPISuiteException
+	 */
+	public void testUpdate() throws WPISuiteException
+	{
+		Session ses = null;
+		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\" }";
+		User oldTemp = this.temp;
+		
+		User newTemp = this.test.update(ses, temp, updateString);
+		
+		// TODO: find a way to retrieve the User from storage to run assertions on.
+		
+		assertEquals(99, newTemp.getIdNum());
+		assertTrue(newTemp.getUsername().equals("updated"));
+		assertEquals(newTemp.getRole(), Role.ADMIN);
+		assertTrue(newTemp.getName().equals("zach"));
+	}
+	
+	@Test(expected = WPISuiteException.class)
+	/**
+	 * Tests failure in update's ObjectMapper. 
+	 * @throws WPISuiteException	on success
+	 */
+	public void testUpdateFailure() throws WPISuiteException
+	{
+		Session ses = null;
+		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\",,,,,,,,,,, }"; // extra commas cause problems in ObjectMapper
+		
+		User newTemp = this.test.update(ses, temp, updateString);	// EXCEPTION SHOULD THROW HERE
+		
+		fail("Exception should have been thrown");
 	}
 
 }

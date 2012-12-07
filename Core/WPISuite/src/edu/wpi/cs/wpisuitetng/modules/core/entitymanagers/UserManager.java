@@ -7,11 +7,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    
+ *    mpdelladonna
+ *    twack - update
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.util.HashMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -23,8 +27,15 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+/**
+ * The EntityManager implementation for the User class. Manages interaction with the 
+ * 	set of Users in the Database defined by the constructor
+ * @author 
+ *
+ */
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
@@ -141,6 +152,58 @@ public class UserManager implements EntityManager<User> {
 	public int Count() {
 		// TODO pending on get all
 		return 0;
+	}
+	
+	/**
+	 * 	Updates a single user object based on the JSON update string provided.
+	 * 		Inflates the JSON into a User object then checks each field for differences.
+	 * @param s	The Session to check authorization for this action
+	 * @param toUpdate	the User to update
+	 * @param changeSet	a JSON string representation of a User object. Contains the fields
+	 * 	to be updated.
+	 * @exception WPISuiteException	thrown when the ObjectMapper fails
+	 * @return	The updated User.
+	 */
+	public User update(Session s, User toUpdate, String changeSet) throws WPISuiteException
+	{
+		// TODO: permissions checking here
+		
+		// convert updateString into a Map, then load into the User
+		try
+		{
+			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
+		
+			// check if the changeSet contains each field of User
+			if(changeMap.containsKey("name"))
+			{
+				toUpdate.setName((String)changeMap.get("name"));
+			}
+			
+			if(changeMap.containsKey("username"))
+			{
+				toUpdate.setUserName((String)changeMap.get("username"));
+			}
+			
+			if(changeMap.containsKey("idNum"))
+			{
+				toUpdate.setIdNum((Integer)changeMap.get("idNum"));
+			}
+			
+			if(changeMap.containsKey("role"))
+			{
+				toUpdate.setRole(Role.valueOf((String)changeMap.get("role")));
+			}
+		}
+		catch(Exception e)
+		{
+			throw new WPISuiteException(); // on Mapping failure
+		}
+		
+		// save the changes back
+		this.save(s, toUpdate);
+		
+		// check for changes in each field
+		return toUpdate;
 	}
 
 }
