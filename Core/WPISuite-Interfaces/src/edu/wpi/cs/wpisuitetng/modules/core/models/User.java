@@ -1,21 +1,36 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *    mpdelladonna
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna (sp?), twack
+ * @author mdelladonna, twack
  */
 
-public class User implements Model
+public class User extends AbstractModel
 {
+
 	private String name;
 	private String username;
 	private String password;
 	private int idNum;
+	private Role role;
 	
 	/**
 	 * The primary constructor for a User
@@ -23,11 +38,46 @@ public class User implements Model
 	 * @param username	User's username (nickname)
 	 * @param idNum	User's ID number
 	 */
-	public User(String name, String username, int idNum)
+	public User(String name, String username, String password, int idNum)
 	{
 		this.name = name;
 		this.username = username;
+		this.password = password;
 		this.idNum = idNum;
+		this.role = Role.USER;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other instanceof User)
+		{
+			if( ((User)other).idNum == this.idNum)
+			{
+				//things that can be null
+				if(this.name != null && !this.name.equals(((User)other).name))
+				{
+					return false;
+				}
+				
+				if(this.username != null && !this.username.equals(((User)other).username))
+				{
+					return false;
+				}
+				
+				if(this.password != null && !this.password.equals(((User)other).password))
+				{
+					return false;
+				}
+				
+				if(this.role != null && !this.role.equals(((User)other).role))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -38,6 +88,15 @@ public class User implements Model
 	public boolean matchPassword(String pass)
 	{
 		return password.equals(pass);
+	}
+	
+	/**
+	 * Sets password (plain text for now, crypto is in the future)
+	 * @param pass
+	 */
+	public void setPassword(String pass)
+	{
+		this.password = pass;
 	}
 	
 	/* Accessors */
@@ -146,5 +205,42 @@ public class User implements Model
 			if(((String) o).equalsIgnoreCase(this.username))
 				b = true;
 		return b;
+	}
+	
+	/**
+	 * Determines if this is equal to another user
+	 * @param anotherUser
+	 * @return true if this and anotherUser are equal
+	 */
+	public boolean equals(User anotherUser){
+		return this.name.equalsIgnoreCase(anotherUser.getName()) &&
+				this.username.equalsIgnoreCase(anotherUser.getUsername()) &&
+				this.idNum == anotherUser.getIdNum();
+	}
+	
+	public User setName(String newName){
+		this.name = newName;
+		return this;
+	}
+	
+	public User setUserName(String newUserName){
+		this.username = newUserName;
+		return this;
+	}
+	
+	public User setIdNum(int newidNum){
+		this.idNum = newidNum;
+		return this;
+	}
+	
+	
+	public Role getRole()
+	{
+		return this.role;
+	}
+	
+	public void setRole(Role r)
+	{
+		this.role = r;
 	}
 }

@@ -7,20 +7,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    mpdelladonna
+ *    twack
  *******************************************************************************/
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-package edu.wpi.cs.wpisuitetng.modules;
+import javax.servlet.http.HttpServletResponse;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
+/**
+ * Base WPI Suite Exception class.
+ * @author twack
+ *
+ */
+public class WPISuiteException extends Exception {
 
-
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
 	
-	public AbstractEntityManager(Data data)
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5271354512939175980L;
+
+	public int getStatus()
 	{
-		this.data = data;
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
 	}
 }

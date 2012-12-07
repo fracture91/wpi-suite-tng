@@ -10,17 +10,25 @@
  *    mpdelladonna
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.mockobjects;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.SessionManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+public class MockSessionManager extends SessionManager {
 
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
+	Session ses;
 	
-	public AbstractEntityManager(Data data)
+	public MockSessionManager(User u)
 	{
-		this.data = data;
+		super();
+		ses = createSession(u);
 	}
+	
+	public Session getTestSession()
+	{
+		return ses;
+	}
+
 }

@@ -10,17 +10,25 @@
  *    mpdelladonna
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
+import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Exception thrown when attempting to store an object already in the database
+ * @author mpdelladonna
+ *
+ */
+public class ConflictException extends WPISuiteException {
 
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
-	
-	public AbstractEntityManager(Data data)
-	{
-		this.data = data;
+	@Override
+	public int getStatus() {
+		return HttpServletResponse.SC_CONFLICT; //409
 	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7823907873323480290L;
+
 }

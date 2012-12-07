@@ -10,17 +10,12 @@
  *    mpdelladonna
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
-
-
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
-	
-	public AbstractEntityManager(Data data)
-	{
-		this.data = data;
-	}
+/**
+ * Available permissions
+ */
+public enum Permission {
+	READ,
+	WRITE
 }

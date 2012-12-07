@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="lib" path="/WPISuite/WebContent/WEB-INF/lib/gson-2.2.2.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/WPISuite/WebContent/WEB-INF/lib/gson-2.2.2.jar"/>
-	<classpathentry kind="lib" path="/WPISuite/WebContent/WEB-INF/lib/db4o-8.0.249.16098-all-java5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

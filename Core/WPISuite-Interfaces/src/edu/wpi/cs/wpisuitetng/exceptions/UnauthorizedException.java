@@ -10,17 +10,21 @@
  *    mpdelladonna
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
+import javax.servlet.http.HttpServletResponse;
 
+public class UnauthorizedException extends WPISuiteException {
 
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
-	
-	public AbstractEntityManager(Data data)
-	{
-		this.data = data;
+	/**
+	 * Exception thrown when attempting an action not allowed for that user's permission
+	 * level
+	 */
+	private static final long serialVersionUID = 9127615601542990581L;
+
+	@Override
+	public int getStatus() {
+		return HttpServletResponse.SC_UNAUTHORIZED; //401
 	}
+
 }

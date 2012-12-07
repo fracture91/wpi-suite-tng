@@ -7,20 +7,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    mpdelladonna
+ *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-import edu.wpi.cs.wpisuitetng.database.Data;
+/**
+ *  Thrown for Authentication errors in the Login system
+ * @author twack
+ *
+ */
+public class AuthenticationException extends WPISuiteException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3607525121952037935L;
 
-public abstract class AbstractEntityManager implements EntityManager<Model> 
-{
-	Data data;
-	
-	public AbstractEntityManager(Data data)
-	{
-		this.data = data;
-	}
 }
