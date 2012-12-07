@@ -162,8 +162,20 @@ public class MockDataStore implements Data {
 
 	@Override
 	public <T> List<T> retrieveAll(T aSample) {
-		// TODO Auto-generated method stub
-		return null;
+		List<T> tmp = new ArrayList<T>();
+		tmp.add(aSample);
+		System.out.println("DEBUG: Inside retrieveAll");
+		System.out.println("DEBUG aTNG: "+ tmp);
+		return tmp;
+	}
+
+	@Override
+	public <T> List<T> deleteAll(T aSample) {
+		List<T> tmp = new ArrayList<T>();
+		tmp.add(aSample);
+		System.out.println("DEBUG: Inside deleteAll");
+		System.out.println("DEBUG aTNG: "+ tmp);
+		return tmp;
 	}
 
 }

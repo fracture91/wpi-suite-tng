@@ -52,6 +52,7 @@ public class TestDB4oDatabase {
 	@Test
 	public void testRetrieveAll(){
 		Data db = DataStore.getDataStore();
+		User[] arr = new User[2];
 		User firstUser = new User("Brian", "bgaffey", "password", 0);
 		db.save(firstUser);
 		User secondUser = new User("Gaffey", "gafftron", "password", 0);
@@ -68,6 +69,15 @@ public class TestDB4oDatabase {
 		assertEquals(1, retrievedList.size());
 		assertTrue(retrievedList.contains(secondUser));
 		assertFalse(retrievedList.contains(firstUser));
+		
+		db.save(firstUser);
+		retrievedList = db.deleteAll(firstUser);
+		User me1 = db.retrieve(User.class, "username", "bgaffey").toArray(arr)[0];
+		User me2 = db.retrieve(User.class, "username", "gafftron").toArray(arr)[0];
+		assertEquals(2, retrievedList.size());
+		assertEquals(me1, null);
+		assertEquals(me2, null);
 	}
+	
 
 }

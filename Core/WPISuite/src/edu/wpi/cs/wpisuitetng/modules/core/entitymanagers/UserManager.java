@@ -14,6 +14,7 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -117,8 +118,12 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public User[] getAll(Session s) {
-		// TODO Implement this feature in a later release
-		return null;
+		User[] ret = new User[1];
+		List<User> myList = data.retrieveAll(new User("","","",0));
+		System.out.println("RetrieveAll got: "+ myList);
+		myList.toArray(ret);
+		System.out.println("Array: "+ret);
+		return ret;
 	}
 
 	@Override
@@ -145,7 +150,7 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void deleteAll(Session s) {
-		// TODO pending on get all
+		data.deleteAll(new User("","","",0));
 	}
 
 	@Override

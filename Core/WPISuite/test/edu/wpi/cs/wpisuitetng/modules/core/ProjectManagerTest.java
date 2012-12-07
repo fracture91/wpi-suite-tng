@@ -68,7 +68,7 @@ public class ProjectManagerTest {
 		test.makeEntity(tempSession, "Garbage");
 	}
 
-	@Test
+	@Ignore
 	public void testGetEntitySessionString() {
 		fail("GetAll is not yet implemented");
 	}
@@ -94,9 +94,9 @@ public class ProjectManagerTest {
 		test.getEntity("jefferythegiraffe");
 	}
 
-	@Ignore
+	@Test
 	public void testGetAll() {
-		fail("Not yet implemented");
+		test.getAll(new Session(tempUser));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -112,6 +112,11 @@ public class ProjectManagerTest {
 			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
 			@Override
 			public <T> List<T> retrieveAll(T arg0) {
+				return null;
+			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			}
@@ -137,6 +142,11 @@ public class ProjectManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
@@ -160,13 +170,39 @@ public class ProjectManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
 
-	@Ignore
+	@Test
 	public void testDeleteAll() {
-		fail("Not yet implemented");
+		new ProjectManager(new Data(){
+			@Override
+			public <T> boolean save(T aTNG) {return false;}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
+				List<Model> a = new ArrayList<Model>();
+				a.add(temp);
+				return a;}
+			@Override
+			public <T> T delete(T aTNG) {return aTNG;}
+			@Override
+			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
+			@Override
+			public <T> List<T> retrieveAll(T arg0) {
+				return null;
+			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
+			}
+		).deleteAll(tempSession);
+		//fail("Not yet implemented");
 	}
 
 	@Ignore

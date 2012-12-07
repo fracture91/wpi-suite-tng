@@ -135,8 +135,7 @@ public class DataStore implements Data {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		List<T> result = theDB.queryByExample(aSample.getClass());
-		System.out.println("RetrieveAll returned:");
-		System.out.println(result);
+		System.out.println("retrievedAll: "+result);
 		return result;
 	}
 	
@@ -148,9 +147,24 @@ public class DataStore implements Data {
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
 	    T found = (T) result.next();
 	    theDB.delete(found);
-		//client.close();
-		//return "Deleted "+aTNG;
 		return found;
+		
+	}
+	
+	/**
+	 * Deletes all objects of the given Class. 
+	 * @param aSample an object of the class we want to delete 
+	 * @return a List of all of the objects that were deleted
+	 */
+	public <T> List<T> deleteAll(T aSample){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		List<T> toBeDeleted = retrieveAll(aSample);
+		for(T aTNG: toBeDeleted){
+			System.out.println("Deleting: "+aTNG);
+			theDB.delete(aTNG);
+		}
+		return toBeDeleted;
 		
 	}
 	

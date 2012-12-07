@@ -111,8 +111,9 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project[] getAll(Session s) {
-		// TODO Implement this feature in a later release (dependant on DB interface)
-		return null;
+		Project[] ret = new Project[1];
+		data.retrieveAll(new Project("","")).toArray(ret);
+		return ret;
 	}
 
 	@Override
@@ -140,8 +141,7 @@ public class ProjectManager implements EntityManager<Project>{
 	
 	@Override
 	public void deleteAll(Session s) {
-		// TODO Auto-generated method stub
-		
+		data.deleteAll(new Project("",""));
 	}
 
 	@Override

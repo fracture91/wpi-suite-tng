@@ -79,7 +79,7 @@ public class UserManagerTest {
 		test.makeEntity(tempSession, "Garbage");
 	}
 
-	@Test
+	@Ignore
 	public void testGetEntitySessionString() {
 		fail("GetAll is not yet implemented");
 	}
@@ -105,9 +105,9 @@ public class UserManagerTest {
 		test.getEntity("jefferythegiraffe");
 	}
 
-	@Ignore
+	@Test
 	public void testGetAll() {
-		fail("Not yet implemented");
+		test.getAll(new Session(temp));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -123,6 +123,10 @@ public class UserManagerTest {
 			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
 			@Override
 			public <T> List<T> retrieveAll(T arg0) {
+				return null;
+			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
 				return null;
 			}
 			}
@@ -148,6 +152,10 @@ public class UserManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getUsername());
 	}
@@ -171,13 +179,38 @@ public class UserManagerTest {
 			public <T> List<T> retrieveAll(T arg0) {
 				return null;
 			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getUsername());
 	}
 
-	@Ignore
+	@Test
 	public void testDeleteAll() {
-		fail("Not yet implemented");
+		new UserManager(new Data(){
+			@Override
+			public <T> boolean save(T aTNG) {return false;}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
+				List<Model> a = new ArrayList<Model>();
+				a.add(temp);
+				return a;}
+			@Override
+			public <T> T delete(T aTNG) {return aTNG;}
+			@Override
+			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
+			@Override
+			public <T> List<T> retrieveAll(T arg0) {
+				return null;
+			}
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
+			}
+		).deleteAll(null);
 	}
 
 	@Ignore
