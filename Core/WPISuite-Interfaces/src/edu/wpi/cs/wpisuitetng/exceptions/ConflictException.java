@@ -14,6 +14,11 @@ package edu.wpi.cs.wpisuitetng.exceptions;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Exception thrown when attempting to store an object already in the database
+ * @author mpdelladonna
+ *
+ */
 public class ConflictException extends WPISuiteException {
 
 	@Override

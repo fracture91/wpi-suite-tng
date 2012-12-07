@@ -156,7 +156,24 @@ public class Project extends AbstractModel
 	
 	@Override
 	public boolean equals(Object anotherProject) {
-		return this.name.equalsIgnoreCase(((Project) anotherProject).getName()) &&
-				this.idNum.equalsIgnoreCase(((Project) anotherProject).getIdNum());
+		if(anotherProject instanceof Project)
+		{
+			if( ((Project)anotherProject).idNum.equals(this.idNum))
+			{
+				//things that can be null
+				if(this.name != null && !this.name.equals(((Project)anotherProject).name))
+				{
+					return false;
+				}
+				
+				if(this.idNum != null && !this.idNum.equals(((Project)anotherProject).idNum))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		return false;
 	}
 }

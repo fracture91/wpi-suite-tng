@@ -40,8 +40,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * 
  * eagerly initialized, the instance of this class is thread safe, provided all methods are thread safe
  * 
- * REMEMBER THREAD SAFETY
- * ALL METHODS MUST BE THREAD SAFE
+ * Remember Thread Safety
+ * All methods must be thread safe
  */
 public class ManagerLayer {
 	
@@ -139,7 +139,7 @@ public class ManagerLayer {
 	}
 	
 	/**read()
-	 * 
+	 * Reads the WPISuite cookie and returns the session associated with it in JSON form
 	 * String args[] - {module,model,identifier}
 	 * 
 	 * @param args - a string array of the parameters, where args[length-1] == null
@@ -167,7 +167,8 @@ public class ManagerLayer {
 	}
 	
 	/**create()
-	 * 
+	 * Creates a JSON representation of the model created from the content passed in
+	 * in the arguments.
 	 * 	 * String args[] - {module,model,identifier}
 	 * @param args - a string array of the parameters
 	 * @param content - the content of the create request
@@ -196,7 +197,7 @@ public class ManagerLayer {
 	
 	/**update
 	 * 
-	 * 
+	 * Updates the model with the content stored in the content argument
 	 * 	 * String args[] - {module,model,identifier}
 	 * @param args - A string array of the parameters
 	 * @param content - a JSON String of the content to update
@@ -217,6 +218,7 @@ public class ManagerLayer {
 	
 	/**delete
 	 * 	 * String args[] - {module,model,identifier}
+	 * Deletes a model identified by the cookie and content of the model.  
 	 * @param args - A String array of the parameters 
 	 * @return String "null" if the delete was successful, a message otherwise
 	 */

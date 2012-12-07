@@ -6,9 +6,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- * 	  rchamer
- *    twack - update
+ * Contributors: mpdelladonna
+ * rchamer
+ * twack
+ *    
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
