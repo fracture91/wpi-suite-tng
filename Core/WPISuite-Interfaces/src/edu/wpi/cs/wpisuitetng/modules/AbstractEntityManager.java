@@ -14,6 +14,7 @@ package edu.wpi.cs.wpisuitetng.modules;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 
+
 public abstract class AbstractEntityManager implements EntityManager<Model> 
 {
 	Data data;

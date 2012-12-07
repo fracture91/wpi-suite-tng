@@ -2,6 +2,11 @@ package edu.wpi.cs.wpisuitetng.exceptions;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Exception thrown when json is malformed.  
+ * @author mpdelladonna
+ *
+ */
 public class BadRequestException extends WPISuiteException {
 
 	/**

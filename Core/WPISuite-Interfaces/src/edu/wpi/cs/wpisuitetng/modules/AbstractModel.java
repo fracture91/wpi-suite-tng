@@ -15,7 +15,11 @@ package edu.wpi.cs.wpisuitetng.modules;
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-
+/**
+ * Defines the behavior for permissions
+ * @author mpdelladonna
+ *
+ */
 public abstract class AbstractModel implements Model {
 
 	@Override

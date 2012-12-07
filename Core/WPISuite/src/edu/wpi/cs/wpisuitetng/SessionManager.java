@@ -50,7 +50,7 @@ public class SessionManager {
 	}
 	
 	/**
-	 * wipes the sessions store.
+	 * Wipes all of the sessions currently stored in the manager.   
 	 */
 	public void clearSessions()
 	{
