@@ -10,12 +10,21 @@
  *    mpdelladonna
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-/**
- * Available permissions
- */
-public enum Permission {
-	READ,
-	WRITE
+import javax.servlet.http.HttpServletResponse;
+
+public class UnauthorizedException extends WPISuiteException {
+
+	/**
+	 * Exception thrown when attempting an action not allowed for that user's permission
+	 * level
+	 */
+	private static final long serialVersionUID = 9127615601542990581L;
+
+	@Override
+	public int getStatus() {
+		return HttpServletResponse.SC_UNAUTHORIZED; //401
+	}
+
 }

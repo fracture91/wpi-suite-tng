@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -48,7 +49,7 @@ public class SessionManager {
 	}
 	
 	/**
-	 * wipes the sessions store.
+	 * Wipes all of the sessions currently stored in the manager.   
 	 */
 	public void clearSessions()
 	{
@@ -108,8 +109,9 @@ public class SessionManager {
 	 * 		a new session for the given user.
 	 * @param sessionToken
 	 * @return	the new Session
+	 * @throws WPISuiteException 
 	 */
-	public Session renewSession(String sessionToken)
+	public Session renewSession(String sessionToken) throws WPISuiteException
 	{
 		// remove the old session
 		this.removeSession(sessionToken);

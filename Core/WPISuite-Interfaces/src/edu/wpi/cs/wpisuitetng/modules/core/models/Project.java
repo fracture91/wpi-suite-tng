@@ -26,6 +26,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 public class Project extends AbstractModel
  {
+
 	private String name;
 	private String idNum;
 	
@@ -49,6 +50,17 @@ public class Project extends AbstractModel
 	public String getIdNum()
 	{
 		return idNum;
+	}
+	
+	/* Mutators */
+	public void setName(String newName)
+	{
+		this.name = newName;
+	}
+	
+	public void setIdNum(String newId)
+	{
+		this.idNum = newId;
 	}
 	
 	/* database interaction */
@@ -140,5 +152,28 @@ public class Project extends AbstractModel
 		
 		
 		return b;
+	}
+	
+	@Override
+	public boolean equals(Object anotherProject) {
+		if(anotherProject instanceof Project)
+		{
+			if( ((Project)anotherProject).idNum.equals(this.idNum))
+			{
+				//things that can be null
+				if(this.name != null && !this.name.equals(((Project)anotherProject).name))
+				{
+					return false;
+				}
+				
+				if(this.idNum != null && !this.idNum.equals(((Project)anotherProject).idNum))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		return false;
 	}
 }

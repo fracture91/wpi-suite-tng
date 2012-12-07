@@ -7,15 +7,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    mpdelladonna
+ *    twack
  *******************************************************************************/
+package edu.wpi.cs.wpisuitetng.exceptions;
 
-package edu.wpi.cs.wpisuitetng;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Available permissions
+ * Base WPI Suite Exception class.
+ * @author twack
+ *
  */
-public enum Permission {
-	READ,
-	WRITE
+public class WPISuiteException extends Exception {
+
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5271354512939175980L;
+
+	public int getStatus()
+	{
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
+	}
 }

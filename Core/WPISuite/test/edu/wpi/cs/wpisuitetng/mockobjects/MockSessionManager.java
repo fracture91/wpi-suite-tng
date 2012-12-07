@@ -7,28 +7,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    twack
+ *    mpdelladonna
  *******************************************************************************/
-package edu.wpi.cs.wpisuitetng.exceptions;
 
-import javax.servlet.http.HttpServletResponse;
+package edu.wpi.cs.wpisuitetng.mockobjects;
 
-/**
- * Base WPI Suite Exception class.
- * @author twack
- *
- */
-public class WPISuiteException extends Exception {
+import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.SessionManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+public class MockSessionManager extends SessionManager {
+
+	Session ses;
 	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5271354512939175980L;
-
-	public int getStatus()
+	public MockSessionManager(User u)
 	{
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		super();
+		ses = createSession(u);
 	}
+	
+	public Session getTestSession()
+	{
+		return ses;
+	}
+
 }

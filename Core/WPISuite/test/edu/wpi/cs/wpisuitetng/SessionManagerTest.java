@@ -18,6 +18,8 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.SessionManager;
+import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -34,11 +36,19 @@ public class SessionManagerTest {
 	@Before
 	public void setUp()
 	{
-		this.u1 = new User("Tyler", "twack", null, 0);
-		this.u2 = new User("Mike", "mpdelladonna", null, 1);		
+		this.u1 = new User("Tyler", "twack", "jayms", 0);
+		this.u2 = new User("Mike", "mpdelladonna", "yams", 1);		
 		
 		this.man = new SessionManager();
-		
+	}
+	
+	@After
+	/**
+	 * Clears out the sessions after each run.
+	 */
+	public void tearDown()
+	{
+		man.clearSessions();
 	}
 
 	/* Test SessionManager Map Exposure Functions */
@@ -91,7 +101,7 @@ public class SessionManagerTest {
 	
 	/* Test complex SessionManager functions */
 	
-	@Ignore
+	@Test
 	/**
 	 * Test the renewSession() function.
 	 * 	The expected behavior is that, given a user's sessionToken string,
@@ -100,32 +110,45 @@ public class SessionManagerTest {
 	 * 
 	 * 	DB Test -- interacts with database
 	 */
-	public void testRenewSession()
+	public void testRenewSession() throws AuthenticationException
 	{
-		//TODO - Implement new session based actions where old ones are commented out.
-		// add the users to the database.
+		// get the Managers out
 		ManagerLayer manager = ManagerLayer.getInstance();
 		UserManager users = manager.getUsers();
-		//users.save(this.u1);
-		//users.save(this.u2);
+		SessionManager sessions = manager.getSessions();
+		
+		// create a session to use against the UserManager to create save u1
+		Session u2Ses = sessions.createSession(this.u2);
+		
+		// log the user in (u1) using u2's session
+		BasicAuth auth = new BasicAuth();
+		try {
+			users.save(u2Ses, this.u1);
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
+		Session oldSession = auth.login(BasicAuth.generateBasicAuth(this.u1.getUsername(), "jayms"));
 		
 		// add the session to renew
-		Session oldSession = this.man.createSession(this.u1);
 		String oldToken = oldSession.toString(); // the key in the manager map for the created Session
-		assertEquals(this.man.sessionCount(), 1);
+		assertEquals(2, sessions.sessionCount());
 		
 		// renew the session
-		Session renewed = this.man.renewSession(oldToken);
+		Session renewed = null;
+		try {
+			renewed = sessions.renewSession(oldToken);
+		} catch (WPISuiteException e) {
+			fail("unexpeced exception");
+		}
 		
-		assertEquals(this.man.sessionCount(), 1); // the new session has been added
-		assertTrue(this.man.sessionExists(renewed.toString()));
+		assertEquals(2, sessions.sessionCount()); // the new session has been added
+		assertTrue(sessions.sessionExists(renewed.toString()));
 		
 		//TODO: determine if we can use a wait to push the clock forward.
 		// assertFalse(this.man.sessionExists(oldToken)); 		
 		
 		// clear the database for the next test.
-		//users.deleteEntity(this.u1.getUsername());
-		//users.deleteEntity(this.u2.getUsername());
+		users.deleteEntity(renewed, this.u1.getUsername());
 	}
 
 }

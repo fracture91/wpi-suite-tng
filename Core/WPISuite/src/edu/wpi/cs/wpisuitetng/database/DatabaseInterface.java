@@ -32,10 +32,12 @@ public interface DatabaseInterface {
 	 * fieldName equals compareValue
 	 * The object type is the class of the object to be retrieved
 	 * 
+	 * This method requires a getter of the form getFieldName which returns a copy of the updated object
+	 * 
 	 * @param objectType - Class of object to be retrieved
 	 * @param fieldName - Name of the field that will be compared against
 	 * @param compareValue - Value of field, fieldName, that is being queried against
-	 * @return The object that is retrieved
+	 * @return The list of Models that is retrieved
 	 */
 	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue);
 	
@@ -43,9 +45,11 @@ public interface DatabaseInterface {
 	 * Updates the object with the value uniqueID for the field fieldName
 	 * and changes the value of the field changeField to the value changeValue
 	 * 
+	 * This method requires a setter of the form setFieldName which returns a copy of the updated object
+	 * 
 	 * @param objectType - object type of object to be retrieved
-	 * @param fieldName - field whose value the object will be retrieved by
-	 * @param uniqueID - value of the field that the object is retrieved by
+	 * @param fieldName - field whose value the object will be identified by
+	 * @param uniqueID - value of the field that the object is identified by
 	 * @param changeValue - field whose value will be changed 
 	 */
 	public void update(Class objectType, String fieldName, Object uniqueID, String changeField, Object changeValue);
