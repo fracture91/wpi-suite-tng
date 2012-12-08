@@ -1,6 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -8,14 +7,12 @@ import com.google.gson.Gson;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
-import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
 
 /**
  * Provides database interaction for Defect models.
@@ -25,6 +22,10 @@ public class DefectManager implements EntityManager<Defect> {
 	Data db;
 	Gson gson;
 	
+	/**
+	 * Create a DefectManager
+	 * @param data The Data instance to use
+	 */
 	public DefectManager(Data data) {
 		db = data;
 		gson = new Gson();
@@ -36,20 +37,19 @@ public class DefectManager implements EntityManager<Defect> {
 	 * 
 	 * @param username the username of the User
 	 * @return The User with the given username
-	 * @throws IllegalArgumentException if the user doesn't exist
+	 * @throws BadRequestException if the user doesn't exist
 	 */
-	private User getExistingUser(String username) throws IllegalArgumentException {
-		List<Model> existingUsers = db.retrieve(User.class, "username", username);
+	private User getExistingUser(String username) throws IllegalArgumentException, BadRequestException {
+		final List<Model> existingUsers = db.retrieve(User.class, "username", username);
 		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
 			return (User) existingUsers.get(0);
 		} else {
-			throw new IllegalArgumentException("User " + username + " does not exist");
+			throw new BadRequestException();
 		}
 	}
 
 	@Override
-	public Defect makeEntity(Session s, String content)
-			throws BadRequestException, ConflictException, WPISuiteException {
+	public Defect makeEntity(Session s, String content) throws BadRequestException {
 		final Defect newDefect = gson.fromJson(content, Defect.class);
 		
 		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
@@ -67,41 +67,45 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 
 	@Override
-	public Defect[] getEntity(Session s, String id) throws NotFoundException,
-			WPISuiteException {
-		int intId = Integer.parseInt(id);
-		if(intId < 1) {
-			throw new NumberFormatException("Defect ID cannot be negative");
+	public Defect[] getEntity(Session s, String id) throws NotFoundException {
+		if(id == null || id.equals("")) {
+			// TODO: getAll should be called from the servlet directly
+			return getAll(s);
 		}
-		return db.retrieve(Defect.class, "id", intId).toArray(new Defect[0]);
+		final int intId = Integer.parseInt(id);
+		if(intId < 1) {
+			throw new NotFoundException();
+		}
+		final Defect[] defects = db.retrieve(Defect.class, "id", intId).toArray(new Defect[0]);
+		if(defects.length < 1 || defects[0] == null) {
+			throw new NotFoundException();
+		}
+		return defects;
 	}
 
 	@Override
-	public Defect[] getAll(Session s) throws WPISuiteException {
-		// TODO: gross hack, use DataStore.retrieveAll
-		return db.retrieve(Defect.class, "events", new ArrayList<DefectEvent>()).toArray(new Defect[0]);
+	public Defect[] getAll(Session s) {
+		return db.retrieveAll(new Defect()).toArray(new Defect[0]);
 	}
 
 	@Override
-	public void save(Session s, Defect model) throws WPISuiteException {
+	public void save(Session s, Defect model) {
 		db.save(model);
 	}
 
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return false;
+		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 	
 	@Override
 	public void deleteAll(Session s) {
-		// TODO Auto-generated method stub
+		db.deleteAll(new Defect());
 	}
 	
 	@Override
 	public int Count() {
-		// TODO Auto-generated method stub
-		return 0;
+		return getAll(null).length;
 	}
 
 }
