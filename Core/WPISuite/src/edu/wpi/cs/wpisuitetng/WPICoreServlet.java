@@ -29,6 +29,13 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
  */
 public class WPICoreServlet extends HttpServlet 
 {
+	@Override
+	protected void doHead(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		resp.addCookie(ManagerLayer.getInstance().superCookie);
+		
+	}
+
 	private static final long serialVersionUID = -7156601241025735047L;
 	
 	/**
