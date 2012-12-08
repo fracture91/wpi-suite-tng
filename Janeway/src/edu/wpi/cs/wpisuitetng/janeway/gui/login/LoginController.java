@@ -76,6 +76,10 @@ public class LoginController implements ActionListener {
 		
 	}
 	
+	/**
+	 * Constructs a login request and sends it. Uses basic auth to send username
+	 * and password (base64 encoded)
+	 */
 	public void sendLoginRequest() {
 		try {
 			// Form the basic auth string
@@ -101,19 +105,26 @@ public class LoginController implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * request was successful.
+	 * @param response the response returned by the server
+	 */
 	public void loginSuccessful(Response response) {
-		System.out.println("login succeeded");
-		// TODO store some info about the user, including the session cookie
+		// Save the session cookie
+		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getResponseHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
+		
+		// Show the main GUI
 		mainGUI.setVisible(true);
 		view.dispose();
 	}
 	
+	/**
+	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * request was unsuccessful.
+	 * @param response the response returned by the server
+	 */
 	public void loginFailed(Response response) {
-		System.out.println("login failed");
-		// TODO notify the user that something went wrong with the login info provided
-		
-		// TODO remove this code once login is working
-		mainGUI.setVisible(true);
-		view.dispose();
+		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
 	}
 }
