@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
@@ -31,7 +32,7 @@ public class Defect implements Model {
 		id = -1;
 		title = description = "";
 		status = NEW;
-		creator = new User("", "", -1);
+		creator = new User("", "", "", -1);
 		tags = new HashSet<Tag>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
@@ -246,6 +247,18 @@ public class Defect implements Model {
 			returnValue = true;
 		}
 		return returnValue;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

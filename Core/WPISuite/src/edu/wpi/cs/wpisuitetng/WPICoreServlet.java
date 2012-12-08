@@ -1,9 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    mpdelladonna
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng;
 
 import java.io.*;
 
 import javax.servlet.http.*;
 import javax.servlet.*;
+
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 
 /**
  * Primary servlet for the WPISuite service
@@ -37,7 +51,11 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().read(path));
+        try {
+			out.println(ManagerLayer.getInstance().read(path,req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
        
         out.close();
 	}
@@ -56,10 +74,15 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().create(path,in.readLine()));
         
-        out.close();
+        try {
+        	out.println(ManagerLayer.getInstance().create(path,in.readLine(),req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
         res.setStatus(HttpServletResponse.SC_CREATED);
+        out.close();
+        
     }
 	
 	/**
@@ -76,7 +99,11 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().update(path,in.readLine()));
+        try {
+			out.println(ManagerLayer.getInstance().update(path,in.readLine(),req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
         
         out.close();
     }
@@ -94,7 +121,11 @@ public class WPICoreServlet extends HttpServlet
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        out.println(ManagerLayer.getInstance().delete(path));
+        try {
+			out.println(ManagerLayer.getInstance().delete(path,req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
         
         out.close();
     }

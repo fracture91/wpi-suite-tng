@@ -125,6 +125,6 @@ public class DefectPanel extends JPanel {
 	 * @return the model represented by this view
 	 */
 	public Defect getModel() {
-		return new Defect(-1, txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), -1));
+		return new Defect(-1, txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
 	}
 }
