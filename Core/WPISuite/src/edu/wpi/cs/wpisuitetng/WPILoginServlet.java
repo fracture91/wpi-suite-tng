@@ -48,15 +48,8 @@ public class WPILoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// parse the POST body into a String
-		BufferedReader in = request.getReader();
-		String postString = new String();
-		String line = in.readLine();
-		while(line != null)
-		{
-			postString.concat(line);
-			line = in.readLine();
-		}
+		// parse the POST header into a String
+		String postString = request.getHeader("Authentication");
 		
 		// Authentication
 		try 
