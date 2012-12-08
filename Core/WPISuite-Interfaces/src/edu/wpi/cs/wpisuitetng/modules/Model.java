@@ -1,6 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules;
 
 import java.lang.String;
+
+import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Model : The interface for all data models. Prototypes methods for model handling
@@ -39,4 +54,14 @@ public interface Model {
 	 * @return true if the o is equal to this Model's unique identifier, else false
 	 */
 	public Boolean identify(Object o);
+	
+	/**
+	 * 
+	 * @return the permission associated with this model
+	 */
+	public Permission getPermission(User u);
+	
+	public void setPermission(Permission p, User u);
+	
+	
 }

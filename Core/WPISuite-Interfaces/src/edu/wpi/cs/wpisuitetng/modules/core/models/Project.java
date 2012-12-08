@@ -1,17 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2012 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    twack
+ *    mpdelladonna
+ *******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mpdelladonna (sp?), twack
+ * @author mdelladonna, twack
  */
 
-public class Project implements Model
+
+public class Project extends AbstractModel
  {
+
 	private String name;
 	private String idNum;
 	
@@ -35,6 +50,17 @@ public class Project implements Model
 	public String getIdNum()
 	{
 		return idNum;
+	}
+	
+	/* Mutators */
+	public void setName(String newName)
+	{
+		this.name = newName;
+	}
+	
+	public void setIdNum(String newId)
+	{
+		this.idNum = newId;
 	}
 	
 	/* database interaction */
@@ -126,5 +152,28 @@ public class Project implements Model
 		
 		
 		return b;
+	}
+	
+	@Override
+	public boolean equals(Object anotherProject) {
+		if(anotherProject instanceof Project)
+		{
+			if( ((Project)anotherProject).idNum.equals(this.idNum))
+			{
+				//things that can be null
+				if(this.name != null && !this.name.equals(((Project)anotherProject).name))
+				{
+					return false;
+				}
+				
+				if(this.idNum != null && !this.idNum.equals(((Project)anotherProject).idNum))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		return false;
 	}
 }
