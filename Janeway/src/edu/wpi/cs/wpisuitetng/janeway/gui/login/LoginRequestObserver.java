@@ -28,7 +28,7 @@ public class LoginRequestObserver implements Observer {
 			Response response = request.getResponse();
 			
 			// check the response code
-			if (response.getResponseCode() >= 200 && response.getResponseCode() < 300) {
+			if (response.getResponseCode() == 200) {
 				controller.loginSuccessful(response);
 			}
 			else { // login failed
