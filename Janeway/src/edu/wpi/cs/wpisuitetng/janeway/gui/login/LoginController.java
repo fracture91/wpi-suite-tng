@@ -8,8 +8,13 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.codec.binary.Base64;
+
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.Response;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 
@@ -54,8 +59,10 @@ public class LoginController implements ActionListener {
 				ConfigManager.getConfig().setCoreUrl(coreURL);
 				ConfigManager.writeConfig();
 				Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration(URLText));
-				mainGUI.setVisible(true);
-				view.dispose();
+				
+				// Send the request
+				sendLoginRequest();
+				
 			} catch (MalformedURLException e1) { // failed, bad URL
 				JOptionPane.showMessageDialog(view,
 				                              "The server address \"" + URLText + "\" is not a valid URL!",
@@ -67,5 +74,46 @@ public class LoginController implements ActionListener {
 			                              JOptionPane.ERROR_MESSAGE);
 		}
 		
+	}
+	
+	public void sendLoginRequest() {
+		try {
+			// Form the basic auth string
+			String basicAuth = "Authorization: Basic ";
+			String password = new String(view.getPasswordField().getPassword());
+			String credentials = view.getUserNameField().getText() + ":" + password;
+			basicAuth += Base64.encodeBase64String(credentials.getBytes());
+			
+			// Create and send the login request
+			Request request = Network.getInstance().makeRequest("login", RequestMethod.POST);
+			System.out.println(basicAuth);
+			request.addRequestHeader("Authorization", basicAuth);
+			request.addObserver(new LoginRequestObserver(this));
+			request.send();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException();
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+	}
+	
+	public void loginSuccessful(Response response) {
+		System.out.println("login succeeded");
+		// TODO store some info about the user, including the session cookie
+		mainGUI.setVisible(true);
+		view.dispose();
+	}
+	
+	public void loginFailed(Response response) {
+		System.out.println("login failed");
+		// TODO notify the user that something went wrong with the login info provided
+		
+		// TODO remove this code once login is working
+		mainGUI.setVisible(true);
+		view.dispose();
 	}
 }

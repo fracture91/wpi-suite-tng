@@ -14,7 +14,7 @@ import edu.wpi.cs.wpisuitetng.network.Response;
 public class SaveRequestObserver implements Observer {
 
 	/**
-	 * @see java.util.Observable#update
+	 * @see java.util.Observer#update
 	 */
 	@Override
 	public void update(Observable observable, Object arg) {

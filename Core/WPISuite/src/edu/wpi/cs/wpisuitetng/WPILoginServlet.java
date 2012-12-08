@@ -49,7 +49,7 @@ public class WPILoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// parse the POST header into a String
-		String postString = request.getHeader("Authentication");
+		String postString = request.getHeader("Authorization");
 		
 		// Authentication
 		try 
