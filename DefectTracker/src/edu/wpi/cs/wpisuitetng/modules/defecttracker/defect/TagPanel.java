@@ -28,6 +28,8 @@ public class TagPanel extends JPanel {
 	protected JButton btnAddTag;
 	protected JButton btnRemoveTag;
 	
+	protected boolean inputEnabled;
+	
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
@@ -45,6 +47,8 @@ public class TagPanel extends JPanel {
 		}
 		
 		addEventListeners();
+		
+		inputEnabled = true;
 	}
 	
 	/**
@@ -116,5 +120,29 @@ public class TagPanel extends JPanel {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
+	 * JComponent#setEnabled because setEnabled does not affect its children.
+	 * 
+	 * @param enabled	Whether or not input is enabled.
+	 */
+	public void setInputEnabled(boolean enabled) {
+		inputEnabled = enabled;
+		
+		txtNewTag.setEnabled(enabled);
+		lstTags.setEnabled(enabled);
+		btnAddTag.setEnabled(enabled);
+		btnRemoveTag.setEnabled(enabled);
+	}
+	
+	/**
+	 * Returns a boolean representing whether or not input is enabled for the TagPanel and its children.
+	 * 
+	 * @return	A boolean representing whether or not input is enabled for the TagPanel and its children.
+	 */
+	public boolean getInputEnabled() {
+		return inputEnabled;
 	}
 }

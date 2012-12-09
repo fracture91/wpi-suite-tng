@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.util.Iterator;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -8,6 +10,7 @@ import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 
 /**
  * Panel to display the fields of a Defect and allow editing
@@ -75,24 +78,15 @@ public class DefectPanel extends JPanel {
 				txtAssignee.setText(defect.getAssignee().getUsername());
 			}
 			
-			//TODO set tagPanel fields
+			if (defect.getTags() != null) {
+				Iterator<Tag> tagsI = defect.getTags().iterator();
+				Tag nextTag;
+				while (tagsI.hasNext()) {
+					nextTag = tagsI.next();
+					tagPanel.lmTags.addElement(nextTag.getName()); //TODO make not crappy
+				}
+			}
 		}
-	}
-	
-	/**
-	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
-	 * JComponent#setEnabled because setEnabled does not affect its children.
-	 * 
-	 * @param enabled	Whether or not input is enabled.
-	 */
-	public void setInputEnabled(boolean enabled) {
-		inputEnabled = enabled;
-		
-		txtTitle.setEnabled(enabled);
-		txtDescription.setEnabled(enabled);
-		txtCreator.setEnabled(enabled);
-		txtAssignee.setEnabled(enabled);
-		// TODO tagPanel.setInputEnabled(enabled);
 	}
 	
 	/**
@@ -157,6 +151,22 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
+	}
+	
+	/**
+	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
+	 * JComponent#setEnabled because setEnabled does not affect its children.
+	 * 
+	 * @param enabled	Whether or not input is enabled.
+	 */
+	public void setInputEnabled(boolean enabled) {
+		inputEnabled = enabled;
+		
+		txtTitle.setEnabled(enabled);
+		txtDescription.setEnabled(enabled);
+		txtCreator.setEnabled(enabled);
+		txtAssignee.setEnabled(enabled);
+		tagPanel.setInputEnabled(enabled);
 	}
 	
 	/**
