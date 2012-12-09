@@ -178,7 +178,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			//throw new AuthenticationException();
+			throw new AuthenticationException();
 		}
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
@@ -206,7 +206,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			//throw new AuthenticationException();
+			throw new AuthenticationException();
 		}
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
@@ -255,7 +255,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			//throw new AuthenticationException();
+			throw new AuthenticationException();
 		}
 		
 		
