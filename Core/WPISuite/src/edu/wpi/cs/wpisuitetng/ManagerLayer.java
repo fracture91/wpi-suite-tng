@@ -205,7 +205,7 @@ public class ManagerLayer {
 	{
 		String result = delete(args,cook);
 		
-		if(result == "null")
+		if(result == "success")
 		{
 			result = create(args,content,cook);
 		}
