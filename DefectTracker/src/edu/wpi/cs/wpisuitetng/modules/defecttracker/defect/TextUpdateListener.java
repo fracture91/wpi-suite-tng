@@ -79,8 +79,8 @@ public class TextUpdateListener implements KeyListener {
 			component.setBorder(defaultBorder);
 		}
 		else {
-			component.setBackground(Color.YELLOW);
-			component.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			component.setBackground(new Color(243, 243, 209));
+			component.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	}
 

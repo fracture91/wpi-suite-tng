@@ -118,15 +118,15 @@ public class TagPanel extends JPanel {
 			
 			while (tagsI.hasNext()) {
 				if (!lmTags.contains(tagsI.next())) {
-					lstTags.setBackground(Color.YELLOW);
-					lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+					lstTags.setBackground(new Color(243, 243, 209));
+					lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 					break;
 				}
 			}
 		}
 		else {
-			lstTags.setBackground(Color.YELLOW);
-			lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			lstTags.setBackground(new Color(243, 243, 209));
+			lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	}
 	
