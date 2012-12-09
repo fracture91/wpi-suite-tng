@@ -40,6 +40,17 @@ public class ToolbarGroupView extends JPanel {
 	}
 	
 	/**
+	 * Construct a group with the given name and the given content panel
+	 * @param name the name to use for the group and display on the bottom
+	 * @param content a custom content panel to use for the group
+	 */
+	public ToolbarGroupView(String name, JPanel content) {
+		this(name);
+		this.remove(content);
+		this.add(content, BorderLayout.CENTER);
+	}
+	
+	/**
 	 * Set the preferred width of the group.
 	 * @param width Width to set to
 	 */
