@@ -26,8 +26,6 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
 	
-	protected boolean inputEnabled;
-	
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
@@ -151,31 +149,6 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
-	}
-	
-	/**
-	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
-	 * JComponent#setEnabled because setEnabled does not affect its children.
-	 * 
-	 * @param enabled	Whether or not input is enabled.
-	 */
-	public void setInputEnabled(boolean enabled) {
-		inputEnabled = enabled;
-		
-		txtTitle.setEnabled(enabled);
-		txtDescription.setEnabled(enabled);
-		txtCreator.setEnabled(enabled);
-		txtAssignee.setEnabled(enabled);
-		tagPanel.setInputEnabled(enabled);
-	}
-	
-	/**
-	 * Returns a boolean representing whether or not input is enabled for the DefectPanel and its children.
-	 * 
-	 * @return	A boolean representing whether or not input is enabled for the DefectPanel and its children.
-	 */
-	public boolean getInputEnabled() {
-		return inputEnabled;
 	}
 	
 	/**

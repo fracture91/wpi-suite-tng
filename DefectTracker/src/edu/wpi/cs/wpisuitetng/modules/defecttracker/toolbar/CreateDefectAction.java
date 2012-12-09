@@ -12,7 +12,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.create.CreateDefectView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 

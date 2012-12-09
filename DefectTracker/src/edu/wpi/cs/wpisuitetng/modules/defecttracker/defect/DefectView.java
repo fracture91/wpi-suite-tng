@@ -61,22 +61,6 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		saveButton.setAction(new SaveChangesAction(controller));
 		buttonGroup.getContent().add(saveButton);
 		buttonGroup.setPreferredWidth(150);
-
-		
-		
-		
-		
-		// disable and hide the save button
-		saveButton.setEnabled(false);
-		saveButton.setVisible(false);
-
-		// Instantiate the edit button and add it to the button panel
-		editButton = new JButton();
-		editButton.setAction(new EditAction(saveButton, editButton, mainPanel));
-		buttonGroup.getContent().add(editButton);
-
-		// disable input on mainPanel
-		mainPanel.setInputEnabled(false);
 	}
 
 	/**
