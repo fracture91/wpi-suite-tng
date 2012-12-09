@@ -22,10 +22,23 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
  */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
+	
+	/**
+	 * Checks for whether or not the text in a given JTextComponent differs from the current model (a Defect).
+	 */
 	protected class TextUpdateListener implements KeyListener {
 		private final JTextComponent component;
 		private Defect model;
 		
+		/**
+		 * Constructs a TextUpdateListener.
+		 * 
+		 * @param defect		The Defect that acts as the current model.
+		 * @param component		The JTextComponent which will have its text compared to the model. The name 
+		 * 						of the JTextComponent must match the name of a getter in Defect after the 
+		 * 						"get". For instance: for the method "getTitle", the name of the 
+		 * 						JTextComponent must be "Title".
+		 */
 		public TextUpdateListener(Defect defect, JTextComponent component) {
 			this.component = component;
 			this.model = defect;
@@ -40,6 +53,8 @@ public class DefectPanel extends JPanel {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
 			String base = "";
+			
+			// Get the base String to compare to the text of the JTextComponent
 			try {
 				Object object = model.getClass().getDeclaredMethod("get" + component.getName()).invoke(model);
 				if (object == null) {
@@ -151,8 +166,6 @@ public class DefectPanel extends JPanel {
 		
 		txtAssigneeListener = new TextUpdateListener(model, txtAssignee);
 		txtAssignee.addKeyListener(txtAssigneeListener);
-		
-		//TODO Tag Listeners
 	}
 
 	/**
