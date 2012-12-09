@@ -1,5 +1,11 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import javax.swing.JLabel;
@@ -7,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.text.JTextComponent;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -17,6 +24,66 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
  */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
+	protected class TextUpdateListener implements KeyListener {
+		private final JTextComponent component;
+		private Defect model;
+		
+		public TextUpdateListener(Defect defect, JTextComponent component) {
+			this.component = component;
+			this.model = defect;
+		}
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			String base = "";
+			try {
+				Object object = model.getClass().getDeclaredMethod("get" + component.getName()).invoke(model);
+				if (object == null) {
+					base = "";
+				}
+				else if (object instanceof String) {
+					base = (String) object;
+				}
+				else if (object instanceof User) {
+					base = ((User) object).getUsername();
+				}
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			
+			// Compare base to the component's text to determine whether or not to highlight the field.
+			if (base.equals(component.getText())) {
+				component.setBackground(Color.WHITE);
+			}
+			else {
+				component.setBackground(Color.YELLOW);
+			}
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+		}
+	}
 
 	protected Defect model;
 
@@ -25,6 +92,11 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
+	
+	protected final TextUpdateListener txtTitleListener;
+	protected final TextUpdateListener txtDescriptionListener;
+	protected final TextUpdateListener txtCreatorListener;
+	protected final TextUpdateListener txtAssigneeListener;
 
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
@@ -50,6 +122,7 @@ public class DefectPanel extends JPanel {
 		this.setLayout(layout);
 
 		addComponents(layout);
+		
 		// Populate the fields based on the given model
 		txtTitle.setText(defect.getTitle());
 		txtDescription.setText(defect.getDescription());
@@ -67,6 +140,21 @@ public class DefectPanel extends JPanel {
 				tagPanel.lmTags.addElement(nextTag.getName());
 			}
 		}
+		
+		// Add TextUpdateListeners
+		txtTitleListener = new TextUpdateListener(model, txtTitle);
+		txtTitle.addKeyListener(txtTitleListener);
+		
+		txtDescriptionListener = new TextUpdateListener(model, txtDescription);
+		txtDescription.addKeyListener(txtDescriptionListener);
+		
+		txtCreatorListener = new TextUpdateListener(model, txtCreator);
+		txtCreator.addKeyListener(txtCreatorListener);
+		
+		txtAssigneeListener = new TextUpdateListener(model, txtAssignee);
+		txtAssignee.addKeyListener(txtAssigneeListener);
+		
+		//TODO Tag Listeners
 	}
 
 	/**
@@ -82,6 +170,12 @@ public class DefectPanel extends JPanel {
 		txtCreator = new JTextField(20);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
+		
+		// set component names
+		txtTitle.setName("Title");
+		txtDescription.setName("Description");
+		txtCreator.setName("Creator");
+		txtAssignee.setName("Assignee");
 
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
