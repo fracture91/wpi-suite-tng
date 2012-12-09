@@ -20,6 +20,7 @@ function addUser()
 	User = new Object();
 	User.name = document.getElementById("name").value;
 	User.username = document.getElementById("id").value;
+	User.password = document.getElementById("password").value;
 	putUser(JSON.stringify(User));
 	
 }
@@ -153,6 +154,7 @@ function putProject(user)
          
             <label>Name: </label><input id="name" maxlength="40" /> <br />
             <label>username: </label><input id="id" maxlength="15" /> <br />
+            <label>password: </label><input id="password" maxlength="15" /> <br />
             <button onclick="addUser()">Add User</button>
             
             <br />
