@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -16,7 +17,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 public class DefectView extends JPanel implements IToolbarGroupProvider {
 
 	private ToolbarGroupView buttonGroup;
-	private JButton editButton;
 	private JButton saveButton;
 	private DefectPanel mainPanel;
 	private SaveDefectController controller;
@@ -32,13 +32,16 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		controller = new SaveDefectController(mainPanel);
 
 		// Instantiate the button panel
-		buttonGroup = new ToolbarGroupView("Create Defect");
+		buttonGroup = new ToolbarGroupView("View/Edit Defect");
 
 		// Instantiate the save button and add it to the button panel
 		saveButton = new JButton();
 		saveButton.setAction(new SaveChangesAction(controller));
 		buttonGroup.getContent().add(saveButton);
 		buttonGroup.setPreferredWidth(150);
+		
+		// Prefill the defect panel
+		mainPanel.getCreatorField().setText(ConfigManager.getConfig().getUserName());
 	}
 
 	/**
@@ -54,7 +57,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		controller = new SaveDefectController(mainPanel);
 
 		// Instantiate the button panel
-		buttonGroup = new ToolbarGroupView("#" + defect.getId());
+		buttonGroup = new ToolbarGroupView("View/Edit Defect");
 
 		// Instantiate the save button and add it to the button panel
 		saveButton = new JButton();

@@ -80,6 +80,7 @@ public class DefectPanel extends JPanel {
 		txtDescription.setLineWrap(true);
 		txtDescription.setBorder(txtTitle.getBorder());
 		txtCreator = new JTextField(20);
+		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
 
@@ -143,5 +144,13 @@ public class DefectPanel extends JPanel {
 	 */
 	public Defect getModel() {
 		return new Defect(-1, txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
+	}
+	
+	/**
+	 * Returns the creator text field
+	 * @return the creator text field
+	 */
+	public JTextField getCreatorField() {
+		return txtCreator;
 	}
 }
