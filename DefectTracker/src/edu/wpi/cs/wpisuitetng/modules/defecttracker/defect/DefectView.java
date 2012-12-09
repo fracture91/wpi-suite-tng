@@ -54,7 +54,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		controller = new SaveDefectController(mainPanel);
 
 		// Instantiate the button panel
-		buttonGroup = new ToolbarGroupView("Create Defect");
+		buttonGroup = new ToolbarGroupView("#" + defect.getId());
 
 		// Instantiate the save button and add it to the button panel
 		saveButton = new JButton();
