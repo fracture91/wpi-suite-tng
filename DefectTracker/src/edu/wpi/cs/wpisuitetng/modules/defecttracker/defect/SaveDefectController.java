@@ -33,7 +33,7 @@ public class SaveDefectController {
 		Request request;
 		try {
 			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.PUT);
-			request.setRequestBody(view.getModel().toJSON());
+			request.setRequestBody(view.getFieldModel().toJSON());
 			request.addObserver(requestObserver);
 			request.send();
 		} catch (MalformedURLException e) {

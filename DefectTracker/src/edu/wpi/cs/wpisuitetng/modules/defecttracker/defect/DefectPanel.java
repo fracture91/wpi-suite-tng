@@ -24,86 +24,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
  */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
-	
-	/**
-	 * Checks for whether or not the text in a given JTextComponent differs from the current model (a Defect).
-	 */
-	protected class TextUpdateListener implements KeyListener {
-		private final JTextComponent component;
-		private Defect model;
-		private final Border defaultBorder;
-		
-		/**
-		 * Constructs a TextUpdateListener.
-		 * 
-		 * @param defect		The Defect that acts as the current model.
-		 * @param component		The JTextComponent which will have its text compared to the model. The name 
-		 * 						of the JTextComponent must match the name of a getter in Defect after the 
-		 * 						"get". For instance: for the method "getTitle", the name of the 
-		 * 						JTextComponent must be "Title".
-		 */
-		public TextUpdateListener(Defect defect, JTextComponent component) {
-			this.component = component;
-			this.model = defect;
-			this.defaultBorder = component.getBorder();
-		}
-
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			String base = "";
-			
-			// Get the base String to compare to the text of the JTextComponent
-			try {
-				Object object = model.getClass().getDeclaredMethod("get" + component.getName()).invoke(model);
-				if (object == null) {
-					base = "";
-				}
-				else if (object instanceof String) {
-					base = (String) object;
-				}
-				else if (object instanceof User) {
-					base = ((User) object).getUsername();
-				}
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-			
-			// Compare base to the component's text to determine whether or not to highlight the field.
-			if (base.equals(component.getText())) {
-				component.setBackground(Color.WHITE);
-				component.setBorder(defaultBorder);
-			}
-			else {
-				component.setBackground(Color.YELLOW);
-				component.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-			}
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-		}
-	}
-
 	protected Defect model;
 
 	protected JTextField txtTitle;
@@ -161,16 +81,16 @@ public class DefectPanel extends JPanel {
 		}
 		
 		// Add TextUpdateListeners
-		txtTitleListener = new TextUpdateListener(model, txtTitle);
+		txtTitleListener = new TextUpdateListener(this, txtTitle);
 		txtTitle.addKeyListener(txtTitleListener);
 		
-		txtDescriptionListener = new TextUpdateListener(model, txtDescription);
+		txtDescriptionListener = new TextUpdateListener(this, txtDescription);
 		txtDescription.addKeyListener(txtDescriptionListener);
 		
-		txtCreatorListener = new TextUpdateListener(model, txtCreator);
+		txtCreatorListener = new TextUpdateListener(this, txtCreator);
 		txtCreator.addKeyListener(txtCreatorListener);
 		
-		txtAssigneeListener = new TextUpdateListener(model, txtAssignee);
+		txtAssigneeListener = new TextUpdateListener(this, txtAssignee);
 		txtAssignee.addKeyListener(txtAssigneeListener);
 	}
 
@@ -245,14 +165,23 @@ public class DefectPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the model object represented by this view
+	 * Gets the DefectPanel's internal model.
+	 * @return
+	 */
+	public Defect getModel() {
+		return model;
+	}
+	
+	/**
+	 * Returns the model object represented by this view's fields.
+	 * 
 	 * TODO: Change return type to the abstract class / interface
 	 * TODO: Ensure that if id field is set to -1, that a new defect is created on the server
 	 * TODO: Do some basic input verification
 	 * TODO: Deal with tags and other assignee
 	 * @return the model represented by this view
 	 */
-	public Defect getModel() {
-		return new Defect(-1, txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
+	public Defect getFieldModel() {
+		return new Defect(model.getId(), txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
 	}
 }
