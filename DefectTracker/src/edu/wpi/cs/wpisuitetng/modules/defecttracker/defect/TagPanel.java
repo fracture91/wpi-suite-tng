@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

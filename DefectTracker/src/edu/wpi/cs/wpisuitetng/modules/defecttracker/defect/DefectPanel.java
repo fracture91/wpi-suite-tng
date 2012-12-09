@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,7 +11,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
 /**
  * Panel to display the fields of a Defect and allow editing
- *
  */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
@@ -24,14 +23,24 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
 	
+	protected boolean inputEnabled;
+	
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
 
+	/**
+	 * Construct a DefectPanel for creating a defect
+	 */
 	public DefectPanel() {
 		this(new Defect());
 	}
 	
+	/**
+	 * Construct a DefectPanel for viewing a defect
+	 * 
+	 * @param defect	The Defect to show.
+	 */
 	public DefectPanel(Defect defect) {
 		
 		this.model = defect;
@@ -50,6 +59,40 @@ public class DefectPanel extends JPanel {
 		if (defect.getAssignee() != null) {
 			txtAssignee.setText(defect.getAssignee().getUsername());
 		}
+		
+		// copy defect fields
+		if (defect.getId() != -1) {
+			if (defect.getTitle() != null) {
+				txtTitle.setText(defect.getTitle());
+			}
+			if (defect.getDescription() != null) {
+				txtDescription.setText(defect.getDescription());
+			}
+			if (defect.getCreator() != null) {
+				txtCreator.setText(defect.getCreator().getUsername());
+			}
+			if (defect.getAssignee() != null) {
+				txtAssignee.setText(defect.getAssignee().getUsername());
+			}
+			
+			//TODO set tagPanel fields
+		}
+	}
+	
+	/**
+	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
+	 * JComponent#setEnabled because setEnabled does not affect its children.
+	 * 
+	 * @param enabled	Whether or not input is enabled.
+	 */
+	public void setInputEnabled(boolean enabled) {
+		inputEnabled = enabled;
+		
+		txtTitle.setEnabled(enabled);
+		txtDescription.setEnabled(enabled);
+		txtCreator.setEnabled(enabled);
+		txtAssignee.setEnabled(enabled);
+		// TODO tagPanel.setInputEnabled(enabled);
 	}
 	
 	/**
@@ -114,6 +157,15 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
+	}
+	
+	/**
+	 * Returns a boolean representing whether or not input is enabled for the DefectPanel and its children.
+	 * 
+	 * @return	A boolean representing whether or not input is enabled for the DefectPanel and its children.
+	 */
+	public boolean getInputEnabled() {
+		return inputEnabled;
 	}
 	
 	/**

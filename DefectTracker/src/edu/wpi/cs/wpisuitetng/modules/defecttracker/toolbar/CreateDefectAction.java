@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.create.CreateDefectView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
@@ -35,7 +36,7 @@ public class CreateDefectAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		controller.addTab("Create Defect", new ImageIcon(), new CreateDefectView(), "Create a new defect");
+		controller.addTab("Create Defect", new ImageIcon(), new DefectView(), "Create a new defect");
 	}
 
 }
