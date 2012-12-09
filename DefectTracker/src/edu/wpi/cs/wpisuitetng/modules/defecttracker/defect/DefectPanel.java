@@ -6,11 +6,13 @@ import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -29,6 +31,7 @@ public class DefectPanel extends JPanel {
 	protected class TextUpdateListener implements KeyListener {
 		private final JTextComponent component;
 		private Defect model;
+		private final Border defaultBorder;
 		
 		/**
 		 * Constructs a TextUpdateListener.
@@ -42,6 +45,7 @@ public class DefectPanel extends JPanel {
 		public TextUpdateListener(Defect defect, JTextComponent component) {
 			this.component = component;
 			this.model = defect;
+			this.defaultBorder = component.getBorder();
 		}
 
 		@Override
@@ -86,9 +90,11 @@ public class DefectPanel extends JPanel {
 			// Compare base to the component's text to determine whether or not to highlight the field.
 			if (base.equals(component.getText())) {
 				component.setBackground(Color.WHITE);
+				component.setBorder(defaultBorder);
 			}
 			else {
 				component.setBackground(Color.YELLOW);
+				component.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 			}
 		}
 

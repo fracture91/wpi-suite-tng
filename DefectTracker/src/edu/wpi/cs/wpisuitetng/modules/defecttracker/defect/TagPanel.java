@@ -13,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
@@ -31,6 +32,8 @@ public class TagPanel extends JPanel {
 	protected JButton btnRemoveTag;
 	
 	private final Defect model;
+	
+	private Border defaultBorder;
 	
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
@@ -71,6 +74,8 @@ public class TagPanel extends JPanel {
 		btnAddTag = new JButton("Add");
 		btnRemoveTag = new JButton("Remove");
 		
+		defaultBorder = lstTags.getBorder();
+		
 		JLabel lblNewTag = new JLabel("Enter a new tag:");
 		int labelWidth = lblNewTag.getPreferredSize().width;
 		
@@ -109,16 +114,19 @@ public class TagPanel extends JPanel {
 			Iterator<Tag> tagsI = model.getTags().iterator();
 			
 			lstTags.setBackground(Color.WHITE);
+			lstTags.setBorder(defaultBorder);
 			
 			while (tagsI.hasNext()) {
 				if (!lmTags.contains(tagsI.next())) {
 					lstTags.setBackground(Color.YELLOW);
+					lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 					break;
 				}
 			}
 		}
 		else {
 			lstTags.setBackground(Color.YELLOW);
+			lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		}
 	}
 	
