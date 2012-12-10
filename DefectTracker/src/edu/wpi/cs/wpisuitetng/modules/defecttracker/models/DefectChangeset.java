@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -25,7 +26,7 @@ public class DefectChangeset implements Model, DefectEvent {
 	 */
 	public DefectChangeset() {
 		date = new Date();
-		user = new User("", "", -1);
+		user = new User("", "", "", -1);
 		changes = new HashMap<String, FieldChange>();
 	}
 	
@@ -100,6 +101,18 @@ public class DefectChangeset implements Model, DefectEvent {
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

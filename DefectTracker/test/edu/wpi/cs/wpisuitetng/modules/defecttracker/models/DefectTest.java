@@ -8,7 +8,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class DefectTest {
 
-	private final User bob = new User("Bob", "bob", -1);
+	private final User bob = new User("Bob", "bob", "", -1);
 	private final Defect d1 = new Defect(1, "", "", bob);
 	private final Defect d1copy = new Defect(1, "", "", bob);
 	private final Defect d2 = new Defect(2, "", "", bob);

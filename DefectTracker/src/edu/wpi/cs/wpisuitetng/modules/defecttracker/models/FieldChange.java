@@ -2,7 +2,9 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Persistent Model that holds and old and new value for some field.
@@ -58,6 +60,18 @@ public class FieldChange implements Model {
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

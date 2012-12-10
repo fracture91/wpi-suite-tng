@@ -1,7 +1,9 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -11,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
@@ -28,19 +31,30 @@ public class TagPanel extends JPanel {
 	protected JButton btnAddTag;
 	protected JButton btnRemoveTag;
 	
+	private final Defect model;
+	
+	private Border defaultBorder;
+	
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
 	
+	/**
+	 * Creates a new TagPanel.
+	 * 
+	 * @param defect	The Defect to use to populate the Tag list and to which the Tag list will be compared.
+	 */
 	protected TagPanel(Defect defect) {
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
 		this.setBorder(BorderFactory.createTitledBorder("Tags"));
+
+		this.model = defect;
 		
 		addComponents(layout);
 		
 		// Populate the list of tags
-		for (Tag tag : defect.getTags()) {
+		for (Tag tag : model.getTags()) {
 			lmTags.addElement(tag);
 		}
 		
@@ -59,6 +73,8 @@ public class TagPanel extends JPanel {
 		lstTags.setBorder(txtNewTag.getBorder());
 		btnAddTag = new JButton("Add");
 		btnRemoveTag = new JButton("Remove");
+		
+		defaultBorder = lstTags.getBorder();
 		
 		JLabel lblNewTag = new JLabel("Enter a new tag:");
 		int labelWidth = lblNewTag.getPreferredSize().width;
@@ -91,6 +107,30 @@ public class TagPanel extends JPanel {
 	}
 	
 	/**
+	 * Checks if the Tags in this TagPanel differ from the model and highlights the Tag list accordingly.
+	 */
+	protected void checkIfUpdated() {
+		if (model.getTags().size() == lmTags.size()) {
+			Iterator<Tag> tagsI = model.getTags().iterator();
+			
+			lstTags.setBackground(Color.WHITE);
+			lstTags.setBorder(defaultBorder);
+			
+			while (tagsI.hasNext()) {
+				if (!lmTags.contains(tagsI.next())) {
+					lstTags.setBackground(new Color(243, 243, 209));
+					lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+					break;
+				}
+			}
+		}
+		else {
+			lstTags.setBackground(new Color(243, 243, 209));
+			lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		}
+	}
+	
+	/**
 	 * Adds event listeners to the buttons
 	 */
 	protected void addEventListeners() {
@@ -102,6 +142,8 @@ public class TagPanel extends JPanel {
 				if (txtNewTag.getText().length() > 0) {
 					lmTags.addElement(txtNewTag.getText());
 					txtNewTag.setText("");
+					
+					checkIfUpdated();
 				}
 			}
 		});
@@ -113,6 +155,8 @@ public class TagPanel extends JPanel {
 				int index = lstTags.getSelectedIndex();
 				if (index > -1) {
 					lmTags.removeElementAt(index);
+					
+					checkIfUpdated();
 				}
 			}
 		});

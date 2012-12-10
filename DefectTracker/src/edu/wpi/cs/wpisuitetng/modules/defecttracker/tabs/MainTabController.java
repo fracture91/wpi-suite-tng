@@ -1,12 +1,20 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs;
 
+/**
+ * Contributors:
+ * AHurle
+ * JPage
+ */
+
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.create.CreateDefectView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.SearchDefectsView;
 
 /**
  * Controls the behavior of a given MainTabView.
@@ -28,19 +36,16 @@ public class MainTabController {
 	}
 	
 	/**
-	 * Create a tab that shows the form for creating a new defect.
+	 * Adds a tab.
+	 * 
+	 * @param title			The tab's title.
+	 * @param icon			The icon for the tab.
+	 * @param component		The component that will be displayed inside the tab.
+	 * @param tip			The tooltip to display when the cursor hovers over the tab title.
 	 */
-	public void addCreateDefectTab() {
-		this.view.addTab("Create Defect", new ImageIcon(), new CreateDefectView(), "Create a new defect");
+	public void addTab(String title, Icon icon, Component component, String tip) {
+		this.view.addTab(title, icon, component, tip);
 		this.view.setSelectedIndex(this.view.getTabCount() - 1);
-	}
-	
-	/**
-	 * Create a tab that shows the defect with the given ID.
-	 * @param id The ID of the defect to show in the tab
-	 */
-	public void addDefectTab(int id) {
-		// TODO
 	}
 	
 	/**

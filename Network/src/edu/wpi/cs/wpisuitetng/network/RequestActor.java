@@ -42,6 +42,7 @@ public class RequestActor extends Thread {
 			connection.setReadTimeout(5*1000);
 			connection.setRequestMethod(request.getRequestMethod());
 			connection.setDoInput(true);
+			connection.setRequestProperty("Connection", "close");
 			
 			// set request headers
 			Iterator<String> requestHeaderKeysI = request.getRequestHeaders().keySet().iterator();
@@ -68,23 +69,29 @@ public class RequestActor extends Thread {
 			}
 
 			// get the response body
-			InputStream in = connection.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
-			String line;
 			String responseBody = "";
 			try {
-				while((line = reader.readLine()) != null) {
-					responseBody += line + "\n";
+				InputStream in = connection.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
+				String line;
+				try {
+					while((line = reader.readLine()) != null) {
+						responseBody += line + "\n";
+					}
+				} catch (SocketTimeoutException e) {
+					// Note: this will be thrown if a read takes longer than 5 seconds
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (SocketTimeoutException e) {
-				// Note: this will be thrown if a read takes longer than 5 seconds
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				finally {
+					if (reader != null) {
+						reader.close();
+					}
+				}
 			}
-			finally {
-				if (reader != null) {
-					reader.close();
-				}
+			catch (IOException e) {
+				// do nothing, received a 400, or 500 status code
+				System.out.println("Received a 400 or 500 status code.");
 			}
 			
 			// get the response headers

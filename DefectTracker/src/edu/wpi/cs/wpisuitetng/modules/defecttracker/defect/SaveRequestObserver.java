@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.create;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -14,7 +14,7 @@ import edu.wpi.cs.wpisuitetng.network.Response;
 public class SaveRequestObserver implements Observer {
 
 	/**
-	 * @see java.util.Observable#update
+	 * @see java.util.Observer#update
 	 */
 	@Override
 	public void update(Observable observable, Object arg) {

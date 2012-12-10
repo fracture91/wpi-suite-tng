@@ -1,11 +1,16 @@
 package edu.wpi.cs.wpisuitetng.network;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Observer;
+
+import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
  * This class represents a Request. It can be observed by one or more Observers.
@@ -19,41 +24,71 @@ public class Request extends Observable {
 	public static enum RequestMethod {
 		GET, POST, PUT, DELETE
 	}
-	
+
 	// TODO add RequestStatus to replace running with?
 	private boolean running = false;
-	
+
 	private String requestBody;
 	private Map<String, List<String>> requestHeaders;
 	private URL requestURL;
 	private RequestMethod requestMethod;
 	private Response response;
-	
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param requestURL		The URL to make the HTTP request to.
-	 * @param requestMethod		The HTTP RequestMethod to use.
+	 * @param networkConfiguration	The NetworkConfiguration to use.
+	 * @param path					The path to append to the API URL.
+	 * @param requestMethod			The HTTP RequestMethod to use.
 	 * 
-	 * @throw NullPointerException	If the requestURL or requestMethod is null.
+	 * @throws MalformedURLException 	
+	 * @throw NullPointerException		If the networkConfiguration or requestMethod is null.
 	 */
-	public Request(URL requestURL, RequestMethod requestMethod) throws NullPointerException {
-		// check to see if the requestURL is null
-		if (requestURL == null) {
-			throw new NullPointerException("The requestURL must not be null.");
+	public Request(NetworkConfiguration networkConfiguration, String path, RequestMethod requestMethod) throws NullPointerException, MalformedURLException {
+		// check to see if the networkConfiguration is null
+		if (networkConfiguration == null) {
+			throw new NullPointerException("The networkConfiguration must not be null.");
 		}
 
 		// check to see if the requestMethod is null
 		if (requestMethod == null) {
 			throw new NullPointerException("The requestMethod must not be null.");
 		}
-		
-		this.requestURL = requestURL;
+
+		// set requestURL
+		// TODO improve code
+		if (path == null || path.length() == 0) {
+			this.requestURL = new URL(networkConfiguration.getApiUrl());
+		}
+		else if (networkConfiguration.getApiUrl().charAt(networkConfiguration.getApiUrl().length() - 1) == '/') {
+			this.requestURL = new URL(networkConfiguration.getApiUrl() + path);
+		}
+		else {
+			this.requestURL = new URL(networkConfiguration.getApiUrl() + '/' + path);
+		}
 		this.requestMethod = requestMethod;
-		
+
+		// Copy request headers from networkConfiguration
 		requestHeaders = new HashMap<String, List<String>>();
+		Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
+		Iterator<String> valuesI;
+		String currentKey;
+		while (keysI.hasNext()) {
+			currentKey = keysI.next();
+			valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
+
+			while (valuesI.hasNext()) {
+				this.addRequestHeader(currentKey, valuesI.next());
+			}
+		}
+
+		// Copy observers from networkConfiguration
+		Iterator<Observer> observersI = networkConfiguration.getObservers().iterator();
+		while (observersI.hasNext()) {
+			this.addObserver(observersI.next());
+		}
 	}
-	
+
 	/**
 	 * Sends the Request by creating a new RequestActor and starting it as a new Thread.
 	 * 
@@ -64,11 +99,11 @@ public class Request extends Observable {
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
-		
+
 		RequestActor requestActor = new RequestActor(this);
 		requestActor.start();
 	}
-	
+
 	/**
 	 * Adds a header to the request.
 	 * 
@@ -83,27 +118,27 @@ public class Request extends Observable {
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
-		
+
 		// check to see if the key is null
 		if (key == null) {
 			throw new NullPointerException("The key must not be null.");
 		}
-		
+
 		// get the List of current values from the requestHeaders Map
 		List<String> currentValues = requestHeaders.get(key);
-		
+
 		// if the List of current values is null, create a new list of current values
 		if (currentValues == null) {
 			currentValues = new ArrayList<String>();
 		}
-		
+
 		// add the new value to the list of current values
 		currentValues.add(value);
-		
+
 		// store the updated List of current values in the Map
 		requestHeaders.put(key, currentValues);
 	}
-	
+
 	/**
 	 * Sets the body of the request.
 	 * TODO elaborate
@@ -126,7 +161,7 @@ public class Request extends Observable {
 
 		this.requestBody = requestBody;
 	}
-	
+
 	/**
 	 * Sets the HTTP method for the Request.
 	 * TODO elaborate
@@ -146,10 +181,10 @@ public class Request extends Observable {
 		if (requestMethod == null) {
 			throw new NullPointerException("The requestMethod parameter must not be null.");
 		}
-		
+
 		this.requestMethod = requestMethod;
 	}
-	
+
 	/**
 	 * Sets the server's Response to the Request.
 	 * 
@@ -162,17 +197,17 @@ public class Request extends Observable {
 		if (running) {
 			throw new IllegalStateException("Request has not been sent yet.");
 		}
-		
+
 		// set the Response to this Request
 		this.response = response;
-		
+
 		// set the Request as changed
 		this.setChanged();
-		
+
 		// notify Observers
 		this.notifyObservers();
 	}
-	
+
 	/**
 	 * Returns a String containing the request body.
 	 * 
@@ -181,7 +216,7 @@ public class Request extends Observable {
 	public String getRequestBody() {
 		return requestBody;
 	}
-	
+
 	/**
 	 * Returns a Map of request header keys to Lists of request header values.
 	 * 
@@ -190,7 +225,7 @@ public class Request extends Observable {
 	public Map<String, List<String>> getRequestHeaders() {
 		return requestHeaders;
 	}
-	
+
 	/**
 	 * Returns a String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
 	 * 
@@ -206,11 +241,11 @@ public class Request extends Observable {
 		} else if (requestMethod == RequestMethod.DELETE) {
 			return "DELETE";
 		}
-		
+
 		// default request method is GET
 		return "GET";
 	}
-	
+
 	/**
 	 * Returns the server's Response to the Request.
 	 * 
@@ -219,7 +254,7 @@ public class Request extends Observable {
 	public Response getResponse() {
 		return response;
 	}
-	
+
 	/**
 	 * Returns a URL pointing to the server.
 	 * 

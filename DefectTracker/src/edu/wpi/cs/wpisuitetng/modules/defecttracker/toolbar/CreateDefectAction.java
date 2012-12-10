@@ -1,10 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar;
 
+/**
+ * Contributors:
+ * AHurle
+ * JPage
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
@@ -27,7 +35,7 @@ public class CreateDefectAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		controller.addCreateDefectTab();
+		controller.addTab("Create Defect", new ImageIcon(), new DefectView(), "Create a new defect");
 	}
 
 }
