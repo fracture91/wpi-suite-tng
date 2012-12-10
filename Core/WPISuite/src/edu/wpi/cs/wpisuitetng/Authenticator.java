@@ -61,12 +61,14 @@ public abstract class Authenticator {
 	public Session login(String postString) throws AuthenticationException
 	{
 		// parse the post string for credentials
+		System.out.println("DEBUG: login parsing");
 		String[] credentials = parsePost(postString); // [0] - username, [1] - password	
 		
 		// attempt to retrieve the User from the Manager layer
 		ManagerLayer manager = ManagerLayer.getInstance();
 		User[] u;
 		try {
+			System.out.println("DEBUG: Retrieve Login User");
 			u = manager.getUsers().getEntity(credentials[0]);
 		} catch (NotFoundException e) {
 			throw new AuthenticationException();	//"No user with the given username found");
@@ -75,6 +77,7 @@ public abstract class Authenticator {
 		User user = u[0];
 		
 		// check password
+		System.out.println("DEBUG: Authenticate Password");
 		if(!user.matchPassword(credentials[1]))
 		{
 			throw new AuthenticationException();
@@ -83,6 +86,7 @@ public abstract class Authenticator {
 		// create a Session mapping in the ManagerLayer
 		Session userSession = manager.getSessions().createSession(user);
 		
+		System.out.println("DEBUG: Create Session");
 		return userSession;
 	}
 	
