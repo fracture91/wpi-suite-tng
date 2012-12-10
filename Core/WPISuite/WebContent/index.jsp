@@ -52,7 +52,7 @@ public String createModelScript(String title, String path, String[] args, int le
 	scriptText += "jsend = JSON.stringify(send);\n";
 	scriptText += "var request = new XMLHttpRequest();\n" +
 			"request.onreadystatechange = function() {\n" +
-				"if(request.readyState == 4 && request.status == 200) {\n" +
+				"if(request.readyState == 4 && request.status > 0) {\n" +
 					"document.getElementById(\""+title+"textArea\").value = request.responseText;\n" +
 				"}\n" +
 			"};\n";
