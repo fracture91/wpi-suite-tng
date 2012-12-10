@@ -49,7 +49,7 @@ public class WPILoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// parse the POST header into a String
-		String postString = request.getHeader("Authentication");
+		String postString = request.getHeader("Authorization");
 		
 		// Authentication
 		try 
@@ -59,7 +59,8 @@ public class WPILoginServlet extends HttpServlet {
 			// post back the Session Cookie.
 			Cookie userCookie = ses.toCookie();
 			response.addCookie(userCookie);
-			response.setStatus(HttpServletResponse.SC_CONTINUE);  //100 - Client can continue
+			response.setStatus(HttpServletResponse.SC_OK);  //200 - Success
+			System.out.println("DEBUG: response set");
 		}
 		catch(AuthenticationException e) // Authentication Failed.
 		{

@@ -16,6 +16,7 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static org.junit.Assert.*;
 
@@ -52,7 +53,9 @@ public class AuthenticatorTest {
 	{
 		ManagerLayer man = ManagerLayer.getInstance();
 		SessionManager sessions = man.getSessions();
+		UserManager users = man.getUsers();
 		
+		users.deleteAll(this.sessions.createSession(this.u));
 		sessions.clearSessions();
 	}
 	

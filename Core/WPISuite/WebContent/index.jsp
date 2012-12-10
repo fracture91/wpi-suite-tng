@@ -67,6 +67,7 @@ public String createModelScript(String title, String path, String[] args, int le
 }
 %>
 <%= createModelScript(coreusertitle, coreuserpath, coreuser, coreuserlength) %>
+
 </head>
 <body>
 <h1>WPI Suite Admin Console</h1>

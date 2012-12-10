@@ -148,7 +148,6 @@ public class LoginServletTest {
 		    
 		    // Cookie Body validation
 		    String cookieBody = wpiSuite.getValue();
-		    System.out.println(cookieBody);
 		    
 		    assertTrue(cookieBody.contains("loginTime"));
 		    assertTrue(cookieBody.contains("twack"));
