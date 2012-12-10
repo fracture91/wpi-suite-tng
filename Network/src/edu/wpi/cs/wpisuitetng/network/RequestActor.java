@@ -91,6 +91,7 @@ public class RequestActor extends Thread {
 			}
 			catch (IOException e) {
 				// do nothing, received a 400, or 500 status code
+				System.out.println("Received a 400 or 500 status code.");
 			}
 			
 			// get the response headers

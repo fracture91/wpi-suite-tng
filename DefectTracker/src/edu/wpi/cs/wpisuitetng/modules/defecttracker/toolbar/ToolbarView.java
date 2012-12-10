@@ -42,7 +42,7 @@ public class ToolbarView extends DefaultToolbarView {
 		
 		// Construct the search field
 		searchField = new JPlaceholderTextField("Lookup by ID", 15);
-		searchField.addActionListener(new LookupDefectController(tabController, searchField));
+		searchField.addActionListener(new LookupDefectController(tabController, searchField, this));
 		
 		// Add the buttons to the content panel
 		layout.putConstraint(SpringLayout.NORTH, createDefect, 5, SpringLayout.NORTH, content);
