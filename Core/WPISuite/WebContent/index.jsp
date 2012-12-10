@@ -18,6 +18,14 @@ String[] coreuser = {
 };
 int coreuserlength = 4;
 
+String coreprojecttitle = "CoreProject";
+String coreprojectpath = "core/project";
+String[] coreproject = {
+		"idNum",
+		"name"
+};
+int coreprojectlength = 2;
+
 public String createModelField(String title, String path, String[] args, int length)
 {
 	String text = "<h3>"+title+"</h3>";
@@ -67,11 +75,13 @@ public String createModelScript(String title, String path, String[] args, int le
 }
 %>
 <%= createModelScript(coreusertitle, coreuserpath, coreuser, coreuserlength) %>
+<%= createModelScript(coreprojecttitle, coreprojectpath, coreproject, coreprojectlength) %>
 </head>
 <body>
 <h1>WPI Suite Admin Console</h1>
 
 
 <%= createModelField(coreusertitle, coreuserpath, coreuser, coreuserlength) %>
+<%= createModelField(coreprojecttitle, coreprojectpath, coreproject, coreprojectlength) %>
 </body>
 </html>
