@@ -31,11 +31,13 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
-	
+
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
 	protected final TextUpdateListener txtCreatorListener;
 	protected final TextUpdateListener txtAssigneeListener;
+	
+	protected boolean inputEnabled;
 
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
@@ -54,6 +56,7 @@ public class DefectPanel extends JPanel {
 	 * @param defect	The Defect to show.
 	 */
 	public DefectPanel(Defect defect) {
+		inputEnabled = true;
 
 		this.model = defect;
 
@@ -61,7 +64,7 @@ public class DefectPanel extends JPanel {
 		this.setLayout(layout);
 
 		addComponents(layout);
-		
+
 		// Populate the fields based on the given model
 		txtTitle.setText(defect.getTitle());
 		txtDescription.setText(defect.getDescription());
@@ -79,17 +82,17 @@ public class DefectPanel extends JPanel {
 				tagPanel.lmTags.addElement(nextTag.getName());
 			}
 		}
-		
+
 		// Add TextUpdateListeners
 		txtTitleListener = new TextUpdateListener(this, txtTitle);
 		txtTitle.addKeyListener(txtTitleListener);
-		
+
 		txtDescriptionListener = new TextUpdateListener(this, txtDescription);
 		txtDescription.addKeyListener(txtDescriptionListener);
-		
+
 		txtCreatorListener = new TextUpdateListener(this, txtCreator);
 		txtCreator.addKeyListener(txtCreatorListener);
-		
+
 		txtAssigneeListener = new TextUpdateListener(this, txtAssignee);
 		txtAssignee.addKeyListener(txtAssigneeListener);
 	}
@@ -108,7 +111,7 @@ public class DefectPanel extends JPanel {
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
-		
+
 		// set component names
 		txtTitle.setName("Title");
 		txtDescription.setName("Description");
@@ -166,13 +169,38 @@ public class DefectPanel extends JPanel {
 	}
 
 	/**
+	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
+	 * JComponent#setEnabled because setEnabled does not affect its children.
+	 * 
+	 * @param enabled	Whether or not input is enabled.
+	 */
+	public void setInputEnabled(boolean enabled) {
+		inputEnabled = enabled;
+
+		txtTitle.setEnabled(enabled);
+		txtDescription.setEnabled(enabled);
+		txtCreator.setEnabled(enabled);
+		txtAssignee.setEnabled(enabled);
+		tagPanel.setInputEnabled(enabled);
+	}
+
+	/**
+	 * Returns a boolean representing whether or not input is enabled for the DefectPanel and its children.
+	 * 
+	 * @return	A boolean representing whether or not input is enabled for the DefectPanel and its children.
+	 */
+	public boolean getInputEnabled() {
+		return inputEnabled;
+	}
+
+	/**
 	 * Gets the DefectPanel's internal model.
 	 * @return
 	 */
 	public Defect getModel() {
 		return model;
 	}
-	
+
 	/**
 	 * Returns the model object represented by this view's fields.
 	 * 
@@ -185,7 +213,7 @@ public class DefectPanel extends JPanel {
 	public Defect getFieldModel() {
 		return new Defect(model.getId(), txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
 	}
-	
+
 	/**
 	 * Returns the creator text field
 	 * @return the creator text field

@@ -2,7 +2,6 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import java.net.MalformedURLException;
 
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
@@ -32,6 +31,7 @@ public class SaveDefectController {
 		// TODO Change PUT/POST depending on whether this is create or update
 		Request request;
 		try {
+			view.setInputEnabled(false);
 			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.PUT);
 			request.setRequestBody(view.getFieldModel().toJSON());
 			request.addObserver(requestObserver);
@@ -44,6 +44,9 @@ public class SaveDefectController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException();
+		}
+		finally {
+			view.setInputEnabled(true);
 		}
 	}
 
