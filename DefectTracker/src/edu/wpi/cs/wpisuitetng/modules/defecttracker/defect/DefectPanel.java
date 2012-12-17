@@ -1,19 +1,12 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -24,6 +17,11 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
  */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel {
+	public enum Mode {
+		CREATE,
+		EDIT;
+	}
+
 	protected Defect model;
 
 	protected JTextField txtTitle;
@@ -36,26 +34,32 @@ public class DefectPanel extends JPanel {
 	protected final TextUpdateListener txtDescriptionListener;
 	protected final TextUpdateListener txtCreatorListener;
 	protected final TextUpdateListener txtAssigneeListener;
-	
+
 	protected boolean inputEnabled;
+	protected Mode	editMode;
 
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
 
 	/**
-	 * Construct a DefectPanel for creating a defect
+	 * Construct a DefectPanel for creating a blank defect.
 	 */
 	public DefectPanel() {
-		this(new Defect());
+		this(new Defect(), Mode.CREATE);
 	}
 
 	/**
-	 * Construct a DefectPanel for viewing a defect
+	 * Constructs a DefectPanel for creating or editing a given Defect.
 	 * 
-	 * @param defect	The Defect to show.
+	 * @param defect	The Defect to edit.
+	 * @param mode		Whether or not the given Defect should be treated as if it already exists 
+	 * 					on the server ({@link Mode#EDIT}) or not ({@link Mode#CREATE}).
 	 */
-	public DefectPanel(Defect defect) {
+	public DefectPanel(Defect defect, Mode mode) {
+		editMode = mode;
+
+		// Indicate that input is enabled
 		inputEnabled = true;
 
 		this.model = defect;
@@ -64,24 +68,6 @@ public class DefectPanel extends JPanel {
 		this.setLayout(layout);
 
 		addComponents(layout);
-
-		// Populate the fields based on the given model
-		txtTitle.setText(defect.getTitle());
-		txtDescription.setText(defect.getDescription());
-		if (defect.getCreator() != null) {
-			txtCreator.setText(defect.getCreator().getUsername());
-		}
-		if (defect.getAssignee() != null) {
-			txtAssignee.setText(defect.getAssignee().getUsername());
-		}
-		if (defect.getTags() != null) {
-			Iterator<Tag> tagsI = defect.getTags().iterator();
-			Tag nextTag;
-			while (tagsI.hasNext()) {
-				nextTag = tagsI.next();
-				tagPanel.lmTags.addElement(nextTag.getName());
-			}
-		}
 
 		// Add TextUpdateListeners
 		txtTitleListener = new TextUpdateListener(this, txtTitle);
@@ -95,6 +81,8 @@ public class DefectPanel extends JPanel {
 
 		txtAssigneeListener = new TextUpdateListener(this, txtAssignee);
 		txtAssignee.addKeyListener(txtAssigneeListener);
+		
+		updateFields();
 	}
 
 	/**
@@ -179,9 +167,71 @@ public class DefectPanel extends JPanel {
 
 		txtTitle.setEnabled(enabled);
 		txtDescription.setEnabled(enabled);
-		txtCreator.setEnabled(enabled);
 		txtAssignee.setEnabled(enabled);
 		tagPanel.setInputEnabled(enabled);
+	}
+	
+	/**
+	 * Updates the DefectPanel's model to contain the values of the given Defect and sets the 
+	 * DefectPanel's editMode to {@link Mode#EDIT}.
+	 * 
+	 * @param defect	The Defect which contains the new values for the model.
+	 */
+	protected void updateModel(Defect defect) {
+		updateModel(defect, Mode.EDIT);
+	}
+
+	/**
+	 * Updates the DefectPanel's model to contain the values of the given Defect.
+	 * 
+	 * @param	defect	The Defect which contains the new values for the model.
+	 * @param	mode	The new editMode.
+	 */
+	protected void updateModel(Defect defect, Mode mode) {
+		editMode = mode;
+		
+		model.setId(defect.getId());
+		model.setTitle(defect.getTitle());
+		model.setDescription(defect.getDescription());
+		model.setAssignee(defect.getAssignee());
+		model.setCreator(defect.getCreator());
+		model.setCreationDate(defect.getCreationDate());
+		model.setLastModifiedDate(defect.getLastModifiedDate());
+		model.setStatus(defect.getStatus());
+
+		//TODO model.setPermission(p, u);
+		//TODO model.setTags(...);
+		
+		updateFields();
+	}
+
+	/**
+	 * Updates the DefectPanel's fields to match those in the current model.
+	 */
+	private void updateFields() {
+		txtTitle.setText(model.getTitle());
+		txtDescription.setText(model.getDescription());
+		if (model.getCreator() != null) {
+			txtCreator.setText(model.getCreator().getUsername());
+		}
+		if (model.getAssignee() != null) {
+			txtAssignee.setText(model.getAssignee().getUsername());
+		}
+		if (model.getTags() != null) {
+			Iterator<Tag> tagsI = model.getTags().iterator();
+			Tag nextTag;
+			while (tagsI.hasNext()) {
+				nextTag = tagsI.next();
+				tagPanel.lmTags.addElement(nextTag.getName());
+			}
+		}
+		
+		// TODO expand this?
+		
+		txtTitleListener.checkIfUpdated();
+		txtDescriptionListener.checkIfUpdated();
+		txtCreatorListener.checkIfUpdated();
+		txtAssigneeListener.checkIfUpdated();
 	}
 
 	/**
@@ -202,6 +252,15 @@ public class DefectPanel extends JPanel {
 	}
 
 	/**
+	 * Returns the edit {@link Mode} for this DefectPanel.
+	 * 
+	 * @return	The edit {@link Mode} for this DefectPanel.
+	 */
+	public Mode getEditMode() {
+		return editMode;
+	}
+
+	/**
 	 * Returns the model object represented by this view's fields.
 	 * 
 	 * TODO: Change return type to the abstract class / interface
@@ -210,7 +269,7 @@ public class DefectPanel extends JPanel {
 	 * TODO: Deal with tags and other assignee
 	 * @return the model represented by this view
 	 */
-	public Defect getFieldModel() {
+	public Defect getEditedModel() {
 		return new Defect(model.getId(), txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
 	}
 

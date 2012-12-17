@@ -18,7 +18,7 @@ public class TextUpdateListener implements KeyListener {
 	protected final DefectPanel panel;
 	protected final JTextComponent component;
 	protected final Border defaultBorder;
-	
+
 	/**
 	 * Constructs a TextUpdateListener.
 	 * 
@@ -37,13 +37,25 @@ public class TextUpdateListener implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
+		checkIfUpdated();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * Checks if the field differs from the DefectPanel's model and changes the style of the field accordingly.
+	 */
+	public void checkIfUpdated() {
 		String base = "";
-		
+
 		// Get the base String to compare to the text of the JTextComponent
 		try {
 			Object object = panel.getModel().getClass().getDeclaredMethod("get" + component.getName()).invoke(panel.getModel());
@@ -72,7 +84,7 @@ public class TextUpdateListener implements KeyListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		
+
 		// Compare base to the component's text to determine whether or not to highlight the field.
 		if (base.equals(component.getText())) {
 			component.setBackground(Color.WHITE);
@@ -82,10 +94,5 @@ public class TextUpdateListener implements KeyListener {
 			component.setBackground(new Color(243, 243, 209));
 			component.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
 	}
 }
