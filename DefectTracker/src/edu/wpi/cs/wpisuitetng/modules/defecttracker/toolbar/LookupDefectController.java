@@ -52,7 +52,7 @@ public class LookupDefectController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JTextField source = (JTextField) e.getSource();
-		if (waitingForResponse == false) { /* proceed if there is not already a request in progress */
+		if (!waitingForResponse) { /* proceed if there is not already a request in progress */
 			waitingForResponse = true; // we are now in the process of making a request
 			
 			// Validate the defect ID that was entered into the search field

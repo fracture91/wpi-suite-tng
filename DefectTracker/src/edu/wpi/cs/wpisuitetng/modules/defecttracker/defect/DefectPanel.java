@@ -36,18 +36,11 @@ public class DefectPanel extends JPanel {
 	protected final TextUpdateListener txtAssigneeListener;
 
 	protected boolean inputEnabled;
-	protected Mode	editMode;
+	protected Mode editMode;
 
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
-
-	/**
-	 * Construct a DefectPanel for creating a blank defect.
-	 */
-	//public DefectPanel() {
-	//	this(new Defect(), Mode.CREATE);
-	//}
 
 	/**
 	 * Constructs a DefectPanel for creating or editing a given Defect.

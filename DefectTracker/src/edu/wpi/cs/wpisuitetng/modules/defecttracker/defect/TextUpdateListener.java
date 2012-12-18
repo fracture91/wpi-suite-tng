@@ -83,7 +83,7 @@ public class TextUpdateListener implements KeyListener {
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 
 		// Compare base to the component's text to determine whether or not to highlight the field.
 		if (base.equals(component.getText())) {

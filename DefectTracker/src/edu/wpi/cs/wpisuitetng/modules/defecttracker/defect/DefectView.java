@@ -34,7 +34,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	 * Constructs a new DefectView where the user can view (and edit) a defect.
 	 * 
 	 * @param defect	The defect to show.
-	 * @param mode		The editMode for editing the Defect
+	 * @param editMode	The editMode for editing the Defect
 	 */
 	public DefectView(Defect defect, Mode editMode) {
 		// If this is a new defect, set the creator
