@@ -45,9 +45,9 @@ public class DefectPanel extends JPanel {
 	/**
 	 * Construct a DefectPanel for creating a blank defect.
 	 */
-	public DefectPanel() {
-		this(new Defect(), Mode.CREATE);
-	}
+	//public DefectPanel() {
+	//	this(new Defect(), Mode.CREATE);
+	//}
 
 	/**
 	 * Constructs a DefectPanel for creating or editing a given Defect.

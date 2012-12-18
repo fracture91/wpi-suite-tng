@@ -43,7 +43,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		}
 		
 		// Instantiate the main create defect panel
-		mainPanel = (editMode == Mode.CREATE) ? new DefectPanel() : new DefectPanel(defect, editMode);
+		mainPanel = new DefectPanel(defect, editMode);
 		this.setLayout(new BorderLayout());
 		this.add(mainPanel, BorderLayout.PAGE_START);
 		controller = new SaveDefectController(this);
