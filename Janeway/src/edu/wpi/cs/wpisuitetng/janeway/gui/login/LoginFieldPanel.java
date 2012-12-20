@@ -2,7 +2,6 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
 import java.awt.Font;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -57,17 +56,6 @@ public class LoginFieldPanel extends JPanel {
 
 		// Add the components to the panel
 		addComponents();
-	}
-	
-	/**
-	 * Adds listeners to the text fields so that the Connect button is activated
-	 * when the enter key is pressed.
-	 */
-	public void addKeyListeners(JButton connectButton) {
-		txtUsername.addKeyListener(new LoginFieldKeyListener(connectButton));
-		txtPassword.addKeyListener(new LoginFieldKeyListener(connectButton));
-		txtProject.addKeyListener(new LoginFieldKeyListener(connectButton));
-		txtUrl.addKeyListener(new LoginFieldKeyListener(connectButton));
 	}
 
 	/**
