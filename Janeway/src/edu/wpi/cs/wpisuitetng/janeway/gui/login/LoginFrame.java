@@ -63,7 +63,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(loginButtonPanel);
 		
 		// Add key listener for Enter to the login fields
-		loginFieldPanel.addKeyListeners(getConnectButton());
+		this.getRootPane().setDefaultButton(getConnectButton());
 		
 		// Pack the frame
 		pack();
