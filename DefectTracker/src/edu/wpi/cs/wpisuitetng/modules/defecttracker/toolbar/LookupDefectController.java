@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.JPlaceholderTextField;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -51,7 +52,7 @@ public class LookupDefectController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JTextField source = (JTextField) e.getSource();
-		if (waitingForResponse == false) { /* proceed if there is not already a request in progress */
+		if (!waitingForResponse) { /* proceed if there is not already a request in progress */
 			waitingForResponse = true; // we are now in the process of making a request
 			
 			// Validate the defect ID that was entered into the search field
@@ -87,7 +88,7 @@ public class LookupDefectController implements ActionListener {
 	 */
 	public void receivedResponse(Defect defect) {
 		// Make a new defect view to display the defect that was received
-		DefectView defectView = new DefectView(defect);
+		DefectView defectView = new DefectView(defect, Mode.EDIT);
 		tabController.addTab("Defect #" + defect.getId(), new ImageIcon(), defectView, "View defect " + defect.getTitle());
 		defectView.requestFocus();
 		
