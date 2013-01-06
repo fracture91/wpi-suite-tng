@@ -117,6 +117,9 @@ public class LoginServletTest {
 	@Test
 	/**
 	 * Acceptence Test 3: User with valid credentials attempts to login.
+	 *  Preconditions:		(1) There must be a user with the username "twack" and 
+	 *  						a password "abcde" in the database
+	 *  						
 	 * 	Expected Results: 	(1) 200 OK Response Code
 	 * 						(2) WPI Suite Cookie Returned
 	 * 						(3) Cookie header match
