@@ -37,7 +37,7 @@ public class BasicAuth extends Authenticator {
 		
 		if(!isValidBasicAuth(parts))
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("The <" + this.getAuthType() + "> authentication token is invalid format");
 		}
 		
 		byte[] decoded = Base64.decodeBase64(parts[2]);
@@ -47,7 +47,7 @@ public class BasicAuth extends Authenticator {
 		// check if the credential array has space for username and password elements.
 		if(credentials.length != 2)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("The <" + this.getAuthType() + "> token's encoded portion is missing a piece");
 		}
 		
 		return credentials;

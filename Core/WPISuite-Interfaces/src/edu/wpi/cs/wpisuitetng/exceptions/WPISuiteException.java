@@ -20,13 +20,25 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class WPISuiteException extends Exception {
 
+	public WPISuiteException(String message)
+	{
+		super(message);
+	}
 	
+	public WPISuiteException()
+	{
+		
+	}
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5271354512939175980L;
 
+	/**
+	 * Holds the HTTP response code corresponding to the type of exception
+	 * @return
+	 */
 	public int getStatus()
 	{
 		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
