@@ -44,7 +44,7 @@ public class ToolbarView extends DefaultToolbarView {
 		searchField = new JPlaceholderTextField("Lookup by ID", 15);
 		searchField.addActionListener(new LookupDefectController(tabController, searchField, this));
 		
-		// Add the buttons to the content panel
+		// Configure the layout of the buttons on the content panel
 		layout.putConstraint(SpringLayout.NORTH, createDefect, 5, SpringLayout.NORTH, content);
 		layout.putConstraint(SpringLayout.WEST, createDefect, 8, SpringLayout.WEST, content);
 		layout.putConstraint(SpringLayout.WEST, searchDefects, 10, SpringLayout.EAST, createDefect);
@@ -52,12 +52,13 @@ public class ToolbarView extends DefaultToolbarView {
 		layout.putConstraint(SpringLayout.NORTH, searchField, 15, SpringLayout.SOUTH, createDefect);
 		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, searchField, 5, SpringLayout.EAST, createDefect);
 		
+		// Add buttons to the content panel
 		content.add(createDefect);
 		content.add(searchDefects);
 		content.add(searchField);
 		
+		// Construct a new toolbar group to be added to the end of the toolbar
 		ToolbarGroupView toolbarGroup = new ToolbarGroupView("Home", content);
-		toolbarGroup.setPreferredWidth(270);
 		addGroup(toolbarGroup);
 	}
 

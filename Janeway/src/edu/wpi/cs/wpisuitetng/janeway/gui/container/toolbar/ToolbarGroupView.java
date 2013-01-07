@@ -1,11 +1,15 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.Hoverable;
 
 /**
  * Holds a view for a group of controls on the toolbar.
@@ -14,7 +18,7 @@ import javax.swing.JPanel;
  * best fit their contents.
  */
 @SuppressWarnings("serial")
-public class ToolbarGroupView extends JPanel {
+public class ToolbarGroupView extends JPanel implements Hoverable {
 	
 	private JLabel label;
 	private JPanel content;
@@ -31,12 +35,14 @@ public class ToolbarGroupView extends JPanel {
 		content.setLayout(new FlowLayout());
 		content.setOpaque(false);
 		label = new JLabel();
-		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setHorizontalAlignment(JLabel.CENTER);		
 		setName(name);
 		add(content, BorderLayout.CENTER);
 		add(label, BorderLayout.SOUTH);
 		setPreferredWidth(DEFAULT_WIDTH); // default, should be changed
 		setMaximumSize(new Dimension(1, Integer.MAX_VALUE)); // don't stretch horizontally
+		this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.gray));
+		this.addMouseListener(new MouseHoverListener(this));
 	}
 	
 	/**
@@ -72,6 +78,18 @@ public class ToolbarGroupView extends JPanel {
 	 */
 	public JPanel getContent() {
 		return content;
+	}
+
+	@Override
+	public void mouseEntered() {
+		this.setOpaque(true);
+		this.repaint();
+	}
+
+	@Override
+	public void mouseExited() {
+		this.setOpaque(false);
+		this.repaint();
 	}
 	
 }
