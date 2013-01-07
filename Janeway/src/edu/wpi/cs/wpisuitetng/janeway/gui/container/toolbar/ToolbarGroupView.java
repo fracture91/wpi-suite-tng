@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.Hoverable;
 
@@ -41,7 +42,7 @@ public class ToolbarGroupView extends JPanel implements Hoverable {
 		add(label, BorderLayout.SOUTH);
 		setPreferredWidth(DEFAULT_WIDTH); // default, should be changed
 		setMaximumSize(new Dimension(1, Integer.MAX_VALUE)); // don't stretch horizontally
-		this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.gray));
+		setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 		this.addMouseListener(new MouseHoverListener(this));
 	}
 	
@@ -83,12 +84,14 @@ public class ToolbarGroupView extends JPanel implements Hoverable {
 	@Override
 	public void mouseEntered() {
 		this.setOpaque(true);
+		this.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Color.gray));
 		this.repaint();
 	}
 
 	@Override
 	public void mouseExited() {
 		this.setOpaque(false);
+		this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 		this.repaint();
 	}
 	
