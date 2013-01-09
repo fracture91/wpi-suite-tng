@@ -63,4 +63,8 @@ public class SearchPanel extends JPanel {
 		this.add(builderScrollPane);
 		this.add(resultsPanel);
 	}
+	
+	public ResultsPanel getResultsPanel() {
+		return resultsPanel;
+	}
 }

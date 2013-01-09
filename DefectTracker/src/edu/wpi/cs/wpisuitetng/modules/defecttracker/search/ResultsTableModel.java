@@ -11,20 +11,32 @@ import javax.swing.table.AbstractTableModel;
 public class ResultsTableModel extends AbstractTableModel {
 
 	/** The names to be displayed in the column headers */
-	String[] columnNames = {"Title", "Creator", "Assignee"};
+	protected String[] columnNames = {};
 	
 	/** The data to be displayed in the table */
-	Object[][] data = {
-			{"Defect 1", "Chris Casola", "Andrew"},
-			{"Defect 2", "Chris Page", "Chris Casola"},
-			{"Defect 3", "Andrew", "Chris Page"},
-	};
+	protected Object[][] data = {};
 	
 	/**
 	 * Construct the model and populate it with data
 	 */
 	public ResultsTableModel() {
 		
+	}
+	
+	/**
+	 * Set the data to be displayed in the table
+	 * @param data a two-dimensional array of objects containing the data
+	 */
+	public void setData(Object[][] data) {
+		this.data = data;
+	}
+	
+	/**
+	 * Set the column names to be displayed in the table
+	 * @param columnNames an array of strings containing the column names
+	 */
+	public void setColumnNames(String[] columnNames) {
+		this.columnNames = columnNames;
 	}
 
 	@Override
