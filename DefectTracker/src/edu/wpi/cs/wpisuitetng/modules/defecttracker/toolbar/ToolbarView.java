@@ -59,7 +59,9 @@ public class ToolbarView extends DefaultToolbarView {
 		
 		// Construct a new toolbar group to be added to the end of the toolbar
 		ToolbarGroupView toolbarGroup = new ToolbarGroupView("Home", content);
-		Double toolbarGroupWidth = createDefect.getPreferredSize().getWidth() + searchDefects.getPreferredSize().getWidth() + 40;
+		
+		// Calculate the width of the toolbar
+		Double toolbarGroupWidth = createDefect.getPreferredSize().getWidth() + searchDefects.getPreferredSize().getWidth() + 40; // 40 accounts for margins between the buttons
 		toolbarGroup.setPreferredWidth(toolbarGroupWidth.intValue());
 		addGroup(toolbarGroup);
 	}

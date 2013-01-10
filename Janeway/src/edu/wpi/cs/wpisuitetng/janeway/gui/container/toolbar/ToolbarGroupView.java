@@ -81,6 +81,9 @@ public class ToolbarGroupView extends JPanel implements Hoverable {
 		return content;
 	}
 
+	/**
+	 * Called when the mouse enters this toolbar group
+	 */
 	@Override
 	public void mouseEntered() {
 		this.setOpaque(true);
@@ -88,6 +91,9 @@ public class ToolbarGroupView extends JPanel implements Hoverable {
 		this.repaint();
 	}
 
+	/**
+	 * Called when the mouse exits this toolbar group
+	 */
 	@Override
 	public void mouseExited() {
 		this.setOpaque(false);
