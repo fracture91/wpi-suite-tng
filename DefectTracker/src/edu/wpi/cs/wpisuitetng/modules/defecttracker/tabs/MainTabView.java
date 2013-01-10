@@ -23,8 +23,6 @@ public class MainTabView extends JTabbedPane {
 		setBorder(BorderFactory.createEmptyBorder(5, 3, 3, 3));
 		addTab("Dashboard", new ImageIcon(), new DashboardView(),
 		       "Your Dashboard - notifications, etc.");
-		addTab("Search", new ImageIcon(), new JPanel(), "Search");
-		addTab("#113", new ImageIcon(), new JPanel(), "Defect #113");
 	}
 	
 	@Override
