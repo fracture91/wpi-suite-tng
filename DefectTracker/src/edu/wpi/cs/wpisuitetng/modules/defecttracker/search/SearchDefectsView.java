@@ -6,6 +6,7 @@ import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
  * View that contains the entire defect searching interface
@@ -26,13 +27,18 @@ public class SearchDefectsView extends JPanel implements IToolbarGroupProvider {
 	protected JButton btnRefresh;
 	
 	/** Controller to handle search and filter requests from the user */
-	protected FilterDefectsController controller;
+	protected RetrieveAllDefectsController controller;
+	
+	/** The main tab controller */
+	protected MainTabController tabController;
 	
 	/**
 	 * Construct the view
+	 * @param tabController The main tab controller
 	 */
-	public SearchDefectsView() {
-		this.mainPanel = new SearchPanel();
+	public SearchDefectsView(MainTabController tabController) {
+		this.tabController = tabController;
+		this.mainPanel = new SearchPanel(tabController);
 		
 		// Construct the layout manager and add constraints
 		layout = new SpringLayout();
@@ -46,7 +52,7 @@ public class SearchDefectsView extends JPanel implements IToolbarGroupProvider {
 		this.add(mainPanel);
 		
 		// Instantiate the controller
-		controller = new FilterDefectsController(this);
+		controller = new RetrieveAllDefectsController(this);
 		
 		// Instantiate the button panel
 		buttonGroup = new ToolbarGroupView("Search/Filter");

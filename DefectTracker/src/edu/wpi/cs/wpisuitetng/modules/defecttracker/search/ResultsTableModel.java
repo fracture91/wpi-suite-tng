@@ -4,8 +4,6 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * A model to manage the data displayed in the {@link ResultsPanel}
- * 
- * TODO Actually make requests to get this data from the core
  */
 @SuppressWarnings("serial")
 public class ResultsTableModel extends AbstractTableModel {

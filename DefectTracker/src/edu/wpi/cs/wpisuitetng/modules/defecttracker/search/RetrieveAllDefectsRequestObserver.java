@@ -9,14 +9,25 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
-public class FilterDefectsRequestObserver implements Observer {
+/**
+ * An observer for a request to retrieve all defects
+ */
+public class RetrieveAllDefectsRequestObserver implements Observer {
 
-	protected FilterDefectsController controller;
+	/** The controller managing the request */
+	protected RetrieveAllDefectsController controller;
 	
-	public FilterDefectsRequestObserver(FilterDefectsController controller) {
+	/**
+	 * Construct the observer
+	 * @param controller
+	 */
+	public RetrieveAllDefectsRequestObserver(RetrieveAllDefectsController controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * @see java.util.Observer#update
+	 */
 	@Override
 	public void update(Observable observable, Object arg) {
 		if (Request.class.getName().equals(observable.getClass().getName())) {

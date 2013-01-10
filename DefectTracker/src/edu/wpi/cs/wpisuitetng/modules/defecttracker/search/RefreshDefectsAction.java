@@ -5,12 +5,20 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 
+/**
+ * Action that calls {@link RetrieveAllDefectsController#refreshData()}, default mnemonic key is R
+ */
 @SuppressWarnings("serial")
 public class RefreshDefectsAction extends AbstractAction {
 	
-	protected final FilterDefectsController controller;
+	/** The controller to be called when this action is performed */
+	protected final RetrieveAllDefectsController controller;
 	
-	public RefreshDefectsAction(FilterDefectsController controller) {
+	/**
+	 * Construct a RefreshDefectsAction
+	 * @param controller when the action is performed this controller's refreshData() method will be called
+	 */
+	public RefreshDefectsAction(RetrieveAllDefectsController controller) {
 		super("Refresh");
 		this.controller = controller;
 		putValue(MNEMONIC_KEY, KeyEvent.VK_R);

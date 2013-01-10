@@ -10,18 +10,32 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 
-public class FilterDefectsController {
+/**
+ * Controller to handle retrieving all defects from the server and
+ * displaying them in the {@link SearchDefectsView}
+ */
+public class RetrieveAllDefectsController {
 
+	/** The search defects view */
 	protected SearchDefectsView view;
 	
+	/** The defects data retrieved from the server */
 	protected Defect[] data = null;
 	
-	public FilterDefectsController(SearchDefectsView view) {
+	/**
+	 * Constructs a new RetrieveAllDefectsController
+	 * 
+	 * @param view the search defects view
+	 */
+	public RetrieveAllDefectsController(SearchDefectsView view) {
 		this.view = view;
 	}
 	
+	/**
+	 * Sends a request for all of the defects
+	 */
 	public void refreshData() {		
-		final Observer requestObserver = new FilterDefectsRequestObserver(this);
+		final Observer requestObserver = new RetrieveAllDefectsRequestObserver(this);
 		Request request;
 		try {
 			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.GET);
@@ -36,6 +50,12 @@ public class FilterDefectsController {
 		}
 	}
 	
+	/**
+	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when the
+	 * response is received
+	 * 
+	 * @param defects an array of defects returned by the server
+	 */
 	public void receivedData(Defect[] defects) {	
 		if (defects.length > 0) {
 			// save the data
@@ -63,6 +83,10 @@ public class FilterDefectsController {
 		}
 	}
 	
+	/**
+	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when an
+	 * error occurs retrieving the defects from the server.
+	 */
 	public void errorReceivingData() {
 		JOptionPane.showMessageDialog(view, "An error occurred retrieving defects from the server.", "Error Communicating with Server", JOptionPane.ERROR_MESSAGE);
 	}
