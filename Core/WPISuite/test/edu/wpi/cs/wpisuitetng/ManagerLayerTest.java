@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -- WPI Suite
+  * Copyright (c) 2012 -- WPI Suite
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -282,5 +282,55 @@ public class ManagerLayerTest {
 		db.delete(me);
 		System.out.println("equal: " + (me == me2));
 		assertEquals(me, me2);
+	}
+	
+	/**
+	 * Test method for AdvancedGet
+	 */
+	@Test
+	public void testAdvancedGet()
+	{
+		String s = null;
+		try {
+			s = testManagerLayer.advancedGet(testUserArgsFake , testCookies);
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
+		
+		assertEquals(s,testUserArgs[0]);
+	}
+	
+	/**
+	 * Test method for AdvancedGet
+	 */
+	@Test(expected = AuthenticationException.class)
+	public void testAdvancedGetNoCookie() throws WPISuiteException
+	{
+		testManagerLayer.advancedGet(testUserArgsFake , null);
+	}
+	
+	/**
+	 * Test method for AdvancedPut
+	 */
+	@Test
+	public void testAdvancedPut()
+	{
+		String s = null;
+		try {
+			s = testManagerLayer.advancedPut(testUserArgsFake , "fake", testCookies);
+		} catch (WPISuiteException e) {
+			fail("unexpected exception");
+		}
+		
+		assertEquals(s,testUserArgs[0]);
+	}
+	
+	/**
+	 * Test method for AdvancedGet
+	 */
+	@Test(expected = AuthenticationException.class)
+	public void testAdvancedPutNoCookie() throws WPISuiteException
+	{
+		testManagerLayer.advancedPut(testUserArgsFake , "fake",  null);
 	}
 }

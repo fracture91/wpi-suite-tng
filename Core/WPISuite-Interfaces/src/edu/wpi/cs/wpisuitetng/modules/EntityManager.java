@@ -67,6 +67,14 @@ public interface EntityManager<T extends Model>
 	 */
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException;
 	
+	/* Advanced Get*/
+	/**
+	 * This method is accessed through the API by a GET request to the AdvancedAPI
+	 * @param s	The session that requested this action
+	 * @param args[] A String array containing the entire path of the GET that initiated this action
+	 */
+	public String advancedGet(Session s, String[] args) throws WPISuiteException;
+	
 	/**
 	 * Deletes all entities of Model class T
 	 */
@@ -78,4 +86,17 @@ public interface EntityManager<T extends Model>
 	 * @return	the number of records of this Manager's Model class T
 	 */
 	public int Count() throws WPISuiteException;
+
+	/* Advanced Put*/
+	/**
+	 * **************
+	 * A note about the content body.  Must not contain any line breaks.  Only the first line is passed 
+	 * to this function.                                            
+	 * **************
+	 * This method is accessed through the API by a PUT request to the AdvancedAPI
+	 * @param s	The session that requested this action
+	 * @param args[] A String array containing the entire path of the PUT that initiated this action
+	 * @param content The content body of the request
+	 */
+	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException;
 }

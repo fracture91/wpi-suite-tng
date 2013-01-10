@@ -244,4 +244,66 @@ public class ManagerLayer {
         
 	}
 	
+	/**Advanced Get
+	 * 
+	 * forwards advanced get requests to the correct entity manager
+	 * @param args - A String array of the parameters
+	 * @param cook - The cookie forward
+	 * @return String - the returned value from the advancedGet call
+	 * 
+	 */
+	public String advancedGet(String[] args, Cookie[] cook) throws WPISuiteException
+	{
+		Session s = null;
+		if(cook != null)
+		{
+			for(Cookie c : cook)
+			{
+				if(c.getName().startsWith("WPISUITE-"))
+					s = sessions.getSession(c.getValue());
+					
+			}	
+		}
+		else
+		{
+			throw new AuthenticationException();
+		}
+		
+        return map.get(args[0]+args[1]).advancedGet(s, args);
+	}
+	
+	/**Advanced Put
+	 * 
+	 * **********************
+	 * A note about advanced put.  the content body should not contain any line breaks.
+	 * only the first line will be passed through to the function.
+	 * **********************
+	 * 
+	 * does the same thing as advanced GET except that it also forwards
+	 * as well as the path arguments
+	 * @param args - the path arguments of the request
+	 * @param content - the content body of the request
+	 * @param cook - the cookie sent along with the request
+	 * @return String - a string response to send back
+	 */
+	public String advancedPut(String[] args, String content, Cookie[] cook) throws WPISuiteException
+	{
+		Session s = null;
+		if(cook != null)
+		{
+			for(Cookie c : cook)
+			{
+				if(c.getName().startsWith("WPISUITE-"))
+					s = sessions.getSession(c.getValue());
+					
+			}	
+		}
+		else
+		{
+			throw new AuthenticationException();
+		}
+		
+        return map.get(args[0]+args[1]).advancedPut(s,args,content);
+	}
+	
 }

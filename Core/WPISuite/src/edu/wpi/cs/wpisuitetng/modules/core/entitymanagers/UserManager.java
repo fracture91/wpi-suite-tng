@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -205,6 +206,18 @@ public class UserManager implements EntityManager<User> {
 		
 		// check for changes in each field
 		return toUpdate;
+	}
+
+	@Override
+	public String advancedGet(Session s, String[] args)
+			throws WPISuiteException {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public String advancedPut(Session s, String[] args, String content)
+			throws WPISuiteException {
+		throw new NotImplementedException();
 	}
 
 }

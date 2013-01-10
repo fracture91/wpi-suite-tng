@@ -29,6 +29,17 @@ public class MockUserManager extends UserManager {
 	}
 
 	@Override
+	public String advancedGet(Session s, String[] args)
+			throws WPISuiteException {
+		return args[0];
+	}
+	@Override
+	public String advancedPut(Session s, String[] args, String content)
+			throws WPISuiteException {
+		return args[0];
+	}
+
+	@Override
 	public User makeEntity(Session s, String content) throws WPISuiteException {
 		return new User("asdf","asdf","asdf", 0);
 	}

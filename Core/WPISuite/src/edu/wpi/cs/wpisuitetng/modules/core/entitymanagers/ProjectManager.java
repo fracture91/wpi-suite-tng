@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -42,6 +43,12 @@ public class ProjectManager implements EntityManager<Project>{
 		this.data = data;
 	}
 	
+	@Override
+	public String advancedGet(Session s, String[] args)
+			throws WPISuiteException {
+		throw new NotImplementedException();
+	}
+
 	@Override
 	public Project makeEntity(Session s, String content) throws WPISuiteException {
 		
@@ -180,6 +187,11 @@ public class ProjectManager implements EntityManager<Project>{
 		
 		// check for changes in each field
 		return toUpdate;
+	}
+
+	@Override
+	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {
+		throw new NotImplementedException();
 	}
 
 
