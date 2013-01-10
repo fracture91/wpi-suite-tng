@@ -14,7 +14,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.SearchDefectsView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
 /**
  * Controls the behavior of a given MainTabView.
@@ -46,6 +48,16 @@ public class MainTabController {
 	public void addTab(String title, Icon icon, Component component, String tip) {
 		this.view.addTab(title, icon, component, tip);
 		this.view.setSelectedIndex(this.view.getTabCount() - 1);
+	}
+	
+	/**
+	 * Adds a tab that displays the given defect
+	 * @param defect the defect to display
+	 */
+	public void addDefectTab(Defect defect) {
+		DefectView defectView = new DefectView(defect, Mode.EDIT);
+		addTab("Defect #" + defect.getId(), new ImageIcon(), defectView, "View defect " + defect.getTitle());
+		defectView.requestFocus();
 	}
 	
 	/**

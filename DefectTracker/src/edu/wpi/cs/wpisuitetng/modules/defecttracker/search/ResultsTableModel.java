@@ -61,4 +61,9 @@ public class ResultsTableModel extends AbstractTableModel {
 	public Class<?> getColumnClass(int col) {
 		return getValueAt(0, col).getClass();
 	}
+	
+	@Override
+	public boolean isCellEditable(int row, int col) {
+		return false;
+	}
 }

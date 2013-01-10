@@ -4,12 +4,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectView;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -39,21 +36,27 @@ public class RetrieveDefectController extends MouseAdapter {
 	public void mouseClicked(MouseEvent me) {
 		if (me.getClickCount() == 2) { /* only respond to double clicks */
 			
-			// Get the defect ID in the row that was clicked
+			// Get a reference to the results JTable from the mouse event
 			JTable resultsTable = (JTable) me.getSource();
-			int row = resultsTable.getSelectedRow();
-			String defectId = (String) resultsTable.getValueAt(row, 0);
-
-			// Create and send a request for the defect with the given ID
-			Request request;
-			try {
-				request = Network.getInstance().makeRequest("defecttracker/defect/" + defectId, RequestMethod.GET);
-				request.addObserver(new RetrieveDefectRequestObserver(this));
-				request.send();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (NullPointerException e) {
-				e.printStackTrace();
+			
+			// Determine the row the user clicked on
+			int row = resultsTable.rowAtPoint(me.getPoint());
+			
+			// make sure the user actually clicked on a row
+			if (row > -1) {
+				String defectId = (String) resultsTable.getValueAt(row, 0);
+	
+				// Create and send a request for the defect with the given ID
+				Request request;
+				try {
+					request = Network.getInstance().makeRequest("defecttracker/defect/" + defectId, RequestMethod.GET);
+					request.addObserver(new RetrieveDefectRequestObserver(this));
+					request.send();
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -65,9 +68,7 @@ public class RetrieveDefectController extends MouseAdapter {
 	 */
 	public void showDefect(Defect defect) {
 		// Make a new defect view to display the defect that was received
-		DefectView defectView = new DefectView(defect, Mode.EDIT);
-		view.getTabController().addTab("Defect #" + defect.getId(), new ImageIcon(), defectView, "View defect " + defect.getTitle());
-		defectView.requestFocus();
+		view.getTabController().addDefectTab(defect);
 	}
 	
 	/**
