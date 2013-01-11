@@ -11,6 +11,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.Before;
 
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -24,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 public class DefectValidatorTest {
 
 	Defect existingDefect;
+	User existingUser;
 	Defect goodNewDefect;
 	Defect goodUpdatedDefect;
 	User bob;
@@ -32,6 +34,7 @@ public class DefectValidatorTest {
 	Tag tag;
 	Tag tagCopy;
 	List<DefectEvent> ignoredEvents;
+	Session defaultSession;
 	Data db;
 	DefectValidator validator;
 	
@@ -41,10 +44,13 @@ public class DefectValidatorTest {
 		
 		tag = new Tag("tag");
 		bob = new User("bob", "bob", "1234", 1);
+		existingUser = new User("joe", "joe", "1234", 2);
 		existingDefect = new Defect(1, "An existing defect", "", bob);
 		existingDefect.setCreationDate(new Date());
 		existingDefect.setLastModifiedDate(new Date());
 		existingDefect.setEvents(new ArrayList<DefectEvent>());
+		
+		defaultSession = new Session(bob);
 		
 		//need copies to simulate db4o cross-container problem
 		tagCopy = new Tag("tag");
@@ -60,6 +66,7 @@ public class DefectValidatorTest {
 		models.add(tag);
 		models.add(bob);
 		models.add(existingDefect);
+		models.add(existingUser);
 		db = new MockDefectData(models);
 		validator = new DefectValidator(db);
 	}
@@ -71,14 +78,14 @@ public class DefectValidatorTest {
 		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
 	}
 	
-	public void checkNoIssues(Defect defect, Mode mode) {
-		List<ValidationIssue> issues = validator.validate(defect, mode);
+	public void checkNoIssues(Session session, Defect defect, Mode mode) {
+		List<ValidationIssue> issues = validator.validate(session, defect, mode);
 		assertEquals(0, issues.size());
 	}
 	
 	@Test
 	public void testGoodNewDefect() {
-		checkNoIssues(goodNewDefect, Mode.CREATE);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
 		assertSame(bob, goodNewDefect.getAssignee());
 		assertSame(bob, goodNewDefect.getCreator());
 		for(Tag t : goodNewDefect.getTags()) {
@@ -91,8 +98,9 @@ public class DefectValidatorTest {
 		assertNotNull(goodNewDefect.getLastModifiedDate());
 	}
 	
-	public List<ValidationIssue> checkFieldIssue(Defect defect, Mode mode, String fieldName) {
-		List<ValidationIssue> issues = validator.validate(defect, mode);
+	public List<ValidationIssue> checkFieldIssue(Session session, Defect defect, Mode mode, 
+			String fieldName) {
+		List<ValidationIssue> issues = validator.validate(session, defect, mode);
 		assertEquals(1, issues.size());
 		assertEquals(fieldName, issues.get(0).getFieldName());
 		return issues;
@@ -101,25 +109,31 @@ public class DefectValidatorTest {
 	@Test
 	public void testNoCreator() {
 		goodNewDefect.setCreator(null);
-		checkFieldIssue(goodNewDefect, Mode.CREATE, "creator");
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "creator");
 	}
 	
 	@Test
 	public void testBadCreator() {
 		goodNewDefect.setCreator(invalidUser);
-		checkFieldIssue(goodNewDefect, Mode.CREATE, "creator");
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "creator");
+	}
+	
+	@Test
+	public void testCreatorMismatch() {
+		goodNewDefect.setCreator(existingUser);
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "creator");
 	}
 	
 	@Test
 	public void testNoAssignee() {
 		goodNewDefect.setAssignee(null);
-		checkNoIssues(goodNewDefect, Mode.CREATE);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
 	}
 	
 	@Test
 	public void testBadAssignee() {
 		goodNewDefect.setAssignee(invalidUser);
-		checkFieldIssue(goodNewDefect, Mode.CREATE, "assignee");
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "assignee");
 	}
 
 }

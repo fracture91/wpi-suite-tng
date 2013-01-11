@@ -41,7 +41,7 @@ public class DefectManager implements EntityManager<Defect> {
 		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
 		newDefect.setId(Count() + 1);
 		
-		List<ValidationIssue> issues = validator.validate(newDefect, Mode.CREATE);
+		List<ValidationIssue> issues = validator.validate(s, newDefect, Mode.CREATE);
 		if(issues.size() > 0) {
 			// TODO: pass errors to client through exception
 			throw new BadRequestException();

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -30,6 +31,7 @@ public class DefectValidator {
 	 * @param data The Data implementation to use
 	 */
 	public DefectValidator(Data data) {
+		//TODO: "strict" mode for returning *all* issues, rather than ignoring and overwriting?
 		this.data = data;
 	}
 	
@@ -69,11 +71,12 @@ public class DefectValidator {
 	 * Validate the given model such that any nested models point to appropriate existing models
 	 * from the Data given in the constructor.
 	 * 
+	 * @param session The session to validate against
 	 * @param defect The defect model to validate
 	 * @param mode The mode to validate for
 	 * @return A list of ValidationIssues (possibly empty)
 	 */
-	public List<ValidationIssue> validate(Defect defect, Mode mode) {
+	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
 		
 		// new defects should always have new status
@@ -97,7 +100,11 @@ public class DefectValidator {
 		} else {
 			User creator = getExistingUser(defect.getCreator().getUsername(), issues, "creator");
 			if(creator != null) {
-				defect.setCreator(creator);
+				if(!creator.getUsername().equals(session.getUsername())) {
+					issues.add(new ValidationIssue("Must match currently logged in user", "creator"));
+				} else {
+					defect.setCreator(creator);
+				}
 			}
 		}
 		
