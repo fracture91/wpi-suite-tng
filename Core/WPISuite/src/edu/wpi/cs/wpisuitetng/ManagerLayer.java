@@ -305,5 +305,10 @@ public class ManagerLayer {
 		
         return map.get(args[0]+args[1]).advancedPut(s,args,content);
 	}
+
+	public char[] advancedPost(String[] path, String readLine, Cookie[] cookies) throws WPISuiteException
+	{
+		
+	}
 	
 }
