@@ -135,5 +135,31 @@ public class DefectValidatorTest {
 		goodNewDefect.setAssignee(invalidUser);
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "assignee");
 	}
+	
+	@Test
+	public void testNoTitle() {
+		goodNewDefect.setTitle(null);
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
+	}
+	
+	@Test
+	public void testShortTitle() {
+		goodNewDefect.setTitle("abcd");
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
+	}
+	
+	public String makeLongString(int size) {
+		StringBuilder str = new StringBuilder(size);
+		for(int i = 0; i < size; i++) {
+			str.append('a');
+		}
+		return str.toString();
+	}
+	
+	@Test
+	public void testLongTitle() {
+		goodNewDefect.setTitle(makeLongString(151));
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
+	}
 
 }
