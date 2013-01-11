@@ -51,16 +51,16 @@ public class DefectValidator {
 	 * Return the User with the given username if they already exist in the database.
 	 * 
 	 * @param username the username of the User
-	 * @param errors list of errors to add to if user doesn't exist
+	 * @param issues list of errors to add to if user doesn't exist
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The User with the given username, or null if they don't exist
 	 */
-	private User getExistingUser(String username, List<ValidationIssue> errors, String fieldName) {
+	private User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) {
 		final List<Model> existingUsers = data.retrieve(User.class, "username", username);
 		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
 			return (User) existingUsers.get(0);
 		} else {
-			errors.add(new ValidationIssue("User doesn't exist", fieldName));
+			issues.add(new ValidationIssue("User doesn't exist", fieldName));
 			return null;
 		}
 	}
@@ -87,14 +87,18 @@ public class DefectValidator {
 		if(defect.getDescription() == null) {
 			// empty descriptions are okay
 			defect.setDescription("");
-		}else if(defect.getDescription().length() > 5000) {
+		} else if(defect.getDescription().length() > 5000) {
 			issues.add(new ValidationIssue("Cannot be greater than 5000 characters", "description"));
 		}
 		
 		// make sure the creator and assignee exist and aren't duplicated
-		User creator = getExistingUser(defect.getCreator().getUsername(), issues, "creator");
-		if(creator != null) {
-			defect.setCreator(creator);
+		if(defect.getCreator() == null) {
+			issues.add(new ValidationIssue("Required", "creator"));
+		} else {
+			User creator = getExistingUser(defect.getCreator().getUsername(), issues, "creator");
+			if(creator != null) {
+				defect.setCreator(creator);
+			}
 		}
 		
 		if(defect.getAssignee() != null) { // defects can be missing an assignee

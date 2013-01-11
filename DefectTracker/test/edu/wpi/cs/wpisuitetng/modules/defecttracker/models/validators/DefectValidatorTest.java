@@ -28,6 +28,7 @@ public class DefectValidatorTest {
 	Defect goodUpdatedDefect;
 	User bob;
 	User bobCopy;
+	User invalidUser;
 	Tag tag;
 	Tag tagCopy;
 	List<DefectEvent> ignoredEvents;
@@ -36,6 +37,8 @@ public class DefectValidatorTest {
 	
 	@Before
 	public void setUp() {
+		invalidUser = new User("idontexist", "blah", "1234", 99);
+		
 		tag = new Tag("tag");
 		bob = new User("bob", "bob", "1234", 1);
 		existingDefect = new Defect(1, "An existing defect", "", bob);
@@ -68,10 +71,14 @@ public class DefectValidatorTest {
 		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
 	}
 	
+	public void checkNoIssues(Defect defect, Mode mode) {
+		List<ValidationIssue> issues = validator.validate(defect, mode);
+		assertEquals(0, issues.size());
+	}
+	
 	@Test
 	public void testGoodNewDefect() {
-		List<ValidationIssue> issues = validator.validate(goodNewDefect, Mode.CREATE);
-		assertEquals(issues.size(), 0);
+		checkNoIssues(goodNewDefect, Mode.CREATE);
 		assertSame(bob, goodNewDefect.getAssignee());
 		assertSame(bob, goodNewDefect.getCreator());
 		for(Tag t : goodNewDefect.getTags()) {
@@ -82,6 +89,37 @@ public class DefectValidatorTest {
 		assertNotSame(ignoredEvents, goodNewDefect.getEvents());
 		assertNotNull(goodNewDefect.getCreationDate());
 		assertNotNull(goodNewDefect.getLastModifiedDate());
+	}
+	
+	public List<ValidationIssue> checkFieldIssue(Defect defect, Mode mode, String fieldName) {
+		List<ValidationIssue> issues = validator.validate(defect, mode);
+		assertEquals(1, issues.size());
+		assertEquals(fieldName, issues.get(0).getFieldName());
+		return issues;
+	}
+	
+	@Test
+	public void testNoCreator() {
+		goodNewDefect.setCreator(null);
+		checkFieldIssue(goodNewDefect, Mode.CREATE, "creator");
+	}
+	
+	@Test
+	public void testBadCreator() {
+		goodNewDefect.setCreator(invalidUser);
+		checkFieldIssue(goodNewDefect, Mode.CREATE, "creator");
+	}
+	
+	@Test
+	public void testNoAssignee() {
+		goodNewDefect.setAssignee(null);
+		checkNoIssues(goodNewDefect, Mode.CREATE);
+	}
+	
+	@Test
+	public void testBadAssignee() {
+		goodNewDefect.setAssignee(invalidUser);
+		checkFieldIssue(goodNewDefect, Mode.CREATE, "assignee");
 	}
 
 }
