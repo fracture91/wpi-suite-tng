@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SpringLayout;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
+
 /**
  * Panel to hold the three portions of the defect search interface. The
  * list of saved filters is displayed in {@link FilterListPanel}, the filter
@@ -24,11 +26,17 @@ public class SearchPanel extends JPanel {
 
 	/** The layout manager for this panel */
 	protected SpringLayout layout;
+	
+	/** The main tab controller */
+	protected MainTabController tabController;
 
 	/**
 	 * Constructs the search panel and sets up the layout for the sub-panels
+	 * @param tabController The main tab controller
 	 */
-	public SearchPanel() {
+	public SearchPanel(MainTabController tabController) {
+		this.tabController = tabController;
+		
 		// Set the layout manager of this panel
 		this.layout = new SpringLayout();
 		this.setLayout(layout);
@@ -38,7 +46,7 @@ public class SearchPanel extends JPanel {
 		JScrollPane builderScrollPane = new JScrollPane(builderPanel);
 		this.filtersPanel = new FilterListPanel();
 		JScrollPane filtersScrollPane = new JScrollPane(filtersPanel);
-		this.resultsPanel = new ResultsPanel();
+		this.resultsPanel = new ResultsPanel(tabController);
 
 		// Constrain the filtersPanel
 		layout.putConstraint(SpringLayout.NORTH, filtersScrollPane, 0, SpringLayout.NORTH, this);
@@ -62,5 +70,9 @@ public class SearchPanel extends JPanel {
 		this.add(filtersScrollPane);
 		this.add(builderScrollPane);
 		this.add(resultsPanel);
+	}
+	
+	public ResultsPanel getResultsPanel() {
+		return resultsPanel;
 	}
 }

@@ -42,10 +42,17 @@ public class CreateDefectRequestObserver implements Observer {
 			// print the body
 			System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 			
+			// parse the defect from the body
 			Gson parser = new Gson();
 			Defect defect = parser.fromJson(response.getBody(), Defect.class);
-			((DefectPanel) view.getDefectPanel()).updateModel(defect);
 			
+			// make sure the defect isn't null
+			if (defect != null) {
+				((DefectPanel) view.getDefectPanel()).updateModel(defect);
+			}
+			else {
+				// TODO notify user of server error
+			}			
 		}
 		// Otherwise...
 		else {

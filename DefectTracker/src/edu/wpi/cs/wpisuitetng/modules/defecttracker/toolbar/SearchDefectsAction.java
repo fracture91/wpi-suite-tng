@@ -35,7 +35,7 @@ public class SearchDefectsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		SearchDefectsView searchDefectsView = new SearchDefectsView();
+		SearchDefectsView searchDefectsView = new SearchDefectsView(controller);
 		controller.addTab("Search Defects", new ImageIcon(), searchDefectsView, "Search for defects");
 	}
 
