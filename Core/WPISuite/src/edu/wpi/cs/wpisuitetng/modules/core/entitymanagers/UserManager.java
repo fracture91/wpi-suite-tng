@@ -207,4 +207,10 @@ public class UserManager implements EntityManager<User> {
 		return toUpdate;
 	}
 
+	@Override
+	public User update(Session s, String content) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
