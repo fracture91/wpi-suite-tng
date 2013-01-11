@@ -26,13 +26,13 @@ public class Request extends Observable {
 	}
 
 	// TODO add RequestStatus to replace running with?
-	private boolean running = false;
+	protected boolean running = false;
 
-	private String requestBody;
-	private Map<String, List<String>> requestHeaders;
-	private URL requestURL;
-	private RequestMethod requestMethod;
-	private Response response;
+	protected String requestBody;
+	protected Map<String, List<String>> requestHeaders;
+	protected URL requestURL;
+	protected RequestMethod requestMethod;
+	protected Response response;
 
 	/**
 	 * Constructor.
