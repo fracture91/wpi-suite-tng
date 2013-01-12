@@ -11,6 +11,8 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.Before;
 
+import com.google.gson.Gson;
+
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -172,6 +174,39 @@ public class DefectValidatorTest {
 	public void testLongDescription() {
 		goodNewDefect.setDescription(makeLongString(5001));
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "description");
+	}
+	
+	@Test
+	public void testNullTag() {
+		goodNewDefect.getTags().add(null);
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "tags");
+	}
+	
+	@Test
+	public void testTagSetNull() {
+		goodNewDefect.setTags(null);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
+		assertTrue(goodNewDefect.getTags() instanceof Set<?>);
+	}
+	
+	@Test
+	public void testNullTagName() {
+		goodNewDefect.getTags().add(new Tag(null));
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "tags");
+	}
+	
+	@Test
+	public void testEmptyTagName() {
+		goodNewDefect.getTags().add(new Tag(""));
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "tags");
+	}
+	
+	@Test
+	public void testTooManyTags() {
+		for(int i = 0; i < 100; i++) {
+			goodNewDefect.getTags().add(new Tag(Integer.toString(i)));
+		}
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "tags");
 	}
 
 }
