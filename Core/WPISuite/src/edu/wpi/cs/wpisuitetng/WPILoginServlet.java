@@ -59,7 +59,8 @@ public class WPILoginServlet extends HttpServlet {
 			// post back the Session Cookie.
 			Cookie userCookie = ses.toCookie();
 			response.addCookie(userCookie);
-			response.setStatus(HttpServletResponse.SC_OK);  // 200 - Successful
+			response.setStatus(HttpServletResponse.SC_OK);  //200 - Success
+			System.out.println("DEBUG: response set");
 		}
 		catch(AuthenticationException e) // Authentication Failed.
 		{

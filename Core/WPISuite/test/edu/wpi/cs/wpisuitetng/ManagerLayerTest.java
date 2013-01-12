@@ -225,9 +225,26 @@ public class ManagerLayerTest {
 	/**
 	 * Test method for {@link edu.wpi.cs.wpisuitetng.ManagerLayer#update(java.lang.String[], java.lang.String, javax.servlet.http.Cookie[])}.
 	 */
-	@Ignore
+	@Test
 	public void testUpdate() {
-		fail("Not yet implemented"); // TODO
+		String s = null;
+		//test case where asking for one users.
+		try {
+			s = testManagerLayer.update(testUserArgsFake,gson.toJson(uniqueFake,uniqueFake.getClass()) , testCookies);
+		} catch (WPISuiteException e) {
+			fail("Unexpected exception");
+		}
+		
+		assertEquals(s,gson.toJson(uniqueFake, uniqueFake.getClass()));
+	}
+	
+	/**
+	 * Test method for {@link edu.wpi.cs.wpisuitetng.ManagerLayer#update(java.lang.String[], java.lang.String, javax.servlet.http.Cookie[])}.
+	 * @throws WPISuiteException 
+	 */
+	@Test(expected = AuthenticationException.class)
+	public void testUpdateNoCookie() throws WPISuiteException {
+		testManagerLayer.update(testUserArgsFake,gson.toJson(fake,fake.getClass()) , null);
 	}
 
 	/**

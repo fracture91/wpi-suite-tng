@@ -224,14 +224,23 @@ public class ManagerLayer {
 	 */
 	public synchronized String update(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
-		String result = delete(args,cook);
-		
-		if(result == "null")
+		Session s = null;
+		if(cook != null)
 		{
-			result = create(args,content,cook);
+			for(Cookie c : cook)
+			{
+				if(c.getName().startsWith("WPISUITE-"))
+					s = sessions.getSession(c.getValue());
+			}
 		}
+		else
+		{
+			throw new AuthenticationException();
+		}
+		Model m;
+		m = (Model) map.get(args[0]+args[1]).update(s, content);
 		
-		return result;
+		return gson.toJson(m, m.getClass());
 	
 	}
 	

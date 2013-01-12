@@ -64,7 +64,7 @@ public class DataStore implements Data {
 			//ObjectContainer client = server.openClient();
 			theDB.store(aTNG);
 			System.out.println("Stored " + aTNG);
-			//client.close();
+			theDB.commit();
 		return true;
 	}
 	
@@ -119,7 +119,7 @@ public class DataStore implements Data {
 		});
 	
 		System.out.println(result);
-		//client.close();
+		theDB.commit();
 		return result;
 	}
 	
@@ -134,6 +134,7 @@ public class DataStore implements Data {
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		List<T> result = theDB.queryByExample(aSample.getClass());
 		System.out.println("retrievedAll: "+result);
+		theDB.commit();
 		return result;
 	}
 	
@@ -149,7 +150,7 @@ public class DataStore implements Data {
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
 	    T found = (T) result.next();
 	    theDB.delete(found);
-		//client.close();
+		theDB.commit();
 		//return "Deleted "+aTNG;
 		return found;
 		
@@ -165,6 +166,7 @@ public class DataStore implements Data {
 			System.out.println("Deleting: "+aTNG);
 			theDB.delete(aTNG);
 		}
+		theDB.commit();
 		return toBeDeleted;
 		
 	}
@@ -212,6 +214,7 @@ public class DataStore implements Data {
 				e.printStackTrace();
 			}
 			
+			theDB.commit();
 			
 			
 		}
