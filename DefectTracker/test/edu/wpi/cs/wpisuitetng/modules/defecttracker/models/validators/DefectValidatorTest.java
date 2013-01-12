@@ -161,5 +161,17 @@ public class DefectValidatorTest {
 		goodNewDefect.setTitle(makeLongString(151));
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
 	}
+	
+	@Test
+	public void testNoDescription() {
+		goodNewDefect.setDescription(null);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
+	}
+	
+	@Test
+	public void testLongDescription() {
+		goodNewDefect.setDescription(makeLongString(5001));
+		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "description");
+	}
 
 }
