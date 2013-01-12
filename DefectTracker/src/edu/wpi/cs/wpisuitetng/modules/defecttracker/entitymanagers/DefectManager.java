@@ -98,4 +98,10 @@ public class DefectManager implements EntityManager<Defect> {
 		return getAll(null).length;
 	}
 
+	@Override
+	public Defect update(Session s, String content) throws WPISuiteException {
+		// TODO: actually update 
+		return makeEntity(s, content);
+	}
+
 }
