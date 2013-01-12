@@ -182,6 +182,12 @@ public class ProjectManager implements EntityManager<Project>{
 		return toUpdate;
 	}
 
+	@Override
+	public Project update(Session s, String content) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 

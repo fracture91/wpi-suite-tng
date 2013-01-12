@@ -21,6 +21,11 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class MockUserManager extends UserManager {
 
 	@Override
+	public User update(Session s, String content) throws WPISuiteException {
+		return new User("asdf","asdf","asdf", 0);
+	}
+
+	@Override
 	public boolean deleteEntity(Session s1, String id) {
 		if(id.equalsIgnoreCase("fake"))
 			return true;
@@ -72,6 +77,8 @@ public class MockUserManager extends UserManager {
 		System.out.println("MockUserManager retval: " + u[0]);
 		return u;
 	}
+	
+	
 	
 	
 }

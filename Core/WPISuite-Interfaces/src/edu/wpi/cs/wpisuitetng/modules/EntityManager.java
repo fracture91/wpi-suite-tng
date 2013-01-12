@@ -55,6 +55,15 @@ public interface EntityManager<T extends Model>
 	
 	/* Update */
 	/**
+	 * 
+	 * @param s the session of the User executing this action
+	 * @param content - JSON representation of the model updates
+	 * @return the updated model
+	 * @throws WPISuiteException
+	 */
+	public T update(Session s, String content) throws WPISuiteException;
+	
+	/**
 	 * Saves the given model of class T to the database
 	 * @param model	the Model to update.
 	 */
