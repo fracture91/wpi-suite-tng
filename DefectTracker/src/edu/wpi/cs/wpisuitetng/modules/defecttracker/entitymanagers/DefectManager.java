@@ -1,9 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gson.Gson;
 
@@ -13,12 +10,10 @@ import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators.DefectValidator;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators.ValidationIssue;
 
 /**
  * Provides database interaction for Defect models.
@@ -27,6 +22,7 @@ public class DefectManager implements EntityManager<Defect> {
 
 	Data db;
 	Gson gson;
+	DefectValidator validator;
 	
 	/**
 	 * Create a DefectManager
@@ -35,23 +31,7 @@ public class DefectManager implements EntityManager<Defect> {
 	public DefectManager(Data data) {
 		db = data;
 		gson = new Gson();
-	}
-
-	/**
-	 * Return the User with the given username if they already exist in the database.
-	 * If they don't exist, throw an IllegalArgumentException.
-	 * 
-	 * @param username the username of the User
-	 * @return The User with the given username
-	 * @throws BadRequestException if the user doesn't exist
-	 */
-	private User getExistingUser(String username) throws IllegalArgumentException, BadRequestException {
-		final List<Model> existingUsers = db.retrieve(User.class, "username", username);
-		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
-			return (User) existingUsers.get(0);
-		} else {
-			throw new BadRequestException();
-		}
+		validator = new DefectValidator(db);
 	}
 
 	@Override
@@ -61,49 +41,11 @@ public class DefectManager implements EntityManager<Defect> {
 		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
 		newDefect.setId(Count() + 1);
 		
-		// new defects should always have new status
-		newDefect.setStatus(DefectStatus.NEW);
-		
-		// make sure title and description size are within constraints
-		if(newDefect.getTitle() == null || newDefect.getTitle().length() > 150
-				|| newDefect.getTitle().length() <= 5) {
+		List<ValidationIssue> issues = validator.validate(s, newDefect, Mode.CREATE);
+		if(issues.size() > 0) {
+			// TODO: pass errors to client through exception
 			throw new BadRequestException();
 		}
-		if(newDefect.getDescription() == null) {
-			// empty descriptions are okay
-			newDefect.setDescription("");
-		}else if(newDefect.getDescription().length() > 5000) {
-			throw new BadRequestException();
-		}
-		
-		// make sure the creator and assignee exist and aren't duplicated
-		newDefect.setCreator(getExistingUser(newDefect.getCreator().getUsername()));
-		if(newDefect.getAssignee() != null) { // defects can be missing an assignee
-			newDefect.setAssignee(getExistingUser(newDefect.getAssignee().getUsername()));
-		}
-		
-		// make sure we don't insert duplicate tags
-		final Set<Tag> tags = newDefect.getTags();
-		final List<Tag> existingTags = db.retrieveAll(new Tag("blah"));
-		for(Tag tag : tags) {
-			int existingIndex = existingTags.indexOf(tag);
-			if(existingIndex != -1) {
-				tags.remove(tag);
-				tags.add(existingTags.get(existingIndex));
-			} else if(tag.getName() == null || tag.getName().length() < 1) {
-				// tags with empty names aren't allowed
-				// TODO: this validation should probably happen in Tag's EntityManager
-				throw new BadRequestException();
-			}
-		}
-		
-		// make sure we're not being spoofed with some weird date
-		final Date creationDate = new Date();
-		newDefect.setCreationDate(creationDate);
-		newDefect.setLastModifiedDate((Date)creationDate.clone());
-		
-		// new defects should never have any events
-		newDefect.setEvents(new ArrayList<DefectEvent>());
 
 		if(!db.save(newDefect)) {
 			throw new WPISuiteException();
