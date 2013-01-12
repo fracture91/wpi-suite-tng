@@ -11,8 +11,6 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.Before;
 
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -207,6 +205,24 @@ public class DefectValidatorTest {
 			goodNewDefect.getTags().add(new Tag(Integer.toString(i)));
 		}
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "tags");
+	}
+	
+	@Test
+	public void testNewTag() {
+		Tag newTag = new Tag("imvalid");
+		goodNewDefect.getTags().add(newTag);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
+		assertTrue(goodNewDefect.getTags().contains(newTag));
+	}
+	
+	@Test
+	public void testBadDates() {
+		Date badDate = new Date(0);
+		goodNewDefect.setCreationDate(badDate);
+		goodNewDefect.setLastModifiedDate(badDate);
+		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
+		assertNotSame(badDate, goodNewDefect.getCreationDate());
+		assertNotSame(badDate, goodNewDefect.getLastModifiedDate());
 	}
 
 }
