@@ -99,4 +99,24 @@ public interface EntityManager<T extends Model>
 	 * @param content The content body of the request
 	 */
 	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException;
+
+	/*Advanced Post*/
+	/**
+	 * 
+	 * **********************
+	 * A note about advanced post.  the content body should not contain any line breaks.
+	 * only the first line will be passed through to the function.
+	 * **********************
+	 * This method is similar to the Advanced Put method, except that where ADvanced Put recieves the entire path
+	 * as a String array, Advanced Post only receives the third path argument, for example API/advanced/module/model/argument
+	 * The reasoning behind this was to allow module developers who required more methods a way to multiplex this 
+	 * one call into multiple different functions.  By using the argument as a key in a switch statement or if else block, 
+	 * they can process the content payload through an unlimited number of functions.
+	 * 
+	 * @param s - The session that requested this action
+	 * @param string - A path identifier [/module/model/identifier]
+	 * @param content - The String payload of the request
+	 * @return - a String to be sent back as the body of the request
+	 */
+	public char[] advancedPost(Session s, String string, String content) throws WPISuiteException;
 }
