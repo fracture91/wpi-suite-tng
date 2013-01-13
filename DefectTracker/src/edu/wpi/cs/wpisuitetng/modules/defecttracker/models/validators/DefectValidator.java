@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 public class DefectValidator {
 	
 	private Data data;
+	private Defect lastExistingDefect;
 	
 	/**
 	 * Create a DefectValidator
@@ -93,6 +94,7 @@ public class DefectValidator {
 				oldDefect = (Defect) oldDefects.get(0);
 			}
 		}
+		lastExistingDefect = oldDefect;
 		
 		if(mode == Mode.CREATE) {
 			// new defects should always have new status
@@ -187,6 +189,13 @@ public class DefectValidator {
 		}
 		
 		return issues;
+	}
+
+	/**
+	 * @return The last existing defect the validator fetched if in edit mode
+	 */
+	public Defect getLastExistingDefect() {
+		return lastExistingDefect;
 	}
 	
 }

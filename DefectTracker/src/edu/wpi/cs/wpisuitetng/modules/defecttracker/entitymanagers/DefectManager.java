@@ -23,6 +23,7 @@ public class DefectManager implements EntityManager<Defect> {
 	Data db;
 	Gson gson;
 	DefectValidator validator;
+	ModelMapper updateMapper;
 	
 	/**
 	 * Create a DefectManager
@@ -32,6 +33,7 @@ public class DefectManager implements EntityManager<Defect> {
 		db = data;
 		gson = new Gson();
 		validator = new DefectValidator(db);
+		updateMapper = new ModelMapper();
 	}
 
 	@Override
@@ -108,13 +110,19 @@ public class DefectManager implements EntityManager<Defect> {
 			throw new BadRequestException();
 		}
 
-		// TODO: copy fields from updated to existing
+		/*
+		 * Because of the disconnected objects problem in db4o, we can't just save updatedDefect.
+		 * We have to get the original defect from db4o, copy properties from updatedDefect,
+		 * then save the original defect again.
+		 */
+		Defect existingDefect = validator.getLastExistingDefect();
+		updateMapper.map(updatedDefect, existingDefect);
 		
-		if(!db.save(updatedDefect)) {
+		if(!db.save(existingDefect)) {
 			throw new WPISuiteException();
 		}
 		
-		return updatedDefect;
+		return existingDefect;
 	}
 
 }
