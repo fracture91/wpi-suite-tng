@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.janeway.network;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
