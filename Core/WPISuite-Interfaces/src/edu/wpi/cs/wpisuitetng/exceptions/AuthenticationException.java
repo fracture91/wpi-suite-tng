@@ -12,6 +12,8 @@
 
 package edu.wpi.cs.wpisuitetng.exceptions;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  *  Thrown for Authentication errors in the Login system
  * @author twack
@@ -19,8 +21,7 @@ package edu.wpi.cs.wpisuitetng.exceptions;
  */
 public class AuthenticationException extends WPISuiteException {
 
-	
-	/**
+	/**`
 	 * 
 	 */
 	private static final long serialVersionUID = 3607525121952037935L;
@@ -29,5 +30,12 @@ public class AuthenticationException extends WPISuiteException {
 	{
 		super(message);
 	}
+
+	@Override
+	public int getStatus() {
+		return HttpServletResponse.SC_FORBIDDEN; // 403
+	}
+	
+	
 
 }

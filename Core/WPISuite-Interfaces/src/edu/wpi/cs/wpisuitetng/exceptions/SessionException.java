@@ -24,4 +24,11 @@ public class SessionException extends WPISuiteException {
 	 */
 	private static final long serialVersionUID = -522664020374920802L;
 
+	@Override
+	public int getStatus() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
 }
