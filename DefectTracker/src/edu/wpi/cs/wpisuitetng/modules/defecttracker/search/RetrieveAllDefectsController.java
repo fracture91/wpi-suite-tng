@@ -62,18 +62,24 @@ public class RetrieveAllDefectsController {
 			this.data = defects;
 			
 			// set the column names
-			String[] columnNames = {"ID", "Title", "Description", "Creator", "Created", "Last Modified"};
+			String[] columnNames = {"ID", "Title", "Description", "Creator", "Assignee", "Created", "Last Modified"};
 			view.getSearchPanel().getResultsPanel().getModel().setColumnNames(columnNames);
 			
 			// put the data in the table
-			Object[][] entries = new Object[defects.length][6];
+			Object[][] entries = new Object[defects.length][columnNames.length];
 			for (int i = 0; i < defects.length; i++) {
 				entries[i][0] = String.valueOf(defects[i].getId());
 				entries[i][1] = defects[i].getTitle();
 				entries[i][2] = defects[i].getDescription();
 				entries[i][3] = defects[i].getCreator().getName();
-				entries[i][4] = defects[i].getCreationDate();
-				entries[i][5] = defects[i].getLastModifiedDate();
+				if (defects[i].getAssignee() != null) {
+					entries[i][4] = defects[i].getAssignee().getName();
+				}
+				else {
+					entries[i][4] = "";
+				}
+				entries[i][5] = defects[i].getCreationDate();
+				entries[i][6] = defects[i].getLastModifiedDate();
 			}
 			view.getSearchPanel().getResultsPanel().getModel().setData(entries);
 			view.getSearchPanel().getResultsPanel().getModel().fireTableStructureChanged();
