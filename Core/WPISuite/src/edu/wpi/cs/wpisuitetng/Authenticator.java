@@ -26,6 +26,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public abstract class Authenticator {
 	
 	private String authType;
+	private PasswordCryptographer passwordHash;
 	
 	/**
 	 * Default constructor with a type definition parameter
@@ -34,6 +35,7 @@ public abstract class Authenticator {
 	public Authenticator(String type)
 	{
 		this.authType = type;  
+		this.passwordHash = new Sha256Password();
 	}
 	
 	public String getAuthType()
@@ -78,7 +80,10 @@ public abstract class Authenticator {
 		
 		// check password
 		System.out.println("DEBUG: Authenticate Password");
-		if(!user.matchPassword(credentials[1]))
+		
+		// password security
+		String hashedPassword = credentials[1]; // this.passwordHash.generateHash(credentials[1]);
+		if(!user.matchPassword(hashedPassword))
 		{
 			throw new AuthenticationException();
 		}

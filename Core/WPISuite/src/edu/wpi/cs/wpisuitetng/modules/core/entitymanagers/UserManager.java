@@ -13,6 +13,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.PasswordCryptographer;
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.Sha256Password;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
@@ -39,18 +42,25 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
+	private PasswordCryptographer passwordHash;
 	Gson gson;
 	Data data;
 
+	/**
+	 * Main constructor for UserManager. Determines the algorithm used to secure passwords.
+	 * @param data
+	 */
 	public UserManager(Data data)
 	{
 		this.data = data;
+		this.passwordHash = new Sha256Password();
 		gson = new Gson();
 	}
 	
 	@Override
 	public User makeEntity(Session s, String content) throws WPISuiteException{
 		
+		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
 			p = gson.fromJson(content, user);
