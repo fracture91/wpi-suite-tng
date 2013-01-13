@@ -198,9 +198,6 @@ public class Request extends Observable implements IRequest {
 
 		// set the Response to this Request
 		this.response = response;
-
-		// set the Request as changed
-		this.setChanged();
 	}
 
 	/**
