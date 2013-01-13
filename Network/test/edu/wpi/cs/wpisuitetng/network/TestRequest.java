@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import org.junit.*;
 
 
@@ -15,7 +13,7 @@ import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 public class TestRequest {
-	class MockObserver implements Observer {
+	class MockObserver implements RequestObserver {
 		
 		private boolean updateCalled;
 		private Response response;
@@ -27,18 +25,16 @@ public class TestRequest {
 			
 		}
 
-		/**
-		 * @see java.util.Observable#update
-		 */
 		@Override
-		public void update(Observable observable, Object arg) {
+		public void done(Observable o) {
+			// TODO Auto-generated method stub
 			synchronized (this) {
 	            notifyAll(  );
 	        }
 			// If observable is a Request...
-			if (Request.class.getName().equals(observable.getClass().getName())) {
+			if (Request.class.getName().equals(o.getClass().getName())) {
 				// cast observable to a Request
-				Request request = (Request) observable;
+				Request request = (Request) o;
 
 				// get the response from the request
 				response = request.getResponse();
@@ -49,6 +45,19 @@ public class TestRequest {
 			else {
 				System.out.println("Observable is not a Request.");
 			}
+			
+		}
+
+		@Override
+		public void error(Observable o) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void fail(Observable o) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	
