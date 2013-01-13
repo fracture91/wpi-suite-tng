@@ -21,6 +21,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DatabaseException extends WPISuiteException {
 	
+	public DatabaseException(String message) {
+		super(message);
+	}
+
 	@Override
 	public int getStatus() {
 		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500

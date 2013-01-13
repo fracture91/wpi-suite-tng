@@ -21,6 +21,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ConflictException extends WPISuiteException {
 
+	public ConflictException(String message) {
+		super(message);
+	}
+
 	@Override
 	public int getStatus() {
 		return HttpServletResponse.SC_CONFLICT; //409

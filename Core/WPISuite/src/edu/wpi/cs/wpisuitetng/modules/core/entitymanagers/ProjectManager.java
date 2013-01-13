@@ -50,7 +50,7 @@ public class ProjectManager implements EntityManager<Project>{
 		try{
 			p = gson.fromJson(content, project);
 		} catch(JsonSyntaxException e){
-			throw new BadRequestException();
+			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
@@ -59,7 +59,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			throw new ConflictException();
+			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
 		return p;
@@ -93,7 +93,7 @@ public class ProjectManager implements EntityManager<Project>{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			throw new NotFoundException();
+			throw new NotFoundException("No (blank) Project id given.");
 		}
 		else
 		{
@@ -101,7 +101,7 @@ public class ProjectManager implements EntityManager<Project>{
 			
 			if(m[0] == null)
 			{
-				throw new NotFoundException();
+				throw new NotFoundException("Project with id <" + id + "> not found.");
 			}
 			else
 			{
@@ -125,7 +125,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			throw new DatabaseException();
+			throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
 		}
 		
 	}
@@ -173,7 +173,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		catch(Exception e)
 		{
-			throw new DatabaseException(); // on Mapping failure
+			throw new DatabaseException("Failure in the ProjectManager.update() changeset mapper."); // on Mapping failure
 		}
 		
 		// save the changes back

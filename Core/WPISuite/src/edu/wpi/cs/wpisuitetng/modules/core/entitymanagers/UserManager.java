@@ -56,7 +56,7 @@ public class UserManager implements EntityManager<User> {
 		try{
 			p = gson.fromJson(content, user);
 		} catch(JsonSyntaxException e){
-			throw new BadRequestException();
+			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
 		
 		if(getEntity(s,p.getUsername())[0] == null)
@@ -65,7 +65,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			throw new ConflictException();
+			throw new ConflictException("A user with the given ID already exists. Entity String: " + content);
 		}
 		
 		return p;
@@ -99,7 +99,7 @@ public class UserManager implements EntityManager<User> {
 		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			throw new NotFoundException();
+			throw new NotFoundException("No User id given.");
 		}
 		else
 		{
@@ -107,7 +107,7 @@ public class UserManager implements EntityManager<User> {
 			
 			if(m[0] == null)
 			{
-				throw new NotFoundException();
+				throw new NotFoundException("User with id <" + id + "> not found.");
 			}
 			else
 			{
@@ -131,7 +131,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			throw new DatabaseException();
+			throw new DatabaseException("Save failure for User."); // Session User: " + s.getUsername() + " User: " + model.getName());
 		}
 		
 	}
@@ -198,7 +198,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		catch(Exception e)
 		{
-			throw new DatabaseException(); // on Mapping failure
+			throw new DatabaseException("Failure in the UserManager.update() changeset mapper."); // on Mapping failure
 		}
 		
 		// save the changes back
