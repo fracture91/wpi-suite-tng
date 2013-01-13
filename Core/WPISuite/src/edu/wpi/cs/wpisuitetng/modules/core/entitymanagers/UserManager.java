@@ -23,6 +23,7 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.DatabaseException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -130,7 +131,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
-			throw new WPISuiteException();
+			throw new DatabaseException();
 		}
 		
 	}
@@ -197,7 +198,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		catch(Exception e)
 		{
-			throw new WPISuiteException(); // on Mapping failure
+			throw new DatabaseException(); // on Mapping failure
 		}
 		
 		// save the changes back
