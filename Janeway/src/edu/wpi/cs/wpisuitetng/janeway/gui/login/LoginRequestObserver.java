@@ -1,6 +1,6 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
-import edu.wpi.cs.wpisuitetng.network.Observable;
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
@@ -14,7 +14,7 @@ public class LoginRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void done(Observable observable) {
+	public void responseReceived(IRequest observable) {
 		// If observable is a Request...
 		if (observable instanceof Request) {
 			// cast observable to a Request
@@ -35,17 +35,22 @@ public class LoginRequestObserver implements RequestObserver {
 		else {
 			System.out.println("Observable is not a Request.");
 		}
-
 	}
 
 	@Override
-	public void error(Observable o) {
+	public void responseError(IRequest o) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void fail(Observable o) {
+	public void requestFail(IRequest o) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void before(IRequest o) {
 		// TODO Auto-generated method stub
 
 	}

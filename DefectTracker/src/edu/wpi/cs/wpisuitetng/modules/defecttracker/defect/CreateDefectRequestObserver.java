@@ -3,7 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.network.Observable;
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
@@ -25,7 +25,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void done(Observable observable) {
+	public void responseReceived(IRequest observable) {
 		// If observable is a Request...
 		if (Request.class.getName().equals(observable.getClass().getName())) {
 			// cast observable to a Request
@@ -57,13 +57,19 @@ public class CreateDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void error(Observable o) {
+	public void responseError(IRequest o) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void fail(Observable o) {
+	public void requestFail(IRequest o) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void before(IRequest o) {
 		// TODO Auto-generated method stub
 
 	}

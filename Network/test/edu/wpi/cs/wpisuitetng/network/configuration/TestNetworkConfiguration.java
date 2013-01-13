@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.Iterator;
 import org.junit.*;
 
+import edu.wpi.cs.wpisuitetng.network.IRequest;
+import edu.wpi.cs.wpisuitetng.network.Observable;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 
 public class TestNetworkConfiguration {
@@ -13,19 +15,25 @@ public class TestNetworkConfiguration {
 		public MockObserver() {}
 
 		@Override
-		public void done(edu.wpi.cs.wpisuitetng.network.Observable o) {
+		public void responseReceived(IRequest o) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void error(edu.wpi.cs.wpisuitetng.network.Observable o) {
+		public void responseError(IRequest o) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void fail(edu.wpi.cs.wpisuitetng.network.Observable o) {
+		public void requestFail(IRequest o) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void before(IRequest o) {
 			// TODO Auto-generated method stub
 			
 		}

@@ -15,7 +15,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
  * 
  * TODO add setRequestData (for url data, etc)
  */
-public class Request extends Observable {
+public class Request extends Observable implements IRequest {
 	/**
 	 * Represents an HTTP request method.
 	 */

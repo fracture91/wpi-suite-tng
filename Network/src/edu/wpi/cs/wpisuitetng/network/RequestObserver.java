@@ -5,23 +5,28 @@ package edu.wpi.cs.wpisuitetng.network;
  */
 public interface RequestObserver {
 	/**
-	 * Called on successful completion of a request (error code 200).
+	 * Called when a response is received.
 	 * 
 	 * @param o
 	 */
-	public void done(Observable o);
+	public void responseReceived(IRequest o);
 	
 	/**
-	 * Called on unsuccessful completion of a request (based on error code).
+	 * Called on when a response is received with a 400 or 500 error.
 	 * 
 	 * @param o
 	 */
-	public void error(Observable o);
+	public void responseError(IRequest o);
 	
 	/**
 	 * Called if an attempt to make a request fails.
 	 * 
 	 * @param o
 	 */
-	public void fail(Observable o);
+	public void requestFail(IRequest o);
+	
+	/**
+	 * Called before a request attempt is made.
+	 */
+	public void before(IRequest o);
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class exists only to be extended by Request.
+ */
 public abstract class Observable {
 	private List<RequestObserver> observers;
 	private boolean changed;
@@ -57,33 +60,44 @@ public abstract class Observable {
 	/**
 	 * Notifies RequestObservers of request completion.
 	 */
-	public void notifyObserversDone() {
+	public void notifyObserversResponseReceived() {
 		Iterator<RequestObserver> observersI = observers.iterator();
 
 		while (observersI.hasNext()) {
-			observersI.next().done(this);
+			observersI.next().responseReceived((IRequest) this);
 		}
 	}
 
 	/**
-	 * Notifies RequestObservers of request error.
+	 * Notifies RequestObservers of response 400 or 500 error.
 	 */
-	public void notifyObserversError() {
+	public void notifyObserversResponseError() {
 		Iterator<RequestObserver> observersI = observers.iterator();
 
 		while (observersI.hasNext()) {
-			observersI.next().error(this);
+			observersI.next().responseError((IRequest) this);
 		}
 	}
 
 	/**
 	 * Notifies RequestObservers of request failure.
 	 */
-	public void notifyObserversFail() {
+	public void notifyObserversRequestFail() {
 		Iterator<RequestObserver> observersI = observers.iterator();
 
 		while (observersI.hasNext()) {
-			observersI.next().fail(this);
+			observersI.next().requestFail((IRequest) this);
+		}
+	}
+	
+	/**
+	 * Notifies RequestObservers of before request.
+	 */
+	public void notifyObserversBefore() {
+		Iterator<RequestObserver> observersI = observers.iterator();
+
+		while (observersI.hasNext()) {
+			observersI.next().before((IRequest) this);
 		}
 	}
 }

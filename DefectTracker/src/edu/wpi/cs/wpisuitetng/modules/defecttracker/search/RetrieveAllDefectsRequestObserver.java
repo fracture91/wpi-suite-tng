@@ -3,7 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.network.Observable;
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
@@ -15,7 +15,7 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 
 	/** The controller managing the request */
 	protected RetrieveAllDefectsController controller;
-	
+
 	/**
 	 * Construct the observer
 	 * @param controller
@@ -25,26 +25,26 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void done(Observable observable) {
+	public void responseReceived(IRequest observable) {
 		if (Request.class.getName().equals(observable.getClass().getName())) {
 			// cast observable to request
 			Request request = (Request) observable;
-			
+
 			// get the response from the request
 			Response response = request.getResponse();
-			
+
 			if (response.getResponseCode() == 200) {
 				// parse the response				
 				Gson parser = new Gson();
 				Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
-				
+
 				// notify the controller
 				controller.receivedData(defects);
 			}
 			else {
-				
+
 			}
-			
+
 		}
 		else {
 			// an error occurred
@@ -53,14 +53,22 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void error(Observable o) {
+	public void responseError(IRequest o) {
+
 		// an error occurred
 		controller.errorReceivingData();
 	}
 
 	@Override
-	public void fail(Observable o) {
+	public void requestFail(IRequest o) {
+
 		// an error occurred
 		controller.errorReceivingData();
+	}
+
+	@Override
+	public void before(IRequest o) {
+		// TODO Auto-generated method stub
+
 	}
 }

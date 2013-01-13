@@ -82,7 +82,7 @@ public class RequestActor extends Thread {
 					// Note: this will be thrown if a read takes longer than 5 seconds
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					request.notifyObserversFail(); // TODO think about this
+					request.notifyObserversRequestFail(); // TODO think about this
 				}
 				finally {
 					if (reader != null) {
@@ -93,7 +93,7 @@ public class RequestActor extends Thread {
 			catch (IOException e) {
 				// do nothing, received a 400, or 500 status code
 				System.out.println("Received a 400 or 500 status code.");
-				request.notifyObserversError(); // TODO think about this
+				request.notifyObserversResponseError(); // TODO think about this
 			}
 			
 			// get the response headers
@@ -111,10 +111,12 @@ public class RequestActor extends Thread {
 			// set the Request's response to the newly created response
 			request.setResponse(response);
 			
-			request.notifyObserversDone();
+			request.notifyObserversResponseReceived();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
+			request.notifyObserversRequestFail(); // TODO think about this
 		} finally {
 			// close the connection
 			if (connection != null) {
