@@ -11,13 +11,12 @@ import edu.wpi.cs.wpisuitetng.network.Response;
  * TODO Make this example more thorough.
  */
 public class MyRequestObserver implements RequestObserver {
-
 	@Override
-	public void responseReceived(IRequest observable) {
+	public void success(IRequest iReq) {
 		// If observable is a Request...
-		if (Request.class.getName().equals(observable.getClass().getName())) {
+		if (Request.class.getName().equals(iReq.getClass().getName())) {
 			// cast observable to a Request
-			Request request = (Request) observable;
+			Request request = (Request) iReq;
 
 			// get the response from the request
 			Response response = request.getResponse();
@@ -32,19 +31,13 @@ public class MyRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void responseError(IRequest o) {
+	public void error(IRequest iReq) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void requestFail(IRequest o) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void before(IRequest o) {
+	public void fail(IRequest iReq, String errorMessage) {
 		// TODO Auto-generated method stub
 
 	}

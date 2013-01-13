@@ -5,28 +5,24 @@ package edu.wpi.cs.wpisuitetng.network;
  */
 public interface RequestObserver {
 	/**
-	 * Called when a response is received.
+	 * Called when a response is received with a success (2xx) status code.
 	 * 
-	 * @param o
+	 * @param iReq	An instance of a class that implements an iRequest.
 	 */
-	public void responseReceived(IRequest o);
+	public void success(IRequest iReq);
 	
 	/**
-	 * Called on when a response is received with a 400 or 500 error.
+	 * Called when a response is received with an client error (4xx) or server error (5xx) status code.
 	 * 
-	 * @param o
+	 * @param iReq	An instance of a class that implements an iRequest.
 	 */
-	public void responseError(IRequest o);
+	public void error(IRequest iReq);
 	
 	/**
 	 * Called if an attempt to make a request fails.
 	 * 
-	 * @param o
+	 * @param iReq	        An instance of a class that implements an iRequest.
+	 * @param errorMessage An error message.
 	 */
-	public void requestFail(IRequest o);
-	
-	/**
-	 * Called before a request attempt is made.
-	 */
-	public void before(IRequest o);
+	public void fail(IRequest iReq, String errorMessage);
 }

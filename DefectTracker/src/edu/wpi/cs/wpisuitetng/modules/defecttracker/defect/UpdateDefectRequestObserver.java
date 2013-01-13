@@ -22,47 +22,41 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void responseReceived(IRequest observable) {
+	public void success(IRequest iReq) {
 		// If observable is a Request...
-				if (Request.class.getName().equals(observable.getClass().getName())) {
-					// cast observable to a Request
-					Request request = (Request) observable;
+		if (Request.class.getName().equals(iReq.getClass().getName())) {
+			// cast observable to a Request
+			Request request = (Request) iReq;
 
-					// get the response from the request
-					Response response = request.getResponse();
+			// get the response from the request
+			Response response = request.getResponse();
 
-					// print the body
-					System.out.println("Received response: " + response.getBody()); //TODO change this to logger
+			// print the body
+			System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
-					// on success
-					if (response.getBody().equals("success")) {
-						((DefectPanel) view.getDefectPanel()).updateModel(((DefectPanel) view.getDefectPanel()).getEditedModel());
-					}
-					else {
-						// TODO
-					}
-				}
-				// Otherwise...
-				else {
-					System.out.println("Observable is not a Request."); // TODO change this to logger
-				}
+			// on success
+			if (response.getBody().equals("success")) {
+				((DefectPanel) view.getDefectPanel()).updateModel(((DefectPanel) view.getDefectPanel()).getEditedModel());
+			}
+			else {
+				// TODO
+			}
+		}
+		// Otherwise...
+		else {
+			System.out.println("Observable is not a Request."); // TODO change this to logger
+		}
 	}
 
 	@Override
-	public void responseError(IRequest o) {
+	public void error(IRequest iReq) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void requestFail(IRequest o) {
+	public void fail(IRequest iReq, String errorMessage) {
 		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void before(IRequest o) {
-		// TODO Auto-generated method stub
-		
 	}
 }

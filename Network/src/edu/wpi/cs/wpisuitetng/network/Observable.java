@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.network;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,46 +32,31 @@ public abstract class Observable {
 	}
 
 	/**
-	 * Notifies RequestObservers of request completion.
+	 * Notifies RequestObservers of a response with a status code indicating success (2xx).
 	 */
-	public void notifyObserversResponseReceived() {
-		Iterator<RequestObserver> observersI = observers.iterator();
-
-		while (observersI.hasNext()) {
-			observersI.next().responseReceived((IRequest) this);
+	public void notifyObserversSuccess() {
+		for (RequestObserver obs : observers) {
+			obs.success((IRequest) this);
 		}
 	}
 
 	/**
-	 * Notifies RequestObservers of response 400 or 500 error.
+	 * Notifies RequestObservers of response with a status code indicating a client error (4xx) for server error (5xx).
 	 */
-	public void notifyObserversResponseError() {
-		Iterator<RequestObserver> observersI = observers.iterator();
-
-		while (observersI.hasNext()) {
-			observersI.next().responseError((IRequest) this);
+	public void notifyObserversError() {
+		for (RequestObserver obs : observers) {
+			obs.error((IRequest) this);
 		}
 	}
 
 	/**
-	 * Notifies RequestObservers of request failure.
+	 * Notifies RequestObservers of a failure in sending a request.
+	 * 
+	 * @param errorMessage An error message.
 	 */
-	public void notifyObserversRequestFail() {
-		Iterator<RequestObserver> observersI = observers.iterator();
-
-		while (observersI.hasNext()) {
-			observersI.next().requestFail((IRequest) this);
-		}
-	}
-	
-	/**
-	 * Notifies RequestObservers of before request.
-	 */
-	public void notifyObserversBefore() {
-		Iterator<RequestObserver> observersI = observers.iterator();
-
-		while (observersI.hasNext()) {
-			observersI.next().before((IRequest) this);
+	public void notifyObserversFail(String errorMessage) {
+		for (RequestObserver obs : observers) {
+			obs.fail((IRequest) this, errorMessage);
 		}
 	}
 }

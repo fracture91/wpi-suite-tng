@@ -25,10 +25,10 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void responseReceived(IRequest observable) {
-		if (Request.class.getName().equals(observable.getClass().getName())) {
+	public void success(IRequest iReq) {
+		if (Request.class.getName().equals(iReq.getClass().getName())) {
 			// cast observable to a Request
-			Request request = (Request) observable;
+			Request request = (Request) iReq;
 
 			// get the response from the request
 			Response response = request.getResponse();
@@ -55,20 +55,12 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void responseError(IRequest o) {
-
+	public void error(IRequest iReq) {
 		controller.errorRetrievingDefect();
 	}
 
 	@Override
-	public void requestFail(IRequest o) {
-
+	public void fail(IRequest iReq, String errorMessage) {
 		controller.errorRetrievingDefect();
-	}
-
-	@Override
-	public void before(IRequest o) {
-		// TODO Auto-generated method stub
-
 	}
 }

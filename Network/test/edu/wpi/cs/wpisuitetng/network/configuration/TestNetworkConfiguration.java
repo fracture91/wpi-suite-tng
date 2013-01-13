@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.network.IRequest;
-import edu.wpi.cs.wpisuitetng.network.Observable;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 
 public class TestNetworkConfiguration {
@@ -15,25 +14,19 @@ public class TestNetworkConfiguration {
 		public MockObserver() {}
 
 		@Override
-		public void responseReceived(IRequest o) {
+		public void success(IRequest iReq) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void responseError(IRequest o) {
+		public void error(IRequest iReq) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void requestFail(IRequest o) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void before(IRequest o) {
+		public void fail(IRequest iReq, String errorMessage) {
 			// TODO Auto-generated method stub
 			
 		}

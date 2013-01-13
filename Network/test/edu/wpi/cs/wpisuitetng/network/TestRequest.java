@@ -22,19 +22,17 @@ public class TestRequest {
 			super();
 			updateCalled = false;
 			response = null;
-
 		}
 
 		@Override
-		public void responseReceived(IRequest o) {
-			// TODO Auto-generated method stub
+		public void success(IRequest iReq) {
 			synchronized (this) {
 				notifyAll(  );
 			}
 			// If observable is a Request...
-			if (Request.class.getName().equals(o.getClass().getName())) {
+			if (Request.class.getName().equals(iReq.getClass().getName())) {
 				// cast observable to a Request
-				Request request = (Request) o;
+				Request request = (Request) iReq;
 
 				// get the response from the request
 				response = request.getResponse();
@@ -48,19 +46,13 @@ public class TestRequest {
 		}
 
 		@Override
-		public void responseError(IRequest o) {
+		public void error(IRequest iReq) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void requestFail(IRequest o) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void before(IRequest o) {
+		public void fail(IRequest iReq, String errorMessage) {
 			// TODO Auto-generated method stub
 
 		}
