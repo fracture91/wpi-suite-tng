@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 public class DefectValidator {
 	
 	private Data data;
+	private Defect lastExistingDefect;
 	
 	/**
 	 * Create a DefectValidator
@@ -79,9 +80,28 @@ public class DefectValidator {
 	 */
 	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
+		if(defect == null) {
+			issues.add(new ValidationIssue("Defect cannot be null"));
+			return issues;
+		}
 		
-		// new defects should always have new status
-		defect.setStatus(DefectStatus.NEW);
+		Defect oldDefect = null;
+		if(mode == Mode.EDIT) {
+			List<Model> oldDefects = data.retrieve(Defect.class, "id", defect.getId());
+			if(oldDefects.size() < 1 || oldDefects.get(0) == null) {
+				issues.add(new ValidationIssue("Defect with id does not exist", "id"));
+			} else {
+				oldDefect = (Defect) oldDefects.get(0);
+			}
+		}
+		lastExistingDefect = oldDefect;
+		
+		if(mode == Mode.CREATE) {
+			// new defects should always have new status
+			defect.setStatus(DefectStatus.NEW);
+		} else if(defect.getStatus() == null) {
+			issues.add(new ValidationIssue("Cannot be null", "status"));
+		}
 		
 		// make sure title and description size are within constraints
 		if(defect.getTitle() == null || defect.getTitle().length() > 150
@@ -96,7 +116,11 @@ public class DefectValidator {
 		}
 		
 		// make sure the creator and assignee exist and aren't duplicated
-		if(defect.getCreator() == null) {
+		if(mode == Mode.EDIT) {
+			if(oldDefect != null) {
+				defect.setCreator(oldDefect.getCreator());
+			}
+		} else if(defect.getCreator() == null) {
 			issues.add(new ValidationIssue("Required", "creator"));
 		} else {
 			User creator = getExistingUser(defect.getCreator().getUsername(), issues, "creator");
@@ -149,14 +173,29 @@ public class DefectValidator {
 		}
 		
 		// make sure we're not being spoofed with some weird date
-		final Date creationDate = new Date();
-		defect.setCreationDate(creationDate);
-		defect.setLastModifiedDate((Date)creationDate.clone());
+		final Date now = new Date();
+		if(oldDefect != null) {
+			defect.setCreationDate(oldDefect.getCreationDate());
+		} else {
+			defect.setCreationDate(now);
+		}
+		defect.setLastModifiedDate((Date)now.clone());
 		
-		// new defects should never have any events
-		defect.setEvents(new ArrayList<DefectEvent>());
+		if(oldDefect != null) {
+			defect.setEvents(oldDefect.getEvents());
+		} else {
+			// new defects should never have any events
+			defect.setEvents(new ArrayList<DefectEvent>());
+		}
 		
 		return issues;
+	}
+
+	/**
+	 * @return The last existing defect the validator fetched if in edit mode
+	 */
+	public Defect getLastExistingDefect() {
+		return lastExistingDefect;
 	}
 	
 }
