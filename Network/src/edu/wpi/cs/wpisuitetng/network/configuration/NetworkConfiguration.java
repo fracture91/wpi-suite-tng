@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observer;
+
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 
 /**
  * Stores configuration information for connecting to the core server API.
@@ -13,7 +14,7 @@ import java.util.Observer;
 public class NetworkConfiguration {
 	protected String apiUrl;									/** The URL of the core server API */
 	protected Map<String, List<String>> defaultRequestHeaders;	/** The default request headers. */
-	protected List<Observer> observers;						/** The default observers. */
+	protected List<RequestObserver> observers;					/** The default observers. */
 	
 	/**
 	 * Constructs a NetworkConfiguration.
@@ -23,7 +24,7 @@ public class NetworkConfiguration {
 	public NetworkConfiguration(String apiUrl) {
 		this.apiUrl = apiUrl;
 		this.defaultRequestHeaders = new HashMap<String, List<String>>();
-		this.observers = new ArrayList<Observer>();
+		this.observers = new ArrayList<RequestObserver>();
 	}
 	
 	/**
@@ -48,7 +49,7 @@ public class NetworkConfiguration {
 		}
 		
 		// Copy observers from networkConfiguration
-		Iterator<Observer> observersI = networkConfiguration.observers.iterator();
+		Iterator<RequestObserver> observersI = networkConfiguration.observers.iterator();
 		while (observersI.hasNext()) {
 			this.addObserver(observersI.next());
 		}
@@ -61,7 +62,7 @@ public class NetworkConfiguration {
 	 * 
 	 * @throws NullPointerException		If the observer is null.
 	 */
-	public void addObserver(Observer observer) throws NullPointerException {
+	public void addObserver(RequestObserver observer) throws NullPointerException {
 		// check to see if the observer is null
 		if (observer == null) {
 			throw new NullPointerException("The observer must not be null.");
@@ -116,7 +117,7 @@ public class NetworkConfiguration {
 	/**
 	 * @return	A List of Observers.
 	 */
-	public List<Observer> getObservers() {
+	public List<RequestObserver> getObservers() {
 		return observers;
 	}
 	

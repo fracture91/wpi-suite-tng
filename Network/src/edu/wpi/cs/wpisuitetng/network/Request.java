@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
@@ -83,7 +81,7 @@ public class Request extends Observable {
 		}
 
 		// Copy observers from networkConfiguration
-		Iterator<Observer> observersI = networkConfiguration.getObservers().iterator();
+		Iterator<RequestObserver> observersI = networkConfiguration.getObservers().iterator();
 		while (observersI.hasNext()) {
 			this.addObserver(observersI.next());
 		}
@@ -203,9 +201,6 @@ public class Request extends Observable {
 
 		// set the Request as changed
 		this.setChanged();
-
-		// notify Observers
-		this.notifyObservers();
 	}
 
 	/**
