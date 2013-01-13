@@ -58,5 +58,11 @@ public interface Data
 	 * @return List of all of the objects of the class of aSample
 	 */
 	public <T> List<T> retrieveAll(T aSample);
+	
+	/**
+	 * Deletes all objects of the the same class as aSample in the database
+	 * @param aSample - Object whose class will be used 
+	 * @return List of all of the objects of the class of aSample
+	 */
 	public <T> List<T> deleteAll(T aSample);
 }

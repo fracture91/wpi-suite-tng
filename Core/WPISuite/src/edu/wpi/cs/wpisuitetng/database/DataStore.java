@@ -64,7 +64,7 @@ public class DataStore implements Data {
 			//ObjectContainer client = server.openClient();
 			theDB.store(aTNG);
 			System.out.println("Stored " + aTNG);
-			theDB.commit();
+			theDB.commit(); //Commits the save to the database
 		return true;
 	}
 	
@@ -119,7 +119,7 @@ public class DataStore implements Data {
 		});
 	
 		System.out.println(result);
-		theDB.commit();
+		theDB.commit(); //Commits the save to the database
 		return result;
 	}
 	
@@ -134,7 +134,7 @@ public class DataStore implements Data {
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		List<T> result = theDB.queryByExample(aSample.getClass());
 		System.out.println("retrievedAll: "+result);
-		theDB.commit();
+		theDB.commit(); //Commits the save to the database
 		return result;
 	}
 	
@@ -150,14 +150,18 @@ public class DataStore implements Data {
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
 	    T found = (T) result.next();
 	    theDB.delete(found);
-		theDB.commit();
+		theDB.commit(); //Commits the save to the database
 		//return "Deleted "+aTNG;
 		return found;
 		
 	}
 	
 	
-	
+	/** Deletes all objects of the given object's class type and returns 
+	 * the List of objects deleted if successful
+	 * @param The object to be deleted
+	 * @return The object being deleted
+	 */
 	public <T> List<T> deleteAll(T aSample){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -166,7 +170,7 @@ public class DataStore implements Data {
 			System.out.println("Deleting: "+aTNG);
 			theDB.delete(aTNG);
 		}
-		theDB.commit();
+		theDB.commit(); //Commits the save to the database
 		return toBeDeleted;
 		
 	}
@@ -188,6 +192,7 @@ public class DataStore implements Data {
 	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue){
 		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID);
 		Object theObject;
+		
 		for(int i = 0; i < objectsToUpdate.size(); i++){
 			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
 			Method[] allMethods = objectClass.getMethods();
@@ -197,7 +202,7 @@ public class DataStore implements Data {
 					methodToBeSaved = m;
 				}
 			}
-			//TODO: IF Null solve this problem...
+			//TODO: IF Null send back a response saying Update fails
 			final Method theSetter = methodToBeSaved;
 			
 			try {
@@ -214,10 +219,7 @@ public class DataStore implements Data {
 				e.printStackTrace();
 			}
 			
-			theDB.commit();
-			
-			
+			theDB.commit(); //Commits the save to the database
 		}
 	}
-
 }
