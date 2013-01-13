@@ -1,12 +1,12 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import java.net.MalformedURLException;
-import java.util.Observer;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 
 /**
  * Controller to handle the saving of a defect
@@ -30,7 +30,7 @@ public class SaveDefectController {
 	 */
 	public void save() {
 		final DefectPanel panel = (DefectPanel) view.getDefectPanel();
-		final Observer requestObserver = (panel.getEditMode() == Mode.CREATE) ? new CreateDefectRequestObserver(view) : new UpdateDefectRequestObserver(view);
+		final RequestObserver requestObserver = (panel.getEditMode() == Mode.CREATE) ? new CreateDefectRequestObserver(view) : new UpdateDefectRequestObserver(view);
 		Request request;
 		try {
 			panel.setInputEnabled(false); //TODO change to view

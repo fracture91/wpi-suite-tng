@@ -1,18 +1,17 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.network.Observable;
 import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
  * An observer for a request to retrieve a defect with the provided id
  */
-public class RetrieveDefectRequestObserver implements Observer {
+public class RetrieveDefectRequestObserver implements RequestObserver {
 
 	/** The retrieve defect controller using this observer */
 	protected RetrieveDefectController controller;
@@ -25,11 +24,8 @@ public class RetrieveDefectRequestObserver implements Observer {
 		this.controller = controller;
 	}
 
-	/**
-	 * @see java.util.Observer#update
-	 */
 	@Override
-	public void update(Observable observable, Object arg) {
+	public void done(Observable observable) {
 		if (Request.class.getName().equals(observable.getClass().getName())) {
 			// cast observable to a Request
 			Request request = (Request) observable;
@@ -56,5 +52,15 @@ public class RetrieveDefectRequestObserver implements Observer {
 		else {
 			// TODO deal with this error
 		}
+	}
+
+	@Override
+	public void error(Observable o) {
+		controller.errorRetrievingDefect();
+	}
+
+	@Override
+	public void fail(Observable o) {
+		controller.errorRetrievingDefect();
 	}
 }

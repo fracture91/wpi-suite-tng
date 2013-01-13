@@ -1,18 +1,17 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.network.Observable;
 import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
  * Observer to respond when a lookup defect response is received
  */
-public class LookupRequestObserver implements Observer {
+public class LookupRequestObserver implements RequestObserver {
 
 	/** The lookup defect controller */
 	protected LookupDefectController controller;
@@ -25,11 +24,8 @@ public class LookupRequestObserver implements Observer {
 		this.controller = controller;
 	}
 
-	/**
-	 * @see java.util.Observer#update
-	 */
 	@Override
-	public void update(Observable observable, Object arg) {
+	public void done(Observable observable) {
 		// If observable is a Request...
 		if (Request.class.getName().equals(observable.getClass().getName())) {
 			// cast observable to a Request
@@ -60,5 +56,15 @@ public class LookupRequestObserver implements Observer {
 		else {
 			System.out.println("Observable is not a Request.");
 		}
+	}
+
+	@Override
+	public void error(Observable o) {
+		controller.requestFailed();
+	}
+
+	@Override
+	public void fail(Observable o) {
+		controller.requestFailed();
 	}
 }

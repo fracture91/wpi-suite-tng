@@ -1,18 +1,17 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.network.Observable;
 import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
  * An observer for a request to retrieve all defects
  */
-public class RetrieveAllDefectsRequestObserver implements Observer {
+public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 
 	/** The controller managing the request */
 	protected RetrieveAllDefectsController controller;
@@ -25,11 +24,8 @@ public class RetrieveAllDefectsRequestObserver implements Observer {
 		this.controller = controller;
 	}
 
-	/**
-	 * @see java.util.Observer#update
-	 */
 	@Override
-	public void update(Observable observable, Object arg) {
+	public void done(Observable observable) {
 		if (Request.class.getName().equals(observable.getClass().getName())) {
 			// cast observable to request
 			Request request = (Request) observable;
@@ -46,8 +42,7 @@ public class RetrieveAllDefectsRequestObserver implements Observer {
 				controller.receivedData(defects);
 			}
 			else {
-				// an error occurred
-				controller.errorReceivingData();
+				
 			}
 			
 		}
@@ -55,5 +50,17 @@ public class RetrieveAllDefectsRequestObserver implements Observer {
 			// an error occurred
 			controller.errorReceivingData();
 		}
+	}
+
+	@Override
+	public void error(Observable o) {
+		// an error occurred
+		controller.errorReceivingData();
+	}
+
+	@Override
+	public void fail(Observable o) {
+		// an error occurred
+		controller.errorReceivingData();
 	}
 }

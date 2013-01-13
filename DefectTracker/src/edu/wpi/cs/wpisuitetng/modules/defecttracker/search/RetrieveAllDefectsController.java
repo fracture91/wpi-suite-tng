@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
 
 import java.net.MalformedURLException;
-import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
@@ -9,6 +8,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 
 /**
  * Controller to handle retrieving all defects from the server and
@@ -35,7 +35,7 @@ public class RetrieveAllDefectsController {
 	 * Sends a request for all of the defects
 	 */
 	public void refreshData() {		
-		final Observer requestObserver = new RetrieveAllDefectsRequestObserver(this);
+		final RequestObserver requestObserver = new RetrieveAllDefectsRequestObserver(this);
 		Request request;
 		try {
 			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.GET);
