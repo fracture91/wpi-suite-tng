@@ -26,6 +26,7 @@ public class DefectValidatorTest {
 
 	Defect existingDefect;
 	User existingUser;
+	User existingUserCopy;
 	Defect goodNewDefect;
 	Defect goodUpdatedDefect;
 	User bob;
@@ -46,8 +47,8 @@ public class DefectValidatorTest {
 		bob = new User("bob", "bob", "1234", 1);
 		existingUser = new User("joe", "joe", "1234", 2);
 		existingDefect = new Defect(1, "An existing defect", "", bob);
-		existingDefect.setCreationDate(new Date());
-		existingDefect.setLastModifiedDate(new Date());
+		existingDefect.setCreationDate(new Date(0));
+		existingDefect.setLastModifiedDate(new Date(0));
 		existingDefect.setEvents(new ArrayList<DefectEvent>());
 		
 		defaultSession = new Session(bob);
@@ -67,6 +68,14 @@ public class DefectValidatorTest {
 		models.add(bob);
 		models.add(existingDefect);
 		models.add(existingUser);
+		
+		existingUserCopy = new User(null, "joe", null, -1);
+		goodUpdatedDefect = new Defect(1, "A changed title", "A changed description", bobCopy);
+		goodUpdatedDefect.setAssignee(existingUserCopy);
+		goodUpdatedDefect.setEvents(new ArrayList<DefectEvent>());
+		goodUpdatedDefect.getTags().add(tagCopy);
+		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
+		
 		db = new MockDefectData(models);
 		validator = new DefectValidator(db);
 	}
@@ -78,9 +87,36 @@ public class DefectValidatorTest {
 		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
 	}
 	
-	public void checkNoIssues(Session session, Defect defect, Mode mode) {
+	public List<ValidationIssue> checkNumIssues(int num, Session session, Defect defect, Mode mode) {
 		List<ValidationIssue> issues = validator.validate(session, defect, mode);
-		assertEquals(0, issues.size());
+		assertEquals(num, issues.size());
+		return issues;
+	}
+	
+	public void checkNoIssues(Session session, Defect defect, Mode mode) {
+		checkNumIssues(0, session, defect, mode);
+	}
+	
+	public List<ValidationIssue> checkIssue(Session session, Defect defect, Mode mode) {
+		return checkNumIssues(1, session, defect, mode);
+	}
+	
+	public List<ValidationIssue> checkNonFieldIssue(Session session, Defect defect, Mode mode) {
+		List<ValidationIssue> issues = checkIssue(session, defect, mode);
+		assertFalse(issues.get(0).hasFieldName());
+		return issues;
+	}
+	
+	public List<ValidationIssue> checkFieldIssue(Session session, Defect defect, Mode mode, 
+			String fieldName) {
+		List<ValidationIssue> issues = checkNumIssues(1, session, defect, mode);
+		assertEquals(fieldName, issues.get(0).getFieldName());
+		return issues;
+	}
+	
+	@Test
+	public void testNullNewDefect() {
+		checkNonFieldIssue(defaultSession, null, Mode.CREATE);
 	}
 	
 	@Test
@@ -96,14 +132,6 @@ public class DefectValidatorTest {
 		assertNotSame(ignoredEvents, goodNewDefect.getEvents());
 		assertNotNull(goodNewDefect.getCreationDate());
 		assertNotNull(goodNewDefect.getLastModifiedDate());
-	}
-	
-	public List<ValidationIssue> checkFieldIssue(Session session, Defect defect, Mode mode, 
-			String fieldName) {
-		List<ValidationIssue> issues = validator.validate(session, defect, mode);
-		assertEquals(1, issues.size());
-		assertEquals(fieldName, issues.get(0).getFieldName());
-		return issues;
 	}
 	
 	@Test
@@ -223,6 +251,47 @@ public class DefectValidatorTest {
 		checkNoIssues(defaultSession, goodNewDefect, Mode.CREATE);
 		assertNotSame(badDate, goodNewDefect.getCreationDate());
 		assertNotSame(badDate, goodNewDefect.getLastModifiedDate());
+	}
+	
+	@Test
+	public void testUpdateNullDefect() {
+		checkNonFieldIssue(defaultSession, null, Mode.EDIT);
+	}
+	
+	@Test
+	public void testGoodUpdatedDefect() {
+		// make sure users other than creator can update
+		checkNoIssues(new Session(new User(null, "someguy", null, 50)), goodUpdatedDefect, Mode.EDIT);
+		assertEquals("A changed title", goodUpdatedDefect.getTitle());
+		assertEquals("A changed description", goodUpdatedDefect.getDescription());
+		assertSame(existingUser, goodUpdatedDefect.getAssignee());
+		assertSame(bob, goodUpdatedDefect.getCreator());
+		for(Tag t : goodUpdatedDefect.getTags()) {
+			assertSame(tag, t);
+		}
+		assertEquals(DefectStatus.CONFIRMED, goodUpdatedDefect.getStatus());
+		assertSame(existingDefect.getEvents(), goodUpdatedDefect.getEvents());
+		assertEquals(existingDefect.getCreationDate(), goodUpdatedDefect.getCreationDate());
+		assertNotNull(goodUpdatedDefect.getLastModifiedDate());
+	}
+	
+	@Test
+	public void testUpdateBadId() {
+		goodUpdatedDefect.setId(999);
+		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "id");
+	}
+	
+	@Test
+	public void testUpdateNullStatus() {
+		goodUpdatedDefect.setStatus(null);
+		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "status");
+	}
+	
+	@Test
+	public void testUpdateChangeCreator() {
+		goodUpdatedDefect.setCreator(existingUserCopy);
+		checkNoIssues(defaultSession, goodUpdatedDefect, Mode.EDIT);
+		assertSame(bob, goodUpdatedDefect.getCreator());
 	}
 
 }

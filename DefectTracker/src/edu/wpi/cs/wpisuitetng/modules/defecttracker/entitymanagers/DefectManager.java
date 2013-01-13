@@ -100,8 +100,21 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public Defect update(Session s, String content) throws WPISuiteException {
-		// TODO: actually update 
-		return makeEntity(s, content);
+		Defect updatedDefect = gson.fromJson(content, Defect.class);
+		
+		List<ValidationIssue> issues = validator.validate(s, updatedDefect, Mode.EDIT);
+		if(issues.size() > 0) {
+			// TODO: pass errors to client through exception
+			throw new BadRequestException();
+		}
+
+		// TODO: copy fields from updated to existing
+		
+		if(!db.save(updatedDefect)) {
+			throw new WPISuiteException();
+		}
+		
+		return updatedDefect;
 	}
 
 }
