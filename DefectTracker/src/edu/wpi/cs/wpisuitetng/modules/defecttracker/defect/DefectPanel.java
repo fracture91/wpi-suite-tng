@@ -263,7 +263,15 @@ public class DefectPanel extends JPanel {
 	 * @return the model represented by this view
 	 */
 	public Defect getEditedModel() {
-		return new Defect(model.getId(), txtTitle.getText(), txtDescription.getText(), new User("", txtCreator.getText(), "", -1));
+		Defect defect = new Defect();
+		defect.setId(model.getId());
+		defect.setTitle(txtTitle.getText());
+		defect.setDescription(txtDescription.getText());
+		if (!(txtAssignee.getText().equals(""))) {
+			defect.setAssignee(new User("", txtAssignee.getText(), "", -1));
+		}
+		defect.setCreator(new User("", txtCreator.getText(), "", -1));
+		return defect;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views;
 
 import java.awt.Dimension;
 

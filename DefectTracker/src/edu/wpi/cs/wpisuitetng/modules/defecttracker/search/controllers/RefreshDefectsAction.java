@@ -1,9 +1,10 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+
 
 /**
  * Action that calls {@link RetrieveAllDefectsController#refreshData()}, default mnemonic key is R

@@ -17,7 +17,7 @@ public class Network {
 	/**
 	 * Constructs a new Network
 	 */
-	private Network() {
+	protected Network() {
 		//TODO finish this
 		//TODO should we create a blank NetworkConfiguration as the default?
 	}
@@ -53,6 +53,15 @@ public class Network {
 		}
 		
 		this.defaultNetworkConfiguration = config;
+	}
+	
+	/**
+	 * Replaces the Network instance with the provided instance. This method can be
+	 * used to replace instance with subclasses of Network for testing purposes.
+	 * @param network the new Network instance
+	 */
+	public static void initNetwork(Network network) {
+		instance = network;
 	}
 	
 	/**

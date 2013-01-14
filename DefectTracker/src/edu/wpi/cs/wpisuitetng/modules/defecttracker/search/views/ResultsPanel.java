@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views;
 
 import java.awt.BorderLayout;
 import java.util.Date;
@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RetrieveDefectController;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.models.ResultsTableModel;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**
@@ -64,5 +66,20 @@ public class ResultsPanel extends JPanel {
 	 */
 	public ResultsTableModel getModel() {
 		return resultsTableModel;
+	}
+	
+	/**
+	 * @return the results table
+	 */
+	public JTable getResultsTable() {
+		return resultsTable;
+	}
+	
+	/**
+	 * Replace the results table with the given table
+	 * @param newTable the new results table
+	 */
+	public void setResultsTable(JTable newTable) {
+		this.resultsTable = newTable;
 	}
 }

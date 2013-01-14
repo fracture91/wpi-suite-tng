@@ -1,6 +1,8 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.models;
 
 import javax.swing.table.AbstractTableModel;
+
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.ResultsPanel;
 
 /**
  * A model to manage the data displayed in the {@link ResultsPanel}
@@ -15,7 +17,7 @@ public class ResultsTableModel extends AbstractTableModel {
 	protected Object[][] data = {};
 	
 	/**
-	 * Construct the model and populate it with data
+	 * Constructor.
 	 */
 	public ResultsTableModel() {
 		
