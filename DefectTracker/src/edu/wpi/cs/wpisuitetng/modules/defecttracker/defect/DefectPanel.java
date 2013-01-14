@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.swing.JLabel;
@@ -191,9 +192,9 @@ public class DefectPanel extends JPanel {
 		model.setCreationDate(defect.getCreationDate());
 		model.setLastModifiedDate(defect.getLastModifiedDate());
 		model.setStatus(defect.getStatus());
+		model.setTags(defect.getTags());
 
 		//TODO model.setPermission(p, u);
-		//TODO model.setTags(...);
 		
 		updateFields();
 	}
@@ -211,6 +212,7 @@ public class DefectPanel extends JPanel {
 			txtAssignee.setText(model.getAssignee().getUsername());
 		}
 		if (model.getTags() != null) {
+			tagPanel.lmTags.clear();
 			Iterator<Tag> tagsI = model.getTags().iterator();
 			Tag nextTag;
 			while (tagsI.hasNext()) {
@@ -271,6 +273,12 @@ public class DefectPanel extends JPanel {
 			defect.setAssignee(new User("", txtAssignee.getText(), "", -1));
 		}
 		defect.setCreator(new User("", txtCreator.getText(), "", -1));
+		HashSet<Tag> tags = new HashSet<Tag>();
+		for (int i = 0; i < tagPanel.lmTags.getSize(); i++) {
+			tags.add(new Tag((String)tagPanel.lmTags.get(i)));
+		}
+		defect.setTags(tags);
+		
 		return defect;
 	}
 
