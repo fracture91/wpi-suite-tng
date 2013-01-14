@@ -25,6 +25,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	private JButton saveButton;
 	private DefectPanel mainPanel;
 	private SaveDefectController controller;
+	private Tab containingTab;
 
 	/**
 	 * Constructs a new CreateDefectView where the user can enter the data for a new defect.
@@ -41,17 +42,20 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	 * @param tab		The Tab holding this DefectView (can be null)
 	 */
 	public DefectView(Defect defect, Mode editMode, Tab tab) {
-		if(tab == null) {
-			tab = new DummyTab();
+		containingTab = tab;
+		if(containingTab == null) {
+			containingTab = new DummyTab();
 		}
 		
-		tab.setIcon(new ImageIcon());
+		// Instantiate the button panel
+		buttonGroup = new ToolbarGroupView("Create Defect");
+		
+		containingTab.setIcon(new ImageIcon());
 		if(editMode == Mode.CREATE) {
-			tab.setTitle("Create Defect");
-			tab.setToolTipText("Create a new defect");
+			containingTab.setTitle("Create Defect");
+			containingTab.setToolTipText("Create a new defect");
 		} else {
-			tab.setTitle("Defect #" + defect.getId());
-			tab.setToolTipText("View defect " + defect.getTitle());
+			setEditModeDescriptors(defect);
 		}
 		
 		// If this is a new defect, set the creator
@@ -64,9 +68,6 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		this.setLayout(new BorderLayout());
 		this.add(mainPanel, BorderLayout.PAGE_START);
 		controller = new SaveDefectController(this);
-
-		// Instantiate the button panel
-		buttonGroup = new ToolbarGroupView("View/Edit Defect");
 
 		// Instantiate the save button and add it to the button panel
 		saveButton = new JButton();
@@ -87,5 +88,11 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	@Override
 	public ToolbarGroupView getGroup() {
 		return buttonGroup;
+	}
+	
+	protected void setEditModeDescriptors(Defect defect) {
+		containingTab.setTitle("Defect #" + defect.getId());
+		containingTab.setToolTipText("View defect " + defect.getTitle());
+		buttonGroup.setName("Edit Defect");
 	}
 }

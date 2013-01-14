@@ -34,6 +34,7 @@ public class Tab {
 	
 	public void setTitle(String title) {
 		view.setTitleAt(getIndex(), title);
+		tabComponent.invalidate(); // needed to make tab shrink with smaller title
 	}
 	
 	public Icon getIcon() {
