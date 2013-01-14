@@ -21,9 +21,6 @@ public class Tag implements Model {
 	 *  @param name the name of the tag, must be neither null nor empty
 	 */
 	public Tag(String name) {
-		if(name.length() < 1) { // will also catch null 
-			throw new RuntimeException("Tag name must not be empty string");
-		}
 		this.name = name;
 	}
 
@@ -75,7 +72,10 @@ public class Tag implements Model {
 	
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		if(name != null) {
+			return name.hashCode();
+		}
+		return 0;
 	}
 
 	@Override
