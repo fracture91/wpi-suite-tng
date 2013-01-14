@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -6,6 +6,8 @@ import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RefreshDefectsAction;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RetrieveAllDefectsController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**

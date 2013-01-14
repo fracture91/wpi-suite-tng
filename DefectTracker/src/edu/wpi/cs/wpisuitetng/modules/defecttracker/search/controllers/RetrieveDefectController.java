@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers.RetrieveDefectRequestObserver;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.ResultsPanel;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;

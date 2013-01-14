@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.SearchDefectsView;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.SearchDefectsView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 
 /**

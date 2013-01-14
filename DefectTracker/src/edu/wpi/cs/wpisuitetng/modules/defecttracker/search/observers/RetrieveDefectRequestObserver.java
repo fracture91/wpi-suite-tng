@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.search;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -6,6 +6,7 @@ import java.util.Observer;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RetrieveDefectController;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
