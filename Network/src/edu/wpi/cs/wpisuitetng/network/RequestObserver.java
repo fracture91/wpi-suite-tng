@@ -9,20 +9,20 @@ public interface RequestObserver {
 	 * 
 	 * @param iReq	An instance of a class that implements an iRequest.
 	 */
-	public void success(IRequest iReq);
+	public void responseSuccess(IRequest iReq);
 	
 	/**
 	 * Called when a response is received with an client error (4xx) or server error (5xx) status code.
 	 * 
 	 * @param iReq	An instance of a class that implements an iRequest.
 	 */
-	public void error(IRequest iReq);
+	public void responseError(IRequest iReq);
 	
 	/**
 	 * Called if an attempt to make a request fails.
 	 * 
-	 * @param iReq	        An instance of a class that implements an iRequest.
-	 * @param errorMessage An error message.
+	 * @param iReq	     An instance of a class that implements an iRequest.
+	 * @param exception An exception.
 	 */
-	public void fail(IRequest iReq, String errorMessage);
+	public void fail(IRequest iReq, Exception exception);
 }

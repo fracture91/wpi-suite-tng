@@ -34,29 +34,29 @@ public abstract class Observable {
 	/**
 	 * Notifies RequestObservers of a response with a status code indicating success (2xx).
 	 */
-	public void notifyObserversSuccess() {
+	public void notifyObserversResponseSuccess() {
 		for (RequestObserver obs : observers) {
-			obs.success((IRequest) this);
+			obs.responseSuccess((IRequest) this);
 		}
 	}
 
 	/**
 	 * Notifies RequestObservers of response with a status code indicating a client error (4xx) for server error (5xx).
 	 */
-	public void notifyObserversError() {
+	public void notifyObserversResponseError() {
 		for (RequestObserver obs : observers) {
-			obs.error((IRequest) this);
+			obs.responseError((IRequest) this);
 		}
 	}
 
 	/**
 	 * Notifies RequestObservers of a failure in sending a request.
 	 * 
-	 * @param errorMessage An error message.
+	 * @param exception An exception.
 	 */
-	public void notifyObserversFail(String errorMessage) {
+	public void notifyObserversFail(Exception exception) {
 		for (RequestObserver obs : observers) {
-			obs.fail((IRequest) this, errorMessage);
+			obs.fail((IRequest) this, exception);
 		}
 	}
 }

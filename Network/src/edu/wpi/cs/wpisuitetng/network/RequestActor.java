@@ -36,6 +36,7 @@ public class RequestActor extends Thread {
 		HttpURLConnection connection = null;
 		boolean requestSendFail = false;
 		boolean responseBodyReadTimeout = false;
+		Exception exceptionRecv = null;
 		
 		try {
 			// setup connection
@@ -82,8 +83,7 @@ public class RequestActor extends Thread {
 					}
 				} catch (SocketTimeoutException e) {
 					// Note: this will be thrown if a read takes longer than 5 seconds
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					exceptionRecv = e;
 					responseBodyReadTimeout = true;
 				}
 				finally {
@@ -111,35 +111,33 @@ public class RequestActor extends Thread {
 			// set the Request's response to the newly created response
 			request.setResponse(response);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			exceptionRecv = e;
 			requestSendFail = true;
 		} finally {
 			// close the connection
 			if (connection != null) {
 				connection.disconnect(); 
 			}
-		}
-		
-		if (requestSendFail) {
-			request.notifyObserversFail("Request could not be sent.");
-		}
-		else if (responseBodyReadTimeout) {
-			request.notifyObserversFail("Response body could not be read.");
-		}
-		else if (request.getResponse() != null) {
-			// On status code 2xx
-			if (request.getResponse().getResponseCode() >= 200 && request.getResponse().getResponseCode() < 300) {
-				request.notifyObserversSuccess();
+			
+			if (requestSendFail) {
+				request.notifyObserversFail(exceptionRecv);
 			}
-			// On status code 4xx or 5xx
-			else if (request.getResponse().getResponseCode() >= 400 && request.getResponse().getResponseCode() < 600) {
-				request.notifyObserversError();
+			else if (responseBodyReadTimeout) {
+				request.notifyObserversFail(exceptionRecv);
 			}
-			// On other status codes
-			else {
-				request.notifyObserversFail("Response returned unhandled status code.");
+			else if (request.getResponse() != null) {
+				// On status code 2xx
+				if (request.getResponse().getResponseCode() >= 200 && request.getResponse().getResponseCode() < 300) {
+					request.notifyObserversResponseSuccess();
+				}
+				// On status code 4xx or 5xx
+				else if (request.getResponse().getResponseCode() >= 400 && request.getResponse().getResponseCode() < 600) {
+					request.notifyObserversResponseError();
+				}
+				// On other status codes
+				else {
+					request.notifyObserversFail(new Exception());
+				}
 			}
 		}
 	}

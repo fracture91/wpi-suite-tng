@@ -25,7 +25,7 @@ public class TestRequest {
 		}
 
 		@Override
-		public void success(IRequest iReq) {
+		public void responseSuccess(IRequest iReq) {
 			synchronized (this) {
 				notifyAll(  );
 			}
@@ -46,13 +46,13 @@ public class TestRequest {
 		}
 
 		@Override
-		public void error(IRequest iReq) {
+		public void responseError(IRequest iReq) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void fail(IRequest iReq, String errorMessage) {
+		public void fail(IRequest iReq, Exception exception) {
 			// TODO Auto-generated method stub
 
 		}

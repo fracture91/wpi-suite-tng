@@ -22,41 +22,32 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void success(IRequest iReq) {
-		// If observable is a Request...
-		if (Request.class.getName().equals(iReq.getClass().getName())) {
-			// cast observable to a Request
-			Request request = (Request) iReq;
+	public void responseSuccess(IRequest iReq) {
+		// cast observable to a Request
+		Request request = (Request) iReq;
 
-			// get the response from the request
-			Response response = request.getResponse();
+		// get the response from the request
+		Response response = request.getResponse();
 
-			// print the body
-			System.out.println("Received response: " + response.getBody()); //TODO change this to logger
+		// print the body
+		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
-			// on success
-			if (response.getBody().equals("success")) {
-				((DefectPanel) view.getDefectPanel()).updateModel(((DefectPanel) view.getDefectPanel()).getEditedModel());
-			}
-			else {
-				// TODO
-			}
+		// on success
+		if (response.getBody().equals("success")) {
+			((DefectPanel) view.getDefectPanel()).updateModel(((DefectPanel) view.getDefectPanel()).getEditedModel());
 		}
-		// Otherwise...
 		else {
-			System.out.println("Observable is not a Request."); // TODO change this to logger
+			// TODO
 		}
 	}
 
 	@Override
-	public void error(IRequest iReq) {
+	public void responseError(IRequest iReq) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void fail(IRequest iReq, String errorMessage) {
+	public void fail(IRequest iReq, Exception exception) {
 		// TODO Auto-generated method stub
-
 	}
 }

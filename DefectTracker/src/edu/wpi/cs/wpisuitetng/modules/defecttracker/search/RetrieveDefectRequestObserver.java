@@ -25,42 +25,38 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void success(IRequest iReq) {
-		if (Request.class.getName().equals(iReq.getClass().getName())) {
-			// cast observable to a Request
-			Request request = (Request) iReq;
+	public void responseSuccess(IRequest iReq) {
+		// cast observable to a Request
+		Request request = (Request) iReq;
 
-			// get the response from the request
-			Response response = request.getResponse();
+		// get the response from the request
+		Response response = request.getResponse();
 
-			// check the response code of the request
-			if (response.getResponseCode() != 200) {
-				controller.errorRetrievingDefect();
-				return;
-			}
+		// check the response code of the request
+		if (response.getResponseCode() != 200) {
+			controller.errorRetrievingDefect();
+			return;
+		}
 
-			// parse the defect received from the core
-			Gson parser = new Gson();
-			Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
-			if (defects.length > 0 && defects[0] != null) {
-				controller.showDefect(defects[0]);
-			}
-			else {
-				controller.errorRetrievingDefect();
-			}
+		// parse the defect received from the core
+		Gson parser = new Gson();
+		Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
+		if (defects.length > 0 && defects[0] != null) {
+			controller.showDefect(defects[0]);
 		}
 		else {
-			// TODO deal with this error
+			controller.errorRetrievingDefect();
 		}
 	}
 
 	@Override
-	public void error(IRequest iReq) {
+	public void responseError(IRequest iReq) {
 		controller.errorRetrievingDefect();
 	}
 
 	@Override
-	public void fail(IRequest iReq, String errorMessage) {
+	public void fail(IRequest iReq, Exception exception) {
+		// TODO deal with exception
 		controller.errorRetrievingDefect();
 	}
 }

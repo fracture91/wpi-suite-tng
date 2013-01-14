@@ -25,41 +25,34 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void success(IRequest iReq) {
-		if (Request.class.getName().equals(iReq.getClass().getName())) {
-			// cast observable to request
-			Request request = (Request) iReq;
+	public void responseSuccess(IRequest iReq) {
+		// cast observable to request
+		Request request = (Request) iReq;
 
-			// get the response from the request
-			Response response = request.getResponse();
+		// get the response from the request
+		Response response = request.getResponse();
 
-			if (response.getResponseCode() == 200) {
-				// parse the response				
-				Gson parser = new Gson();
-				Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
+		if (response.getResponseCode() == 200) {
+			// parse the response				
+			Gson parser = new Gson();
+			Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
 
-				// notify the controller
-				controller.receivedData(defects);
-			}
-			else {
-
-			}
-
+			// notify the controller
+			controller.receivedData(defects);
 		}
 		else {
-			// an error occurred
-			controller.errorReceivingData();
+
 		}
 	}
 
 	@Override
-	public void error(IRequest iReq) {
+	public void responseError(IRequest iReq) {
 		// an error occurred
 		controller.errorReceivingData();
 	}
 
 	@Override
-	public void fail(IRequest iReq, String errorMessage) {
+	public void fail(IRequest iReq, Exception exception) {
 		// an error occurred
 		controller.errorReceivingData();
 	}

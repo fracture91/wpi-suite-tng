@@ -12,7 +12,7 @@ import edu.wpi.cs.wpisuitetng.network.Response;
  */
 public class MyRequestObserver implements RequestObserver {
 	@Override
-	public void success(IRequest iReq) {
+	public void responseSuccess(IRequest iReq) {
 		// If observable is a Request...
 		if (Request.class.getName().equals(iReq.getClass().getName())) {
 			// cast observable to a Request
@@ -31,14 +31,12 @@ public class MyRequestObserver implements RequestObserver {
 	}
 
 	@Override
-	public void error(IRequest iReq) {
+	public void responseError(IRequest iReq) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void fail(IRequest iReq, String errorMessage) {
+	public void fail(IRequest iReq, Exception exception) {
 		// TODO Auto-generated method stub
-
 	}
 }
