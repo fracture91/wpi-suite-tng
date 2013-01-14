@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import org.junit.*;
 
 
@@ -15,30 +13,26 @@ import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 public class TestRequest {
-	class MockObserver implements Observer {
-		
+	class MockObserver implements RequestObserver {
+
 		private boolean updateCalled;
 		private Response response;
-		
+
 		public MockObserver() {
 			super();
 			updateCalled = false;
 			response = null;
-			
 		}
 
-		/**
-		 * @see java.util.Observable#update
-		 */
 		@Override
-		public void update(Observable observable, Object arg) {
+		public void responseSuccess(IRequest iReq) {
 			synchronized (this) {
-	            notifyAll(  );
-	        }
+				notifyAll(  );
+			}
 			// If observable is a Request...
-			if (Request.class.getName().equals(observable.getClass().getName())) {
+			if (Request.class.getName().equals(iReq.getClass().getName())) {
 				// cast observable to a Request
-				Request request = (Request) observable;
+				Request request = (Request) iReq;
 
 				// get the response from the request
 				response = request.getResponse();
@@ -50,16 +44,28 @@ public class TestRequest {
 				System.out.println("Observable is not a Request.");
 			}
 		}
+
+		@Override
+		public void responseError(IRequest iReq) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void fail(IRequest iReq, Exception exception) {
+			// TODO Auto-generated method stub
+
+		}
 	}
-	
+
 	private NetworkConfiguration config;
 	private static int port = 8080;
-	
+
 	@Before
 	public void setUp() {
 		config = new NetworkConfiguration("http://localhost:" + port);
 	}
-	
+
 	/**
 	 * Test that a NullPointerException is thrown when a null networkConfiguration is passed to the Request constructor.
 	 * @throws MalformedURLException 
@@ -72,10 +78,10 @@ public class TestRequest {
 		} catch (NullPointerException e) {
 			assertTrue("The networkConfiguration must not be null.".equals(e.getMessage()));
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Test that a NullPointerException is thrown when a null requestMethod is passed to the Request#setRequestMethod.
 	 * @throws MalformedURLException 
@@ -89,7 +95,7 @@ public class TestRequest {
 			assertTrue("The requestMethod must not be null.".equals(e.getMessage()));
 		}
 	}
-	
+
 	/**
 	 * Test that a NullPointerException is thrown when a null body is passed to the Request#setRequestBody.
 	 */
@@ -106,7 +112,7 @@ public class TestRequest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Test that communication works. DummyServer must be running on port 8080 for this test to work.
 	 */
@@ -117,7 +123,7 @@ public class TestRequest {
 
 		// The request body
 		String body = "This is the request body!";
-		
+
 		// Create the URL
 		try {
 			URL url = new URL("http", "localhost", port, "/myModule/myModel");
@@ -134,8 +140,8 @@ public class TestRequest {
 			manualRequest.send();
 			synchronized (requestObserver) {
 				requestObserver.wait(2000);
-		    }
-			
+			}
+
 			assertEquals(true, (body+"\n").equals(manualRequest.getResponse().getBody()));
 			assertEquals(200, manualRequest.getResponse().getResponseCode());
 			assertEquals(true, "OK".equalsIgnoreCase(manualRequest.getResponse().getResponseMessage()));

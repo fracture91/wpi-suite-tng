@@ -34,6 +34,9 @@ public class RequestActor extends Thread {
 	 */
 	public void run() {
 		HttpURLConnection connection = null;
+		boolean requestSendFail = false;
+		boolean responseBodyReadTimeout = false;
+		Exception exceptionRecv = null;
 		
 		try {
 			// setup connection
@@ -80,8 +83,8 @@ public class RequestActor extends Thread {
 					}
 				} catch (SocketTimeoutException e) {
 					// Note: this will be thrown if a read takes longer than 5 seconds
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					exceptionRecv = e;
+					responseBodyReadTimeout = true;
 				}
 				finally {
 					if (reader != null) {
@@ -91,7 +94,6 @@ public class RequestActor extends Thread {
 			}
 			catch (IOException e) {
 				// do nothing, received a 400, or 500 status code
-				System.out.println("Received a 400 or 500 status code.");
 			}
 			
 			// get the response headers
@@ -109,12 +111,33 @@ public class RequestActor extends Thread {
 			// set the Request's response to the newly created response
 			request.setResponse(response);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			exceptionRecv = e;
+			requestSendFail = true;
 		} finally {
 			// close the connection
 			if (connection != null) {
 				connection.disconnect(); 
+			}
+			
+			if (requestSendFail) {
+				request.notifyObserversFail(exceptionRecv);
+			}
+			else if (responseBodyReadTimeout) {
+				request.notifyObserversFail(exceptionRecv);
+			}
+			else if (request.getResponse() != null) {
+				// On status code 2xx
+				if (request.getResponse().getResponseCode() >= 200 && request.getResponse().getResponseCode() < 300) {
+					request.notifyObserversResponseSuccess();
+				}
+				// On status code 4xx or 5xx
+				else if (request.getResponse().getResponseCode() >= 400 && request.getResponse().getResponseCode() < 600) {
+					request.notifyObserversResponseError();
+				}
+				// On other status codes
+				else {
+					request.notifyObserversFail(new Exception());
+				}
 			}
 		}
 	}

@@ -1,31 +1,26 @@
 package edu.wpi.cs.wpisuitetng.janeway.network;
 
-import java.util.Observable;
-import java.util.Observer;
-
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
- * An Observer for the Request class.
+ * A RequestObserver for the Request class.
  * 
  * TODO Make this example more thorough.
  */
-public class MyRequestObserver implements Observer {
-
-	/**
-	 * @see java.util.Observable#update
-	 */
+public class MyRequestObserver implements RequestObserver {
 	@Override
-	public void update(Observable observable, Object arg) {
+	public void responseSuccess(IRequest iReq) {
 		// If observable is a Request...
-		if (Request.class.getName().equals(observable.getClass().getName())) {
+		if (Request.class.getName().equals(iReq.getClass().getName())) {
 			// cast observable to a Request
-			Request request = (Request) observable;
-			
+			Request request = (Request) iReq;
+
 			// get the response from the request
 			Response response = request.getResponse();
-			
+
 			// print the body
 			System.out.println("Received response: " + response.getBody());
 		}
@@ -33,5 +28,15 @@ public class MyRequestObserver implements Observer {
 		else {
 			System.out.println("Observable is not a Request.");
 		}
+	}
+
+	@Override
+	public void responseError(IRequest iReq) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void fail(IRequest iReq, Exception exception) {
+		// TODO Auto-generated method stub
 	}
 }

@@ -1,21 +1,20 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
 
 /**
  * An Observer for a Request to create a Defect.
  */
-public class CreateDefectRequestObserver implements Observer {
-	
+public class CreateDefectRequestObserver implements RequestObserver {
+
 	private final DefectView view;
-	
+
 	/**
 	 * Constructs a new CreateDefectRequestObserver
 	 * 
@@ -25,38 +24,38 @@ public class CreateDefectRequestObserver implements Observer {
 		this.view = view;
 	}
 
-	/**
-	 * @see java.util.Observer#update
-	 */
 	@Override
-	public void update(Observable observable, Object arg) {
-		// If observable is a Request...
-		if (Request.class.getName().equals(observable.getClass().getName())) {
-			// cast observable to a Request
-			Request request = (Request) observable;
-			
-			// get the response from the request
-			Response response = request.getResponse();
-			
+	public void responseSuccess(IRequest iReq) {
+		// cast observable to a Request
+		Request request = (Request) iReq;
 
-			// print the body
-			System.out.println("Received response: " + response.getBody()); //TODO change this to logger
-			
-			// parse the defect from the body
-			Gson parser = new Gson();
-			Defect defect = parser.fromJson(response.getBody(), Defect.class);
-			
-			// make sure the defect isn't null
-			if (defect != null) {
-				((DefectPanel) view.getDefectPanel()).updateModel(defect);
-			}
-			else {
-				// TODO notify user of server error
-			}			
+		// get the response from the request
+		Response response = request.getResponse();
+
+
+		// print the body
+		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
+
+		// parse the defect from the body
+		Gson parser = new Gson();
+		Defect defect = parser.fromJson(response.getBody(), Defect.class);
+
+		// make sure the defect isn't null
+		if (defect != null) {
+			((DefectPanel) view.getDefectPanel()).updateModel(defect);
 		}
-		// Otherwise...
 		else {
-			System.out.println("Observable is not a Request."); // TODO change this to logger
+			// TODO notify user of server error
 		}
+	}
+
+	@Override
+	public void responseError(IRequest iReq) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void fail(IRequest iReq, Exception exception) {
+		// TODO Auto-generated method stub
 	}
 }

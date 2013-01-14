@@ -3,21 +3,32 @@ package edu.wpi.cs.wpisuitetng.network.configuration;
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 import org.junit.*;
 
+import edu.wpi.cs.wpisuitetng.network.IRequest;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+
 public class TestNetworkConfiguration {
-	class MockObserver implements Observer {
+	class MockObserver implements RequestObserver {
 		
 		public MockObserver() {}
 
-		/**
-		 * @see java.util.Observable#update
-		 */
 		@Override
-		public void update(Observable observable, Object arg) {
-			// Do nothing
+		public void responseSuccess(IRequest iReq) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void responseError(IRequest iReq) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void fail(IRequest iReq, Exception exception) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
@@ -52,7 +63,7 @@ public class TestNetworkConfiguration {
 		config.addObserver(new MockObserver());
 		assertEquals(2, config.getObservers().size());
 		
-		Iterator<Observer> observersI = config.getObservers().iterator();
+		Iterator<RequestObserver> observersI = config.getObservers().iterator();
 		
 		while (observersI.hasNext()) {
 			assertTrue(observersI.next() instanceof MockObserver);
