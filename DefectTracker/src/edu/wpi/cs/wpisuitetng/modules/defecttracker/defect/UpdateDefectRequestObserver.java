@@ -1,13 +1,17 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import edu.wpi.cs.wpisuitetng.network.IRequest;
+import com.google.gson.Gson;
+
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.IRequest;
 
 /**
  * A RequestObserver for a Request to update a Defect.
  */
+
 public class UpdateDefectRequestObserver implements RequestObserver {
 
 	private final DefectView view;
@@ -32,12 +36,16 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 		// print the body
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
-		// on success
-		if (response.getBody().equals("success")) {
-			((DefectPanel) view.getDefectPanel()).updateModel(((DefectPanel) view.getDefectPanel()).getEditedModel());
+		// parse the defect from the body
+		Gson parser = new Gson();
+		Defect defect = parser.fromJson(response.getBody(), Defect.class);
+
+		// make sure the defect isn't null
+		if (defect != null) {
+			((DefectPanel) view.getDefectPanel()).updateModel(defect);
 		}
 		else {
-			// TODO
+			// TODO notify user of server error
 		}
 	}
 
