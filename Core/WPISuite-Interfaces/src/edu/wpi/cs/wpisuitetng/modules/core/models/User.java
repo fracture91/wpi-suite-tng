@@ -9,6 +9,7 @@
  * Contributors:
  *    twack
  *    mpdelladonna
+ *    bgaffey
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.models;
@@ -20,7 +21,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 public class User extends AbstractModel
@@ -116,12 +117,12 @@ public class User extends AbstractModel
 	}
 	
 	/* database interaction */
-	public void save()
+	public void save(User aUser)
 	{
 		return;
 	}
 	
-	public void delete()
+	public void delete(User aUser)
 	{
 		return;
 	}

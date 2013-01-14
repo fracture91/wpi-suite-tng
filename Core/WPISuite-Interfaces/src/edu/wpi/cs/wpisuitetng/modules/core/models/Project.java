@@ -15,12 +15,13 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 
@@ -29,6 +30,8 @@ public class Project extends AbstractModel
 
 	private String name;
 	private String idNum;
+	private Role role;
+	private Permission permission; 
 	
 	/**
 	 * Primary constructor for a Project
@@ -68,17 +71,31 @@ public class Project extends AbstractModel
 	/**
 	 * Implements Model-specific save logic
 	 */
-	public void save()
+	public void save(User aUser)
 	{
-		return; // TODO: implement saving during API - DB Layer Link up
+//		if(aUser.getRole().equals(role.ADMIN)){
+		if(getPermission(aUser).equals(permission.WRITE) || 
+		   aUser.getRole().equals(role.ADMIN)){
+			return; // TODO: implement saving during API - DB Layer Link up
+		}
+		else{
+		return; 
+		}
 	}
 	
 	/**
 	 * Implements Model-specific delete logic
 	 */
-	public void delete()
+	public void delete(User aUser)
 	{
-		return; // TODO: implement deleting during API - DB Layer Link up
+		//if(aUser.getRole().equals(role.ADMIN)){
+		if(getPermission(aUser).equals(permission.WRITE) || 
+		   aUser.getRole().equals(role.ADMIN)){
+			return; // TODO: implement saving during API - DB Layer Link up
+		}
+		else{
+		return; 
+		}
 	}
 	
 	

@@ -26,8 +26,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public interface Model {
 
 	/* database interaction */
-	public void save();
-	public void delete();
+	public void save(User aUser);
+	public void delete(User aUser);
 	
 	/* serializing */
 	
