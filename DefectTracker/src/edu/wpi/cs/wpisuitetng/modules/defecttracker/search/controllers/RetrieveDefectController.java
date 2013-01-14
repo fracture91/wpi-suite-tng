@@ -70,7 +70,7 @@ public class RetrieveDefectController extends MouseAdapter {
 	 */
 	public void showDefect(Defect defect) {
 		// Make a new defect view to display the defect that was received
-		view.getTabController().addDefectTab(defect);
+		view.getTabController().addEditDefectTab(defect);
 	}
 	
 	/**

@@ -45,19 +45,45 @@ public class MainTabController {
 	 * @param component		The component that will be displayed inside the tab.
 	 * @param tip			The tooltip to display when the cursor hovers over the tab title.
 	 */
-	public void addTab(String title, Icon icon, Component component, String tip) {
+	public Tab addTab(String title, Icon icon, Component component, String tip) {
 		this.view.addTab(title, icon, component, tip);
-		this.view.setSelectedIndex(this.view.getTabCount() - 1);
+		int index = this.view.getTabCount() - 1;
+		this.view.setSelectedIndex(index);
+		return new Tab(view, view.getTabComponentAt(index));
+	}
+	
+	public Tab addTab() {
+		return addTab(null, null, null, null);
+	}
+	
+	/**
+	 * Adds a tab that displays the given defect in the given mode
+	 * @param defect The defect to display
+	 * @param mode The Mode to use
+	 */
+	private Tab addDefectTab(Defect defect, Mode mode) {
+		Tab tab = addTab();
+		DefectView view = new DefectView(defect, mode, tab);
+		tab.setComponent(view);
+		view.requestFocus();
+		return tab;
 	}
 	
 	/**
 	 * Adds a tab that displays the given defect
 	 * @param defect the defect to display
+	 * @return The created Tab 
 	 */
-	public void addDefectTab(Defect defect) {
-		DefectView defectView = new DefectView(defect, Mode.EDIT);
-		addTab("Defect #" + defect.getId(), new ImageIcon(), defectView, "View defect " + defect.getTitle());
-		defectView.requestFocus();
+	public Tab addEditDefectTab(Defect defect) {
+		return addDefectTab(defect, Mode.EDIT);
+	}
+	
+	/**
+	 * Adds a tab that allows the user to create a new Defect
+	 * @return The created Tab
+	 */
+	public Tab addCreateDefectTab() {
+		return addDefectTab(new Defect(), Mode.CREATE);
 	}
 	
 	/**
