@@ -90,6 +90,9 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		return buttonGroup;
 	}
 	
+	/**
+	 * @param defect Set the tab title, tooltip, and group name according to this Defect
+	 */
 	protected void setEditModeDescriptors(Defect defect) {
 		containingTab.setTitle("Defect #" + defect.getId());
 		containingTab.setToolTipText("View defect " + defect.getTitle());

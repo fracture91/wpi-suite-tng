@@ -10,8 +10,8 @@ import javax.swing.Icon;
  */
 public class Tab {
 
-	private MainTabView view;
-	private Component tabComponent;
+	private final MainTabView view;
+	private final Component tabComponent;
 
 	/**
 	 * Create a Tab identified by the given MainTabView and tabComponent.
@@ -32,6 +32,9 @@ public class Tab {
 		return view.getTitleAt(getIndex());
 	}
 	
+	/**
+	 * @param title Set the title of the Tab to this String
+	 */
 	public void setTitle(String title) {
 		view.setTitleAt(getIndex(), title);
 		tabComponent.invalidate(); // needed to make tab shrink with smaller title
@@ -41,6 +44,9 @@ public class Tab {
 		return view.getIconAt(getIndex());
 	}
 	
+	/**
+	 * @param icon Set the icon of the Tab to this Icon
+	 */
 	public void setIcon(Icon icon) {
 		view.setIconAt(getIndex(), icon);
 	}
@@ -49,6 +55,9 @@ public class Tab {
 		return view.getToolTipTextAt(getIndex());
 	}
 	
+	/**
+	 * @param toolTipText Set the tooltip of the Tab to this String
+	 */
 	public void setToolTipText(String toolTipText) {
 		view.setToolTipTextAt(getIndex(), toolTipText);
 	}
@@ -57,6 +66,9 @@ public class Tab {
 		return view.getComponentAt(getIndex());
 	}
 	
+	/**
+	 * @param component Set the component contained by this Tab to this Component
+	 */
 	public void setComponent(Component component) {
 		view.setComponentAt(getIndex(), component);
 	}

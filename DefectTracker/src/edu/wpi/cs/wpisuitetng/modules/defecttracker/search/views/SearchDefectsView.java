@@ -39,6 +39,7 @@ public class SearchDefectsView extends JPanel implements IToolbarGroupProvider {
 	/**
 	 * Construct the view
 	 * @param tabController The main tab controller
+	 * @param tab The Tab containing this view
 	 */
 	public SearchDefectsView(MainTabController tabController, Tab tab) {
 		this.tabController = tabController;
@@ -49,7 +50,7 @@ public class SearchDefectsView extends JPanel implements IToolbarGroupProvider {
 			tab.setToolTipText("Search for defects");
 		}
 		
-		this.mainPanel = new SearchPanel(tabController);
+		mainPanel = new SearchPanel(tabController);
 		
 		// Construct the layout manager and add constraints
 		layout = new SpringLayout();
