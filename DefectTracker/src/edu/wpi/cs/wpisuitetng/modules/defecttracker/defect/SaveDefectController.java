@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import java.net.MalformedURLException;
-
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;

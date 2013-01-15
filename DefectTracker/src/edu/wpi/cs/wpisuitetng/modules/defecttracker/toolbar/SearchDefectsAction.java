@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.SearchDefectsView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.Tab;
 
 /**
  * Action that calls {@link MainTabController#addSearchDefectsTab()}, default mnemonic key is D.
@@ -35,8 +36,10 @@ public class SearchDefectsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		SearchDefectsView searchDefectsView = new SearchDefectsView(controller);
-		controller.addTab("Search Defects", new ImageIcon(), searchDefectsView, "Search for defects");
+		Tab tab = controller.addTab();
+		SearchDefectsView view = new SearchDefectsView(controller, tab);
+		tab.setComponent(view);
+		view.requestFocus();
 	}
 
 }
