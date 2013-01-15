@@ -43,6 +43,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		// make sure the defect isn't null
 		if (defect != null) {
 			((DefectPanel) view.getDefectPanel()).updateModel(defect);
+			view.setEditModeDescriptors(defect);
 		}
 		else {
 			// TODO notify user of server error

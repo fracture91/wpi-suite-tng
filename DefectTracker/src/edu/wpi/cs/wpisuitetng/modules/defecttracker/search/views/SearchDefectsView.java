@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
@@ -9,6 +10,7 @@ import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RefreshDefectsAction;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RetrieveAllDefectsController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.Tab;
 
 /**
  * View that contains the entire defect searching interface
@@ -37,10 +39,18 @@ public class SearchDefectsView extends JPanel implements IToolbarGroupProvider {
 	/**
 	 * Construct the view
 	 * @param tabController The main tab controller
+	 * @param tab The Tab containing this view
 	 */
-	public SearchDefectsView(MainTabController tabController) {
+	public SearchDefectsView(MainTabController tabController, Tab tab) {
 		this.tabController = tabController;
-		this.mainPanel = new SearchPanel(tabController);
+		
+		if(tab != null) {
+			tab.setTitle("Search Defects");
+			tab.setIcon(new ImageIcon());
+			tab.setToolTipText("Search for defects");
+		}
+		
+		mainPanel = new SearchPanel(tabController);
 		
 		// Construct the layout manager and add constraints
 		layout = new SpringLayout();

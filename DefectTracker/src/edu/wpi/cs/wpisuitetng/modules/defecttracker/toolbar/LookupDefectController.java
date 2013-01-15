@@ -88,7 +88,7 @@ public class LookupDefectController implements ActionListener {
 	 */
 	public void receivedResponse(Defect defect) {
 		// Make a new defect view to display the defect that was received
-		tabController.addDefectTab(defect);
+		tabController.addEditDefectTab(defect);
 		
 		// Reset the search field
 		searchField.clearText();

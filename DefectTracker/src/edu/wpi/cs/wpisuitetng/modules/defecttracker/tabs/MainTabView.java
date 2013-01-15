@@ -42,4 +42,10 @@ public class MainTabView extends JTabbedPane {
 		}
 	}
 	
+	@Override
+	public void setComponentAt(int index, Component component) {
+		super.setComponentAt(index, component);
+		fireStateChanged(); // hack to make sure toolbar knows if component changes
+	}
+	
 }
