@@ -101,16 +101,9 @@ public class TestRequest {
 	 */
 	@Test
 	public void testRequestSetRequestBodyNullPointerException() {
-		try {
-			Request r = new Request(config, null, RequestMethod.POST);
-			r.setRequestBody(null);
-			fail("No exception thrown.");
-		} catch (NullPointerException e) {
-			// Do nothing
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Request r = new Request(config, null, RequestMethod.POST);
+		r.setRequestBody(null);
+		fail("No exception thrown.");
 	}
 
 	/**
