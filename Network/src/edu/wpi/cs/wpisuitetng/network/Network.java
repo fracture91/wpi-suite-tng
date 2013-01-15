@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.network;
 
-import java.net.MalformedURLException;
-
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
@@ -30,9 +28,10 @@ public class Network {
 	 * 
 	 * @return	A Request.
 	 * 
-	 * @throws NullPointerException		If the requestMethod is null.
+	 * @throws RuntimeException			If there is an error using the configured URL.
+	 * @throws NullPointerException		If the requestMethod is null or there is a configuration error.
 	 */
-	public Request makeRequest(String path, Request.RequestMethod requestMethod) throws MalformedURLException, NullPointerException {		
+	public Request makeRequest(String path, Request.RequestMethod requestMethod) {		
 		if (requestMethod == null) {
 			throw new NullPointerException("requestMethod may not be null");
 		}

@@ -39,10 +39,10 @@ public class Request extends Observable implements IRequest {
 	 * @param path					The path to append to the API URL.
 	 * @param requestMethod			The HTTP RequestMethod to use.
 	 * 
-	 * @throws MalformedURLException 	
-	 * @throw NullPointerException		If the networkConfiguration or requestMethod is null.
+	 * @throw RuntimeException		If a MalformedURLException is received while constructing the URL.
+	 * @throw NullPointerException	If the networkConfiguration or requestMethod is null.
 	 */
-	public Request(NetworkConfiguration networkConfiguration, String path, RequestMethod requestMethod) throws NullPointerException, MalformedURLException {
+	public Request(NetworkConfiguration networkConfiguration, String path, RequestMethod requestMethod) {
 		// check to see if the networkConfiguration is null
 		if (networkConfiguration == null) {
 			throw new NullPointerException("The networkConfiguration must not be null.");
@@ -53,37 +53,42 @@ public class Request extends Observable implements IRequest {
 			throw new NullPointerException("The requestMethod must not be null.");
 		}
 
-		// set requestURL
-		// TODO improve code
-		if (path == null || path.length() == 0) {
-			this.requestURL = new URL(networkConfiguration.getApiUrl());
-		}
-		else if (networkConfiguration.getApiUrl().charAt(networkConfiguration.getApiUrl().length() - 1) == '/') {
-			this.requestURL = new URL(networkConfiguration.getApiUrl() + path);
-		}
-		else {
-			this.requestURL = new URL(networkConfiguration.getApiUrl() + '/' + path);
-		}
-		this.requestMethod = requestMethod;
+		try {
+			// set requestURL
+			// TODO improve code
+			if (path == null || path.length() == 0) {
+				this.requestURL = new URL(networkConfiguration.getApiUrl());
+			}
+			else if (networkConfiguration.getApiUrl().charAt(networkConfiguration.getApiUrl().length() - 1) == '/') {
+				this.requestURL = new URL(networkConfiguration.getApiUrl() + path);
+			}
+			else {
+				this.requestURL = new URL(networkConfiguration.getApiUrl() + '/' + path);
+			}
+			this.requestMethod = requestMethod;
 
-		// Copy request headers from networkConfiguration
-		requestHeaders = new HashMap<String, List<String>>();
-		Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
-		Iterator<String> valuesI;
-		String currentKey;
-		while (keysI.hasNext()) {
-			currentKey = keysI.next();
-			valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
+			// Copy request headers from networkConfiguration
+			requestHeaders = new HashMap<String, List<String>>();
+			Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
+			Iterator<String> valuesI;
+			String currentKey;
+			while (keysI.hasNext()) {
+				currentKey = keysI.next();
+				valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
 
-			while (valuesI.hasNext()) {
-				this.addRequestHeader(currentKey, valuesI.next());
+				while (valuesI.hasNext()) {
+					this.addRequestHeader(currentKey, valuesI.next());
+				}
+			}
+
+			// Copy observers from networkConfiguration
+			Iterator<RequestObserver> observersI = networkConfiguration.getObservers().iterator();
+			while (observersI.hasNext()) {
+				this.addObserver(observersI.next());
 			}
 		}
-
-		// Copy observers from networkConfiguration
-		Iterator<RequestObserver> observersI = networkConfiguration.getObservers().iterator();
-		while (observersI.hasNext()) {
-			this.addObserver(observersI.next());
+		catch (MalformedURLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
