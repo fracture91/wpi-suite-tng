@@ -81,13 +81,14 @@ public class User extends AbstractModel
 	}
 	
 	/**
-	 * Performs password checking logic. In the future, this may implement hashing.
+	 * Performs password checking logic. Fails if password field is null, which happens
+	 * 	when User is deserialized so as to protect the password.
 	 * @param pass	the password String to compare
 	 * @return	True if the password matches, False otherwise.
 	 */
 	public boolean matchPassword(String pass)
 	{
-		return password.equals(pass);
+		return (this.password == null) ? false : password.equals(pass);
 	}
 	
 	/**
