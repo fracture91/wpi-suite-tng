@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers;
 
-import java.net.MalformedURLException;
-
 import javax.swing.JOptionPane;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -20,10 +18,10 @@ public class RetrieveAllDefectsController {
 
 	/** The search defects view */
 	protected SearchDefectsView view;
-	
+
 	/** The defects data retrieved from the server */
 	protected Defect[] data = null;
-	
+
 	/**
 	 * Constructs a new RetrieveAllDefectsController
 	 * 
@@ -32,26 +30,18 @@ public class RetrieveAllDefectsController {
 	public RetrieveAllDefectsController(SearchDefectsView view) {
 		this.view = view;
 	}
-	
+
 	/**
 	 * Sends a request for all of the defects
 	 */
 	public void refreshData() {		
 		final RequestObserver requestObserver = new RetrieveAllDefectsRequestObserver(this);
 		Request request;
-		try {
-			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.GET);
-			request.addObserver(requestObserver);
-			request.send();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.GET);
+		request.addObserver(requestObserver);
+		request.send();
 	}
-	
+
 	/**
 	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when the
 	 * response is received
@@ -62,11 +52,11 @@ public class RetrieveAllDefectsController {
 		if (defects.length > 0) {
 			// save the data
 			this.data = defects;
-			
+
 			// set the column names
 			String[] columnNames = {"ID", "Title", "Description", "Creator", "Assignee", "Created", "Last Modified"};
 			view.getSearchPanel().getResultsPanel().getModel().setColumnNames(columnNames);
-			
+
 			// put the data in the table
 			Object[][] entries = new Object[defects.length][columnNames.length];
 			for (int i = 0; i < defects.length; i++) {
@@ -90,7 +80,7 @@ public class RetrieveAllDefectsController {
 			// do nothing, there are no defects
 		}
 	}
-	
+
 	/**
 	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when an
 	 * error occurs retrieving the defects from the server.

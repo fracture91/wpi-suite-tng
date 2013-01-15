@@ -17,7 +17,6 @@ import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.Response;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
-
 /**
  * Controller to handle user login
  *
@@ -81,28 +80,18 @@ public class LoginController implements ActionListener {
 	 * and password (base64 encoded)
 	 */
 	public void sendLoginRequest() {
-		try {
-			// Form the basic auth string
-			String basicAuth = "Authorization: Basic ";
-			String password = new String(view.getPasswordField().getPassword());
-			String credentials = view.getUserNameField().getText() + ":" + password;
-			basicAuth += Base64.encodeBase64String(credentials.getBytes());
-			
-			// Create and send the login request
-			Request request = Network.getInstance().makeRequest("login", RequestMethod.POST);
-			System.out.println(basicAuth);
-			request.addRequestHeader("Authorization", basicAuth);
-			request.addObserver(new LoginRequestObserver(this));
-			request.send();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
+		// Form the basic auth string
+		String basicAuth = "Authorization: Basic ";
+		String password = new String(view.getPasswordField().getPassword());
+		String credentials = view.getUserNameField().getText() + ":" + password;
+		basicAuth += Base64.encodeBase64String(credentials.getBytes());
+
+		// Create and send the login request
+		Request request = Network.getInstance().makeRequest("login", RequestMethod.POST);
+		System.out.println(basicAuth);
+		request.addRequestHeader("Authorization", basicAuth);
+		request.addObserver(new LoginRequestObserver(this));
+		request.send();
 	}
 	
 	/**
