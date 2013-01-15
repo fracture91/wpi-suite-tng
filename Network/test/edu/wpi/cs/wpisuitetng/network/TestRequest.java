@@ -101,9 +101,14 @@ public class TestRequest {
 	 */
 	@Test
 	public void testRequestSetRequestBodyNullPointerException() {
-		Request r = new Request(config, null, RequestMethod.POST);
-		r.setRequestBody(null);
-		fail("No exception thrown.");
+		try {
+			Request r = new Request(config, null, RequestMethod.POST);
+			r.setRequestBody(null);
+			fail("No exception thrown.");
+		}
+		catch(NullPointerException e) {
+			assertTrue("The requestBody parameter must not be null.".equals(e.getMessage()));
+		}
 	}
 
 	/**
