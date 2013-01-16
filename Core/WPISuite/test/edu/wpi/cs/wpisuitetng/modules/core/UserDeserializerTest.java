@@ -23,6 +23,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserDeserializer;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -45,17 +46,17 @@ public class UserDeserializerTest {
 	@Test
 	public void parsePasswordTest1()
 	{
-		String jsonUser = "{name:\"Tyler\", password:\"abc34;.\", username:\"twack\"}";
+		String jsonUser = "{\"name\":\"Tyler\", \"password\":\"abc34;.\", \"username\":\"twack\"}";
 		
 		String parsedPassword = UserDeserializer.parsePassword(jsonUser);
-		
+		System.out.println(parsedPassword);
 		assertTrue(parsedPassword.equals("abc34;."));
 	}
 	
 	@Test
 	public void parsePasswordTest2()
 	{
-		String jsonUser = "{name:\"Tyler\", password: \"abc34;.\", username:\"twack\"}";
+		String jsonUser = "{\"name\":\"Tyler\", \"password\": \"abc34;.\", \"username\":\"twack\"}";
 		
 		String parsedPassword = UserDeserializer.parsePassword(jsonUser);
 		
@@ -65,7 +66,7 @@ public class UserDeserializerTest {
 	@Test
 	public void parsePasswordTest3()
 	{
-		String jsonUser = "{name:\"Tyler\", password:\"abc34;.\", username:\"twack\"}";
+		String jsonUser = "{\"name\":\"Tyler\", \"password\":\"abc34;.\", \"username\":\"twack\"}";
 		
 		String parsedPassword = UserDeserializer.parsePassword(jsonUser);
 		
@@ -75,7 +76,7 @@ public class UserDeserializerTest {
 	@Test(expected=JsonParseException.class)
 	public void parsePasswordNoPasswordTest()
 	{
-		String jsonUser ="{name:\"Tyler\", username:\"twack\"}";
+		String jsonUser ="{\"name\":\"Tyler\", \"username\":\"twack\"}";
 		
 		String parsedPassword = UserDeserializer.parsePassword(jsonUser); // expect Exception
 	}
@@ -86,7 +87,7 @@ public class UserDeserializerTest {
 	 */
 	public void deserializeUserFull()
 	{
-		String jsonUser ="{name:\"Tyler\", username:\"twack\", idNum:2, password:\"abcde\"}";
+		String jsonUser ="{\"name\":\"Tyler\", \"username\":\"twack\", \"idNum\":2, password:\"abcde\", \"role\":\"ADMIN\"}";
 		Gson deserializer = this.gson.create();
 		
 		User inflated = deserializer.fromJson(jsonUser, User.class);
@@ -94,9 +95,12 @@ public class UserDeserializerTest {
 		assertEquals(2, inflated.getIdNum());
 		assertTrue(inflated.getName().equals("Tyler"));
 		assertTrue(inflated.getUsername().equals("twack"));
+		assertTrue(inflated.getRole().equals(Role.ADMIN));
 		
 		assertFalse(inflated.matchPassword("abcde"));
 		assertFalse(inflated.matchPassword(null));
+		
+		System.out.println(inflated.toString());
 	}
 	
 	@Test
@@ -105,7 +109,7 @@ public class UserDeserializerTest {
 	 */
 	public void deserializeUserMissingFields()
 	{
-		String jsonUser ="{name:\"Tyler\", idNum:2}";
+		String jsonUser ="{\"name\":\"Tyler\", \"idNum\":2}";
 		Gson deserializer = this.gson.create();
 		
 		User inflated = deserializer.fromJson(jsonUser, User.class);
@@ -124,7 +128,7 @@ public class UserDeserializerTest {
 	 */
 	public void deserializeUserMissingId()
 	{
-		String jsonUser ="{name:\"Tyler\", username:\"twack\", password:\"abcde\"}";
+		String jsonUser ="{\"name\":\"Tyler\", \"username\":\"twack\", \"password\":\"abcde\"}";
 		Gson deserializer = this.gson.create();
 		
 		User inflated = deserializer.fromJson(jsonUser, User.class); // exception expected.

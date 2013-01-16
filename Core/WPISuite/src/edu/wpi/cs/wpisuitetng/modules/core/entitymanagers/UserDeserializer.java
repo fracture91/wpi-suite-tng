@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -60,7 +61,15 @@ public class UserDeserializer implements JsonDeserializer<User> {
 			 name = deflated.get("name").getAsString();
 		 }
 		 
-		 return new User(name, username, null, idNum);
+		 User inflated = new User(name, username, null, idNum);
+		 
+		 if(deflated.has("role"))
+		 {
+			 Role r = Role.valueOf(deflated.get("role").getAsString());
+			 inflated.setRole(r);
+		 }
+		 
+		 return inflated;
 	}
 	
 	/**
@@ -77,7 +86,8 @@ public class UserDeserializer implements JsonDeserializer<User> {
 		}
 		
 		int fieldStartIndex = serializedUser.indexOf("password");
-		int startIndex = serializedUser.indexOf('"', fieldStartIndex) + 1;
+		int separator = serializedUser.indexOf(':', fieldStartIndex);
+		int startIndex = serializedUser.indexOf('"', separator) + 1;
 		int endIndex = serializedUser.indexOf('"', startIndex);
 		
 		String password = serializedUser.substring(startIndex, endIndex);
