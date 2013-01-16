@@ -15,7 +15,7 @@ public class NetworkConfiguration {
 	protected String apiUrl;									/** The URL of the core server API */
 	protected Map<String, List<String>> defaultRequestHeaders;	/** The default request headers. */
 	protected List<RequestObserver> observers;					/** The default observers. */
-	
+
 	/**
 	 * Constructs a NetworkConfiguration.
 	 * 
@@ -26,7 +26,7 @@ public class NetworkConfiguration {
 		this.defaultRequestHeaders = new HashMap<String, List<String>>();
 		this.observers = new ArrayList<RequestObserver>();
 	}
-	
+
 	/**
 	 * Creates a new NetworkConfiguration which duplicates the given NetworkConfiguration.
 	 * 
@@ -34,7 +34,7 @@ public class NetworkConfiguration {
 	 */
 	public NetworkConfiguration(NetworkConfiguration networkConfiguration) {
 		this(networkConfiguration.getApiUrl());
-		
+
 		// Copy request headers from networkConfiguration
 		Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
 		Iterator<String> valuesI;
@@ -42,19 +42,19 @@ public class NetworkConfiguration {
 		while (keysI.hasNext()) {
 			currentKey = keysI.next();
 			valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
-			
+
 			while (valuesI.hasNext()) {
 				this.addRequestHeader(currentKey, valuesI.next());
 			}
 		}
-		
+
 		// Copy observers from networkConfiguration
 		Iterator<RequestObserver> observersI = networkConfiguration.observers.iterator();
 		while (observersI.hasNext()) {
 			this.addObserver(observersI.next());
 		}
 	}
-	
+
 	/**
 	 * Adds an observer to the observers.
 	 * 
@@ -67,12 +67,10 @@ public class NetworkConfiguration {
 		if (observer == null) {
 			throw new NullPointerException("The observer must not be null.");
 		}
-		
+
 		observers.add(observer);
 	}
-	
-	
-	
+
 	/**
 	 * Adds a header to the default request headers.
 	 * 
@@ -86,41 +84,41 @@ public class NetworkConfiguration {
 		if (key == null) {
 			throw new NullPointerException("The key must not be null.");
 		}
-		
+
 		// check to see if the value is null
 		if (value == null) {
 			throw new NullPointerException("The value must not be null.");
 		}
-		
+
 		// get the List of current values from the requestHeaders Map
 		List<String> currentValues = defaultRequestHeaders.get(key);
-		
+
 		// if the List of current values is null, create a new list of current values
 		if (currentValues == null) {
 			currentValues = new ArrayList<String>();
 		}
-		
+
 		// add the new value to the list of current values
 		currentValues.add(value);
-		
+
 		// store the updated List of current values in the Map
 		defaultRequestHeaders.put(key, currentValues);
 	}
-	
+
 	/**
 	 * @return A URL to the core server API.
 	 */
 	public String getApiUrl() {
 		return apiUrl;
 	}
-	
+
 	/**
 	 * @return	A List of Observers.
 	 */
 	public List<RequestObserver> getObservers() {
 		return observers;
 	}
-	
+
 	/**
 	 * Returns a Map of the default request headers. The return value is not safe for modification.
 	 * 

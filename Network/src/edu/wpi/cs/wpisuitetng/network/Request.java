@@ -11,9 +11,7 @@ import java.util.Map;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
- * This class represents a Request. It can be observed by one or more Observers.
- * 
- * TODO add setRequestData (for url data, etc)
+ * This class represents a Request. It can be observed by one or more RequestObservers.
  */
 public class Request extends Observable implements IRequest {
 	/**
@@ -23,7 +21,6 @@ public class Request extends Observable implements IRequest {
 		GET, POST, PUT, DELETE
 	}
 
-	// TODO add RequestStatus to replace running with?
 	protected boolean running = false;
 
 	protected String requestBody;
@@ -206,18 +203,14 @@ public class Request extends Observable implements IRequest {
 	}
 
 	/**
-	 * Returns a String containing the request body.
-	 * 
-	 * @return	A String containing the request body.
+	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestBody
 	 */
 	public String getRequestBody() {
 		return requestBody;
 	}
 
 	/**
-	 * Returns a Map of request header keys to Lists of request header values.
-	 * 
-	 * @return	A Map of request header keys to Lists of request header values.
+	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestHeaders
 	 */
 	public Map<String, List<String>> getRequestHeaders() {
 		return requestHeaders;
@@ -244,20 +237,14 @@ public class Request extends Observable implements IRequest {
 	}
 
 	/**
-	 * Returns the server's Response to the Request.
-	 * 
-	 * @return	The server's Response to the Request.
+	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getResponse
 	 */
 	public Response getResponse() {
 		return response;
 	}
 
 	/**
-	 * Returns a URL pointing to the server.
-	 * 
-	 * TODO Make this javadoc better
-	 * 
-	 * @return	A URL pointing to the server.
+	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getURL
 	 */
 	public URL getURL() {
 		return requestURL;
