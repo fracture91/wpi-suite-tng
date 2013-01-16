@@ -46,7 +46,7 @@ public class UserDeserializer implements JsonDeserializer<User> {
 		 
 		 // for all other attributes: instantiate as null, fill in if given.
 		 
-		 int idNum = deflated.getAsInt();
+		 int idNum = deflated.get("idNum").getAsInt();
 		 String username = null;
 		 String name = null;
 		 
