@@ -66,7 +66,7 @@ public class SessionTest {
 		SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy h:mm:ss a");
 		Date loginTime = this.ses1.getLoginTime();
 		
-		String json = "{\"user\":" + this.u1.toString() + ",\"loginTime\":\"" + format.format(loginTime) + "\"}";
+		String json = "{\"user\":" + this.u1.toString() + ",\"loginTime\":\"" + format.format(loginTime) + "\"}";		
 		
 		assertTrue(json.equals(this.ses1.toString()));
 	}

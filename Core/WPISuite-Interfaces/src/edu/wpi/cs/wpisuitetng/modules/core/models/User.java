@@ -14,6 +14,7 @@
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
@@ -26,11 +27,11 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 public class User extends AbstractModel
 {
 
-	private String name;
-	private String username;
+	@Expose private String name;
+	@Expose private String username;
 	private String password;
-	private int idNum;
-	private Role role;
+	@Expose private int idNum;
+	@Expose private Role role;
 	
 	/**
 	 * The primary constructor for a User
@@ -138,18 +139,11 @@ public class User extends AbstractModel
 	{
 		String json;
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		
 		json = gson.toJson(this, User.class);
-		/*
-		json = "{";
-		json += "name:"+ name +",";
-		json += "idNum:"+ idNum;
-		json += "}";
-		*/
 		
-		return json;
-		
+		return json;	
 	}
 	
 	/**
@@ -160,24 +154,15 @@ public class User extends AbstractModel
 	 */
 	public static String toJSON(User[] u)
 	{
-		String json ="";
+		String json ="{";
 		
-		Gson gson = new Gson();
-		
-		json = gson.toJson(u, User[].class);
-		/*
 		for(User a : u)
 		{
-			json += gson.toJson(a, User.class);
+			json += a.toJSON() + ", ";
 		}
 		
-		/*
-		json = "{";
-		json += "name:"+ name +",";
-		json += "idNum:"+ idNum;
 		json += "}";
-		*/
-		
+				
 		return json;
 		
 	}

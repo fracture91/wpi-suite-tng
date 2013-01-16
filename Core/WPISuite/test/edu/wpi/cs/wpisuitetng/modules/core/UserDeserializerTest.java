@@ -49,7 +49,7 @@ public class UserDeserializerTest {
 		String jsonUser = "{\"name\":\"Tyler\", \"password\":\"abc34;.\", \"username\":\"twack\"}";
 		
 		String parsedPassword = UserDeserializer.parsePassword(jsonUser);
-		System.out.println(parsedPassword);
+		
 		assertTrue(parsedPassword.equals("abc34;."));
 	}
 	
@@ -99,8 +99,6 @@ public class UserDeserializerTest {
 		
 		assertFalse(inflated.matchPassword("abcde"));
 		assertFalse(inflated.matchPassword(null));
-		
-		System.out.println(inflated.toString());
 	}
 	
 	@Test

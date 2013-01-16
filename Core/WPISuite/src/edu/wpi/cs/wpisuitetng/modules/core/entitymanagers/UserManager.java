@@ -198,10 +198,7 @@ public class UserManager implements EntityManager<User> {
 		}
 		
 		// Resolve differences toUpdate using changes, field-by-field.
-		if(changes.getIdNum() != toUpdate.getIdNum())
-		{
-			throw new ConflictException(); // The given User changeSet's idNum does not match the given User toUpdate.
-		}
+		toUpdate.setIdNum(changes.getIdNum());
 		
 		if(changes.getName() != null)
 		{
