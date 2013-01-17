@@ -19,4 +19,10 @@
 			<param name="dependency.target" value="dist"/>
 		</antcall>
 	</target>
+
+	<target name="test" description="Runs tests">
+		<antcall target="depend.all">
+			<param name="dependency.target" value="test"/>
+		</antcall>
+	</target>
 </project>
