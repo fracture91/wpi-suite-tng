@@ -2,7 +2,8 @@
 <project name="DefectTracker" default="compile">
 	<import file="../build-common.xml"/>
 
-	<property name="core-lib" location="../Core/WPISuite/WebContent/WEB-INF/lib"/>
+	<property name="core-jar-dest" location="${core-lib}/DefectTracker.jar"/>
+	<property name="janeway-jar-dest" location="../Janeway/modules/DefectTracker.jar"/>
 
 	<target name="compile-base">
 		<mkdir dir="build"/>
@@ -20,14 +21,14 @@
 	</target>
 
 	<target name="janeway-jar" depends="compile-base">
-		<jar destfile="../Janeway/modules/DefectTracker.jar">
+		<jar destfile="${janeway-jar-dest}">
 			<fileset dir="build"/>
 			<fileset file="manifest.txt"/>
 		</jar>
 	</target>
 
 	<target name="core-jar" depends="compile-base">
-		<jar destfile="${core-lib}/DefectTracker.jar">
+		<jar destfile="${core-jar-dest}">
 			<fileset dir="build"/>
 		</jar>
 	</target>
@@ -36,6 +37,8 @@
 
 	<target name="clean">
 		<delete dir="build"/>
+		<delete file="${core-jar-dest}"/>
+		<delete file="${janeway-jar-dest}"/>
 	</target>
 
 </project>

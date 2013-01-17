@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Janeway" default="default">
+	<import file="../build-common.xml"/>
+
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes">
+			<classpath>
+				<pathelement path="../Network/build"/>
+				<pathelement path="../Core/WPISuite-Interfaces/build"/>
+				<fileset dir="${core-lib}">
+					<include name="commons-codec-1.7.jar"/>
+				</fileset>
+				<pathelement path="build"/>
+			</classpath>
+		</javac>
+	</target>
+
+</project>

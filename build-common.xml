@@ -2,6 +2,8 @@
 <project name="build-common" default="compile">
 	<import file="dependencies.xml"/>
 
+	<property name="core-lib" location="${dependencies.basedir}/Core/WPISuite/WebContent/WEB-INF/lib"/>
+
 	<target name="clean" description="Deletes files created during the build">
 		<echo message="${ant.project.name} - build-common.clean - not implemented"/>
 	</target>

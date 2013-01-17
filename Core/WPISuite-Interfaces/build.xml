@@ -11,6 +11,7 @@
 -->
 
 <project name="WPISuite-Interfaces" default="core" basedir=".">
+	<import file="../../build-common.xml"/>
 	<description>
 		Build file for the WPISuite-Interfaces project. Provides
 		options to build into the WPISuite Server project.
@@ -19,7 +20,6 @@
 	<!-- define global directory shortcuts -->
 	<property name="src" location="src" />
 	<property name="build" location="build" />
-	<property name="core-lib" location="../WPISuite/WebContent/WEB-INF/lib" />
 	
 	<!-- define the external jar class path reference -->
 	<path id="ext-lib">
@@ -37,7 +37,7 @@
 	</target>
 	
 	<!-- compiles the project -->
-	<target name="compile" depends="init">
+	<target name="compile-base" depends="init">
 		<javac srcdir="${src}" destdir="${build}" includeJavaRuntime="yes">
 			<classpath refid="ext-lib" />
 		</javac>
@@ -51,7 +51,7 @@
 	</target>
 	
 	<!-- creates a manifest and jars up the project into the core-lib -->
-	<target name="core" depends="compile, clean">
+	<target name="compile" depends="compile-base, clean">
 		<manifest file="${build}/MANIFEST.MF" >
 			<attribute name="Built-By" value="${user.name}" />
 		</manifest>

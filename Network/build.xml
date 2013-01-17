@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Network" default="default">
+	<import file="../build-common.xml"/>
+
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes">
+			<classpath>
+				<pathelement path="build"/>
+			</classpath>
+		</javac>
+	</target>
+
+</project>
