@@ -28,7 +28,6 @@ public class RequestActor extends Thread {
 	
 	/**
 	 * Overrides Thread's run method. This will be called when the thread is started.
-	 * TODO handle 400 and 500 error exceptions and whatnot
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
@@ -119,7 +118,10 @@ public class RequestActor extends Thread {
 				connection.disconnect(); 
 			}
 			
-			if (requestSendFail) {
+			if (!request.isAsynchronous) {
+				// Do nothing
+			}
+			else if (requestSendFail) {
 				request.notifyObserversFail(exceptionRecv);
 			}
 			else if (responseBodyReadTimeout) {

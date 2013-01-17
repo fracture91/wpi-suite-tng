@@ -12,6 +12,13 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
  * This class represents a Request. It can be observed by one or more RequestObservers.
+ * 
+ * A Request can be sent synchronously or asynchronously. By default, a Request is asynchronous upon 
+ * construction. When a synchronous Request is sent, it will block, causing the current thread to pause 
+ * while the Request is sent and while waiting for a Response. The RequestObservers that have been added to 
+ * the Request will not be notified. In most cases, you will not want to send a synchronous Request. When a 
+ * Request is sent asynchronously, a new thread is created which sends the Request, generates a Response, 
+ * and notifies any RequestObservers that have been added to the Request.
  */
 public class Request extends Observable implements IRequest {
 	/**
@@ -28,6 +35,7 @@ public class Request extends Observable implements IRequest {
 	protected URL requestURL;
 	protected RequestMethod requestMethod;
 	protected Response response;
+	protected boolean isAsynchronous;
 
 	/**
 	 * Constructor.
@@ -87,10 +95,13 @@ public class Request extends Observable implements IRequest {
 		catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+
+		setAsynchronous();
 	}
 
 	/**
 	 * Sends the Request by creating a new RequestActor and starting it as a new Thread.
+	 * Note: If Request.isAsynchronous is false, RequestObservers for this Request will not be updated.
 	 * 
 	 * @throws IllegalStateException	If the request has already been sent.
 	 */
@@ -101,7 +112,13 @@ public class Request extends Observable implements IRequest {
 		}
 
 		RequestActor requestActor = new RequestActor(this);
-		requestActor.start();
+		
+		if (isAsynchronous) {
+			requestActor.start();
+		}
+		else {
+			requestActor.run();
+		}
 	}
 
 	/**
@@ -137,6 +154,30 @@ public class Request extends Observable implements IRequest {
 
 		// store the updated List of current values in the Map
 		requestHeaders.put(key, currentValues);
+	}
+
+	/**
+	 * Makes this Request synchronous.
+	 */
+	public void clearAsynchronous() {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request already sent.");
+		}
+		
+		isAsynchronous = false;
+	}
+
+	/**
+	 * Makes this Request asynchronous.
+	 */
+	public void setAsynchronous() {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request already sent.");
+		}
+
+		isAsynchronous = true;
 	}
 
 	/**
@@ -248,5 +289,14 @@ public class Request extends Observable implements IRequest {
 	 */
 	public URL getURL() {
 		return requestURL;
+	}
+
+	/**
+	 * Returns a boolean indicating whether or not this Request is asynchronous.
+	 * 
+	 * @return a boolean indicating whether or not this Request is asynchronous.
+	 */
+	public boolean isAsynchronous() {
+		return isAsynchronous;
 	}
 }
