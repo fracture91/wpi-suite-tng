@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="DefectTracker" default="compile">
+	<import file="../build-common.xml"/>
+
+	<property name="core-lib" location="../Core/WPISuite/WebContent/WEB-INF/lib"/>
+
+	<target name="compile-base">
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes">
+			<classpath>
+				<pathelement path="../Janeway/build"/>
+				<pathelement path="../Network/build"/>
+				<pathelement path="../Core/WPISuite-Interfaces/build"/>
+				<fileset dir="${core-lib}">
+					<include name="gson-*.jar"/>
+				</fileset>
+				<pathelement path="build"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="janeway-jar" depends="compile-base">
+		<jar destfile="../Janeway/modules/DefectTracker.jar">
+			<fileset dir="build"/>
+			<fileset file="manifest.txt"/>
+		</jar>
+	</target>
+
+	<target name="core-jar" depends="compile-base">
+		<jar destfile="${core-lib}/DefectTracker.jar">
+			<fileset dir="build"/>
+		</jar>
+	</target>
+
+	<target name="compile" depends="janeway-jar, core-jar"/>
+
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+
+</project>

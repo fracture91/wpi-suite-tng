@@ -16,7 +16,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Build JAR for Janeway.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/Build Janeway Jar.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
