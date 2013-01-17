@@ -56,10 +56,15 @@ public class TabPanel extends JPanel {
 				// Add the toolbar and main component to the new panel
 				newPanel.add(jtm.getToolbar());
 				newPanel.add(jtm.getMainComponent());
+				newPanel.setName(jtm.getName());
 				
 				// Add a tab to the tabbed pane containing the new panel
 				tabbedPane.addTab(jtm.getName(), jtm.getIcon(), newPanel);
 			}
 		}
+	}
+	
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
 	}
 }

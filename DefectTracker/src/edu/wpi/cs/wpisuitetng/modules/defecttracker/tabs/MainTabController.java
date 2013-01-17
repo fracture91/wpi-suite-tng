@@ -115,6 +115,18 @@ public class MainTabController {
 	}
 	
 	/**
+	 * Closes the currently active tab
+	 */
+	public void closeCurrentTab() {
+		try {
+			view.removeTabAt(view.getSelectedIndex());
+		}
+		catch (IndexOutOfBoundsException e) {
+			// do nothing, tried to close tab that does not exist
+		}
+	}
+	
+	/**
 	 * Changes the selected tab to the tab with the given index
 	 * @param tabIndex the index of the tab to select
 	 */

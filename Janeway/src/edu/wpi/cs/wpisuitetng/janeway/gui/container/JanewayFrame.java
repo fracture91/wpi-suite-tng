@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -57,6 +58,16 @@ public class JanewayFrame extends JFrame {
 		
 		// Add the tab panel
 		tabPanel = new TabPanel(modules);
-		this.add(tabPanel, BorderLayout.CENTER);		
+		this.add(tabPanel, BorderLayout.CENTER);
+		
+		// Add key event dispatcher
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new JanewayKeyEventDispatcher(this, modules));
+	}
+	
+	/**
+	 * @return the tab panel
+	 */
+	public TabPanel getTabPanel() {
+		return tabPanel;
 	}
 }

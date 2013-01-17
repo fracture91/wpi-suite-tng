@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.KeyboardShortcut;
+
 
 /**
  * A dummy module to demonstrate the Janeway client
@@ -45,7 +47,7 @@ public class DummyModule implements IJanewayModule {
 	}
 
 	/**
-	 * Return the name of the module
+	 * @see edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule#getName()
 	 */
 	@Override
 	public String getName() {
@@ -53,11 +55,10 @@ public class DummyModule implements IJanewayModule {
 	}
 
 	/**
-	 * Return a list of tabs used by this module
+	 * @see edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule#getTabs()
 	 */
 	@Override
 	public List<JanewayTabModel> getTabs() {
 		return tabs;
 	}
-
 }
