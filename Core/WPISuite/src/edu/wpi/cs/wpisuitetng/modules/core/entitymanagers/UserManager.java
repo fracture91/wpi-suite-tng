@@ -13,6 +13,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.PasswordCryptographer;
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.Sha256Password;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
@@ -41,28 +44,33 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
+	private PasswordCryptographer passwordHash;
 	Gson gson;
 	Data data;
 
 	/**
 	 * Creates a UserManager operating on the given Data.
 	 * 	Attaches the custom serializer and deserializers for the Gson library.
+	 * Determines the algorithm used to secure passwords.
 	 * @param data
 	 */
 	public UserManager(Data data)
 	{
 		this.data = data;
-		
-		// hang the custom serializer/deserializer
+		this.passwordHash = new Sha256Password();
+
+		// build the custom serializer/deserializer
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(this.user, new UserDeserializer());
 		
 		this.gson = builder.create();
+		
 	}
 	
 	@Override
 	public User makeEntity(Session s, String content) throws WPISuiteException{
 		
+		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
 			p = gson.fromJson(content, user);
@@ -73,8 +81,10 @@ public class UserManager implements EntityManager<User> {
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
 			String newPassword = UserDeserializer.parsePassword(content);
-			//TODO: password hashing
-			p.setPassword(newPassword);
+			
+			String hashedPassword = this.passwordHash.generateHash(newPassword);
+			
+			p.setPassword(hashedPassword);
 			
 			save(s,p);
 		}

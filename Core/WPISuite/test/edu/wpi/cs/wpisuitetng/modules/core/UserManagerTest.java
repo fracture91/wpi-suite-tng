@@ -69,7 +69,8 @@ public class UserManagerTest {
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}
-		assertEquals(u,temp);
+		
+		assertTrue(u.equals(temp));
 	}
 	
 	@Test(expected = ConflictException.class)
