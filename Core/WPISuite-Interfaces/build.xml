@@ -47,11 +47,11 @@
 	<target name="clean">
 		<delete file="${build}/MANIFEST.MF" />
 		<delete file="${core-lib}/WPISuite-Interfaces.jar" />
-		<delete file="${build}" />
+		<delete dir="${build}" />
 	</target>
 	
 	<!-- creates a manifest and jars up the project into the core-lib -->
-	<target name="compile" depends="compile-base, clean">
+	<target name="compile" depends="compile-base">
 		<manifest file="${build}/MANIFEST.MF" >
 			<attribute name="Built-By" value="${user.name}" />
 		</manifest>
