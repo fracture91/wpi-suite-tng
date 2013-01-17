@@ -3,11 +3,11 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.controllers.RetrieveDefectController;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
-import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * An observer for a request to retrieve a defect with the provided id
@@ -31,10 +31,10 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 		Request request = (Request) iReq;
 
 		// get the response from the request
-		Response response = request.getResponse();
+		ResponseModel response = request.getResponse();
 
 		// check the response code of the request
-		if (response.getResponseCode() != 200) {
+		if (response.getStatusCode() != 200) {
 			controller.errorRetrievingDefect();
 			return;
 		}

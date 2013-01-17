@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
+
 /**
  * This class makes a request asynchronously.
  */
@@ -42,7 +44,7 @@ public class RequestActor extends Thread {
 			connection = (HttpURLConnection) request.getURL().openConnection();
 			connection.setConnectTimeout(20*1000);
 			connection.setReadTimeout(5*1000);
-			connection.setRequestMethod(request.getRequestMethod());
+			connection.setRequestMethod(request.getRequestMethod().toString());
 			connection.setDoInput(true);
 			connection.setRequestProperty("Connection", "close");
 			
@@ -105,7 +107,7 @@ public class RequestActor extends Thread {
 			String responseMessage = connection.getResponseMessage();
 			
 			// create Response
-			Response response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
+			ResponseModel response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
 			
 			// set the Request's response to the newly created response
 			request.setResponse(response);
@@ -129,11 +131,11 @@ public class RequestActor extends Thread {
 			}
 			else if (request.getResponse() != null) {
 				// On status code 2xx
-				if (request.getResponse().getResponseCode() >= 200 && request.getResponse().getResponseCode() < 300) {
+				if (request.getResponse().getStatusCode() >= 200 && request.getResponse().getStatusCode() < 300) {
 					request.notifyObserversResponseSuccess();
 				}
 				// On status code 4xx or 5xx
-				else if (request.getResponse().getResponseCode() >= 400 && request.getResponse().getResponseCode() < 600) {
+				else if (request.getResponse().getStatusCode() >= 400 && request.getResponse().getStatusCode() < 600) {
 					request.notifyObserversResponseError();
 				}
 				// On other status codes

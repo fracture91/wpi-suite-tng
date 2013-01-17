@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.network;
 
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+
 /**
  * Interface for observing requests.
  */

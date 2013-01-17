@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.RequestModel;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * This class represents a Request. It can be observed by one or more RequestObservers.
@@ -20,22 +23,10 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
  * Request is sent asynchronously, a new thread is created which sends the Request, generates a Response, 
  * and notifies any RequestObservers that have been added to the Request.
  */
-public class Request extends Observable implements IRequest {
-	/**
-	 * Represents an HTTP request method.
-	 */
-	public static enum RequestMethod {
-		GET, POST, PUT, DELETE
-	}
-
+public class Request extends RequestModel {
+	private List<RequestObserver> observers;
 	protected boolean running = false;
-
-	protected String requestBody;
-	protected Map<String, List<String>> requestHeaders;
-	protected URL requestURL;
-	protected RequestMethod requestMethod;
-	protected Response response;
-	protected boolean isAsynchronous;
+	protected boolean isAsynchronous = true;
 
 	/**
 	 * Constructor.
@@ -96,7 +87,7 @@ public class Request extends Observable implements IRequest {
 			throw new RuntimeException(e);
 		}
 
-		setAsynchronous();
+		observers = new ArrayList<RequestObserver>();
 	}
 
 	/**
@@ -112,7 +103,7 @@ public class Request extends Observable implements IRequest {
 		}
 
 		RequestActor requestActor = new RequestActor(this);
-		
+
 		if (isAsynchronous) {
 			requestActor.start();
 		}
@@ -130,30 +121,14 @@ public class Request extends Observable implements IRequest {
 	 * @throws IllegalStateException	If the request has already been sent.
 	 * @throws NullPointerException		If the key is null.
 	 */
+	@Override
 	public void addRequestHeader(String key, String value) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
 
-		// check to see if the key is null
-		if (key == null) {
-			throw new NullPointerException("The key must not be null.");
-		}
-
-		// get the List of current values from the requestHeaders Map
-		List<String> currentValues = requestHeaders.get(key);
-
-		// if the List of current values is null, create a new list of current values
-		if (currentValues == null) {
-			currentValues = new ArrayList<String>();
-		}
-
-		// add the new value to the list of current values
-		currentValues.add(value);
-
-		// store the updated List of current values in the Map
-		requestHeaders.put(key, currentValues);
+		super.addRequestHeader(key, value);
 	}
 
 	/**
@@ -164,7 +139,7 @@ public class Request extends Observable implements IRequest {
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
-		
+
 		isAsynchronous = false;
 	}
 
@@ -189,18 +164,14 @@ public class Request extends Observable implements IRequest {
 	 * @throws IllegalStateException	If the request has already been sent.
 	 * @throws NullPointerException		If the requestBody is null.
 	 */
+	@Override
 	public void setRequestBody(String requestBody) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
 
-		// check to see if the key is null
-		if (requestBody == null) {
-			throw new NullPointerException("The requestBody parameter must not be null.");
-		}
-
-		this.requestBody = requestBody;
+		super.setRequestBody(requestBody);
 	}
 
 	/**
@@ -212,18 +183,14 @@ public class Request extends Observable implements IRequest {
 	 * @throws IllegalStateException	If the request has already been sent.
 	 * @throws NullPointerException		If the requestMethod is null.
 	 */
+	@Override
 	public void setRequestMethod(RequestMethod requestMethod) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
 			throw new IllegalStateException("Request already sent.");
 		}
 
-		// check to see if the requestMethod is null
-		if (requestMethod == null) {
-			throw new NullPointerException("The requestMethod parameter must not be null.");
-		}
-
-		this.requestMethod = requestMethod;
+		super.setRequestMethod(requestMethod);
 	}
 
 	/**
@@ -233,62 +200,14 @@ public class Request extends Observable implements IRequest {
 	 * 
 	 * @throws	IllegalStateException	If the Request has not been sent yet.
 	 */
-	protected void setResponse(Response response) {
+	@Override
+	protected void setResponse(ResponseModel response) {
 		// check to see if the request has been sent yet
 		if (running) {
 			throw new IllegalStateException("Request has not been sent yet.");
 		}
 
-		// set the Response to this Request
-		this.response = response;
-	}
-
-	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestBody
-	 */
-	public String getRequestBody() {
-		return requestBody;
-	}
-
-	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestHeaders
-	 */
-	public Map<String, List<String>> getRequestHeaders() {
-		return requestHeaders;
-	}
-
-	/**
-	 * Returns a String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
-	 * 
-	 * @return	A String representing the request method.
-	 */
-	public String getRequestMethod() {
-		if (requestMethod == RequestMethod.GET) {
-			return "GET";
-		} else if (requestMethod == RequestMethod.POST) {
-			return "POST";
-		} else if (requestMethod == RequestMethod.PUT) {
-			return "PUT";
-		} else if (requestMethod == RequestMethod.DELETE) {
-			return "DELETE";
-		}
-
-		// default request method is GET
-		return "GET";
-	}
-
-	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getResponse
-	 */
-	public Response getResponse() {
-		return response;
-	}
-
-	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getURL
-	 */
-	public URL getURL() {
-		return requestURL;
+		super.setResponse(response);
 	}
 
 	/**
@@ -298,5 +217,86 @@ public class Request extends Observable implements IRequest {
 	 */
 	public boolean isAsynchronous() {
 		return isAsynchronous;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Adds a RequestObserver to this Observable.
+	 * 
+	 * @param o The RequestObserver to add.
+	 */
+	public void addObserver(RequestObserver o) {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request has not been sent yet.");
+		}
+
+		observers.add(o);
+	}
+
+	/**
+	 * Returns the number of RequestObservers for this Observable.
+	 * 
+	 * @return The number of RequestObservers for this Observable.
+	 */
+	public int countObservers() {
+		return observers.size();
+	}
+
+	/**
+	 * Notifies RequestObservers of a response with a status code indicating success (2xx).
+	 */
+	public void notifyObserversResponseSuccess() {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request has not been sent yet.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.responseSuccess((IRequest) this);
+		}
+	}
+
+	/**
+	 * Notifies RequestObservers of response with a status code indicating a client error (4xx) for server error (5xx).
+	 */
+	public void notifyObserversResponseError() {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request has not been sent yet.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.responseError((IRequest) this);
+		}
+	}
+
+	/**
+	 * Notifies RequestObservers of a failure in sending a request.
+	 * 
+	 * @param exception An exception.
+	 */
+	public void notifyObserversFail(Exception exception) {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request has not been sent yet.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.fail((IRequest) this, exception);
+		}
 	}
 }

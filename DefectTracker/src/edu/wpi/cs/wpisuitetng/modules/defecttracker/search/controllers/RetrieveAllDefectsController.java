@@ -7,8 +7,8 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers.RetrieveAll
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.SearchDefectsView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
 
 /**
  * Controller to handle retrieving all defects from the server and

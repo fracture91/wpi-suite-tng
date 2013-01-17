@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.network;
+package edu.wpi.cs.wpisuitetng.network.models;
 
 import java.net.URL;
 import java.util.List;
@@ -26,18 +26,18 @@ public interface IRequest {
 	public Map<String, List<String>> getRequestHeaders();
 	
 	/**
-	 * Returns a String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
+	 * Returns a RequestMethod representing the HTTP request method.
 	 * 
-	 * @return	A String representing the request method.
+	 * @return	A RequestMethod representing the request method.
 	 */
-	public String getRequestMethod();
+	public RequestMethod getRequestMethod();
 	
 	/**
 	 * Returns the server's Response to the Request.
 	 * 
 	 * @return	The server's Response to the Request.
 	 */
-	public Response getResponse();
+	public ResponseModel getResponse();
 
 	/**
 	 * Returns a URL pointing to the server.

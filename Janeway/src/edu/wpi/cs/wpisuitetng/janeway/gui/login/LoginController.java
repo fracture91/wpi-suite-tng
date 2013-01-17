@@ -13,9 +13,9 @@ import org.apache.commons.codec.binary.Base64;
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
-import edu.wpi.cs.wpisuitetng.network.Response;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * Controller to handle user login
@@ -99,9 +99,9 @@ public class LoginController implements ActionListener {
 	 * request was successful.
 	 * @param response the response returned by the server
 	 */
-	public void loginSuccessful(Response response) {
+	public void loginSuccessful(ResponseModel response) {
 		// Save the session cookie
-		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getResponseHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
+		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
 		
 		// Show the main GUI
 		mainGUI.setVisible(true);
@@ -113,7 +113,7 @@ public class LoginController implements ActionListener {
 	 * request was unsuccessful.
 	 * @param response the response returned by the server
 	 */
-	public void loginFailed(Response response) {
+	public void loginFailed(ResponseModel response) {
 		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
 	}
 }

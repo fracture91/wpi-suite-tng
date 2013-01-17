@@ -3,10 +3,10 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
-import edu.wpi.cs.wpisuitetng.network.IRequest;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
-import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * An Observer for a Request to create a Defect.
@@ -30,7 +30,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		Request request = (Request) iReq;
 
 		// get the response from the request
-		Response response = request.getResponse();
+		ResponseModel response = request.getResponse();
 
 
 		// print the body

@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
-import edu.wpi.cs.wpisuitetng.network.Response;
-import edu.wpi.cs.wpisuitetng.network.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * A RequestObserver for a Request to update a Defect.
@@ -31,7 +31,7 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 		Request request = (Request) iReq;
 
 		// get the response from the request
-		Response response = request.getResponse();
+		ResponseModel response = request.getResponse();
 
 		// print the body
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger

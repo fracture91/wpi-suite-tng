@@ -3,8 +3,8 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
 
 /**
  * Controller to handle the saving of a defect
