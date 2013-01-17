@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="build-common" default="compile">
+	<import file="dependencies.xml"/>
+
+	<target name="clean" description="Deletes files created during the build">
+		<echo message="${ant.project.name} - build-common.clean - not implemented"/>
+	</target>
+
+	<target name="compile" description="Compiles source code">
+		<echo message="${ant.project.name} - build-common.compile - not implemented"/>
+	</target>
+
+	<target name="dist" depends="compile" description="Creates distributable">
+		<echo message="${ant.project.name} - build-common.dist - not implemented"/>
+	</target>
+
+	<target name="clean.dependencies"
+		description="Deletes files created during the build (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="clean"/>
+		</antcall>
+	</target>
+
+	<target name="dist.dependencies"
+		description="Creates distributable (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="dist"/>
+		</antcall>
+	</target>
+</project>

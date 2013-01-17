@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="dependencies" default="depend.all">
+	<dirname property="dependencies.basedir" file="${ant.file.dependencies}"/>
+
+	<target name="depend.all"
+		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker">
+	</target>
+
+	<!-- Each project must define its dependencies below -->
+
+	<target name="depend.WPISuite-Interfaces">
+		<ant dir="${dependencies.basedir}/Core/WPISuite-Interfaces"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+	<target name="depend.Network">
+		<ant dir="${dependencies.basedir}/Network"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+	<target name="depend.Janeway"
+		depends="depend.Network, depend.WPISuite-Interfaces">
+		<ant dir="${dependencies.basedir}/Janeway"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+	<!-- Note that WPISuite depends on DefectTracker because of the lack of dynamic loading -->
+	<target name="depend.WPISuite"
+		depends="depend.WPISuite-Interfaces, depend.DefectTracker">
+		<ant dir="${dependencies.basedir}/Core/WPISuite"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+	<target name="depend.DefectTracker"
+		depends="depend.Janeway">
+		<ant dir="${dependencies.basedir}/DefectTracker"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+</project>
