@@ -104,7 +104,9 @@ public class MainTabController {
 	 * Changes the selected tab to the tab left of the current tab
 	 */
 	public void switchToLeftTab() {
-		switchToTab(view.getSelectedIndex() - 1);
+		if (view.getSelectedIndex() > 0) {
+			switchToTab(view.getSelectedIndex() - 1);
+		}
 	}
 	
 	/**
