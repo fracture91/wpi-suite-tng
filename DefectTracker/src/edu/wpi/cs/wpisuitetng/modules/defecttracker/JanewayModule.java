@@ -61,7 +61,7 @@ public class JanewayModule implements IJanewayModule {
 	private void registerKeyboardShortcuts(JanewayTabModel tab) {
 		//int shortcutKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		int shortcutKeyMask = KeyEvent.CTRL_DOWN_MASK;
-		
+
 		// control + tab: switch to right tab
 		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, KeyEvent.SHIFT_DOWN_MASK, KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
 			@Override
@@ -77,9 +77,17 @@ public class JanewayModule implements IJanewayModule {
 				mainTabController.switchToLeftTab();
 			}
 		}));
-		
+
 		// control + w: close tab
 		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, 0, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainTabController.closeCurrentTab();
+			}
+		}));
+
+		// command + w: close tab
+		tab.getKeyboardShortcuts().add(new KeyboardShortcut(KeyEvent.META_DOWN_MASK, 0, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainTabController.closeCurrentTab();
