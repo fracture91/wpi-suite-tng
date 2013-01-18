@@ -3,6 +3,7 @@
 	<import file="dependencies.xml"/>
 
 	<target name="clean" description="Deletes build files">
+		<delete dir="${test-results}"/>
 		<antcall target="depend.all">
 			<param name="dependency.target" value="clean"/>
 		</antcall>
@@ -21,6 +22,7 @@
 	</target>
 
 	<target name="test" description="Runs tests">
+		<mkdir dir="${test-results}"/>
 		<antcall target="depend.all">
 			<param name="dependency.target" value="test"/>
 		</antcall>

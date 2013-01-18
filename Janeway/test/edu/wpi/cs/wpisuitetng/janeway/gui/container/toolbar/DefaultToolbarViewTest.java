@@ -69,6 +69,7 @@ public class DefaultToolbarViewTest {
 	public void testInsertEnd() {
 		toolbar.insertGroupAt(newGroup, 5);
 		assertContents(Arrays.asList(group1, null, group2, null, group3, null, newGroup));
+		fail();
 	}
 	
 	@Test
