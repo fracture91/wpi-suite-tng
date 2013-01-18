@@ -1,6 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -59,11 +58,12 @@ public class JanewayModule implements IJanewayModule {
 
 	@SuppressWarnings("serial")
 	private void registerKeyboardShortcuts(JanewayTabModel tab) {
-		//int shortcutKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		String osName = System.getProperty("os.name").toLowerCase();
 		int shortcutKeyMask = KeyEvent.CTRL_DOWN_MASK;
+		int keysToExclude = KeyEvent.ALT_DOWN_MASK | KeyEvent.VK_WINDOWS | KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK;
 
 		// control + tab: switch to right tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, KeyEvent.SHIFT_DOWN_MASK, KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
+		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, keysToExclude, KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainTabController.switchToRightTab();
@@ -71,27 +71,30 @@ public class JanewayModule implements IJanewayModule {
 		}));
 
 		// control + shift + tab: switch to left tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask | KeyEvent.SHIFT_DOWN_MASK, 0, KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
+		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask | KeyEvent.SHIFT_DOWN_MASK, keysToExclude & ~(KeyEvent.SHIFT_DOWN_MASK), KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainTabController.switchToLeftTab();
 			}
 		}));
 
-		// control + w: close tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, 0, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainTabController.closeCurrentTab();
-			}
-		}));
-
-		// command + w: close tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(KeyEvent.META_DOWN_MASK, 0, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainTabController.closeCurrentTab();
-			}
-		}));
+		if (osName.contains("mac")) {
+			// COMMAND + w: close tab
+			tab.getKeyboardShortcuts().add(new KeyboardShortcut(KeyEvent.META_DOWN_MASK, keysToExclude & ~(KeyEvent.META_DOWN_MASK), KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					mainTabController.closeCurrentTab();
+				}
+			}));
+		}
+		else {
+			// control + w: close tab
+			tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, keysToExclude, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					mainTabController.closeCurrentTab();
+				}
+			}));
+		}
 	}
 }
