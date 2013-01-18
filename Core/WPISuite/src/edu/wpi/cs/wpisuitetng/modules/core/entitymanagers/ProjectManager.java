@@ -25,10 +25,13 @@ import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class ProjectManager implements EntityManager<Project>{
 
@@ -118,30 +121,47 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public void save(Session s, Project model) throws WPISuiteException {
-		if(data.save(model))
-		{
-			return ;
+		User theUser = s.getUser();
+		if(model.getPermission(theUser).equals(Permission.WRITE) || 
+		   theUser.getRole().equals(Role.ADMIN)){
+			if(data.save(model))
+			{
+				return ;
+			}
+			else
+			{
+				throw new WPISuiteException();
+			}
 		}
-		else
-		{
-			throw new WPISuiteException();
+		else{
+			//throw 401
 		}
 		
 	}
 
 	@Override
-	public boolean deleteEntity(Session s1, String id)
+	public boolean deleteEntity(Session s, String id) throws NotFoundException
 	{
-		
-		Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
-		
-		return (m != null) ? true : false;
-		
+		User theUser = s.getUser();
+		Project[] model = this.getEntity(id);
+		if(model[0].getPermission(theUser).equals(Permission.WRITE) || 
+		   theUser.getRole().equals(Role.ADMIN)){
+			Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
+			
+			return (m != null) ? true : false;
+		}
+		else{
+			//throw authorization exception
+			return false;
+		}
 	}
 	
 	@Override
 	public void deleteAll(Session s) {
-		data.deleteAll(new Project("",""));
+		User theUser = s.getUser();
+		if( theUser.getRole().equals(Role.ADMIN)){
+			data.deleteAll(new Project("",""));
+		}
 	}
 
 	@Override
@@ -152,34 +172,40 @@ public class ProjectManager implements EntityManager<Project>{
 	
 	public Project update(Session s, Project toUpdate, String changeSet) throws WPISuiteException
 	{
-		// TODO: permissions checking here
-		
-		// convert updateString into a Map, then load into the User
-		try
-		{
-			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
-		
-			// check if the changeSet contains each field of User
-			if(changeMap.containsKey("name"))
+		User theUser = s.getUser();
+		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
+		   theUser.getRole().equals(Role.ADMIN)){
+			// convert updateString into a Map, then load into the User
+			try
 			{
-				toUpdate.setName((String)changeMap.get("name"));
+				HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
+			
+				// check if the changeSet contains each field of User
+				if(changeMap.containsKey("name"))
+				{
+					toUpdate.setName((String)changeMap.get("name"));
+				}
+				
+				if(changeMap.containsKey("idNum"))
+				{
+					toUpdate.setIdNum((String)changeMap.get("idNum"));
+				}
+			}
+			catch(Exception e)
+			{
+				throw new WPISuiteException(); // on Mapping failure
 			}
 			
-			if(changeMap.containsKey("idNum"))
-			{
-				toUpdate.setIdNum((String)changeMap.get("idNum"));
-			}
+			// save the changes back
+			this.save(s, toUpdate);
+			
+			// check for changes in each field
+			return toUpdate;
 		}
-		catch(Exception e)
-		{
-			throw new WPISuiteException(); // on Mapping failure
+		else{
+			//throw unauthorized
+			return toUpdate;
 		}
-		
-		// save the changes back
-		this.save(s, toUpdate);
-		
-		// check for changes in each field
-		return toUpdate;
 	}
 
 

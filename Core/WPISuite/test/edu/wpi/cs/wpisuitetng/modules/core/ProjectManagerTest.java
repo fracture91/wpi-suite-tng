@@ -130,7 +130,7 @@ public class ProjectManagerTest {
 	}
 
 	@Test
-	public void testDeleteEntityFail() {
+	public void testDeleteEntityFail() throws NotFoundException {
 		new ProjectManager(new Data(){
 			@Override
 			public <T> boolean save(T aTNG) {return false;}
@@ -158,7 +158,7 @@ public class ProjectManagerTest {
 	}
 	
 	@Test
-	public void testDeleteEntity()
+	public void testDeleteEntity() throws NotFoundException
 	{
 		new ProjectManager(new Data(){
 			@Override

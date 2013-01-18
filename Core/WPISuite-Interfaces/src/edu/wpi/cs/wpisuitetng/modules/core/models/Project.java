@@ -74,14 +74,7 @@ public class Project extends AbstractModel
 	 */
 	public void save(Session s)
 	{
-		User theUser = s.getUser();
-		if(getPermission(theUser).equals(permission.WRITE) || 
-		   theUser.getRole().equals(role.ADMIN)){
-			return; // TODO: implement saving during API - DB Layer Link up
-		}
-		else{
 		return; 
-		}
 	}
 	
 	/**
