@@ -36,13 +36,15 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	 */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		for (IJanewayModule module : modules) {
-			for (JanewayTabModel tabModel : module.getTabs()) {
-				if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
-					for (KeyboardShortcut shortcut : tabModel.getKeyboardShortcuts()) {
-						shortcut.processKeyEvent(event);
+		if (event.getKeyCode() != KeyEvent.VK_WINDOWS) {
+			for (IJanewayModule module : modules) {
+				for (JanewayTabModel tabModel : module.getTabs()) {
+					if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
+						for (KeyboardShortcut shortcut : tabModel.getKeyboardShortcuts()) {
+							shortcut.processKeyEvent(event);
+						}
+						return false;
 					}
-					return false;
 				}
 			}
 		}
