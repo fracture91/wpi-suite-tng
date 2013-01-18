@@ -59,7 +59,11 @@ public class JanewayModule implements IJanewayModule {
 	@SuppressWarnings("serial")
 	private void registerKeyboardShortcuts(JanewayTabModel tab) {
 		String osName = System.getProperty("os.name").toLowerCase();
+		
+		// the default modifier key
 		int shortcutKeyMask = KeyEvent.CTRL_DOWN_MASK;
+		
+		// modifier keys to exclude from shortcuts
 		int keysToExclude = KeyEvent.ALT_DOWN_MASK | KeyEvent.VK_WINDOWS | KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK;
 
 		// control + tab: switch to right tab
@@ -78,6 +82,7 @@ public class JanewayModule implements IJanewayModule {
 			}
 		}));
 
+		// if this is a mac, use command + w, otherwise use control + w
 		if (osName.contains("mac")) {
 			// COMMAND + w: close tab
 			tab.getKeyboardShortcuts().add(new KeyboardShortcut(KeyEvent.META_DOWN_MASK, keysToExclude & ~(KeyEvent.META_DOWN_MASK), KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {

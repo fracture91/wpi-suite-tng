@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.KeyboardShortcut;
@@ -21,6 +22,8 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	/** The list of modules that were loaded at runtime */
 	protected final List<IJanewayModule> modules;
 	
+	protected List<KeyboardShortcut> globalShortcuts;
+	
 	/**
 	 * Constructs a new JanewayKeyEventDispatcher
 	 * @param mainWindow the main Janeway frame
@@ -29,6 +32,7 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	public JanewayKeyEventDispatcher(JanewayFrame mainWindow, List<IJanewayModule> modules) {
 		this.mainWindow = mainWindow;
 		this.modules = modules;
+		this.globalShortcuts = new ArrayList<KeyboardShortcut>();
 	}
 
 	/**
@@ -37,6 +41,12 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getKeyCode() != KeyEvent.VK_WINDOWS) {
+			// notify global keyboard shortcuts
+			for (KeyboardShortcut shortcut : globalShortcuts) {
+				shortcut.processKeyEvent(event);
+			}
+			
+			// notify module keyboard shortcuts
 			for (IJanewayModule module : modules) {
 				for (JanewayTabModel tabModel : module.getTabs()) {
 					if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
@@ -49,5 +59,14 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Adds the given shortcut to the list of global shortcuts for
+	 * the Janeway client.
+	 * @param shortcut the new keyboard shortcut to add
+	 */
+	public void addGlobalShortcut(KeyboardShortcut shortcut) {
+		globalShortcuts.add(shortcut);
 	}
 }
