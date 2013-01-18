@@ -10,7 +10,7 @@
 			twack
 -->
 
-<project name="WPISuite-Interfaces" default="core" basedir=".">
+<project name="WPISuite-Interfaces" default="compile">
 	<import file="../../build-common.xml"/>
 	<description>
 		Build file for the WPISuite-Interfaces project. Provides
