@@ -13,7 +13,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +28,7 @@ import edu.wpi.cs.wpisuitetng.Sha256Password;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -44,33 +44,18 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
-	private PasswordCryptographer passwordHash;
 	Gson gson;
 	Data data;
 
-	/**
-	 * Creates a UserManager operating on the given Data.
-	 * 	Attaches the custom serializer and deserializers for the Gson library.
-	 * Determines the algorithm used to secure passwords.
-	 * @param data
-	 */
 	public UserManager(Data data)
 	{
 		this.data = data;
-		this.passwordHash = new Sha256Password();
-
-		// build the custom serializer/deserializer
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(this.user, new UserDeserializer());
-		
-		this.gson = builder.create();
-		
+		gson = new Gson();
 	}
 	
 	@Override
 	public User makeEntity(Session s, String content) throws WPISuiteException{
 		
-		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
 			p = gson.fromJson(content, user);
@@ -80,12 +65,6 @@ public class UserManager implements EntityManager<User> {
 		
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
-			String newPassword = UserDeserializer.parsePassword(content);
-			
-			String hashedPassword = this.passwordHash.generateHash(newPassword);
-			
-			p.setPassword(hashedPassword);
-			
 			save(s,p);
 		}
 		else
@@ -195,46 +174,54 @@ public class UserManager implements EntityManager<User> {
 	{
 		// TODO: permissions checking here
 		
-		User changes;
-		
-		// Inflate the changeSet into a User object.
+		// convert updateString into a Map, then load into the User
 		try
 		{
-			changes = this.gson.fromJson(changeSet, this.user);
-		}
-		catch(JsonParseException e)
-		{
-			throw new WPISuiteException();
-		}
+			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
 		
-		// Resolve differences toUpdate using changes, field-by-field.
-		toUpdate.setIdNum(changes.getIdNum());
-		
-		if(changes.getName() != null)
-		{
-			toUpdate.setName(changes.getName());
+			// check if the changeSet contains each field of User
+			if(changeMap.containsKey("name"))
+			{
+				toUpdate.setName((String)changeMap.get("name"));
+			}
+			
+			if(changeMap.containsKey("username"))
+			{
+				toUpdate.setUserName((String)changeMap.get("username"));
+			}
+			
+			if(changeMap.containsKey("idNum"))
+			{
+				toUpdate.setIdNum((Integer)changeMap.get("idNum"));
+			}
+			
+			if(changeMap.containsKey("role"))
+			{
+				toUpdate.setRole(Role.valueOf((String)changeMap.get("role")));
+			}
 		}
-		
-		if(changes.getUsername() != null)
+		catch(Exception e)
 		{
-			toUpdate.setUserName(changes.getUsername());
-		}
-		
-		if(!changes.getRole().equals(toUpdate.getRole()))
-		{
-			toUpdate.setRole(changes.getRole());
+			throw new WPISuiteException(); // on Mapping failure
 		}
 		
 		// save the changes back
 		this.save(s, toUpdate);
 		
+		// check for changes in each field
 		return toUpdate;
 	}
 
 	@Override
-	public User update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedGet(Session s, String[] args)
+			throws WPISuiteException {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public String advancedPut(Session s, String[] args, String content)
+			throws WPISuiteException {
+		throw new NotImplementedException();
 	}
 
 }
