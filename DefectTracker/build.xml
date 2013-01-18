@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="DefectTracker" default="compile">
+<project name="DefectTracker" default="compile.deps">
 	<import file="../build-common.xml"/>
 
 	<property name="core-jar-dest" location="${core-lib}/DefectTracker.jar"/>
@@ -59,7 +59,8 @@
 		<delete file="${janeway-jar-dest}"/>
 	</target>
 
-	<target name="test" depends="compile-test">
+	<!-- compile dependency is necessary since Core needs jars to run tests... hacky -->
+	<target name="test" depends="compile-test, compile">
 		<junit printsummary="yes" haltonfailure="no">
 			<classpath refid="test-classpath"/>
 			<formatter type="xml"/>

@@ -2,6 +2,14 @@
 <project name="sample" default="compile">
 	<import file="dependencies.xml"/>
 
+	<!--
+		The following targets call build.xml files in the projects specified in dependencies.xml.
+		This happens in whatever order is necessary to satisfy the dependency graph.
+
+		For example, to run all tests:
+		$ ant test
+	-->
+
 	<target name="clean" description="Deletes build files">
 		<delete dir="${test-results}"/>
 		<antcall target="depend.all">

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="dependencies" default="depend.all">
 	<dirname property="dependencies.basedir" file="${ant.file.dependencies}"/>
+
+	<!-- All test targets should output JUnit's XML reports to this directory -->
 	<property name="test-results" location="${dependencies.basedir}/test-results"/>
-	
+
+	<!-- This target should have dependencies such that all projects are depended upon -->
 	<target name="depend.all"
 		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker">
 	</target>
 
-	<!-- Each project must define its dependencies below -->
+	<!--
+		Each project must define itself and its dependencies below.
+		Note that this applies to _every_ target in the root build.xml.
+	-->
 
 	<target name="depend.WPISuite-Interfaces">
 		<ant dir="${dependencies.basedir}/Core/WPISuite-Interfaces"

@@ -5,6 +5,8 @@
 	<property name="core-lib" location="${dependencies.basedir}/Core/WPISuite/WebContent/WEB-INF/lib"/>
 	<property name="junit-jar" location="${dependencies.basedir}/junit-4.8.2.jar"/>
 
+	<!-- build.xml files that import this one should override the following targets -->
+
 	<target name="clean" description="Deletes files created during the build">
 		<echo message="${ant.project.name} - build-common.clean - not implemented"/>
 	</target>
@@ -22,17 +24,42 @@
 	</target>
 
 
-	<target name="clean.dependencies"
+	<!--
+		The following targets can be used in any build.xml that imports this file. Examples follow.
+		
+		Compile the DefectTracker project and any dependencies:
+		$ cd DefectTracker
+		$ ant compile.deps
+
+		Only run DefectTracker's tests:
+		$ cd DefectTracker
+		$ ant test.single
+	-->
+
+	<target name="compile.deps"
+		description="Compiles source (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="compile"/>
+		</antcall>
+	</target>
+
+	<target name="clean.deps"
 		description="Deletes files created during the build (includes dependencies)">
 		<antcall target="depend.${ant.project.name}">
 			<param name="dependency.target" value="clean"/>
 		</antcall>
 	</target>
 
-	<target name="dist.dependencies"
+	<target name="dist.deps"
 		description="Creates distributable (includes dependencies)">
 		<antcall target="depend.${ant.project.name}">
 			<param name="dependency.target" value="dist"/>
 		</antcall>
+	</target>
+
+	<target name="test.single" depends="compile.deps"
+		description="Runs tests for this single project">
+		<mkdir dir="${test-results}"/>
+		<antcall target="test"/>
 	</target>
 </project>

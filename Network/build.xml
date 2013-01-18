@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Network" default="compile">
+<project name="Network" default="compile.deps">
 	<import file="../build-common.xml"/>
-	
+
 	<path id="classpath">
 		<pathelement path="build"/>
 	</path>
@@ -11,7 +11,7 @@
 		<pathelement path="build-test"/>
 		<pathelement path="${junit-jar}"/>
 	</path>
-	
+
 	<target name="compile">
 		<mkdir dir="build"/>
 		<javac srcdir="src" destdir="build" includeJavaRuntime="yes">
@@ -26,9 +26,17 @@
 		</javac>
 	</target>
 
+	<!-- Build a jar.  Not really used, just as an example. -->
+	<target name="jar" depends="compile">
+		<jar destfile="network.jar">
+			<fileset dir="build"/>
+		</jar>
+	</target>
+
 	<target name="clean">
 		<delete dir="build"/>
 		<delete dir="build-test"/>
+		<delete dir="network.jar"/>
 	</target>
 
 	<target name="test" depends="compile-test">
