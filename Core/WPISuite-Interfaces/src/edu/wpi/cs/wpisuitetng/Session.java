@@ -48,6 +48,9 @@ public class Session {
 	{
 		return loginTime;
 	}
+	public User getUser(){
+		return user;
+	}
 	
 	@Override
 	public String toString()

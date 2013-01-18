@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng.modules;
 import java.lang.String;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -26,8 +27,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public interface Model {
 
 	/* database interaction */
-	public void save(User aUser);
-	public void delete(User aUser);
+	public void save(Session s);
+	public void delete(Session s);
 	
 	/* serializing */
 	

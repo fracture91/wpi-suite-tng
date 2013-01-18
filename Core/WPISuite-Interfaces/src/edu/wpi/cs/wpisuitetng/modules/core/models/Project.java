@@ -16,6 +16,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
@@ -71,11 +72,11 @@ public class Project extends AbstractModel
 	/**
 	 * Implements Model-specific save logic
 	 */
-	public void save(User aUser)
+	public void save(Session s)
 	{
-//		if(aUser.getRole().equals(role.ADMIN)){
-		if(getPermission(aUser).equals(permission.WRITE) || 
-		   aUser.getRole().equals(role.ADMIN)){
+		User theUser = s.getUser();
+		if(getPermission(theUser).equals(permission.WRITE) || 
+		   theUser.getRole().equals(role.ADMIN)){
 			return; // TODO: implement saving during API - DB Layer Link up
 		}
 		else{
@@ -86,11 +87,11 @@ public class Project extends AbstractModel
 	/**
 	 * Implements Model-specific delete logic
 	 */
-	public void delete(User aUser)
+	public void delete(Session s)
 	{
-		//if(aUser.getRole().equals(role.ADMIN)){
-		if(getPermission(aUser).equals(permission.WRITE) || 
-		   aUser.getRole().equals(role.ADMIN)){
+		User theUser = s.getUser();
+		if(getPermission(theUser).equals(permission.WRITE) || 
+		   theUser.getRole().equals(role.ADMIN)){
 			return; // TODO: implement saving during API - DB Layer Link up
 		}
 		else{

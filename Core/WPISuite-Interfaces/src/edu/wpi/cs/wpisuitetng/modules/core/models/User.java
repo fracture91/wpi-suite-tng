@@ -16,6 +16,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
 
+import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
@@ -117,12 +118,12 @@ public class User extends AbstractModel
 	}
 	
 	/* database interaction */
-	public void save(User aUser)
+	public void save(Session s)
 	{
 		return;
 	}
 	
-	public void delete(User aUser)
+	public void delete(Session s)
 	{
 		return;
 	}

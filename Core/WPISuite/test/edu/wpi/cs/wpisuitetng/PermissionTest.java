@@ -20,7 +20,7 @@ public class PermissionTest {
 		perm = new AbstractModel(){
 
 			@Override
-			public void delete(User aUser) {		
+			public void delete(Session s) {		
 			}
 
 			@Override
@@ -29,7 +29,7 @@ public class PermissionTest {
 			}
 
 			@Override
-			public void save(User aUser) {
+			public void save(Session s) {
 			}
 
 			@Override
