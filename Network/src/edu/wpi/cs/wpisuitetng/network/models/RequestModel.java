@@ -7,33 +7,34 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestModel implements IRequest {
-	protected String requestBody;
-	protected Map<String, List<String>> requestHeaders;
-	protected URL requestURL;
-	protected RequestMethod requestMethod;
+	protected String body;
+	protected Map<String, List<String>> headers;
+	protected Map<String, String> urlData;
+	protected URL url;
+	protected HttpMethod httpMethod;
 	protected ResponseModel response;
-	
+
 	public RequestModel() {
-		requestHeaders = new HashMap<String, List<String>>();
+		headers = new HashMap<String, List<String>>();
+		urlData = new HashMap<String, String>();
 	}
-	
+
 	/**
-	 * Adds a header to the request.
+	 * Adds a header to the RequestModel.
 	 * 
 	 * @param key		A String representing the header key.
 	 * @param value		A String representing the header value.
 	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
 	 * @throws NullPointerException		If the key is null.
 	 */
-	public void addRequestHeader(String key, String value) throws IllegalStateException, NullPointerException {
+	public void addHeader(String key, String value) throws NullPointerException {
 		// check to see if the key is null
 		if (key == null) {
 			throw new NullPointerException("The key must not be null.");
 		}
 
 		// get the List of current values from the requestHeaders Map
-		List<String> currentValues = requestHeaders.get(key);
+		List<String> currentValues = headers.get(key);
 
 		// if the List of current values is null, create a new list of current values
 		if (currentValues == null) {
@@ -44,98 +45,133 @@ public class RequestModel implements IRequest {
 		currentValues.add(value);
 
 		// store the updated List of current values in the Map
-		requestHeaders.put(key, currentValues);
+		headers.put(key, currentValues);
 	}
-	
+
 	/**
-	 * Sets the body of the request.
-	 * TODO elaborate
+	 * Adds a urlData key-value pair to the RequestModel.
 	 * 
-	 * @param requestBody	The body of the request to send to the server.
+	 * @param key		A String representing the urlData key.
+	 * @param value		A String representing the urlData value.
 	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
-	 * @throws NullPointerException		If the requestBody is null.
+	 * @throws NullPointerException		If the key or value is null.
 	 */
-	public void setRequestBody(String requestBody) throws IllegalStateException, NullPointerException {
+	public void addUrlData(String key, String value) throws NullPointerException {
 		// check to see if the key is null
-		if (requestBody == null) {
-			throw new NullPointerException("The requestBody parameter must not be null.");
+		if (key == null) {
+			throw new NullPointerException("The key must not be null.");
+		}
+		// check to see if the value is null
+		if (value == null) {
+			throw new NullPointerException("The value must not be null.");
 		}
 
-		this.requestBody = requestBody;
+		// add the new value to the list of current values
+		urlData.put(key, value);
+	}
+
+	/**
+	 * Sets the body of the RequestModel.
+	 * 
+	 * @param body	The body of the request to send to the server.
+	 * 
+	 * @throws NullPointerException		If the body is null.
+	 */
+	public void setBody(String body) throws NullPointerException {
+		// check to see if the key is null
+		if (body == null) {
+			throw new NullPointerException("The body parameter must not be null.");
+		}
+
+		this.body = body;
 	}
 
 	/**
 	 * Sets the HTTP method for the Request.
-	 * TODO elaborate
 	 * 
-	 * @param requestMethod
+	 * @param httpMethod The HttpMethod to use when sending data to the server.
 	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
-	 * @throws NullPointerException		If the requestMethod is null.
+	 * @throws NullPointerException		If the httpMethod is null.
 	 */
-	public void setRequestMethod(RequestMethod requestMethod) throws IllegalStateException, NullPointerException {
+	public void setHttpMethod(HttpMethod httpMethod) throws NullPointerException {
 		// check to see if the requestMethod is null
-		if (requestMethod == null) {
-			throw new NullPointerException("The requestMethod parameter must not be null.");
+		if (httpMethod == null) {
+			throw new NullPointerException("The httpMethod parameter must not be null.");
 		}
 
-		this.requestMethod = requestMethod;
+		this.httpMethod = httpMethod;
 	}
 
 	/**
-	 * Sets the server's Response to the Request.
+	 * Sets the server's response to the request.
 	 * 
-	 * @param response	The server's ResponseModel to the Request.
+	 * @param response	The server's ResponseModel to the request.
 	 * 
-	 * @throws	IllegalStateException	If the Request has not been sent yet.
+	 * @throws NullPointerException		If the response is null.
 	 */
-	protected void setResponse(ResponseModel response) {
-		// set the Response to this Request
+	protected void setResponse(ResponseModel response) throws NullPointerException {
+		// check to see if the response is null
+		if (response == null) {
+			throw new NullPointerException("The response parameter must not be null.");
+		}
+
 		this.response = response;
 	}
-	
-	/**
-	 * TODO
-	 */
-	public void setURL(URL url) {
-		requestURL = url;
-	}
 
 	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestBody
-	 */
-	public String getRequestBody() {
-		return requestBody;
-	}
-
-	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getRequestHeaders
-	 */
-	public Map<String, List<String>> getRequestHeaders() {
-		return requestHeaders;
-	}
-
-	/**
-	 * Returns a String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
+	 * Sets the RequestModel's URL.
 	 * 
-	 * @return	A String representing the request method.
+	 * @param url The URL to make the request to.
 	 */
-	public RequestMethod getRequestMethod() {
-		return requestMethod;
+	public void setUrl(URL url) {
+		this.url = url;
 	}
 
 	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getResponse
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getBody()
 	 */
+	@Override
+	public String getBody() {
+		return body;
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getHeaders()
+	 */
+	@Override
+	public Map<String, List<String>> getHeaders() {
+		return headers;
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getHttpMethod()
+	 */
+	@Override
+	public HttpMethod getHttpMethod() {
+		return httpMethod;
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getResponse()
+	 */
+	@Override
 	public ResponseModel getResponse() {
 		return response;
 	}
 
 	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.IRequest#getURL
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getURL()
 	 */
-	public URL getURL() {
-		return requestURL;
+	@Override
+	public URL getUrl() {
+		return url;
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequests#getUrlData()
+	 */
+	@Override
+	public Map<String, String> getUrlData() {
+		return urlData;
 	}
 }

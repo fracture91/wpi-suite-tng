@@ -17,6 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class TestRetrieveDefectController {
 
@@ -74,8 +75,8 @@ public class TestRetrieveDefectController {
 		assertTrue(request.isSent());
 
 		// Validate the request
-		assertEquals("/defecttracker/defect/" + defectId, request.getURL().getPath());
-		assertEquals("GET", request.getRequestMethod());
+		assertEquals("/defecttracker/defect/" + defectId, request.getUrl().getPath());
+		assertEquals(HttpMethod.GET, request.getHttpMethod());
 	}
 
 	@Test

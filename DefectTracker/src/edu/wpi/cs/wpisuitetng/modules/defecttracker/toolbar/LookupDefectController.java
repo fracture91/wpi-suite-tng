@@ -11,7 +11,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.tabs.MainTabController;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Controller to handle retrieving a defect from the core
@@ -64,7 +64,7 @@ public class LookupDefectController implements ActionListener {
 
 			// Generate the request
 			Request request;
-			request = Network.getInstance().makeRequest("defecttracker/defect/" + id, RequestMethod.GET);
+			request = Network.getInstance().makeRequest("defecttracker/defect/" + id, HttpMethod.GET);
 			request.addObserver(new LookupRequestObserver(this));
 			request.send();
 		}

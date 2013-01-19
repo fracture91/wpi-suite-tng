@@ -14,7 +14,7 @@ import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
-import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
@@ -87,9 +87,9 @@ public class LoginController implements ActionListener {
 		basicAuth += Base64.encodeBase64String(credentials.getBytes());
 
 		// Create and send the login request
-		Request request = Network.getInstance().makeRequest("login", RequestMethod.POST);
+		Request request = Network.getInstance().makeRequest("login", HttpMethod.POST);
 		System.out.println(basicAuth);
-		request.addRequestHeader("Authorization", basicAuth);
+		request.addHeader("Authorization", basicAuth);
 		request.addObserver(new LoginRequestObserver(this));
 		request.send();
 	}

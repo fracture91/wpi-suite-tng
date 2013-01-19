@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,29 +40,25 @@ public class RequestActor extends Thread {
 		
 		try {
 			// setup connection
-			connection = (HttpURLConnection) request.getURL().openConnection();
-			connection.setConnectTimeout(20*1000);
-			connection.setReadTimeout(5*1000);
-			connection.setRequestMethod(request.getRequestMethod().toString());
+			connection = (HttpURLConnection) request.getUrl().openConnection();
+			connection.setConnectTimeout(request.getConnectTimeout());
+			connection.setReadTimeout(request.getReadTimeout());
+			connection.setRequestMethod(request.getHttpMethod().toString());
 			connection.setDoInput(true);
 			connection.setRequestProperty("Connection", "close");
 			
 			// set request headers
-			Iterator<String> requestHeaderKeysI = request.getRequestHeaders().keySet().iterator();
-			while (requestHeaderKeysI.hasNext()) {
-				String requestHeaderKey = requestHeaderKeysI.next();
-				Iterator<String> requestHeaderValuesI = request.getRequestHeaders().get(requestHeaderKey).iterator();
-				
-				while (requestHeaderValuesI.hasNext()) {
-					connection.setRequestProperty(requestHeaderKey, requestHeaderValuesI.next());
+			for (String requestHeaderKey : request.getHeaders().keySet()) {
+				for (String requestHeaderValue : request.getHeaders().get(requestHeaderKey)) {
+					connection.setRequestProperty(requestHeaderKey, requestHeaderValue);
 				}
 			}
 			
 			// if there is a body to send, send it
-			if (request.getRequestBody() != null) {
+			if (request.getBody() != null) {
 				connection.setDoOutput(true);
 				DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-				out.writeBytes(request.getRequestBody());
+				out.writeBytes(request.getBody());
 				out.flush();
 				out.close();
 			}

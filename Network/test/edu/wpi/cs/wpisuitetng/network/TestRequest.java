@@ -8,15 +8,16 @@ import org.junit.*;
 
 
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Response;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 public class TestRequest {
 	class MockObserver implements RequestObserver {
 
 		private boolean updateCalled;
-		private Response response;
+		private ResponseModel response;
 
 		public MockObserver() {
 			super();
@@ -29,20 +30,8 @@ public class TestRequest {
 			synchronized (this) {
 				notifyAll(  );
 			}
-			// If observable is a Request...
-			if (Request.class.getName().equals(iReq.getClass().getName())) {
-				// cast observable to a Request
-				Request request = (Request) iReq;
-
-				// get the response from the request
-				response = request.getResponse();
-
-				// print the body
-			}
-			// Otherwise...
-			else {
-				System.out.println("Observable is not a Request.");
-			}
+			// get the response from the request
+			response = iReq.getResponse();
 		}
 
 		@Override
@@ -70,45 +59,27 @@ public class TestRequest {
 	 * Test that a NullPointerException is thrown when a null networkConfiguration is passed to the Request constructor.
 	 * @throws MalformedURLException 
 	 */
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testRequestConstructorNullPointerException() throws MalformedURLException {
-		try {
-			Request r = new Request(null, null, null);
-			fail("No NullPointerException thrown when constructing a Request with null networkConfiguration parameter.");
-		} catch (NullPointerException e) {
-			assertTrue("The networkConfiguration must not be null.".equals(e.getMessage()));
-		}
-
-
+		Request r = new Request(null, null, null);
 	}
 
 	/**
 	 * Test that a NullPointerException is thrown when a null requestMethod is passed to the Request#setRequestMethod.
 	 * @throws MalformedURLException 
 	 */
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testRequestSetRequestMethodNullPointerException() throws MalformedURLException {
-		try {
-			Request r = new Request(config, null, null);
-			fail("No NullPointerException thrown when constructing a Request with null requestMethod parameter.");
-		} catch (NullPointerException e) {
-			assertTrue("The requestMethod must not be null.".equals(e.getMessage()));
-		}
+		Request r = new Request(config, null, null);
 	}
 
 	/**
 	 * Test that a NullPointerException is thrown when a null body is passed to the Request#setRequestBody.
 	 */
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testRequestSetRequestBodyNullPointerException() {
-		try {
-			Request r = new Request(config, null, RequestMethod.POST);
-			r.setRequestBody(null);
-			fail("No exception thrown.");
-		}
-		catch(NullPointerException e) {
-			assertTrue("The requestBody parameter must not be null.".equals(e.getMessage()));
-		}
+		Request r = new Request(config, null, HttpMethod.POST);
+		r.setBody(null);
 	}
 
 	/**
@@ -128,10 +99,10 @@ public class TestRequest {
 
 
 			// Make a new POST Request.
-			Request manualRequest = new Request(config, null, RequestMethod.POST);	// construct the Request
+			Request manualRequest = new Request(config, null, HttpMethod.POST);	// construct the Request
 
 			// Configure the request
-			manualRequest.setRequestBody(body);	// set the request body to send to the server
+			manualRequest.setBody(body);	// set the request body to send to the server
 			manualRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 
 			// Send the request!
@@ -141,8 +112,8 @@ public class TestRequest {
 			}
 
 			assertEquals(true, (body+"\n").equals(manualRequest.getResponse().getBody()));
-			assertEquals(200, manualRequest.getResponse().getResponseCode());
-			assertEquals(true, "OK".equalsIgnoreCase(manualRequest.getResponse().getResponseMessage()));
+			assertEquals(200, manualRequest.getResponse().getStatusCode());
+			assertEquals(true, "OK".equalsIgnoreCase(manualRequest.getResponse().getStatusMessage()));
 		} catch (MalformedURLException e) {
 			fail("MalformedURLException");
 		} //TODO switch to https

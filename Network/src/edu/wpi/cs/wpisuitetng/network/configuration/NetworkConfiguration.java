@@ -2,7 +2,6 @@ package edu.wpi.cs.wpisuitetng.network.configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,22 +35,15 @@ public class NetworkConfiguration {
 		this(networkConfiguration.getApiUrl());
 
 		// Copy request headers from networkConfiguration
-		Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
-		Iterator<String> valuesI;
-		String currentKey;
-		while (keysI.hasNext()) {
-			currentKey = keysI.next();
-			valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
-
-			while (valuesI.hasNext()) {
-				this.addRequestHeader(currentKey, valuesI.next());
+		for (String currentKey : networkConfiguration.getRequestHeaders().keySet()) {
+			for (String currentValue : networkConfiguration.getRequestHeaders().get(currentKey)) {
+				this.addRequestHeader(currentKey, currentValue);
 			}
 		}
 
 		// Copy observers from networkConfiguration
-		Iterator<RequestObserver> observersI = networkConfiguration.observers.iterator();
-		while (observersI.hasNext()) {
-			this.addObserver(observersI.next());
+		for (RequestObserver observer : networkConfiguration.observers) {
+			this.addObserver(observer);
 		}
 	}
 

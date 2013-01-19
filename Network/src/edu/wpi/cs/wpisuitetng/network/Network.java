@@ -1,7 +1,7 @@
 package edu.wpi.cs.wpisuitetng.network;
 
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
-import edu.wpi.cs.wpisuitetng.network.models.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Singleton for managing Network configuration.
@@ -16,10 +16,7 @@ public class Network {
 	/**
 	 * Constructs a new Network
 	 */
-	protected Network() {
-		//TODO finish this
-		//TODO should we create a blank NetworkConfiguration as the default?
-	}
+	protected Network() {}
 	
 	/**
 	 * Makes a Request using the defaultNetworkConfiguration, the given path, and the given requestMethod.
@@ -32,7 +29,7 @@ public class Network {
 	 * @throws RuntimeException			If there is an error using the configured URL.
 	 * @throws NullPointerException		If the requestMethod is null or there is a configuration error.
 	 */
-	public Request makeRequest(String path, RequestMethod requestMethod) {		
+	public Request makeRequest(String path, HttpMethod requestMethod) {		
 		if (requestMethod == null) {
 			throw new NullPointerException("requestMethod may not be null");
 		}
