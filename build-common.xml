@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="build-common" default="compile">
+	<import file="dependencies.xml"/>
+
+	<property name="core-lib" location="${dependencies.basedir}/Core/WPISuite/WebContent/WEB-INF/lib"/>
+	<property name="junit-jar" location="${dependencies.basedir}/junit-4.8.2.jar"/>
+
+	<!-- build.xml files that import this one should override the following targets -->
+
+	<target name="clean" description="Deletes files created during the build">
+		<echo message="${ant.project.name} - build-common.clean - not implemented"/>
+	</target>
+
+	<target name="compile" description="Compiles source code">
+		<echo message="${ant.project.name} - build-common.compile - not implemented"/>
+	</target>
+
+	<target name="dist" depends="compile" description="Creates distributable">
+		<echo message="${ant.project.name} - build-common.dist - not implemented"/>
+	</target>
+
+	<target name="test" depends="compile" description="Runs tests">
+		<echo message="${ant.project.name} - build-common.test - no tests"/>
+	</target>
+
+
+	<!--
+		The following targets can be used in any build.xml that imports this file. Examples follow.
+		
+		Compile the DefectTracker project and any dependencies:
+		$ cd DefectTracker
+		$ ant compile.deps
+
+		Only run DefectTracker's tests:
+		$ cd DefectTracker
+		$ ant test.single
+	-->
+
+	<target name="compile.deps"
+		description="Compiles source (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="compile"/>
+		</antcall>
+	</target>
+
+	<target name="clean.deps"
+		description="Deletes files created during the build (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="clean"/>
+		</antcall>
+	</target>
+
+	<target name="dist.deps"
+		description="Creates distributable (includes dependencies)">
+		<antcall target="depend.${ant.project.name}">
+			<param name="dependency.target" value="dist"/>
+		</antcall>
+	</target>
+
+	<target name="test.single" depends="compile.deps"
+		description="Runs tests for this single project">
+		<mkdir dir="${test-results}"/>
+		<antcall target="test"/>
+	</target>
+</project>
