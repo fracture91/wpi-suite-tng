@@ -24,7 +24,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators.Validation
 public class DefectManager implements EntityManager<Defect> {
 
 	Data db;
-	Gson gson;
 	DefectValidator validator;
 	ModelMapper updateMapper;
 	
@@ -34,14 +33,13 @@ public class DefectManager implements EntityManager<Defect> {
 	 */
 	public DefectManager(Data data) {
 		db = data;
-		gson = new Gson();
 		validator = new DefectValidator(db);
 		updateMapper = new ModelMapper();
 	}
 
 	@Override
 	public Defect makeEntity(Session s, String content) throws WPISuiteException {
-		final Defect newDefect = gson.fromJson(content, Defect.class);
+		final Defect newDefect = Defect.fromJSON(content);
 		
 		// TODO: increment properly, ensure uniqueness using ID generator.  This is a gross hack.
 		newDefect.setId(Count() + 1);
@@ -105,7 +103,7 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public Defect update(Session session, String content) throws WPISuiteException {
-		Defect updatedDefect = gson.fromJson(content, Defect.class);
+		Defect updatedDefect = Defect.fromJSON(content);
 		
 		List<ValidationIssue> issues = validator.validate(session, updatedDefect, Mode.EDIT);
 		if(issues.size() > 0) {

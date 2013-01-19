@@ -39,8 +39,7 @@ public class LookupRequestObserver implements RequestObserver {
 		}
 
 		// parse the list of defects received from the core
-		Gson parser = new Gson();
-		Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
+		Defect[] defects = Defect.fromJSONArray(response.getBody());
 
 		// make sure that there is actually a defect in the body			
 		if (defects.length > 0 && defects[0] != null) {
