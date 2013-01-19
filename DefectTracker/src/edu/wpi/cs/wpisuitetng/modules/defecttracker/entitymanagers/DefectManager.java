@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -10,8 +11,10 @@ import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators.DefectValidator;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators.ValidationIssue;
 
@@ -101,10 +104,10 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 
 	@Override
-	public Defect update(Session s, String content) throws WPISuiteException {
+	public Defect update(Session session, String content) throws WPISuiteException {
 		Defect updatedDefect = gson.fromJson(content, Defect.class);
 		
-		List<ValidationIssue> issues = validator.validate(s, updatedDefect, Mode.EDIT);
+		List<ValidationIssue> issues = validator.validate(session, updatedDefect, Mode.EDIT);
 		if(issues.size() > 0) {
 			// TODO: pass errors to client through exception
 			throw new BadRequestException();
@@ -116,10 +119,27 @@ public class DefectManager implements EntityManager<Defect> {
 		 * then save the original defect again.
 		 */
 		Defect existingDefect = validator.getLastExistingDefect();
-		updateMapper.map(updatedDefect, existingDefect);
+		Date originalLastModified = existingDefect.getLastModifiedDate();
 		
-		if(!db.save(existingDefect)) {
-			throw new WPISuiteException();
+		DefectChangeset changeset = new DefectChangeset();
+		// core should make sure the session user exists
+		// if this can't find the user, something's horribly wrong
+		changeset.setUser((User) db.retrieve(User.class, "username", session.getUsername()).get(0));
+		ChangesetCallback callback = new ChangesetCallback(changeset);
+		
+		// copy values to old defect and fill in our changeset appropriately
+		updateMapper.map(updatedDefect, existingDefect, callback);
+		
+		if(changeset.getChanges().size() == 0) {
+			// stupid user didn't even change anything!
+			// don't bother saving to database, reset last modified date
+			existingDefect.setLastModifiedDate(originalLastModified);
+		} else {
+			// add changeset to Defect events, save to database
+			existingDefect.getEvents().add(changeset);
+			if(!db.save(existingDefect)) {
+				throw new WPISuiteException();
+			}
 		}
 		
 		return existingDefect;
