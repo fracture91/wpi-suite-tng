@@ -93,7 +93,7 @@ public class Request extends RequestModel {
 	public void send() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		RequestActor requestActor = new RequestActor(this);
@@ -114,7 +114,21 @@ public class Request extends RequestModel {
 	public void addHeader(String key, String value) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		super.addHeader(key, value);
+	}
+	
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#addQueryData(String, String)
+	 * 
+	 * @throws IllegalStateException	If the Request is being sent.
+	 */
+	public void addQueryData(String key, String value) throws IllegalStateException, NullPointerException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		super.addHeader(key, value);
@@ -128,7 +142,7 @@ public class Request extends RequestModel {
 	public void clearAsynchronous() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		isAsynchronous = false;
@@ -142,7 +156,7 @@ public class Request extends RequestModel {
 	public void setAsynchronous() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		isAsynchronous = true;
@@ -158,7 +172,7 @@ public class Request extends RequestModel {
 	public void setConnectTimeout(int connectTimeout) throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		this.connectTimeout = connectTimeout;
@@ -174,7 +188,7 @@ public class Request extends RequestModel {
 	public void setReadTimeout(int readTimeout) throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		this.readTimeout = readTimeout;
@@ -188,7 +202,7 @@ public class Request extends RequestModel {
 	public void setBody(String body) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		super.setBody(body);
@@ -202,7 +216,7 @@ public class Request extends RequestModel {
 	public void setHttpMethod(HttpMethod httpMethod) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		super.setHttpMethod(httpMethod);
@@ -216,7 +230,7 @@ public class Request extends RequestModel {
 	protected void setResponse(ResponseModel response) throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		super.setResponse(response);
@@ -273,7 +287,7 @@ public class Request extends RequestModel {
 	public void addObserver(RequestObserver o) throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		observers.add(o);
@@ -296,7 +310,7 @@ public class Request extends RequestModel {
 	public void notifyObserversResponseSuccess() throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		for (RequestObserver obs : observers) {
@@ -312,7 +326,7 @@ public class Request extends RequestModel {
 	public void notifyObserversResponseError() throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		for (RequestObserver obs : observers) {
@@ -330,7 +344,7 @@ public class Request extends RequestModel {
 	public void notifyObserversFail(Exception exception) throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		for (RequestObserver obs : observers) {

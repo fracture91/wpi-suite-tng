@@ -9,14 +9,14 @@ import java.util.Map;
 public class RequestModel implements IRequest {
 	protected String body;
 	protected Map<String, List<String>> headers;
-	protected Map<String, String> urlData;
+	protected Map<String, String> queryData;
 	protected URL url;
 	protected HttpMethod httpMethod;
 	protected ResponseModel response;
 
 	public RequestModel() {
 		headers = new HashMap<String, List<String>>();
-		urlData = new HashMap<String, String>();
+		queryData = new HashMap<String, String>();
 	}
 
 	/**
@@ -49,14 +49,14 @@ public class RequestModel implements IRequest {
 	}
 
 	/**
-	 * Adds a urlData key-value pair to the RequestModel.
+	 * Adds a queryData key-value pair to the RequestModel.
 	 * 
-	 * @param key		A String representing the urlData key.
-	 * @param value		A String representing the urlData value.
+	 * @param key		A String representing the query data key.
+	 * @param value		A String representing the query data value.
 	 * 
 	 * @throws NullPointerException		If the key or value is null.
 	 */
-	public void addUrlData(String key, String value) throws NullPointerException {
+	public void addQueryData(String key, String value) throws NullPointerException {
 		// check to see if the key is null
 		if (key == null) {
 			throw new NullPointerException("The key must not be null.");
@@ -67,7 +67,7 @@ public class RequestModel implements IRequest {
 		}
 
 		// add the new value to the list of current values
-		urlData.put(key, value);
+		queryData.put(key, value);
 	}
 
 	/**
@@ -168,10 +168,10 @@ public class RequestModel implements IRequest {
 	}
 
 	/**
-	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequests#getUrlData()
+	 * @see edu.wpi.cs.wpisuitetng.network.models.IRequest#getQueryData()
 	 */
 	@Override
-	public Map<String, String> getUrlData() {
-		return urlData;
+	public Map<String, String> getQueryData() {
+		return queryData;
 	}
 }

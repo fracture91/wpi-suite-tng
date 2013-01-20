@@ -19,13 +19,6 @@ public interface IRequest {
 	public String getBody();
 	
 	/**
-	 * Returns a Map containing the url data.
-	 * 
-	 * @return a Map containing the url data.
-	 */
-	public Map<String, String> getUrlData();
-	
-	/**
 	 * Returns a Map of request header keys to Lists of request header values.
 	 * 
 	 * @return	A Map of request header keys to Lists of request header values.
@@ -38,6 +31,13 @@ public interface IRequest {
 	 * @return	A HttpMethod representing the request method.
 	 */
 	public HttpMethod getHttpMethod();
+	
+	/**
+	 * Returns a Map containing the query data.
+	 * 
+	 * @return a Map containing the query data.
+	 */
+	public Map<String, String> getQueryData();
 	
 	/**
 	 * Returns the server's Response to the Request.
