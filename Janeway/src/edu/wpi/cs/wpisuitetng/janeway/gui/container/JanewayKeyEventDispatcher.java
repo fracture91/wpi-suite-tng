@@ -1,6 +1,8 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.KeyEventDispatcher;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 		this.modules = modules;
 		this.globalShortcuts = new ArrayList<KeyboardShortcut>();
 		this.windowsKeyDown = false;
+		mainWindow.addWindowFocusListener(new JanewayFocusListener(this));
 	}
 
 	/**
@@ -101,5 +104,13 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 			}
 		}
 		return !windowsKeyDown;
+	}
+	
+	/**
+	 * Sets the value of the windows key flag
+	 * @param value the new value of the flag
+	 */
+	public synchronized void setWindowsKeyFlag(boolean value) {
+		windowsKeyDown = value;
 	}
 }
