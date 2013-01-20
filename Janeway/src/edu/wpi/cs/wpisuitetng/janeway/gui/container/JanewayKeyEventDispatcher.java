@@ -38,26 +38,35 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	}
 
 	/**
-	 * Dispatches the given key event to the active tab
+	 * Dispatches the given key event to the active tab.
+	 * 
+	 * @return true if the event was dispatched, false if the event should be handled
+	 * by the next dispatcher. IMPORTANT: if you don't want the default action to occur
+	 * for a shortcut, you must consume the event and then return true.
 	 */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(event);
 		for (KeyboardShortcut shortcut : globalShortcuts) {
-			shortcut.processKeyEvent(keyStroke);
+			if (shortcut.processKeyEvent(keyStroke)) {
+				event.consume();
+				return true;
+			}
 		}
 		
 		for (IJanewayModule module : modules) {
 			for (JanewayTabModel tabModel : module.getTabs()) {
 				if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
 					for (KeyboardShortcut shortcut : tabModel.getKeyboardShortcuts()) {
-						shortcut.processKeyEvent(keyStroke);
+						if (shortcut.processKeyEvent(keyStroke)) {
+							event.consume();
+							return true;
+						}
 					}
 					return false;
 				}
 			}
 		}
-		
 		return false;
 	}
 

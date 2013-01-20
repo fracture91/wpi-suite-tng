@@ -50,10 +50,12 @@ public class KeyboardShortcut {
 	 * each of the actions is performed.
 	 * @param keyStroke the key stroke to compare
 	 */
-	public void processKeyEvent(KeyStroke keyStroke) {
+	public boolean processKeyEvent(KeyStroke keyStroke) {
 		if (this.keyStroke.equals(keyStroke)) {
 			performActions();
+			return true;
 		}
+		return false;
 	}
 	
 	/**

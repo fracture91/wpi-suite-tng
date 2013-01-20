@@ -87,7 +87,7 @@ public class JanewayFrame extends JFrame {
 		keyEventDispatcher.addGlobalKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control PAGE_DOWN"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				tabPanel.switchToLeftTab();
+				tabPanel.switchToRightTab();
 			}
 		}));
 		
@@ -95,7 +95,7 @@ public class JanewayFrame extends JFrame {
 		keyEventDispatcher.addGlobalKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control PAGE_UP"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				tabPanel.switchToRightTab();
+				tabPanel.switchToLeftTab();
 			}
 		}));
 	}

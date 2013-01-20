@@ -46,7 +46,9 @@ public class TabPanel extends JPanel {
 	 * Changes the selected tab to the tab right of the current tab
 	 */
 	public void switchToRightTab() {
-		switchToTab(tabbedPane.getSelectedIndex() + 1);
+		if (tabbedPane.getSelectedIndex() < tabbedPane.getTabCount() - 1) {
+			switchToTab(tabbedPane.getSelectedIndex() + 1);
+		}
 	}
 	
 	/**
