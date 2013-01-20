@@ -2,10 +2,16 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.ModelMapper.MapCallback;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
 public class ModelMapperTest {
@@ -41,6 +47,38 @@ public class ModelMapperTest {
 	@Test
 	public void testTypeMismatch() {
 		mapper.map(user, a); // no shared fields, nothing happens, no exception
+	}
+	
+	public abstract class TestMapCallback implements MapCallback{
+		List<String> receivedNames = new ArrayList<String>();
+	}
+	
+	@Test
+	public void testCallback() {
+		TestMapCallback callback = new TestMapCallback() {
+			@Override
+			public Object call(Model source, Model destination, String fieldName, Object sourceValue,
+					Object destinationValue) {
+				assertSame(a, source);
+				assertSame(b, destination);
+				receivedNames.add(fieldName);
+				if(fieldName.equals("title")) {
+					assertEquals("a", sourceValue);
+					assertEquals("b", destinationValue);
+				} else if(fieldName.equals("id")) {
+					return -1;
+				}
+				return null;
+			}
+		};
+		mapper.map(a, b, callback);
+		// not an exhaustive list
+		assertTrue(callback.receivedNames.containsAll(Arrays.asList("id", "title", "lastModifiedDate")));
+		// make sure mapper honored callback return value - again, not exhaustive
+		assertEquals(-1, b.getId());
+		assertNull(b.getTitle());
+		assertNull(b.getDescription());
+		assertNull(b.getCreator());
 	}
 
 }

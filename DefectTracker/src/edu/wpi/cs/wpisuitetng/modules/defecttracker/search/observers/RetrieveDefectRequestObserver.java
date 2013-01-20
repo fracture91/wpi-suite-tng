@@ -40,8 +40,7 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 		}
 
 		// parse the defect received from the core
-		Gson parser = new Gson();
-		Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
+		Defect[] defects = Defect.fromJSONArray(response.getBody());
 		if (defects.length > 0 && defects[0] != null) {
 			controller.showDefect(defects[0]);
 		}
