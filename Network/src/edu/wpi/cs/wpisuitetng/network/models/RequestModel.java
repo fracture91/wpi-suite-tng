@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents an HTTP request.
+ */
 public class RequestModel implements IRequest {
 	protected String body;
 	protected Map<String, List<String>> headers;
@@ -124,6 +127,11 @@ public class RequestModel implements IRequest {
 	 * @param url The URL to make the request to.
 	 */
 	public void setUrl(URL url) {
+		// check to see if the url is null
+		if (url == null) {
+			throw new NullPointerException("The url parameter must not be null.");
+		}
+
 		this.url = url;
 	}
 

@@ -7,32 +7,17 @@ import java.util.Map;
 
 /**
  * Represents a response to a request.
- * 
- * TODO Think about just taking a HTTPURLConnection in the constructor.
- * TODO Convert response body String into a Model object.
  */
 public class ResponseModel {
 	private int statusCode;
 	private String statusMessage;
 	private Map<String, List<String>> headers;
 	private String body;
-	
+
 	public ResponseModel() {
 		this.headers = new HashMap<String, List<String>>();
 	}
-	
-	public void setStatusCode(int code) {
-		statusCode = code;
-	}
-	
-	public void setStatusMessage(String message) {
-		statusMessage = message;
-	}
-	
-	public void setBody(String body) {
-		this.body = body;
-	}
-	
+
 	/**
 	 * Adds a header to the response.
 	 * 
@@ -61,7 +46,46 @@ public class ResponseModel {
 		// store the updated List of current values in the Map
 		headers.put(key, currentValues);
 	}
-	
+
+	/**
+	 * Sets the response body.
+	 * 
+	 * @param body The response body.
+	 */
+	public void setBody(String body) {
+		// check to see if the body is null
+		if (body == null) {
+			throw new NullPointerException("The body must not be null.");
+		}
+
+		this.body = body;
+	}
+
+	/**
+	 * Sets the response HTTP status code.
+	 * 
+	 * @param code	An int representing an HTTP status code.
+	 */
+	public void setStatusCode(int code) {
+		//TODO throw exception if code < 100
+		
+		statusCode = code;
+	}
+
+	/**
+	 * Sets the response HTTP status message.
+	 * 
+	 * @param code	An int representing an HTTP status message.
+	 */
+	public void setStatusMessage(String message) {
+		// check to see if the message is null
+		if (message == null) {
+			throw new NullPointerException("The message must not be null.");
+		}
+
+		statusMessage = message;
+	}
+
 	/**
 	 * Returns a String containing the response body.
 	 * 
@@ -70,16 +94,7 @@ public class ResponseModel {
 	public String getBody() {
 		return this.body;
 	}
-	
-	/**
-	 * Returns an integer representing the status code received in the response from the server.
-	 * 
-	 * @return	An integer representing the status code received in the response.
-	 */
-	public int getStatusCode() {
-		return statusCode;
-	}
-	
+
 	/**
 	 * Returns a Map<String, List<String>> containing the response headers.
 	 * 
@@ -88,7 +103,16 @@ public class ResponseModel {
 	public Map<String, List<String>> getHeaders() {
 		return this.headers;
 	}
-	
+
+	/**
+	 * Returns an integer representing the status code received in the response from the server.
+	 * 
+	 * @return	An integer representing the status code received in the response.
+	 */
+	public int getStatusCode() {
+		return statusCode;
+	}
+
 	/**
 	 * Returns a String representing the status message received in the response from the server.
 	 * 
