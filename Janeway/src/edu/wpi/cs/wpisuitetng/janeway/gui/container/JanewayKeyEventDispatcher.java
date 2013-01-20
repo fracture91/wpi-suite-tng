@@ -24,7 +24,11 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	/** The list of modules that were loaded at runtime */
 	protected final List<IJanewayModule> modules;
 
+	/** The list of shortcuts used globally by all modules */
 	protected List<KeyboardShortcut> globalShortcuts;
+
+	/** A flag representing the state of the windows key */
+	protected boolean windowsKeyDown;
 
 	/**
 	 * Constructs a new JanewayKeyEventDispatcher
@@ -35,6 +39,7 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 		this.mainWindow = mainWindow;
 		this.modules = modules;
 		this.globalShortcuts = new ArrayList<KeyboardShortcut>();
+		this.windowsKeyDown = false;
 	}
 
 	/**
@@ -46,24 +51,26 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	 */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(event);
-		for (KeyboardShortcut shortcut : globalShortcuts) {
-			if (shortcut.processKeyEvent(keyStroke)) {
-				event.consume();
-				return true;
+		if(isWindowsKeyUp(event)) {
+			KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(event);
+			for (KeyboardShortcut shortcut : globalShortcuts) {
+				if (shortcut.processKeyEvent(keyStroke)) {
+					event.consume();
+					return true;
+				}
 			}
-		}
-		
-		for (IJanewayModule module : modules) {
-			for (JanewayTabModel tabModel : module.getTabs()) {
-				if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
-					for (KeyboardShortcut shortcut : tabModel.getKeyboardShortcuts()) {
-						if (shortcut.processKeyEvent(keyStroke)) {
-							event.consume();
-							return true;
+
+			for (IJanewayModule module : modules) {
+				for (JanewayTabModel tabModel : module.getTabs()) {
+					if (tabModel.getName().equals(mainWindow.getTabPanel().getTabbedPane().getSelectedComponent().getName())) {
+						for (KeyboardShortcut shortcut : tabModel.getKeyboardShortcuts()) {
+							if (shortcut.processKeyEvent(keyStroke)) {
+								event.consume();
+								return true;
+							}
 						}
+						return false;
 					}
-					return false;
 				}
 			}
 		}
@@ -77,5 +84,22 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	 */
 	public void addGlobalKeyboardShortcut(KeyboardShortcut shortcut) {
 		globalShortcuts.add(shortcut);
+	}
+	
+	/**
+	 * Maintains the state of the windowsKeyDown flag.
+	 * @param event the last keye vent
+	 * @return false if the windows key is pressed, otherwise true
+	 */
+	private synchronized boolean isWindowsKeyUp(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.VK_WINDOWS) {
+			if (event.getID() == KeyEvent.KEY_PRESSED) {
+				windowsKeyDown = true;
+			}
+			else if (event.getID() == KeyEvent.KEY_RELEASED) {
+				windowsKeyDown = false;
+			}
+		}
+		return !windowsKeyDown;
 	}
 }
