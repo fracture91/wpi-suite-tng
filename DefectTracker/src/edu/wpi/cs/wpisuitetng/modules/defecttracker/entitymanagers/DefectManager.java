@@ -135,7 +135,8 @@ public class DefectManager implements EntityManager<Defect> {
 		} else {
 			// add changeset to Defect events, save to database
 			existingDefect.getEvents().add(changeset);
-			if(!db.save(existingDefect)) {
+			// TODO: events field doesn't persist without explicit save - is this a bug?
+			if(!db.save(existingDefect) || !db.save(existingDefect.getEvents())) {
 				throw new WPISuiteException();
 			}
 		}
