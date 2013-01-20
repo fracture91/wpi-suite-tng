@@ -110,7 +110,7 @@ public class JanewayKeyEventDispatcher implements KeyEventDispatcher {
 	 * Sets the value of the windows key flag
 	 * @param value the new value of the flag
 	 */
-	public synchronized void setWindowsKeyFlag(boolean value) {
+	protected synchronized void setWindowsKeyFlag(boolean value) {
 		windowsKeyDown = value;
 	}
 }
