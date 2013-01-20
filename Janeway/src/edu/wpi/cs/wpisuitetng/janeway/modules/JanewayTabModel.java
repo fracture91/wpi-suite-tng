@@ -32,6 +32,14 @@ public class JanewayTabModel {
 	}
 	
 	/**
+	 * Adds the given keyboard shortcut to this tab
+	 * @param shortcut the keyboard shortcut to add
+	 */
+	public void addKeyboardShortcut(KeyboardShortcut shortcut) {
+		keyboardShortcuts.add(shortcut);
+	}
+	
+	/**
 	 * @return The name that will appear on the module's tab (e.g. "Defect").
 	 */
 	public String getName() {

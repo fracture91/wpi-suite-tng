@@ -1,11 +1,11 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.widgets;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Action;
+import javax.swing.KeyStroke;
 
 /**
  * This class performs the given action when a keyboard event is received
@@ -14,50 +14,31 @@ import javax.swing.Action;
  */
 public class KeyboardShortcut {
 	
-	/** 
-	 * The modifier keys that must be pressed (e.g. CTRL, SHIFT). Build
-	 * this mask by combining key masks with bitwise OR.
-	 * 
-	 * Example: to match the CTRL key and Shift key, use KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK
-	 */
-	protected final int modifiersDownMask;
+	/** A KeyStroke representing the combination of keys required for this shortcut */
+	protected KeyStroke keyStroke;
 	
-	/** The modifier keys that must NOT be pressed */
-	protected final int modifiersUpMask;
-	
-	/** The type of key event (e.g. KeyEvent.KEY_PRESSED, KeyEvent.KEY_TYPED, KeyEvent.KEY_RELEASED) */
-	protected final int keyEventType;
-	
-	/** The alphanumeric key that must be matched (e.g. the mask KeyEvent.VK_S corresponds to the letter s) */
-	protected final int keyPressed;
-	
-	/** The list of actions to perform when a KeyEvent is received that matches */
+	/** The list of actions to perform when a KeyEvent is received that matches the keyStroke */
 	protected final List<Action> actions;
 	
 	/**
-	 * Constructs a new keyboard shortcut.
-	 * @param modifiersDownMask the modifier keys that must be pressed
-	 * @param modifiersUpMask the modifier keys that must not be pressed
-	 * @param keyEventType the type of key event
-	 * @param keyPressed the alphanumeric keys that must be pressed
+	 * Constructs a new KeyboardShortcut for the combination of keys represented
+	 * by the given KeyStroke.
+	 * @param keyStroke a KeyStroke representing the combination of keys that make up this shortcut
 	 */
-	public KeyboardShortcut(int modifiersDownMask, int modifiersUpMask, int keyEventType, int keyPressed) {
-		this(modifiersDownMask, modifiersUpMask, keyEventType, keyPressed, null);
+	public KeyboardShortcut(KeyStroke keyStroke) {
+		this(keyStroke, null);
 	}
 	
 	/**
-	 * Constructs a new keyboard shortcut.
-	 * @param modifiersDownMask the modifier keys that must be pressed
-	 * @param modifiersUpMask the modifier keys that must not be pressed
-	 * @param keyEventType the type of key event
-	 * @param keyPressed the alphanumeric keys that must be pressed
-	 * @param action an action to be performed when a KeyEvent is received that matches
+	 * Constructs a new KeyboardShortcut for the combination of keys represented
+	 * @param keyStroke a KeyStroke representing the combination of keys that make up this shortcut
+	 * @param action the action to perform when this keyboard shortcut is typed
 	 */
-	public KeyboardShortcut(int modifiersDownMask, int modifiersUpMask, int keyEventType, int keyPressed, Action action) {
-		this.modifiersDownMask = modifiersDownMask;
-		this.modifiersUpMask = modifiersUpMask;
-		this.keyEventType = keyEventType;
-		this.keyPressed = keyPressed;
+	public KeyboardShortcut(KeyStroke keyStroke, Action action) {
+		if (keyStroke == null) {
+			throw new NullPointerException("The given KeyStroke cannot be null");
+		}
+		this.keyStroke = keyStroke;
 		actions = new ArrayList<Action>();
 		if (action != null) {
 			actions.add(action);
@@ -65,14 +46,12 @@ public class KeyboardShortcut {
 	}
 	
 	/**
-	 * Determines if the given key event matches this shortcut. If it matches
+	 * Determines if the given key stroke matches this shortcut. If it matches
 	 * each of the actions is performed.
-	 * @param e the key event
+	 * @param keyStroke the key stroke to compare
 	 */
-	public void processKeyEvent(KeyEvent e) {
-		if (((e.getModifiersEx() & (modifiersDownMask | modifiersUpMask)) == modifiersDownMask) &&
-				(e.getID() == keyEventType) &&
-				(e.getKeyCode() == keyPressed)) {
+	public void processKeyEvent(KeyStroke keyStroke) {
+		if (this.keyStroke.equals(keyStroke)) {
 			performActions();
 		}
 	}

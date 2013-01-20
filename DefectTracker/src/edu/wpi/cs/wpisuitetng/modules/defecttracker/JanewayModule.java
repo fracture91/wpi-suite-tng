@@ -1,11 +1,11 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.KeyboardShortcut;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
@@ -60,32 +60,25 @@ public class JanewayModule implements IJanewayModule {
 	private void registerKeyboardShortcuts(JanewayTabModel tab) {
 		String osName = System.getProperty("os.name").toLowerCase();
 		
-		// the default modifier key
-		int shortcutKeyMask = KeyEvent.CTRL_DOWN_MASK;
-		
-		// modifier keys to exclude from shortcuts
-		int keysToExclude = KeyEvent.ALT_DOWN_MASK | KeyEvent.VK_WINDOWS | KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK;
-
 		// control + tab: switch to right tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, keysToExclude, KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
+		tab.addKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control TAB"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainTabController.switchToRightTab();
 			}
 		}));
-
+		
 		// control + shift + tab: switch to left tab
-		tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask | KeyEvent.SHIFT_DOWN_MASK, keysToExclude & ~(KeyEvent.SHIFT_DOWN_MASK), KeyEvent.KEY_PRESSED, KeyEvent.VK_TAB, new AbstractAction() {
+		tab.addKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control shift TAB"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainTabController.switchToLeftTab();
 			}
 		}));
-
-		// if this is a mac, use command + w, otherwise use control + w
+		
+		// command + w for mac or control + w for windows: close the current tab
 		if (osName.contains("mac")) {
-			// COMMAND + w: close tab
-			tab.getKeyboardShortcuts().add(new KeyboardShortcut(KeyEvent.META_DOWN_MASK, keysToExclude & ~(KeyEvent.META_DOWN_MASK), KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
+			tab.addKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("meta W"), new AbstractAction() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					mainTabController.closeCurrentTab();
@@ -93,8 +86,7 @@ public class JanewayModule implements IJanewayModule {
 			}));
 		}
 		else {
-			// control + w: close tab
-			tab.getKeyboardShortcuts().add(new KeyboardShortcut(shortcutKeyMask, keysToExclude, KeyEvent.KEY_PRESSED, KeyEvent.VK_W, new AbstractAction() {
+			tab.addKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control W"), new AbstractAction() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					mainTabController.closeCurrentTab();

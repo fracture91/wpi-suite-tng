@@ -5,13 +5,13 @@ import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
@@ -82,33 +82,21 @@ public class JanewayFrame extends JFrame {
 	 * @param keyEventDispatcher the current key event dispatcher
 	 */
 	private void addGlobalKeyboardShortcuts(JanewayKeyEventDispatcher keyEventDispatcher) {
-		// control + page up: switch to left module tab
-		KeyboardShortcut controlPageUp = new KeyboardShortcut(KeyEvent.CTRL_DOWN_MASK, 
-				KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK, 
-				KeyEvent.KEY_PRESSED, 
-				KeyEvent.VK_PAGE_DOWN, 
-				new AbstractAction() {
-
+		
+		// control + page down: switch to the module tab to the right
+		keyEventDispatcher.addGlobalKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control PAGE_DOWN"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				tabPanel.switchToLeftTab();
 			}
-		});
-
-		// control + page down: switch to right module tab
-		KeyboardShortcut controlPageDown = new KeyboardShortcut(KeyEvent.CTRL_DOWN_MASK, 
-				KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK, 
-				KeyEvent.KEY_PRESSED, 
-				KeyEvent.VK_PAGE_UP, 
-				new AbstractAction() {
-
+		}));
+		
+		// control + page up: switch to the module tab to the left
+		keyEventDispatcher.addGlobalKeyboardShortcut(new KeyboardShortcut(KeyStroke.getKeyStroke("control PAGE_UP"), new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				tabPanel.switchToRightTab();
 			}
-		});
-		
-		keyEventDispatcher.addGlobalShortcut(controlPageUp);
-		keyEventDispatcher.addGlobalShortcut(controlPageDown);
+		}));
 	}
 }
