@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.network.configuration;
+package edu.wpi.cs.wpisuitetng.network.models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
