@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
@@ -66,7 +67,8 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		// Instantiate the main create defect panel
 		mainPanel = new DefectPanel(defect, editMode);
 		this.setLayout(new BorderLayout());
-		this.add(mainPanel, BorderLayout.PAGE_START);
+		JScrollPane mainPanelScrollPane = new JScrollPane(mainPanel);
+		this.add(mainPanelScrollPane, BorderLayout.CENTER);
 		controller = new SaveDefectController(this);
 
 		// Instantiate the save button and add it to the button panel

@@ -32,6 +32,7 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
+	protected DefectEventView defectEventView;
 
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
@@ -111,12 +112,20 @@ public class DefectPanel extends JPanel {
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
+		defectEventView = new DefectEventView(model);
 
 		// set component names
 		txtTitle.setName("Title");
 		txtDescription.setName("Description");
 		txtCreator.setName("Creator");
 		txtAssignee.setName("Assignee");
+		
+		// set widths
+		txtTitle.setMaximumSize(txtTitle.getPreferredSize());
+		//txtDescription.setMaximumSize(txtDescription.getPreferredSize());
+		txtCreator.setMaximumSize(txtCreator.getPreferredSize());
+		txtAssignee.setMaximumSize(txtAssignee.getPreferredSize());
+		tagPanel.setMaximumSize(tagPanel.getPreferredSize());
 
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
@@ -155,7 +164,11 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.NORTH, tagPanel, VERTICAL_PADDING * 3, SpringLayout.NORTH, txtAssignee);
 		layout.putConstraint(SpringLayout.WEST, tagPanel, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, tagPanel, 0, SpringLayout.EAST, txtTitle);
-		layout.putConstraint(SpringLayout.SOUTH, this, 15, SpringLayout.SOUTH, tagPanel);
+		
+		layout.putConstraint(SpringLayout.NORTH, defectEventView, VERTICAL_PADDING, SpringLayout.SOUTH, tagPanel);
+		layout.putConstraint(SpringLayout.WEST, defectEventView, 0, SpringLayout.WEST, tagPanel);
+		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);
+		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
 
 		add(lblTitle);
 		add(txtTitle);
@@ -166,6 +179,7 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
+		add(defectEventView);
 	}
 
 	/**
