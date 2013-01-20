@@ -6,6 +6,7 @@
 Servers\.settings\*
 Servers\.settings
 javadoc
+test-results
 
 # Package Files #
 *.war
