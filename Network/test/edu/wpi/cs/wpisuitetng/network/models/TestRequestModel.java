@@ -105,7 +105,7 @@ public class TestRequestModel {
 	}
 	
 	/**
-	 * Test the testSetHttpMethod method.
+	 * Test the setHttpMethod method.
 	 */
 	@Test
 	public void testSetHttpMethod() {
@@ -117,7 +117,7 @@ public class TestRequestModel {
 	}
 	
 	/**
-	 * Test the testSetHttpMethod method for a NullPointerException.
+	 * Test the setHttpMethod method for a NullPointerException.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testSetHttpMethodException() {
@@ -125,7 +125,26 @@ public class TestRequestModel {
 	}
 	
 	/**
-	 * Test the testSetUrl method.
+	 * Test the setResponse method.
+	 */
+	@Test
+	public void testSetResponse() {
+		ResponseModel response = new ResponseModel();
+		response.setBody("My response");
+		rm.setResponse(response);
+		assertEquals(response, rm.getResponse()); // TODO switch to .equals method
+	}
+	
+	/**
+	 * Test the setResponse method for a NullPointerException.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testSetResponseException() {
+		rm.setResponse(null);
+	}
+	
+	/**
+	 * Test the setUrl method.
 	 */
 	@Test
 	public void testSetUrl() throws MalformedURLException {
@@ -135,7 +154,7 @@ public class TestRequestModel {
 	}
 	
 	/**
-	 * Test the testSetUrl method for a NullPointerException.
+	 * Test the setUrl method for a NullPointerException.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testSetUrlException() {
