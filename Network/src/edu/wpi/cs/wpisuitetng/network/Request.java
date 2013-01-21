@@ -20,6 +20,8 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
  * the Request will not be notified. In most cases, you will not want to send a synchronous Request. When a 
  * Request is sent asynchronously, a new thread is created which sends the Request, generates a Response, 
  * and notifies any RequestObservers that have been added to the Request.
+ * 
+ * TODO add equals method
  */
 public class Request extends RequestModel {
 	private List<RequestObserver> observers;

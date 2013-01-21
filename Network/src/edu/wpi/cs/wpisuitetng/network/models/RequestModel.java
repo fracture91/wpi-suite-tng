@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * Represents an HTTP request.
+ * 
+ * TODO add equals method
  */
 public class RequestModel implements IRequest {
 	protected String body;

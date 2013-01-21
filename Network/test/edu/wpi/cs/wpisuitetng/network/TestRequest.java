@@ -3,7 +3,6 @@ package edu.wpi.cs.wpisuitetng.network;
 import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import org.junit.*;
 
 
@@ -81,6 +80,109 @@ public class TestRequest {
 	public void testRequestSetRequestBodyNullPointerException() {
 		Request r = new Request(config, null, HttpMethod.POST);
 		r.setBody(null);
+	}
+	
+	/**
+	 * Test the addHeader method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testAddHeaderIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.addHeader("key", "value");
+	}
+	
+	/**
+	 * Test the addQueryData method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testAddQueryDataIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.addQueryData("key", "value");
+	}
+	
+	/**
+	 * Test the setAsynchronous and clearAsynchronous methods for an IllegalStateException.
+	 */
+	@Test
+	public void testSetClearAsynchronous() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		assertTrue(r.isAsynchronous()); // should be asynchronous by default
+		r.clearAsynchronous();
+		assertFalse(r.isAsynchronous());
+		r.setAsynchronous();
+		assertTrue(r.isAsynchronous());
+	}
+	
+	/**
+	 * Test the clearAsynchronous method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testClearAsynchronousIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.clearAsynchronous();
+	}
+	
+	/**
+	 * Test the setAsynchronous method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetAsynchronousIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setAsynchronous();
+	}
+	
+	/**
+	 * Test the setConnectTimeout method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetConnectTimeoutIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setConnectTimeout(1000);
+	}
+	
+	/**
+	 * Test the setReadTimeout method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetReadTimeoutIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setReadTimeout(1000);
+	}
+	
+	/**
+	 * Test the setBody method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetBodyIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setBody("");
+	}
+	
+	/**
+	 * Test the setHttpMethod method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetHttpMethodIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setHttpMethod(HttpMethod.GET);
+	}
+	
+	/**
+	 * Test the setResponse method for an IllegalStateException.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testSetResponseIllegalStateException() {
+		Request r = new Request(config, null, HttpMethod.GET);
+		r.running = true;
+		r.setResponse(new ResponseModel());
 	}
 
 	/**
