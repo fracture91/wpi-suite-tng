@@ -314,5 +314,39 @@ public class ManagerLayer {
 		
         return map.get(args[0]+args[1]).advancedPut(s,args,content);
 	}
+
+	/**
+	 * ADvanced Post
+	 * 
+	 * **********************
+	 * A note about advanced post.  the content body should not contain any line breaks.
+	 * only the first line will be passed through to the function.
+	 * **********************
+	 * 
+	 * @param path
+	 * @param readLine
+	 * @param cookies
+	 * @return
+	 * @throws WPISuiteException
+	 */
+	public String advancedPost(String[] args, String content, Cookie[] cook) throws WPISuiteException
+	{
+		Session s = null;
+		if(cook != null)
+		{
+			for(Cookie c : cook)
+			{
+				if(c.getName().startsWith("WPISUITE-"))
+					s = sessions.getSession(c.getValue());
+					
+			}	
+		}
+		else
+		{
+			throw new AuthenticationException();
+		}
+		
+        return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
+	}
 	
 }

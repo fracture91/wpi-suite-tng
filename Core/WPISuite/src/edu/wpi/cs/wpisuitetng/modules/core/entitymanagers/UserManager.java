@@ -224,4 +224,10 @@ public class UserManager implements EntityManager<User> {
 		throw new NotImplementedException();
 	}
 
+	@Override
+	public String advancedPost(Session s, String string, String content)
+			throws WPISuiteException {
+		throw new NotImplementedException();
+	}
+
 }

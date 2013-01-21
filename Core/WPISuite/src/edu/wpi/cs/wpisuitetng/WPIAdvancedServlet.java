@@ -52,8 +52,24 @@ public class WPIAdvancedServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	
+		BufferedReader in = req.getReader();
+		PrintWriter out = res.getWriter();
+		String delims = "[/]+";
+        String[] path = req.getPathInfo().split(delims);
+        
+        System.arraycopy(path, 1, path, 0, path.length-1);
+        path[path.length-1] = null;
+        
+        
+        try {
+        	out.println(ManagerLayer.getInstance().advancedPost(path,in.readLine(),req.getCookies()));
+		} catch (WPISuiteException e) {
+			res.setStatus(e.getStatus());
+		}
+        
+        out.close();
 	}
 	
 	/**

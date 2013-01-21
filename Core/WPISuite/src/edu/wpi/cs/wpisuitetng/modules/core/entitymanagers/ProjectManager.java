@@ -199,6 +199,11 @@ public class ProjectManager implements EntityManager<Project>{
 		throw new NotImplementedException();
 	}
 
+	@Override
+	public String advancedPost(Session s, String string, String content) throws WPISuiteException {
+		throw new NotImplementedException();
+	}
+
 
 	
 
