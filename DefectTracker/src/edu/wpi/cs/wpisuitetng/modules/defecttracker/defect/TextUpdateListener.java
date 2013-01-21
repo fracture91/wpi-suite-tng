@@ -13,6 +13,12 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Checks for whether or not the text in a given JTextComponent differs from the current model (a Defect).
+ * 
+ * Whenever a key is released in the TextUpdateListener's component, checkIfUpdated() is called. This method 
+ * gets the component's name and looks up the value of the relevant field in panel's Defect model. It then 
+ * compares this value to the component's text to see if the text differs from the model. If the text 
+ * differs, the style of the component is changed to show that it differs from the relevant field in the model.
+ * Otherwise, the component's style is changed to be normal.
  */
 public class TextUpdateListener implements KeyListener {
 	protected final DefectPanel panel;
