@@ -65,7 +65,8 @@ public class DefectPanel extends JPanel {
 
 		addComponents(layout);
 
-		// Add TextUpdateListeners
+		// Add TextUpdateListeners. These check if the text component's text differs from the panel's Defect 
+		// model and highlights them accordingly every time a key is pressed.
 		txtTitleListener = new TextUpdateListener(this, txtTitle);
 		txtTitle.addKeyListener(txtTitleListener);
 
@@ -94,6 +95,7 @@ public class DefectPanel extends JPanel {
 			}
 		});
 		
+		// Populate the form with the contents of the Defect model and update the TextUpdateListeners.
 		updateFields();
 	}
 
@@ -112,7 +114,8 @@ public class DefectPanel extends JPanel {
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
 
-		// set component names
+		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
+		// These are required for TextUpdateListener to be able to get the correct field from panel's Defect model.
 		txtTitle.setName("Title");
 		txtDescription.setName("Description");
 		txtCreator.setName("Creator");
