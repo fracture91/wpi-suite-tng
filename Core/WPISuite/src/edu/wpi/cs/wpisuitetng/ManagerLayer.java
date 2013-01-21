@@ -320,7 +320,7 @@ public class ManagerLayer {
 	 * @return
 	 * @throws WPISuiteException
 	 */
-	public char[] advancedPost(String[] args, String content, Cookie[] cook) throws WPISuiteException
+	public String advancedPost(String[] args, String content, Cookie[] cook) throws WPISuiteException
 	{
 		Session s = null;
 		if(cook != null)

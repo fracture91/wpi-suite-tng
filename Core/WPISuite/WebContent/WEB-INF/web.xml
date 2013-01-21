@@ -48,6 +48,6 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>AdvancedAPI</servlet-name>
-  	<url-pattern>/AdvancedAPI/*</url-pattern>
+  	<url-pattern>/API/Advanced/*</url-pattern>
   </servlet-mapping>
 </web-app>

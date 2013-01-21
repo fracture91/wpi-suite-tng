@@ -221,7 +221,7 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public char[] advancedPost(Session s, String string, String content)
+	public String advancedPost(Session s, String string, String content)
 			throws WPISuiteException {
 		throw new NotImplementedException();
 	}

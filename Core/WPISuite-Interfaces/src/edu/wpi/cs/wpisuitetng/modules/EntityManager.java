@@ -118,5 +118,5 @@ public interface EntityManager<T extends Model>
 	 * @param content - The String payload of the request
 	 * @return - a String to be sent back as the body of the request
 	 */
-	public char[] advancedPost(Session s, String string, String content) throws WPISuiteException;
+	public String advancedPost(Session s, String string, String content) throws WPISuiteException;
 }
