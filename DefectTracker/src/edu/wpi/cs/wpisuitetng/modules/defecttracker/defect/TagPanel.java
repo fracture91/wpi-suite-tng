@@ -82,12 +82,14 @@ public class TagPanel extends JPanel {
 
 		JLabel lblNewTag = new JLabel("Enter a new tag:");
 		int labelWidth = lblNewTag.getPreferredSize().width;
-
+		
 		layout.putConstraint(SpringLayout.NORTH, lblNewTag, VERTICAL_PADDING, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, lblNewTag, 10, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.EAST, lblNewTag, labelWidth, SpringLayout.WEST, lblNewTag);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, txtNewTag, 0, SpringLayout.VERTICAL_CENTER, lblNewTag);
 		layout.putConstraint(SpringLayout.WEST, txtNewTag, HORIZONTAL_PADDING, SpringLayout.EAST, lblNewTag);
+
+		layout.putConstraint(SpringLayout.NORTH, txtNewTag, VERTICAL_PADDING, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.NORTH, lstTags, VERTICAL_PADDING, SpringLayout.SOUTH, txtNewTag);
 
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, btnAddTag, 0, SpringLayout.VERTICAL_CENTER, txtNewTag);
 		layout.putConstraint(SpringLayout.WEST, btnAddTag, HORIZONTAL_PADDING * 5, SpringLayout.EAST, txtNewTag);

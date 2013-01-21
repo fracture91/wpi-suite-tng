@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -55,7 +56,7 @@ public class DefectPanel extends JPanel {
 	 */
 	public DefectPanel(Defect defect, Mode mode) {
 		editMode = mode;
-
+		
 		// Indicate that input is enabled
 		inputEnabled = true;
 
@@ -107,6 +108,7 @@ public class DefectPanel extends JPanel {
 		txtTitle = new JTextField(50);
 		txtDescription = new JTextArea();
 		txtDescription.setLineWrap(true);
+		txtDescription.setWrapStyleWord(true);
 		txtDescription.setBorder(txtTitle.getBorder());
 		txtCreator = new JTextField(20);
 		txtCreator.setEnabled(false);
@@ -120,9 +122,8 @@ public class DefectPanel extends JPanel {
 		txtCreator.setName("Creator");
 		txtAssignee.setName("Assignee");
 		
-		// set widths
+		// set maximum widths of components so they are not stretched
 		txtTitle.setMaximumSize(txtTitle.getPreferredSize());
-		//txtDescription.setMaximumSize(txtDescription.getPreferredSize());
 		txtCreator.setMaximumSize(txtCreator.getPreferredSize());
 		txtAssignee.setMaximumSize(txtAssignee.getPreferredSize());
 		tagPanel.setMaximumSize(tagPanel.getPreferredSize());
@@ -169,6 +170,10 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.WEST, defectEventView, 0, SpringLayout.WEST, tagPanel);
 		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);
 		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
+
+		SpringLayout.Constraints defectPanelConstraint = layout.getConstraints(this);
+		defectPanelConstraint.setHeight(Spring.sum(Spring.constant(defectEventView.getHeight()), defectPanelConstraint.getConstraint(SpringLayout.SOUTH)));
+		
 
 		add(lblTitle);
 		add(txtTitle);
