@@ -9,6 +9,7 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.dummyserver.DummyServer;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
@@ -61,7 +62,7 @@ public class TestRequest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRequestConstructorNullPointerException() throws MalformedURLException {
-		Request r = new Request(null, null, null);
+		new Request(null, null, null);
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class TestRequest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRequestSetRequestMethodNullPointerException() throws MalformedURLException {
-		Request r = new Request(config, null, null);
+		new Request(config, null, null);
 	}
 
 	/**
@@ -95,8 +96,8 @@ public class TestRequest {
 
 		// Create the URL
 		try {
-			URL url = new URL("http", "localhost", port, "/myModule/myModel");
-
+			DummyServer server = new DummyServer(port);
+			server.start();
 
 			// Make a new POST Request.
 			Request manualRequest = new Request(config, null, HttpMethod.POST);	// construct the Request
@@ -111,11 +112,14 @@ public class TestRequest {
 				requestObserver.wait(2000);
 			}
 
-			assertEquals(true, (body+"\n").equals(manualRequest.getResponse().getBody()));
+			//assertEquals(true, (body+"\n").equals(manualRequest.getResponse().getBody()));
 			assertEquals(200, manualRequest.getResponse().getStatusCode());
 			assertEquals(true, "OK".equalsIgnoreCase(manualRequest.getResponse().getStatusMessage()));
-		} catch (MalformedURLException e) {
-			fail("MalformedURLException");
+			
+			assertTrue(body.equals(server.getLastReceived().getBody()));
+			assertEquals(manualRequest.getHttpMethod(), server.getLastReceived().getHttpMethod());
+			
+			server.stop();
 		} //TODO switch to https
 		catch (InterruptedException e) {
 			// TODO Auto-generated catch block
