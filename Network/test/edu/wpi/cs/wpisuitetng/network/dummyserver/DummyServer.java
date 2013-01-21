@@ -38,7 +38,7 @@ public class DummyServer {
 		catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		address = new InetSocketAddress(8080);
+		address = new InetSocketAddress(port);
 	}
 
 	public void start() {

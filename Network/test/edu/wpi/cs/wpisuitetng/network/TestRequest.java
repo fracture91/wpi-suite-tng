@@ -48,7 +48,7 @@ public class TestRequest {
 	}
 
 	private NetworkConfiguration config;
-	private static int port = 8080;
+	private static int port = 38512;
 
 	@Before
 	public void setUp() {
