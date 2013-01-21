@@ -26,6 +26,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	private DefectPanel mainPanel;
 	private SaveDefectController controller;
 	private Tab containingTab;
+	private boolean inputEnabled = true;
 
 	/**
 	 * Constructs a new CreateDefectView where the user can enter the data for a new defect.
@@ -64,7 +65,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		}
 		
 		// Instantiate the main create defect panel
-		mainPanel = new DefectPanel(defect, editMode);
+		mainPanel = new DefectPanel(this, defect, editMode);
 		this.setLayout(new BorderLayout());
 		this.add(mainPanel, BorderLayout.PAGE_START);
 		controller = new SaveDefectController(this);
@@ -74,6 +75,28 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		saveButton.setAction(new SaveChangesAction(controller));
 		buttonGroup.getContent().add(saveButton);
 		buttonGroup.setPreferredWidth(150);
+	}
+	
+	/**
+	 * Sets whether input is enabled for this panel and its children. This should be used instead of 
+	 * JComponent#setEnabled because setEnabled does not affect its children.
+	 * 
+	 * @param enabled	Whether or not input is enabled.
+	 */
+	public void setInputEnabled(boolean enabled) {
+		inputEnabled = enabled;
+
+		saveButton.setEnabled(enabled);
+		mainPanel.setInputEnabled(enabled);
+	}
+	
+	/**
+	 * Returns whether or not input is enabled.
+	 * 
+	 * @return whether or not input is enabled.
+	 */
+	public boolean getInputEnabled() {
+		return inputEnabled;
 	}
 
 	/**

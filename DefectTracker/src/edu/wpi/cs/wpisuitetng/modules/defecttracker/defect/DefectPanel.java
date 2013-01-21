@@ -24,6 +24,8 @@ public class DefectPanel extends JPanel {
 		EDIT;
 	}
 
+	protected DefectView parent;
+	
 	protected Defect model;
 
 	protected JTextField txtTitle;
@@ -47,11 +49,13 @@ public class DefectPanel extends JPanel {
 	/**
 	 * Constructs a DefectPanel for creating or editing a given Defect.
 	 * 
+	 * @param parent	The parent DefectView.
 	 * @param defect	The Defect to edit.
 	 * @param mode		Whether or not the given Defect should be treated as if it already exists 
 	 * 					on the server ({@link Mode#EDIT}) or not ({@link Mode#CREATE}).
 	 */
-	public DefectPanel(Defect defect, Mode mode) {
+	public DefectPanel(DefectView parent, Defect defect, Mode mode) {
+		this.parent = parent;
 		editMode = mode;
 
 		// Indicate that input is enabled
@@ -176,7 +180,7 @@ public class DefectPanel extends JPanel {
 	 * 
 	 * @param enabled	Whether or not input is enabled.
 	 */
-	public void setInputEnabled(boolean enabled) {
+	protected void setInputEnabled(boolean enabled) {
 		inputEnabled = enabled;
 
 		txtTitle.setEnabled(enabled);
@@ -255,6 +259,15 @@ public class DefectPanel extends JPanel {
 	 */
 	public Defect getModel() {
 		return model;
+	}
+	
+	/**
+	 * Returns the parent DefectView.
+	 * 
+	 * @return the parent DefectView.
+	 */
+	public DefectView getParent() {
+		return parent;
 	}
 
 	/**
