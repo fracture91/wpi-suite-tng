@@ -1,13 +1,11 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -15,18 +13,15 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * Every time a Defect is changed by a user, a DefectChangeset should be created
  * containing the changes and the user responsible for making them.
  */
-public class DefectChangeset implements Model, DefectEvent {
+public class DefectChangeset extends DefectEvent {
 
-	private Date date;
-	private User user;
 	private Map<String, FieldChange> changes;
 	
 	/**
 	 * Construct a DefectChangeset with default properties.
 	 */
 	public DefectChangeset() {
-		date = new Date();
-		user = new User("", "", "", -1);
+		type = EventType.CHANGESET;
 		changes = new HashMap<String, FieldChange>();
 	}
 	
@@ -38,26 +33,6 @@ public class DefectChangeset implements Model, DefectEvent {
 	 */
 	public DefectChangeset(User user) {
 		this();
-		this.user = user;
-	}
-
-	@Override
-	public Date getDate() {
-		return date;
-	}
-
-	@Override
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	@Override
-	public User getUser() {
-		return user;
-	}
-
-	@Override
-	public void setUser(User user) {
 		this.user = user;
 	}
 

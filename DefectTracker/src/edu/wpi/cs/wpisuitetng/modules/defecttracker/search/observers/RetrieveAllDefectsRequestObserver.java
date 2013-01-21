@@ -35,8 +35,7 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 
 		if (response.getStatusCode() == 200) {
 			// parse the response				
-			Gson parser = new Gson();
-			Defect[] defects = parser.fromJson(response.getBody(), Defect[].class);
+			Defect[] defects = Defect.fromJSONArray(response.getBody());
 
 			// notify the controller
 			controller.receivedData(defects);

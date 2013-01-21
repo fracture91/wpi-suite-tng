@@ -33,7 +33,49 @@ public class TabPanel extends JPanel {
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
-	public void addModules() {
+	/**
+	 * Changes the selected tab to the tab left of the current tab
+	 */
+	public void switchToLeftTab() {
+		if (tabbedPane.getSelectedIndex() > 0) {
+			switchToTab(tabbedPane.getSelectedIndex() - 1);
+		}
+	}
+	
+	/**
+	 * Changes the selected tab to the tab right of the current tab
+	 */
+	public void switchToRightTab() {
+		if (tabbedPane.getSelectedIndex() < tabbedPane.getTabCount() - 1) {
+			switchToTab(tabbedPane.getSelectedIndex() + 1);
+		}
+	}
+	
+	/**
+	 * Return the JTabbedPane holding the module tabs
+	 * @return
+	 */
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+	
+	/**
+	 * Changes the selected tab to the tab with the given index
+	 * @param tabIndex the index of the tab to select
+	 */
+	private void switchToTab(int tabIndex) {
+		try {
+			tabbedPane.setSelectedIndex(tabIndex);
+		}
+		catch (IndexOutOfBoundsException e) {
+			// an invalid tab was requested, do nothing
+		}
+	}
+	
+	/**
+	 * Called by the constructor to add a tab for each module
+	 */
+	private void addModules() {
 		for (IJanewayModule ijm : modules) {
 			for (JanewayTabModel jtm : ijm.getTabs()) {				
 				// Create a panel to hold the buttons and tab contents
@@ -56,6 +98,7 @@ public class TabPanel extends JPanel {
 				// Add the toolbar and main component to the new panel
 				newPanel.add(jtm.getToolbar());
 				newPanel.add(jtm.getMainComponent());
+				newPanel.setName(jtm.getName());
 				
 				// Add a tab to the tabbed pane containing the new panel
 				tabbedPane.addTab(jtm.getName(), jtm.getIcon(), newPanel);

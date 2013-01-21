@@ -37,8 +37,7 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
 		// parse the defect from the body
-		Gson parser = new Gson();
-		Defect defect = parser.fromJson(response.getBody(), Defect.class);
+		Defect defect = Defect.fromJSON(response.getBody());
 
 		// make sure the defect isn't null
 		if (defect != null) {

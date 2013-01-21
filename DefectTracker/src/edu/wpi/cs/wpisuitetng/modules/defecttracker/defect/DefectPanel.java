@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -75,6 +77,22 @@ public class DefectPanel extends JPanel {
 
 		txtAssigneeListener = new TextUpdateListener(this, txtAssignee);
 		txtAssignee.addKeyListener(txtAssigneeListener);
+		
+		// prevent tab key from inserting tab characters into the description field
+		txtDescription.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent event) {
+				if (event.getKeyCode() == KeyEvent.VK_TAB) {
+					if (event.getModifiers() == 0) {
+						txtDescription.transferFocus();
+					}
+					else {
+						txtDescription.transferFocusBackward();
+					}
+					event.consume();
+				}
+			}
+		});
 		
 		updateFields();
 	}

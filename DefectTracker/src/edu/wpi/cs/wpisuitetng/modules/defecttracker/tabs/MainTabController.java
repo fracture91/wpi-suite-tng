@@ -101,6 +101,47 @@ public class MainTabController {
 	}
 	
 	/**
+	 * Changes the selected tab to the tab left of the current tab
+	 */
+	public void switchToLeftTab() {
+		if (view.getSelectedIndex() > 0) {
+			switchToTab(view.getSelectedIndex() - 1);
+		}
+	}
+	
+	/**
+	 * Changes the selected tab to the tab right of the current tab
+	 */
+	public void switchToRightTab() {
+		switchToTab(view.getSelectedIndex() + 1);
+	}
+	
+	/**
+	 * Closes the currently active tab
+	 */
+	public void closeCurrentTab() {
+		try {
+			view.removeTabAt(view.getSelectedIndex());
+		}
+		catch (IndexOutOfBoundsException e) {
+			// do nothing, tried to close tab that does not exist
+		}
+	}
+	
+	/**
+	 * Changes the selected tab to the tab with the given index
+	 * @param tabIndex the index of the tab to select
+	 */
+	private void switchToTab(int tabIndex) {
+		try {
+			view.setSelectedIndex(tabIndex);
+		}
+		catch (IndexOutOfBoundsException e) {
+			// an invalid tab was requested, do nothing
+		}
+	}
+	
+	/**
 	 * Close tabs upon middle clicks.
 	 * @param event MouseEvent that happened on this.view
 	 */
@@ -113,5 +154,4 @@ public class MainTabController {
 			}
 		}
 	}
-	
 }
