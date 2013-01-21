@@ -269,10 +269,7 @@ public class DefectPanel extends JPanel {
 	/**
 	 * Returns the model object represented by this view's fields.
 	 * 
-	 * TODO: Change return type to the abstract class / interface
-	 * TODO: Ensure that if id field is set to -1, that a new defect is created on the server
 	 * TODO: Do some basic input verification
-	 * TODO: Deal with tags and other assignee
 	 * @return the model represented by this view
 	 */
 	public Defect getEditedModel() {
@@ -283,7 +280,9 @@ public class DefectPanel extends JPanel {
 		if (!(txtAssignee.getText().equals(""))) {
 			defect.setAssignee(new User("", txtAssignee.getText(), "", -1));
 		}
-		defect.setCreator(new User("", txtCreator.getText(), "", -1));
+		if (!(txtCreator.getText().equals(""))) {
+			defect.setCreator(new User("", txtCreator.getText(), "", -1));
+		}
 		HashSet<Tag> tags = new HashSet<Tag>();
 		for (int i = 0; i < tagPanel.lmTags.getSize(); i++) {
 			tags.add(new Tag((String)tagPanel.lmTags.get(i)));
