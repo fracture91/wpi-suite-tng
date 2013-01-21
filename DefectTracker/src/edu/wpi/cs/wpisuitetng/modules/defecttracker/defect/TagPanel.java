@@ -34,7 +34,7 @@ public class TagPanel extends JPanel {
 	private final Defect model;
 
 	private Border defaultBorder;
-	
+
 	protected boolean inputEnabled;
 
 	protected static final int HORIZONTAL_PADDING = 5;
@@ -48,7 +48,7 @@ public class TagPanel extends JPanel {
 	 */
 	protected TagPanel(Defect defect) {
 		inputEnabled = true;
-		
+
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
 		this.setBorder(BorderFactory.createTitledBorder("Tags"));
@@ -58,9 +58,7 @@ public class TagPanel extends JPanel {
 		addComponents(layout);
 
 		// Populate the list of tags
-		for (Tag tag : model.getTags()) {
-			lmTags.addElement(tag);
-		}
+		updateFields();
 
 		addEventListeners();
 	}
@@ -114,14 +112,12 @@ public class TagPanel extends JPanel {
 	 * Checks if the Tags in this TagPanel differ from the model and highlights the Tag list accordingly.
 	 */
 	protected void checkIfUpdated() {
-		if (model.getTags().size() == lmTags.size()) {
-			Iterator<Tag> tagsI = model.getTags().iterator();
+		lstTags.setBackground(Color.WHITE);
+		lstTags.setBorder(defaultBorder);
 
-			lstTags.setBackground(Color.WHITE);
-			lstTags.setBorder(defaultBorder);
-
-			while (tagsI.hasNext()) {
-				if (!lmTags.contains(tagsI.next())) {
+		if (lmTags.size() == model.getTags().size()) {
+			for (Tag tag : model.getTags()) {
+				if (!lmTags.contains(tag.getName())) {
 					lstTags.setBackground(new Color(243, 243, 209));
 					lstTags.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 					break;
@@ -188,5 +184,41 @@ public class TagPanel extends JPanel {
 	 */
 	public boolean getInputEnabled() {
 		return inputEnabled;
+	}
+
+	/**
+	 * Updates the TagPanel's model to contain the values of the given Defect.
+	 * 
+	 * @param	defect	The Defect which contains the new values for the model.
+	 */
+	protected void updateModel(Defect defect) {
+		model.setId(defect.getId());
+		model.setTitle(defect.getTitle());
+		model.setDescription(defect.getDescription());
+		model.setAssignee(defect.getAssignee());
+		model.setCreator(defect.getCreator());
+		model.setCreationDate(defect.getCreationDate());
+		model.setLastModifiedDate(defect.getLastModifiedDate());
+		model.setStatus(defect.getStatus());
+		model.setTags(defect.getTags());
+
+		updateFields();
+	}
+
+	/**
+	 * Updates the TagPanel's fields to match those in the current model.
+	 */
+	private void updateFields() {
+		if (model.getTags() != null) {
+			lmTags.clear();
+			Iterator<Tag> tagsI = model.getTags().iterator();
+			Tag nextTag;
+			while (tagsI.hasNext()) {
+				nextTag = tagsI.next();
+				lmTags.addElement(nextTag.getName());
+			}
+		}
+
+		checkIfUpdated();
 	}
 }

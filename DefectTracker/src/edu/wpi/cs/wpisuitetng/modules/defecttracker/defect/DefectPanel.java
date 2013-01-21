@@ -3,7 +3,6 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -213,7 +212,7 @@ public class DefectPanel extends JPanel {
 		model.setCreationDate(defect.getCreationDate());
 		model.setLastModifiedDate(defect.getLastModifiedDate());
 		model.setStatus(defect.getStatus());
-		model.setTags(defect.getTags());
+		tagPanel.updateModel(defect);
 
 		//TODO model.setPermission(p, u);
 		
@@ -231,15 +230,6 @@ public class DefectPanel extends JPanel {
 		}
 		if (model.getAssignee() != null) {
 			txtAssignee.setText(model.getAssignee().getUsername());
-		}
-		if (model.getTags() != null) {
-			tagPanel.lmTags.clear();
-			Iterator<Tag> tagsI = model.getTags().iterator();
-			Tag nextTag;
-			while (tagsI.hasNext()) {
-				nextTag = tagsI.next();
-				tagPanel.lmTags.addElement(nextTag.getName());
-			}
 		}
 		
 		// TODO expand this?
