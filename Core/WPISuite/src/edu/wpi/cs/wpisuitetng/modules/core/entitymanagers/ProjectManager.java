@@ -193,6 +193,7 @@ public class ProjectManager implements EntityManager<Project>{
 	public Project update(Session s, String content) throws WPISuiteException {
 		// TODO Auto-generated method stub
 		return null;
+	}
 
 	@Override
 	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {

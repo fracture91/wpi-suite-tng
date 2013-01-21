@@ -44,37 +44,60 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class UserManager implements EntityManager<User> {
 
 	Class<User> user = User.class;
+	private PasswordCryptographer passwordHash;
 	Gson gson;
 	Data data;
 
+	/**
+	 * Creates a UserManager operating on the given Data.
+	 * 	Attaches the custom serializer and deserializers for the Gson library.
+	 * Determines the algorithm used to secure passwords.
+	 * @param data
+	 */
 	public UserManager(Data data)
 	{
 		this.data = data;
-		gson = new Gson();
+		this.passwordHash = new Sha256Password();
+
+		// build the custom serializer/deserializer
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(this.user, new UserDeserializer());
+
+		this.gson = builder.create();
+
 	}
+
 	
 	@Override
 	public User makeEntity(Session s, String content) throws WPISuiteException{
-		
+
+		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
 			p = gson.fromJson(content, user);
 		} catch(JsonSyntaxException e){
 			throw new BadRequestException();
 		}
-		
+
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
+			String newPassword = UserDeserializer.parsePassword(content);
+
+			String hashedPassword = this.passwordHash.generateHash(newPassword);
+
+			p.setPassword(hashedPassword);
+
 			save(s,p);
 		}
 		else
 		{
 			throw new ConflictException();
 		}
-		
+
 		return p;
 	}
-
+	
+	
 	@Override
 	public User[] getEntity(Session s,String id) 
 	{
@@ -173,42 +196,40 @@ public class UserManager implements EntityManager<User> {
 	public User update(Session s, User toUpdate, String changeSet) throws WPISuiteException
 	{
 		// TODO: permissions checking here
-		
-		// convert updateString into a Map, then load into the User
+
+		User changes;
+
+		// Inflate the changeSet into a User object.
 		try
 		{
-			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
-		
-			// check if the changeSet contains each field of User
-			if(changeMap.containsKey("name"))
-			{
-				toUpdate.setName((String)changeMap.get("name"));
-			}
-			
-			if(changeMap.containsKey("username"))
-			{
-				toUpdate.setUserName((String)changeMap.get("username"));
-			}
-			
-			if(changeMap.containsKey("idNum"))
-			{
-				toUpdate.setIdNum((Integer)changeMap.get("idNum"));
-			}
-			
-			if(changeMap.containsKey("role"))
-			{
-				toUpdate.setRole(Role.valueOf((String)changeMap.get("role")));
-			}
+			changes = this.gson.fromJson(changeSet, this.user);
 		}
-		catch(Exception e)
+		catch(JsonParseException e)
 		{
-			throw new WPISuiteException(); // on Mapping failure
+			throw new WPISuiteException();
 		}
-		
+
+		// Resolve differences toUpdate using changes, field-by-field.
+		toUpdate.setIdNum(changes.getIdNum());
+
+		if(changes.getName() != null)
+		{
+			toUpdate.setName(changes.getName());
+		}
+
+		if(changes.getUsername() != null)
+		{
+			toUpdate.setUserName(changes.getUsername());
+		}
+
+		if(!changes.getRole().equals(toUpdate.getRole()))
+		{
+			toUpdate.setRole(changes.getRole());
+		}
+
 		// save the changes back
 		this.save(s, toUpdate);
-		
-		// check for changes in each field
+
 		return toUpdate;
 	}
 
@@ -228,6 +249,13 @@ public class UserManager implements EntityManager<User> {
 	public String advancedPost(Session s, String string, String content)
 			throws WPISuiteException {
 		throw new NotImplementedException();
+	}
+
+
+	@Override
+	public User update(Session s, String content) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
