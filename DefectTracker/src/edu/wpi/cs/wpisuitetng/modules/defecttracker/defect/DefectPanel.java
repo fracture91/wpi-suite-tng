@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -12,6 +13,7 @@ import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 
 /**
@@ -28,6 +30,7 @@ public class DefectPanel extends JPanel {
 
 	protected JTextField txtTitle;
 	protected JTextArea txtDescription;
+	protected JComboBox cmbStatus;
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
@@ -108,6 +111,11 @@ public class DefectPanel extends JPanel {
 		txtDescription = new JTextArea();
 		txtDescription.setLineWrap(true);
 		txtDescription.setBorder(txtTitle.getBorder());
+		String[] defectStatusValues = new String[DefectStatus.values().length];
+		for (int i = 0; i < DefectStatus.values().length; i++) {
+			defectStatusValues[i] = DefectStatus.values()[i].toString();
+		}
+		cmbStatus = new JComboBox(defectStatusValues);
 		txtCreator = new JTextField(20);
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
@@ -117,11 +125,13 @@ public class DefectPanel extends JPanel {
 		// These are required for TextUpdateListener to be able to get the correct field from panel's Defect model.
 		txtTitle.setName("Title");
 		txtDescription.setName("Description");
+		cmbStatus.setName("Status");
 		txtCreator.setName("Creator");
 		txtAssignee.setName("Assignee");
 
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
+		JLabel lblStatus = new JLabel("Status:", LABEL_ALIGNMENT);
 		JLabel lblCreator = new JLabel("Creator:", LABEL_ALIGNMENT);
 		JLabel lblAssignee = new JLabel("Assignee:", LABEL_ALIGNMENT);
 
@@ -142,11 +152,23 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.EAST, txtDescription, 0, SpringLayout.EAST, txtTitle);
 		layout.putConstraint(SpringLayout.SOUTH, txtDescription, txtTitle.getPreferredSize().height * 4, SpringLayout.NORTH, txtDescription);
 
-		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, txtDescription);
+		layout.putConstraint(SpringLayout.NORTH, cmbStatus, VERTICAL_PADDING, SpringLayout.SOUTH, txtDescription);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblStatus, 0, SpringLayout.VERTICAL_CENTER, cmbStatus);
+		layout.putConstraint(SpringLayout.WEST, lblStatus, 0, SpringLayout.WEST, lblTitle);
+		layout.putConstraint(SpringLayout.EAST, lblStatus, labelWidth, SpringLayout.WEST, lblStatus);
+		layout.putConstraint(SpringLayout.WEST, cmbStatus, HORIZONTAL_PADDING, SpringLayout.EAST, lblStatus);
+		
+		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, cmbStatus);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblCreator, 0, SpringLayout.VERTICAL_CENTER, txtCreator);
 		layout.putConstraint(SpringLayout.WEST, lblCreator, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, lblCreator, labelWidth, SpringLayout.WEST, lblCreator);
 		layout.putConstraint(SpringLayout.WEST, txtCreator, HORIZONTAL_PADDING, SpringLayout.EAST, lblCreator);
+		
+//		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, txtDescription);
+//		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblCreator, 0, SpringLayout.VERTICAL_CENTER, txtCreator);
+//		layout.putConstraint(SpringLayout.WEST, lblCreator, 0, SpringLayout.WEST, lblTitle);
+//		layout.putConstraint(SpringLayout.EAST, lblCreator, labelWidth, SpringLayout.WEST, lblCreator);
+//		layout.putConstraint(SpringLayout.WEST, txtCreator, HORIZONTAL_PADDING, SpringLayout.EAST, lblCreator);
 
 		layout.putConstraint(SpringLayout.NORTH, txtAssignee, VERTICAL_PADDING, SpringLayout.SOUTH, txtCreator);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblAssignee, 0, SpringLayout.VERTICAL_CENTER, txtAssignee);
@@ -163,6 +185,8 @@ public class DefectPanel extends JPanel {
 		add(txtTitle);
 		add(lblDescription);
 		add(txtDescription);
+		add(lblStatus);
+		add(cmbStatus);
 		add(lblCreator);
 		add(txtCreator);
 		add(lblAssignee);
@@ -181,6 +205,7 @@ public class DefectPanel extends JPanel {
 
 		txtTitle.setEnabled(enabled);
 		txtDescription.setEnabled(enabled);
+		cmbStatus.setEnabled(enabled);
 		txtAssignee.setEnabled(enabled);
 		tagPanel.setInputEnabled(enabled);
 	}
@@ -225,6 +250,11 @@ public class DefectPanel extends JPanel {
 	private void updateFields() {
 		txtTitle.setText(model.getTitle());
 		txtDescription.setText(model.getDescription());
+		for (int i = 0; i < cmbStatus.getItemCount(); i++) {
+			if (model.getStatus() == DefectStatus.valueOf((String) cmbStatus.getItemAt(i))) {
+				cmbStatus.setSelectedIndex(i);
+			}
+		}
 		if (model.getCreator() != null) {
 			txtCreator.setText(model.getCreator().getUsername());
 		}
@@ -277,6 +307,7 @@ public class DefectPanel extends JPanel {
 		defect.setId(model.getId());
 		defect.setTitle(txtTitle.getText());
 		defect.setDescription(txtDescription.getText());
+		defect.setStatus(DefectStatus.valueOf((String) cmbStatus.getSelectedItem()));
 		if (!(txtAssignee.getText().equals(""))) {
 			defect.setAssignee(new User("", txtAssignee.getText(), "", -1));
 		}
