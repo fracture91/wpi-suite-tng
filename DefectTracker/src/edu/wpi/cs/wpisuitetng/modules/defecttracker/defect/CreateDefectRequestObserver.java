@@ -45,15 +45,26 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		else {
 			// TODO notify user of server error
 		}
+		
+		always();
 	}
 
 	@Override
 	public void responseError(IRequest iReq) {
 		// TODO Auto-generated method stub
+		always();
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
 		// TODO Auto-generated method stub
+		always();
+	}
+	
+	/**
+	 * Should always be run when an update method is called.
+	 */
+	private void always() {
+		view.setInputEnabled(true);
 	}
 }

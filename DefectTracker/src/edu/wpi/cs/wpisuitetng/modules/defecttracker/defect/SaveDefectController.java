@@ -30,13 +30,11 @@ public class SaveDefectController {
 		final DefectPanel panel = (DefectPanel) view.getDefectPanel();
 		final RequestObserver requestObserver = (panel.getEditMode() == Mode.CREATE) ? new CreateDefectRequestObserver(view) : new UpdateDefectRequestObserver(view);
 		Request request;
-		panel.setInputEnabled(false); //TODO change to view
+		panel.getParent().setInputEnabled(false);
 		request = Network.getInstance().makeRequest("defecttracker/defect", (panel.getEditMode() == Mode.CREATE) ? HttpMethod.PUT : HttpMethod.POST);
 		request.setBody(panel.getEditedModel().toJSON());
 		request.addObserver(requestObserver);
 		request.send();
-		panel.setInputEnabled(true);
-
 	}
 
 }
