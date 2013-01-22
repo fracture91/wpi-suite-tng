@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class DefectChangesetPanel extends DefectEventPanel {
 	 */
 	@SuppressWarnings("unchecked")
 	public DefectChangesetPanel(DefectChangeset event) {
-		setTitle("Fields changed by: " + event.getUser().getUsername());
+		setTitle("<html>Modified by <i>" + event.getUser().getUsername() + " </i>on <i>" + new SimpleDateFormat("MM/dd/yy hh:mm a").format(event.getDate()) + "</i></html>");
 
 		// build content from map of field changes
 		String content = "<html>";
@@ -45,21 +46,33 @@ public class DefectChangesetPanel extends DefectEventPanel {
 			content += fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 
 			// handle fields of type String
-			if (String.class.isInstance(oldField)) {
+			if (String.class.isInstance(newField)) {
 				String oldValue = (String)oldField;
 				String newValue = (String)newField;
 
-				content += " <b>FROM</b><i> ";
-				content += (oldValue.length() < 35) ? oldValue : oldValue.substring(0, 35) + "...";
-				content += " </i><b>TO</b><i> ";
-				content += (newValue.length() < 35) ? newValue : newValue.substring(0, 35) + "...";
-				content += "</i><br />";
+				if (oldValue.length() > 0) {
+					content += " <b>FROM</b><i> ";
+					content += (oldValue.length() < 35) ? oldValue : oldValue.substring(0, 35) + "...";
+					content += " </i><b>TO</b><i> ";
+					content += (newValue.length() < 35) ? newValue : newValue.substring(0, 35) + "...";
+					content += "</i><br />";
+				}
+				else {
+					content += " <b>NEW</b><i> ";
+					content += (newValue.length() < 35) ? newValue : newValue.substring(0, 35) + "...";
+					content += "</i><br />";
+				}
 			}
 			// handle fields of type User
-			else if (User.class.isInstance(oldField)) {
+			else if (User.class.isInstance(newField)) {
 				User oldValue = (User)oldField;
 				User newValue = (User)newField;
-				content += " <b>FROM</b><i> " + oldValue.getUsername() + " </i><b>TO</b><i> " + newValue.getUsername() + "</i><br />";
+				if (oldValue != null) {
+					content += " <b>FROM</b><i> " + oldValue.getUsername() + " </i><b>TO</b><i> " + newValue.getUsername() + "</i><br />";
+				}
+				else {
+					content += " <b>NEW</b><i> " + newValue.getUsername() + "</i><br />";
+				}
 			}
 			// handle fields of type Set<Tag>
 			else if (tagSetClass.isInstance(oldField) && tagSetClass.isInstance(newField)) { 
@@ -80,7 +93,7 @@ public class DefectChangesetPanel extends DefectEventPanel {
 			}
 			// the field type is not recognized
 			else {
-				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField.getClass());
+				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField);
 			}
 		}
 		content += "</html>";
