@@ -34,11 +34,15 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtTitle;
 	protected JTextArea txtDescription;
 	protected JComboBox cmbStatus;
-	protected JLabel txtDate;
+	protected JLabel txtCreatedDate;
+	protected JLabel txtModifiedDate;
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
 	protected DefectEventView defectEventView;
+	
+	protected JLabel lblCreatedDate;
+	protected JLabel lblModifiedDate;
 
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
@@ -128,12 +132,15 @@ public class DefectPanel extends JPanel {
 			defectStatusValues[i] = DefectStatus.values()[i].toString();
 		}
 		cmbStatus = new JComboBox(defectStatusValues);
-		txtDate = new JLabel("");
+		txtCreatedDate = new JLabel();
+		txtModifiedDate = new JLabel("");
 		txtCreator = new JTextField(20);
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
 		defectEventView = new DefectEventView(model);
+		
+		cmbStatus.setEnabled(false);
 
 		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
 		// These are required for TextUpdateListener to be able to get the correct field from panel's Defect model.
@@ -153,7 +160,8 @@ public class DefectPanel extends JPanel {
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
 		JLabel lblStatus = new JLabel("Status:", LABEL_ALIGNMENT);
-		JLabel lblDate = new JLabel("Modified:", LABEL_ALIGNMENT);
+		lblCreatedDate = new JLabel("", LABEL_ALIGNMENT);
+		lblModifiedDate = new JLabel("", LABEL_ALIGNMENT);
 		JLabel lblCreator = new JLabel("Creator:", LABEL_ALIGNMENT);
 		JLabel lblAssignee = new JLabel("Assignee:", LABEL_ALIGNMENT);
 
@@ -180,13 +188,19 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.EAST, lblStatus, labelWidth, SpringLayout.WEST, lblStatus);
 		layout.putConstraint(SpringLayout.WEST, cmbStatus, HORIZONTAL_PADDING, SpringLayout.EAST, lblStatus);
 		
-		layout.putConstraint(SpringLayout.NORTH, txtDate, VERTICAL_PADDING, SpringLayout.SOUTH, cmbStatus);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblDate, 0, SpringLayout.VERTICAL_CENTER, txtDate);
-		layout.putConstraint(SpringLayout.WEST, lblDate, 0, SpringLayout.WEST, lblTitle);
-		layout.putConstraint(SpringLayout.EAST, lblDate, labelWidth, SpringLayout.WEST, lblDate);
-		layout.putConstraint(SpringLayout.WEST, txtDate, HORIZONTAL_PADDING, SpringLayout.EAST, lblDate);
+		layout.putConstraint(SpringLayout.NORTH, txtCreatedDate, VERTICAL_PADDING, SpringLayout.SOUTH, cmbStatus);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblCreatedDate, 0, SpringLayout.VERTICAL_CENTER, txtCreatedDate);
+		layout.putConstraint(SpringLayout.WEST, lblCreatedDate, 0, SpringLayout.WEST, lblTitle);
+		layout.putConstraint(SpringLayout.EAST, lblCreatedDate, labelWidth, SpringLayout.WEST, lblCreatedDate);
+		layout.putConstraint(SpringLayout.WEST, txtCreatedDate, HORIZONTAL_PADDING, SpringLayout.EAST, lblCreatedDate);
 		
-		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, txtDate);
+		layout.putConstraint(SpringLayout.NORTH, txtModifiedDate, VERTICAL_PADDING, SpringLayout.SOUTH, txtCreatedDate);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblModifiedDate, 0, SpringLayout.VERTICAL_CENTER, txtModifiedDate);
+		layout.putConstraint(SpringLayout.WEST, lblModifiedDate, 0, SpringLayout.WEST, lblTitle);
+		layout.putConstraint(SpringLayout.EAST, lblModifiedDate, labelWidth, SpringLayout.WEST, lblModifiedDate);
+		layout.putConstraint(SpringLayout.WEST, txtModifiedDate, HORIZONTAL_PADDING, SpringLayout.EAST, lblModifiedDate);
+		
+		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, txtModifiedDate);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblCreator, 0, SpringLayout.VERTICAL_CENTER, txtCreator);
 		layout.putConstraint(SpringLayout.WEST, lblCreator, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, lblCreator, labelWidth, SpringLayout.WEST, lblCreator);
@@ -217,8 +231,10 @@ public class DefectPanel extends JPanel {
 		add(txtDescription);
 		add(lblStatus);
 		add(cmbStatus);
-		add(lblDate);
-		add(txtDate);
+		add(lblCreatedDate);
+		add(txtCreatedDate);
+		add(lblModifiedDate);
+		add(txtModifiedDate);
 		add(lblCreator);
 		add(txtCreator);
 		add(lblAssignee);
@@ -286,7 +302,14 @@ public class DefectPanel extends JPanel {
 				cmbStatus.setSelectedIndex(i);
 			}
 		}
-		txtDate.setText(model.getLastModifiedDate().toString());
+		if (editMode == Mode.EDIT) {
+			lblCreatedDate.setText("Created:");
+			txtCreatedDate.setText(model.getCreationDate().toString());
+		}
+		if (editMode == Mode.EDIT) {
+			lblModifiedDate.setText("Modified:");
+			txtModifiedDate.setText(model.getLastModifiedDate().toString());
+		}
 		if (model.getCreator() != null) {
 			txtCreator.setText(model.getCreator().getUsername());
 		}
