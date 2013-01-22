@@ -1,9 +1,8 @@
 package edu.wpi.cs.wpisuitetng.janeway.network;
 
-import edu.wpi.cs.wpisuitetng.network.IRequest;
-import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
-import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * A RequestObserver for the Request class.
@@ -13,21 +12,12 @@ import edu.wpi.cs.wpisuitetng.network.Response;
 public class MyRequestObserver implements RequestObserver {
 	@Override
 	public void responseSuccess(IRequest iReq) {
-		// If observable is a Request...
-		if (Request.class.getName().equals(iReq.getClass().getName())) {
-			// cast observable to a Request
-			Request request = (Request) iReq;
-
 			// get the response from the request
-			Response response = request.getResponse();
+			ResponseModel response = iReq.getResponse();
 
 			// print the body
 			System.out.println("Received response: " + response.getBody());
-		}
-		// Otherwise...
-		else {
-			System.out.println("Observable is not a Request.");
-		}
+
 	}
 
 	@Override

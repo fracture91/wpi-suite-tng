@@ -11,7 +11,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers.RetrieveDef
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.ResultsPanel;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Controller to handle retrieving one defect from the server
@@ -49,7 +49,7 @@ public class RetrieveDefectController extends MouseAdapter {
 
 				// Create and send a request for the defect with the given ID
 				Request request;
-				request = Network.getInstance().makeRequest("defecttracker/defect/" + defectId, RequestMethod.GET);
+				request = Network.getInstance().makeRequest("defecttracker/defect/" + defectId, HttpMethod.GET);
 				request.addObserver(new RetrieveDefectRequestObserver(this));
 				request.send();
 			}

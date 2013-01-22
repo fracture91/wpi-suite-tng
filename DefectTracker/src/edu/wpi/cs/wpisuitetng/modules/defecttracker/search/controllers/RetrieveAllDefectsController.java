@@ -7,8 +7,8 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.observers.RetrieveAll
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.SearchDefectsView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Controller to handle retrieving all defects from the server and
@@ -37,7 +37,7 @@ public class RetrieveAllDefectsController {
 	public void refreshData() {		
 		final RequestObserver requestObserver = new RetrieveAllDefectsRequestObserver(this);
 		Request request;
-		request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.GET);
+		request = Network.getInstance().makeRequest("defecttracker/defect", HttpMethod.GET);
 		request.addObserver(requestObserver);
 		request.send();
 	}

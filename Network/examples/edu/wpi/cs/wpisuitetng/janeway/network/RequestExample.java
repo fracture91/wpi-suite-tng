@@ -2,8 +2,8 @@ package edu.wpi.cs.wpisuitetng.janeway.network;
 
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * This is a preliminary example for making request using the Request class.
@@ -33,10 +33,10 @@ public class RequestExample {
 		String body1 = "The request body of the manually configured Request";
 
 		// Make a new POST Request.
-		Request manualRequest = new Request(config, "subpath", RequestMethod.POST);	// construct the Request
+		Request manualRequest = new Request(config, "subpath", HttpMethod.POST);	// construct the Request
 
 		// Configure the request
-		manualRequest.setRequestBody(body1);	// set the request body to send to the server
+		manualRequest.setBody(body1);	// set the request body to send to the server
 		manualRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 
 		// Send the request!
@@ -58,10 +58,10 @@ public class RequestExample {
 		String body2 = "The request body of the Request created by Network";
 
 		// Make a new POST Request with the default network configuration.
-		Request networkRequest = Network.getInstance().makeRequest("subpath", RequestMethod.POST);
+		Request networkRequest = Network.getInstance().makeRequest("subpath", HttpMethod.POST);
 
 		// Configure the request
-		networkRequest.setRequestBody(body2);	// set the request body to send to the server
+		networkRequest.setBody(body2);	// set the request body to send to the server
 		networkRequest.addObserver(requestObserver);	// Add the requestObserver to the request's set of Observers
 
 		// Send the request!

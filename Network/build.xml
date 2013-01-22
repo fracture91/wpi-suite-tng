@@ -4,6 +4,9 @@
 
 	<path id="classpath">
 		<pathelement path="build"/>
+		<fileset dir="Libraries">
+			<include name="simple-*.jar"/>
+		</fileset>
 	</path>
 
 	<path id="test-classpath">

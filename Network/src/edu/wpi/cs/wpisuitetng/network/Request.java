@@ -3,263 +3,354 @@ package edu.wpi.cs.wpisuitetng.network;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.RequestModel;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
- * This class represents a Request. It can be observed by one or more Observers.
+ * This class represents a Request. It can be observed by one or more RequestObservers.
  * 
- * TODO add setRequestData (for url data, etc)
+ * A Request can be sent synchronously or asynchronously. By default, a Request is asynchronous upon 
+ * construction. When a synchronous Request is sent, it will block, causing the current thread to pause 
+ * while the Request is sent and while waiting for a Response. The RequestObservers that have been added to 
+ * the Request will not be notified. In most cases, you will not want to send a synchronous Request. When a 
+ * Request is sent asynchronously, a new thread is created which sends the Request, generates a Response, 
+ * and notifies any RequestObservers that have been added to the Request.
+ * 
+ * TODO add equals method
  */
-public class Request extends Observable implements IRequest {
-	/**
-	 * Represents an HTTP request method.
-	 */
-	public static enum RequestMethod {
-		GET, POST, PUT, DELETE
-	}
-
-	// TODO add RequestStatus to replace running with?
+public class Request extends RequestModel {
+	private List<RequestObserver> observers;
+	protected int readTimeout = 5000;
+	protected int connectTimeout = 5000;
 	protected boolean running = false;
-
-	protected String requestBody;
-	protected Map<String, List<String>> requestHeaders;
-	protected URL requestURL;
-	protected RequestMethod requestMethod;
-	protected Response response;
+	protected boolean isAsynchronous = true;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param networkConfiguration	The NetworkConfiguration to use.
 	 * @param path					The path to append to the API URL.
-	 * @param requestMethod			The HTTP RequestMethod to use.
+	 * @param httpMethod			The HttpMethod to use.
 	 * 
 	 * @throw RuntimeException		If a MalformedURLException is received while constructing the URL.
 	 * @throw NullPointerException	If the networkConfiguration or requestMethod is null.
 	 */
-	public Request(NetworkConfiguration networkConfiguration, String path, RequestMethod requestMethod) {
+	public Request(NetworkConfiguration networkConfiguration, String path, HttpMethod httpMethod) {
 		// check to see if the networkConfiguration is null
 		if (networkConfiguration == null) {
 			throw new NullPointerException("The networkConfiguration must not be null.");
 		}
 
-		// check to see if the requestMethod is null
-		if (requestMethod == null) {
-			throw new NullPointerException("The requestMethod must not be null.");
+		// check to see if the httpMethod is null
+		if (httpMethod == null) {
+			throw new NullPointerException("The httpMethod must not be null.");
 		}
 
 		try {
 			// set requestURL
 			// TODO improve code
 			if (path == null || path.length() == 0) {
-				this.requestURL = new URL(networkConfiguration.getApiUrl());
+				setUrl(new URL(networkConfiguration.getApiUrl()));
 			}
 			else if (networkConfiguration.getApiUrl().charAt(networkConfiguration.getApiUrl().length() - 1) == '/') {
-				this.requestURL = new URL(networkConfiguration.getApiUrl() + path);
+				setUrl(new URL(networkConfiguration.getApiUrl() + path));
 			}
 			else {
-				this.requestURL = new URL(networkConfiguration.getApiUrl() + '/' + path);
+				setUrl(new URL(networkConfiguration.getApiUrl() + '/' + path));
 			}
-			this.requestMethod = requestMethod;
+
+			// set the HttpMethod
+			setHttpMethod(httpMethod);
 
 			// Copy request headers from networkConfiguration
-			requestHeaders = new HashMap<String, List<String>>();
-			Iterator<String> keysI = networkConfiguration.getRequestHeaders().keySet().iterator();
-			Iterator<String> valuesI;
-			String currentKey;
-			while (keysI.hasNext()) {
-				currentKey = keysI.next();
-				valuesI = networkConfiguration.getRequestHeaders().get(currentKey).iterator();
-
-				while (valuesI.hasNext()) {
-					this.addRequestHeader(currentKey, valuesI.next());
+			for (String currentKey : networkConfiguration.getRequestHeaders().keySet()) {
+				for (String currentValue : networkConfiguration.getRequestHeaders().get(currentKey)) {
+					addHeader(currentKey, currentValue);
 				}
 			}
 
 			// Copy observers from networkConfiguration
-			Iterator<RequestObserver> observersI = networkConfiguration.getObservers().iterator();
-			while (observersI.hasNext()) {
-				this.addObserver(observersI.next());
+			for (RequestObserver observer : networkConfiguration.getObservers()) {
+				addObserver(observer);
 			}
 		}
 		catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+
+		observers = new ArrayList<RequestObserver>();
 	}
 
 	/**
 	 * Sends the Request by creating a new RequestActor and starting it as a new Thread.
+	 * Note: If Request.isAsynchronous is false, RequestObservers for this Request will not be updated.
 	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
+	 * @throws IllegalStateException	If the Request is being sent.
 	 */
 	public void send() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
 		RequestActor requestActor = new RequestActor(this);
-		requestActor.start();
+
+		if (isAsynchronous) {
+			requestActor.start();
+		}
+		else {
+			requestActor.run();
+		}
 	}
 
 	/**
-	 * Adds a header to the request.
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#addHeader(String, String)
 	 * 
-	 * @param key		A String representing the header key.
-	 * @param value		A String representing the header value.
-	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
-	 * @throws NullPointerException		If the key is null.
+	 * @throws IllegalStateException	If the Request is being sent.
 	 */
-	public void addRequestHeader(String key, String value) throws IllegalStateException, NullPointerException {
+	public void addHeader(String key, String value) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
-		// check to see if the key is null
-		if (key == null) {
-			throw new NullPointerException("The key must not be null.");
-		}
-
-		// get the List of current values from the requestHeaders Map
-		List<String> currentValues = requestHeaders.get(key);
-
-		// if the List of current values is null, create a new list of current values
-		if (currentValues == null) {
-			currentValues = new ArrayList<String>();
-		}
-
-		// add the new value to the list of current values
-		currentValues.add(value);
-
-		// store the updated List of current values in the Map
-		requestHeaders.put(key, currentValues);
+		super.addHeader(key, value);
 	}
-
+	
 	/**
-	 * Sets the body of the request.
-	 * TODO elaborate
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#addQueryData(String, String)
 	 * 
-	 * @param requestBody	The body of the request to send to the server.
-	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
-	 * @throws NullPointerException		If the requestBody is null.
+	 * @throws IllegalStateException	If the Request is being sent.
 	 */
-	public void setRequestBody(String requestBody) throws IllegalStateException, NullPointerException {
+	public void addQueryData(String key, String value) throws IllegalStateException, NullPointerException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
-		// check to see if the key is null
-		if (requestBody == null) {
-			throw new NullPointerException("The requestBody parameter must not be null.");
-		}
-
-		this.requestBody = requestBody;
+		super.addHeader(key, value);
 	}
 
 	/**
-	 * Sets the HTTP method for the Request.
-	 * TODO elaborate
+	 * Makes this Request synchronous.
 	 * 
-	 * @param requestMethod
-	 * 
-	 * @throws IllegalStateException	If the request has already been sent.
-	 * @throws NullPointerException		If the requestMethod is null.
+	 * @throws IllegalStateException	If the Request is being sent.
 	 */
-	public void setRequestMethod(RequestMethod requestMethod) throws IllegalStateException, NullPointerException {
+	public void clearAsynchronous() throws IllegalStateException {
 		// check to see if the request has already been sent
 		if (running) {
-			throw new IllegalStateException("Request already sent.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
-		// check to see if the requestMethod is null
-		if (requestMethod == null) {
-			throw new NullPointerException("The requestMethod parameter must not be null.");
-		}
-
-		this.requestMethod = requestMethod;
+		isAsynchronous = false;
 	}
 
 	/**
-	 * Sets the server's Response to the Request.
+	 * Makes this Request asynchronous.
 	 * 
-	 * @param response	The server's Response to the Request.
-	 * 
-	 * @throws	IllegalStateException	If the Request has not been sent yet.
+	 * @throws IllegalStateException	If the Request is being sent.
 	 */
-	protected void setResponse(Response response) {
+	public void setAsynchronous() throws IllegalStateException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		isAsynchronous = true;
+	}
+
+	/**
+	 * Sets the timeout (in milliseconds) for connecting to the server.
+	 * 
+	 * @param connectTimeout the timeout (in milliseconds) for connecting to the server.
+	 * 
+	 * @throws IllegalStateException	If the Request is being sent.
+	 */
+	public void setConnectTimeout(int connectTimeout) throws IllegalStateException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		this.connectTimeout = connectTimeout;
+	}
+	
+	/**
+	 * Sets the timeout (in milliseconds) for reading the response body.
+	 * 
+	 * @param readTimeout the timeout (in milliseconds) for reading the response body
+	 * 
+	 * @throws IllegalStateException	If the Request is being sent.
+	 */
+	public void setReadTimeout(int readTimeout) throws IllegalStateException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		this.readTimeout = readTimeout;
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#setBody(String)
+	 * 
+	 * @throws IllegalStateException	If the Request is being sent.
+	 */
+	public void setBody(String body) throws IllegalStateException, NullPointerException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		super.setBody(body);
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#setHttpMethod(HttpMethod)
+	 * 
+	 * @throws IllegalStateException	If the Request is being sent.
+	 */
+	public void setHttpMethod(HttpMethod httpMethod) throws IllegalStateException, NullPointerException {
+		// check to see if the request has already been sent
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		super.setHttpMethod(httpMethod);
+	}
+
+	/**
+	 * @see edu.wpi.cs.wpisuitetng.network.models.RequestModel#setResponse(ResponseModel)
+	 * 
+	 * @throws	IllegalStateException	If the Request is being sent.
+	 */
+	protected void setResponse(ResponseModel response) throws IllegalStateException {
 		// check to see if the request has been sent yet
 		if (running) {
-			throw new IllegalStateException("Request has not been sent yet.");
+			throw new IllegalStateException("Request is being sent.");
 		}
 
-		// set the Response to this Request
-		this.response = response;
+		super.setResponse(response);
 	}
 
 	/**
-	 * Returns a String containing the request body.
+	 * Returns the timeout (in milliseconds) for connecting to the server.
 	 * 
-	 * @return	A String containing the request body.
+	 * @return the timeout (in milliseconds) for connecting to the server.
 	 */
-	public String getRequestBody() {
-		return requestBody;
+	public int getConnectTimeout() {
+		return readTimeout;
+	}
+	
+	/**
+	 * Returns the timeout (in milliseconds) for reading the response body.
+	 * 
+	 * @return the timeout (in milliseconds) for reading the response body.
+	 */
+	public int getReadTimeout() {
+		return readTimeout;
 	}
 
 	/**
-	 * Returns a Map of request header keys to Lists of request header values.
+	 * Returns a boolean indicating whether or not this Request is asynchronous.
 	 * 
-	 * @return	A Map of request header keys to Lists of request header values.
+	 * @return a boolean indicating whether or not this Request is asynchronous.
 	 */
-	public Map<String, List<String>> getRequestHeaders() {
-		return requestHeaders;
+	public boolean isAsynchronous() {
+		return isAsynchronous;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
-	 * Returns a String representing the HTTP request method. Ex: "GET", "POST", "PUT", "DELETE"
+	 * Adds a RequestObserver to this Observable.
 	 * 
-	 * @return	A String representing the request method.
+	 * @param o The RequestObserver to add.
+	 * 
+	 * @throws	IllegalStateException	If the Request is being sent.
 	 */
-	public String getRequestMethod() {
-		if (requestMethod == RequestMethod.GET) {
-			return "GET";
-		} else if (requestMethod == RequestMethod.POST) {
-			return "POST";
-		} else if (requestMethod == RequestMethod.PUT) {
-			return "PUT";
-		} else if (requestMethod == RequestMethod.DELETE) {
-			return "DELETE";
+	public void addObserver(RequestObserver o) throws IllegalStateException {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
 		}
 
-		// default request method is GET
-		return "GET";
+		observers.add(o);
 	}
 
 	/**
-	 * Returns the server's Response to the Request.
+	 * Returns the number of RequestObservers for this Observable.
 	 * 
-	 * @return	The server's Response to the Request.
+	 * @return The number of RequestObservers for this Observable.
 	 */
-	public Response getResponse() {
-		return response;
+	public int countObservers() {
+		return observers.size();
 	}
 
 	/**
-	 * Returns a URL pointing to the server.
+	 * Notifies RequestObservers of a response with a status code indicating success (2xx).
 	 * 
-	 * TODO Make this javadoc better
-	 * 
-	 * @return	A URL pointing to the server.
+	 * @throws	IllegalStateException	If the Request is being sent.
 	 */
-	public URL getURL() {
-		return requestURL;
+	public void notifyObserversResponseSuccess() throws IllegalStateException {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.responseSuccess((IRequest) this);
+		}
+	}
+
+	/**
+	 * Notifies RequestObservers of response with a status code indicating a client error (4xx) for server error (5xx).
+	 * 
+	 * @throws	IllegalStateException	If the Request is being sent.
+	 */
+	public void notifyObserversResponseError() throws IllegalStateException {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.responseError((IRequest) this);
+		}
+	}
+
+	/**
+	 * Notifies RequestObservers of a failure in sending a request.
+	 * 
+	 * @param exception An exception.
+	 * 
+	 * @throws	IllegalStateException	If the Request is being sent.
+	 */
+	public void notifyObserversFail(Exception exception) throws IllegalStateException {
+		// check to see if the request has been sent yet
+		if (running) {
+			throw new IllegalStateException("Request is being sent.");
+		}
+
+		for (RequestObserver obs : observers) {
+			obs.fail((IRequest) this, exception);
+		}
 	}
 }

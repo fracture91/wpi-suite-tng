@@ -13,6 +13,12 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Checks for whether or not the text in a given JTextComponent differs from the current model (a Defect).
+ * 
+ * Whenever a key is released in the TextUpdateListener's component, checkIfUpdated() is called. This method 
+ * gets the component's name and looks up the value of the relevant field in panel's Defect model. It then 
+ * compares this value to the component's text to see if the text differs from the model. If the text 
+ * differs, the style of the component is changed to show that it differs from the relevant field in the model.
+ * Otherwise, the component's style is changed to be normal.
  */
 public class TextUpdateListener implements KeyListener {
 	protected final DefectPanel panel;
@@ -54,19 +60,25 @@ public class TextUpdateListener implements KeyListener {
 	 * Checks if the field differs from the DefectPanel's model and changes the style of the field accordingly.
 	 */
 	public void checkIfUpdated() {
-		String base = "";
+		String base = ""; // the String value of the field in the panel's Defect model that corresponds to the component
 
 		// Get the base String to compare to the text of the JTextComponent
 		try {
-			Object object = panel.getModel().getClass().getDeclaredMethod("get" + component.getName()).invoke(panel.getModel());
-			if (object == null) {
+			// Get the field from the Defect model that corresponds with the name of component.
+			// For instance, if the component's name is "Title" Defect#getTitle will be called.
+			Object field = panel.getModel().getClass().getDeclaredMethod("get" + component.getName()).invoke(panel.getModel());
+			
+			// If field is null, set base to an empty String.
+			if (field == null) {
 				base = "";
 			}
-			else if (object instanceof String) {
-				base = (String) object;
+			// If field is an instance of String, set base to that String.
+			else if (field instanceof String) {
+				base = (String) field;
 			}
-			else if (object instanceof User) {
-				base = ((User) object).getUsername();
+			// If field is an instance of User, set base to its username.
+			else if (field instanceof User) {
+				base = ((User) field).getUsername();
 			}
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
