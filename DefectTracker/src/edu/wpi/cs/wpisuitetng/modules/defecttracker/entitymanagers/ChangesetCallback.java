@@ -45,7 +45,7 @@ class ChangesetCallback implements MapCallback {
 				 * remember that fields from updated defect are being copied to old one
 				 * destinationValue is the old value
 				 */
-				changeset.getChanges().put(fieldName, new FieldChange(destinationValue, sourceValue));
+				changeset.getChanges().put(fieldName, new FieldChange<Object>(destinationValue, sourceValue));
 			}
 		}
 		return sourceValue;

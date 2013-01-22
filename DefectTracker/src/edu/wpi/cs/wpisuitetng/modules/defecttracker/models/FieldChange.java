@@ -8,16 +8,18 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Persistent Model that holds and old and new value for some field.
+ *
+ * @param <T> the type of the field that was changed
  */
-public class FieldChange implements Model {
-	private final Object oldValue;
-	private final Object newValue;
+public class FieldChange<T> implements Model {
+	private final T oldValue;
+	private final T newValue;
 	
 	/**
 	 * @param oldValue the old value of a field before it was changed
 	 * @param newValue the new value of a field after it was changed
 	 */
-	public FieldChange(Object oldValue, Object newValue) {
+	public FieldChange(T oldValue, T newValue) {
 		this.oldValue = oldValue;
 		this.newValue = newValue;
 	}
@@ -25,14 +27,14 @@ public class FieldChange implements Model {
 	/**
 	 * @return the oldValue
 	 */
-	public Object getOldValue() {
+	public T getOldValue() {
 		return oldValue;
 	}
 
 	/**
 	 * @return the newValue
 	 */
-	public Object getNewValue() {
+	public T getNewValue() {
 		return newValue;
 	}
 

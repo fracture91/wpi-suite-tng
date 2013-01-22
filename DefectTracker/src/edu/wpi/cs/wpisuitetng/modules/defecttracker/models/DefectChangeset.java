@@ -15,14 +15,14 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class DefectChangeset extends DefectEvent {
 
-	private Map<String, FieldChange> changes;
+	private Map<String, FieldChange<?>> changes;
 	
 	/**
 	 * Construct a DefectChangeset with default properties.
 	 */
 	public DefectChangeset() {
 		type = EventType.CHANGESET;
-		changes = new HashMap<String, FieldChange>();
+		changes = new HashMap<String, FieldChange<?>>();
 	}
 	
 	/**
@@ -39,14 +39,14 @@ public class DefectChangeset extends DefectEvent {
 	/**
 	 * @return the map of field names to changes (Assignee -> (Bob, Joe))
 	 */
-	public Map<String, FieldChange> getChanges() {
+	public Map<String, FieldChange<?>> getChanges() {
 		return changes;
 	}
 
 	/**
 	 * @param changes the changes to set
 	 */
-	public void setChanges(Map<String, FieldChange> changes) {
+	public void setChanges(Map<String, FieldChange<?>> changes) {
 		this.changes = changes;
 	}
 

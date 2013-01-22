@@ -1,11 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
