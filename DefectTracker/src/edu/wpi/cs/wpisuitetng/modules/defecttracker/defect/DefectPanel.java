@@ -41,6 +41,7 @@ public class DefectPanel extends JPanel {
 
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
+	protected final ComboUpdateListener cmbStatusListener;
 	protected final TextUpdateListener txtCreatorListener;
 	protected final TextUpdateListener txtAssigneeListener;
 
@@ -80,6 +81,9 @@ public class DefectPanel extends JPanel {
 
 		txtDescriptionListener = new TextUpdateListener(this, txtDescription);
 		txtDescription.addKeyListener(txtDescriptionListener);
+		
+		cmbStatusListener = new ComboUpdateListener(this, cmbStatus);
+		cmbStatus.addItemListener(cmbStatusListener);
 
 		txtCreatorListener = new TextUpdateListener(this, txtCreator);
 		txtCreator.addKeyListener(txtCreatorListener);
@@ -177,12 +181,6 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.WEST, lblCreator, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, lblCreator, labelWidth, SpringLayout.WEST, lblCreator);
 		layout.putConstraint(SpringLayout.WEST, txtCreator, HORIZONTAL_PADDING, SpringLayout.EAST, lblCreator);
-		
-//		layout.putConstraint(SpringLayout.NORTH, txtCreator, VERTICAL_PADDING, SpringLayout.SOUTH, txtDescription);
-//		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblCreator, 0, SpringLayout.VERTICAL_CENTER, txtCreator);
-//		layout.putConstraint(SpringLayout.WEST, lblCreator, 0, SpringLayout.WEST, lblTitle);
-//		layout.putConstraint(SpringLayout.EAST, lblCreator, labelWidth, SpringLayout.WEST, lblCreator);
-//		layout.putConstraint(SpringLayout.WEST, txtCreator, HORIZONTAL_PADDING, SpringLayout.EAST, lblCreator);
 
 		layout.putConstraint(SpringLayout.NORTH, txtAssignee, VERTICAL_PADDING, SpringLayout.SOUTH, txtCreator);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, lblAssignee, 0, SpringLayout.VERTICAL_CENTER, txtAssignee);
@@ -261,8 +259,6 @@ public class DefectPanel extends JPanel {
 		model.setLastModifiedDate(defect.getLastModifiedDate());
 		model.setStatus(defect.getStatus());
 		tagPanel.updateModel(defect);
-
-		//TODO model.setPermission(p, u);
 		
 		updateFields();
 	}
@@ -285,10 +281,9 @@ public class DefectPanel extends JPanel {
 			txtAssignee.setText(model.getAssignee().getUsername());
 		}
 		
-		// TODO expand this?
-		
 		txtTitleListener.checkIfUpdated();
 		txtDescriptionListener.checkIfUpdated();
+		cmbStatusListener.checkIfUpdated();
 		txtCreatorListener.checkIfUpdated();
 		txtAssigneeListener.checkIfUpdated();
 	}
