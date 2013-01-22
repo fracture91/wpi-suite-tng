@@ -1,7 +1,12 @@
 package edu.wpi.cs.wpisuitetng.janeway.modules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
+
+import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.KeyboardShortcut;
 
 /**
  * Represents a tab in the Janeway interface.
@@ -13,6 +18,7 @@ public class JanewayTabModel {
 	private Icon icon;
 	private JComponent toolbar;
 	private JComponent mainComponent;
+	private ArrayList<KeyboardShortcut> keyboardShortcuts;
 	
 	/**
 	 * Construct a tab model with the given properties.
@@ -22,6 +28,15 @@ public class JanewayTabModel {
 		this.icon = icon;
 		this.toolbar = toolbar;
 		this.mainComponent = mainComponent;
+		this.keyboardShortcuts = new ArrayList<KeyboardShortcut>();
+	}
+	
+	/**
+	 * Adds the given keyboard shortcut to this tab
+	 * @param shortcut the keyboard shortcut to add
+	 */
+	public void addKeyboardShortcut(KeyboardShortcut shortcut) {
+		keyboardShortcuts.add(shortcut);
 	}
 	
 	/**
@@ -52,4 +67,10 @@ public class JanewayTabModel {
 		return mainComponent;
 	}
 	
+	/**
+	 * @return the keyboard shortcuts used by this tab
+	 */
+	public List<KeyboardShortcut> getKeyboardShortcuts() {
+		return keyboardShortcuts;
+	}
 }

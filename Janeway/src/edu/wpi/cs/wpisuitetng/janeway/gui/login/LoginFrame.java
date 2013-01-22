@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -62,7 +63,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(loginButtonPanel);
 		
 		// Add key listener for Enter to the login fields
-		loginFieldPanel.addKeyListeners(getConnectButton());
+		this.getRootPane().setDefaultButton(getConnectButton());
 		
 		// Pack the frame
 		pack();
@@ -96,6 +97,14 @@ public class LoginFrame extends JFrame {
 	 */
 	public JTextField getUserNameField() {
 		return this.loginFieldPanel.txtUsername;
+	}
+	
+	/**
+	 * Getter for the password text field
+	 * @return the password text field
+	 */
+	public JPasswordField getPasswordField() {
+		return this.loginFieldPanel.txtPassword;
 	}
 	
 	/**

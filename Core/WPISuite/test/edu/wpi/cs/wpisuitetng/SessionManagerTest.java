@@ -102,6 +102,7 @@ public class SessionManagerTest {
 	/* Test complex SessionManager functions */
 	
 	@Test
+	@Ignore
 	/**
 	 * Test the renewSession() function.
 	 * 	The expected behavior is that, given a user's sessionToken string,

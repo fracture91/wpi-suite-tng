@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
@@ -31,7 +33,7 @@ public class Defect implements Model {
 		id = -1;
 		title = description = "";
 		status = NEW;
-		creator = new User("", "", -1);
+		creator = new User("", "", "", -1);
 		tags = new HashSet<Tag>();
 		creationDate = new Date();
 		lastModifiedDate = new Date();
@@ -233,6 +235,34 @@ public class Defect implements Model {
 	public String toString() {
 		return toJSON();
 	}
+	
+	/**
+	 * @param json Json string to parse containing Defect
+	 * @return The Defect given by json
+	 */
+	public static Defect fromJSON(String json) {
+		GsonBuilder builder = new GsonBuilder();
+		addGsonDependencies(builder);
+		return builder.create().fromJson(json, Defect.class);
+	}
+	
+	/**
+	 * @param json Json string to parse containing Defect array
+	 * @return The Defect array given by json
+	 */
+	public static Defect[] fromJSONArray(String json) {
+		GsonBuilder builder = new GsonBuilder();
+		addGsonDependencies(builder);
+		return builder.create().fromJson(json, Defect[].class);
+	}
+	
+	/**
+	 * Add dependencies necessary for Gson to interact with this class
+	 * @param builder Builder to modify
+	 */
+	public static void addGsonDependencies(GsonBuilder builder) {
+		DefectEvent.addGsonDependencies(builder);
+	}
 
 	// interface documentation says this is necessary for the mock database
 	// not sure if this is still needed otherwise
@@ -246,6 +276,18 @@ public class Defect implements Model {
 			returnValue = true;
 		}
 		return returnValue;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

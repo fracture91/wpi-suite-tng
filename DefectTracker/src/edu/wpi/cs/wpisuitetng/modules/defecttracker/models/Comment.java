@@ -1,29 +1,24 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
-import java.util.Date;
-
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Persistent Model that represents a Comment on a Defect 
  */
-public class Comment implements Model, DefectEvent {
+public class Comment extends DefectEvent {
 
 	private int defectId;
-	private Date date;
-	private User user;
 	private String body;
 	
 	/**
 	 * Create a Comment with default properties.
 	 */
 	public Comment() {
+		type = EventType.COMMENT;
 		defectId = -1;
-		date = new Date();
-		user = new User("", "", -1);
 		body = "";
 	}
 	
@@ -36,6 +31,7 @@ public class Comment implements Model, DefectEvent {
 	 * @param body the message body of the Comment
 	 */
 	public Comment(int defectId, User user, String body) {
+		this();
 		this.defectId = defectId;
 		this.user = user;
 		this.body = body;
@@ -53,26 +49,6 @@ public class Comment implements Model, DefectEvent {
 	 */
 	public void setDefectId(int defectId) {
 		this.defectId = defectId;
-	}
-
-	@Override
-	public Date getDate() {
-		return date;
-	}
-
-	@Override
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	@Override
-	public User getUser() {
-		return user;
-	}
-
-	@Override
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	/**
@@ -111,6 +87,18 @@ public class Comment implements Model, DefectEvent {
 	public Boolean identify(Object o) {
 		// TODO
 		return false;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

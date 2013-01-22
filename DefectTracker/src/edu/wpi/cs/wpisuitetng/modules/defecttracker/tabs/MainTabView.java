@@ -5,7 +5,6 @@ import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.dashboard.DashboardView;
@@ -23,8 +22,6 @@ public class MainTabView extends JTabbedPane {
 		setBorder(BorderFactory.createEmptyBorder(5, 3, 3, 3));
 		addTab("Dashboard", new ImageIcon(), new DashboardView(),
 		       "Your Dashboard - notifications, etc.");
-		addTab("Search", new ImageIcon(), new JPanel(), "Search");
-		addTab("#113", new ImageIcon(), new JPanel(), "Defect #113");
 	}
 	
 	@Override
@@ -42,6 +39,12 @@ public class MainTabView extends JTabbedPane {
 		if(getTabComponentAt(index) instanceof ClosableTabComponent) {
 			super.removeTabAt(index);
 		}
+	}
+	
+	@Override
+	public void setComponentAt(int index, Component component) {
+		super.setComponentAt(index, component);
+		fireStateChanged(); // hack to make sure toolbar knows if component changes
 	}
 	
 }

@@ -2,7 +2,9 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Persistent Model for a Tag - arbitrary strings you can attach to Defects
@@ -19,9 +21,6 @@ public class Tag implements Model {
 	 *  @param name the name of the tag, must be neither null nor empty
 	 */
 	public Tag(String name) {
-		if(name.length() < 1) { // will also catch null 
-			throw new RuntimeException("Tag name must not be empty string");
-		}
 		this.name = name;
 	}
 
@@ -73,7 +72,22 @@ public class Tag implements Model {
 	
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		if(name != null) {
+			return name.hashCode();
+		}
+		return 0;
+	}
+
+	@Override
+	public Permission getPermission(User u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPermission(Permission p, User u) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

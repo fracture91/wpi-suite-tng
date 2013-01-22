@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginFrame;
+import edu.wpi.cs.wpisuitetng.janeway.modules.DummyModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.ModuleLoader;
 
@@ -29,7 +30,7 @@ public class Janeway {
 	/**
 	 * Instantiate the main GUI frame
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		
 		// Set the look and feel to cross-platform so the UI looks
 		// the same across operating systems
@@ -44,6 +45,7 @@ public class Janeway {
 		// Load modules
 		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
 		modules = moduleLoader.getModules();
+		modules.add(new DummyModule());
 		
 		// Check for modules
 		if (modules.size() < 1) {
@@ -55,9 +57,16 @@ public class Janeway {
 			public void run() {
 				final JanewayFrame gui = new JanewayFrame(modules);
 				final LoginFrame loginGui = new LoginFrame("Janeway");
-				loginGui.setVisible(true);
-				gui.setVisible(false);
-				loginGui.getConnectButton().addActionListener(new LoginController(gui, loginGui));
+				
+				if (args.length > 0 && args[0].equals("-nologin")) {
+					loginGui.setVisible(false);
+					gui.setVisible(true);
+				}
+				else {
+					loginGui.setVisible(true);
+					gui.setVisible(false);
+					loginGui.getConnectButton().addActionListener(new LoginController(gui, loginGui));
+				}
 			}
 		});
 	}

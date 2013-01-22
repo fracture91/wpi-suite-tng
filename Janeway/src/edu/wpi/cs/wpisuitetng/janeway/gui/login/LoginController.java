@@ -8,8 +8,14 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import org.apache.commons.codec.binary.Base64;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * Controller to handle user login
@@ -50,8 +56,12 @@ public class LoginController implements ActionListener {
 			try { // try to convert the URL text to a URL object
 				coreURL = new URL(URLText);
 				ConfigManager.getConfig().setCoreUrl(coreURL);
-				mainGUI.setVisible(true);
-				view.dispose();
+				ConfigManager.writeConfig();
+				Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration(URLText));
+				
+				// Send the request
+				sendLoginRequest();
+				
 			} catch (MalformedURLException e1) { // failed, bad URL
 				JOptionPane.showMessageDialog(view,
 				                              "The server address \"" + URLText + "\" is not a valid URL!",
@@ -63,5 +73,47 @@ public class LoginController implements ActionListener {
 			                              JOptionPane.ERROR_MESSAGE);
 		}
 		
+	}
+	
+	/**
+	 * Constructs a login request and sends it. Uses basic auth to send username
+	 * and password (base64 encoded)
+	 */
+	public void sendLoginRequest() {
+		// Form the basic auth string
+		String basicAuth = "Authorization: Basic ";
+		String password = new String(view.getPasswordField().getPassword());
+		String credentials = view.getUserNameField().getText() + ":" + password;
+		basicAuth += Base64.encodeBase64String(credentials.getBytes());
+
+		// Create and send the login request
+		Request request = Network.getInstance().makeRequest("login", HttpMethod.POST);
+		System.out.println(basicAuth);
+		request.addHeader("Authorization", basicAuth);
+		request.addObserver(new LoginRequestObserver(this));
+		request.send();
+	}
+	
+	/**
+	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * request was successful.
+	 * @param response the response returned by the server
+	 */
+	public void loginSuccessful(ResponseModel response) {
+		// Save the session cookie
+		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
+		
+		// Show the main GUI
+		mainGUI.setVisible(true);
+		view.dispose();
+	}
+	
+	/**
+	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * request was unsuccessful.
+	 * @param response the response returned by the server
+	 */
+	public void loginFailed(ResponseModel response) {
+		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
 	}
 }

@@ -1,5 +1,11 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar;
 
+/**
+ * Contributors:
+ * AHurle
+ * JPage
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
