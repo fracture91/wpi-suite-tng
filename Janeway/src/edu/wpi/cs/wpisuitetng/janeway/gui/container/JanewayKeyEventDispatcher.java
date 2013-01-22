@@ -1,8 +1,6 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.container;
 
 import java.awt.KeyEventDispatcher;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;

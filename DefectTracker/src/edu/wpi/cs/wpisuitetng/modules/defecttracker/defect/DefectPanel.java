@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -33,6 +34,7 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
+	protected DefectEventView defectEventView;
 
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
@@ -57,7 +59,7 @@ public class DefectPanel extends JPanel {
 	public DefectPanel(DefectView parent, Defect defect, Mode mode) {
 		this.parent = parent;
 		editMode = mode;
-
+		
 		// Indicate that input is enabled
 		inputEnabled = true;
 
@@ -111,11 +113,13 @@ public class DefectPanel extends JPanel {
 		txtTitle = new JTextField(50);
 		txtDescription = new JTextArea();
 		txtDescription.setLineWrap(true);
+		txtDescription.setWrapStyleWord(true);
 		txtDescription.setBorder(txtTitle.getBorder());
 		txtCreator = new JTextField(20);
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
+		defectEventView = new DefectEventView(model);
 
 		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
 		// These are required for TextUpdateListener to be able to get the correct field from panel's Defect model.
@@ -123,6 +127,12 @@ public class DefectPanel extends JPanel {
 		txtDescription.setName("Description");
 		txtCreator.setName("Creator");
 		txtAssignee.setName("Assignee");
+		
+		// set maximum widths of components so they are not stretched
+		txtTitle.setMaximumSize(txtTitle.getPreferredSize());
+		txtCreator.setMaximumSize(txtCreator.getPreferredSize());
+		txtAssignee.setMaximumSize(txtAssignee.getPreferredSize());
+		tagPanel.setMaximumSize(tagPanel.getPreferredSize());
 
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
@@ -161,7 +171,15 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.NORTH, tagPanel, VERTICAL_PADDING * 3, SpringLayout.NORTH, txtAssignee);
 		layout.putConstraint(SpringLayout.WEST, tagPanel, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, tagPanel, 0, SpringLayout.EAST, txtTitle);
-		layout.putConstraint(SpringLayout.SOUTH, this, 15, SpringLayout.SOUTH, tagPanel);
+		
+		layout.putConstraint(SpringLayout.NORTH, defectEventView, VERTICAL_PADDING, SpringLayout.SOUTH, tagPanel);
+		layout.putConstraint(SpringLayout.WEST, defectEventView, 0, SpringLayout.WEST, tagPanel);
+		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);
+		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
+
+		SpringLayout.Constraints defectPanelConstraint = layout.getConstraints(this);
+		defectPanelConstraint.setHeight(Spring.sum(Spring.constant(defectEventView.getHeight()), defectPanelConstraint.getConstraint(SpringLayout.SOUTH)));
+		
 
 		add(lblTitle);
 		add(txtTitle);
@@ -172,6 +190,7 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
+		add(defectEventView);
 	}
 
 	/**

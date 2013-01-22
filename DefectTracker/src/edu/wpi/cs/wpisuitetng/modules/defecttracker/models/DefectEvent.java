@@ -61,6 +61,7 @@ public abstract class DefectEvent implements Model {
 	 */
 	public static void addGsonDependencies(GsonBuilder builder) {
 		builder.registerTypeAdapter(DefectEvent.class, new DefectEventDeserializer());
+		builder.registerTypeAdapter(DefectChangeset.class, new DefectChangesetDeserializer());
 	}
 	
 }

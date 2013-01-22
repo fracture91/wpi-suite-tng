@@ -3,8 +3,6 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;

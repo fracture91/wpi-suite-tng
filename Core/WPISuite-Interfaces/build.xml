@@ -38,7 +38,7 @@
 	
 	<!-- compiles the project -->
 	<target name="compile-base" depends="init">
-		<javac srcdir="${src}" destdir="${build}" includeJavaRuntime="yes">
+		<javac srcdir="${src}" destdir="${build}" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="ext-lib" />
 		</javac>
 	</target>
