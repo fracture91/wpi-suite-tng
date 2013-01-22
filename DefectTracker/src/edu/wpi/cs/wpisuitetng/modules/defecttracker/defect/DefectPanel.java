@@ -145,6 +145,7 @@ public class DefectPanel extends JPanel {
 		
 		// set maximum widths of components so they are not stretched
 		txtTitle.setMaximumSize(txtTitle.getPreferredSize());
+		cmbStatus.setMaximumSize(cmbStatus.getPreferredSize());
 		txtCreator.setMaximumSize(txtCreator.getPreferredSize());
 		txtAssignee.setMaximumSize(txtAssignee.getPreferredSize());
 		tagPanel.setMaximumSize(tagPanel.getPreferredSize());
