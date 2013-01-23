@@ -184,7 +184,22 @@ public class ManagerLayer {
 		}
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
-        return (m == null) ? "null" : gson.toJson(m, m.getClass());
+        //return (m == null) ? "null" : gson.toJson(m, m.getClass());
+		
+		String response = "null";
+		
+		if(m != null)
+		{
+			response = "[";
+			for(Model n : m)
+			{
+				response.concat(n.toJSON()+",");
+			}
+			response = response.replace(response.substring(response.length()-1), "");
+			response.concat("]");
+		}
+		
+		return response;
 	}
 	
 	/**create()
@@ -213,7 +228,7 @@ public class ManagerLayer {
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
         
-        return gson.toJson(m, m.getClass());
+        return m.toJSON();
 	}
 	
 	/**update
@@ -242,7 +257,7 @@ public class ManagerLayer {
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).update(s, content);
 		
-		return gson.toJson(m, m.getClass());
+		return m.toJSON();
 	
 	}
 	

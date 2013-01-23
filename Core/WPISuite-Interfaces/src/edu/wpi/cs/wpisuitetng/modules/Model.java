@@ -36,6 +36,7 @@ public interface Model {
 	 */
 	public String toJSON();
 	
+	
 	/* Built-in overrides/overloads */
 	
 	/** toString : enforce an override. May simply call serializeToJSON.

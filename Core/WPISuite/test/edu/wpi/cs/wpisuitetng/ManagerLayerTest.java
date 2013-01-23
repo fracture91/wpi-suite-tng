@@ -34,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockSessionManager;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockUserManager;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -158,7 +159,19 @@ public class ManagerLayerTest {
 			fail("Unexpected exception");
 		}
 		
-		assertEquals(s,gson.toJson(fakeList, fakeList.getClass()));
+		String response = "null";
+		
+		if(fakeList != null)
+		{
+			response = "[";
+			for(Model n : fakeList)
+			{
+				response.concat(n.toJSON()+",");
+			}
+			response = response.replace(response.substring(response.length()-1), "");
+			response.concat("]");
+		}
+		assertEquals(s,response);
 	}
 	
 	/**
@@ -194,7 +207,20 @@ public class ManagerLayerTest {
 			fail("Unexpected exception");
 		}
 		System.out.println("read all the users: "+s);
-		assertEquals(s,gson.toJson(doubleFakeList, doubleFakeList.getClass()));
+		
+		String response = "null";
+		
+		if(doubleFakeList != null)
+		{
+			response = "[";
+			for(Model n : doubleFakeList)
+			{
+				response.concat(n.toJSON()+",");
+			}
+			response = response.replace(response.substring(response.length()-1), "");
+			response.concat("]");
+		}
+		assertEquals(s,response);
 	}
 	/**
 	 * Test method for {@link edu.wpi.cs.wpisuitetng.ManagerLayer#create(java.lang.String[], java.lang.String, javax.servlet.http.Cookie[])}.
@@ -210,7 +236,7 @@ public class ManagerLayerTest {
 			fail("Unexpected exception");
 		}
 		
-		assertEquals(s,gson.toJson(uniqueFake, uniqueFake.getClass()));
+		assertEquals(s,uniqueFake.toJSON());
 	}
 	/**
 	 * Test method for {@link edu.wpi.cs.wpisuitetng.ManagerLayer#create(java.lang.String[], java.lang.String, javax.servlet.http.Cookie[])}.
@@ -235,7 +261,7 @@ public class ManagerLayerTest {
 			fail("Unexpected exception");
 		}
 		
-		assertEquals(s,gson.toJson(uniqueFake, uniqueFake.getClass()));
+		assertEquals(s,uniqueFake.toJSON());
 	}
 	
 	/**
