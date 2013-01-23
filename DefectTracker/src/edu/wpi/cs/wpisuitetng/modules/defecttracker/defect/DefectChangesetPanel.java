@@ -7,6 +7,7 @@ import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.FieldChange;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 
@@ -64,14 +65,17 @@ public class DefectChangesetPanel extends DefectEventPanel {
 				}
 			}
 			// handle fields of type User
-			else if (User.class.isInstance(newField)) {
+			else if (User.class.isInstance(newField) || User.class.isInstance(oldField)) {
 				User oldValue = (User)oldField;
 				User newValue = (User)newField;
-				if (oldValue != null) {
-					content += " <b>FROM</b><i> " + oldValue.getUsername() + " </i><b>TO</b><i> " + newValue.getUsername() + "</i><br />";
+				if (oldValue == null) {
+					content += " <b>NEW</b><i> " + newValue.getUsername() + "</i><br />";
+				}
+				else if (newValue == null) {
+					content += " <b>REMOVED</b><i> " + oldValue.getUsername() + "</i><br />";
 				}
 				else {
-					content += " <b>NEW</b><i> " + newValue.getUsername() + "</i><br />";
+					content += " <b>FROM</b><i> " + oldValue.getUsername() + " </i><b>TO</b><i> " + newValue.getUsername() + "</i><br />";
 				}
 			}
 			// handle fields of type Set<Tag>
@@ -91,9 +95,16 @@ public class DefectChangesetPanel extends DefectEventPanel {
 				}
 				content += "</i><br />";
 			}
+			else if (DefectStatus.class.isInstance(newField)) {
+				DefectStatus oldValue = (DefectStatus)oldField;
+				DefectStatus newValue = (DefectStatus)newField;
+				if (oldValue != null && newValue != null) {
+					content += " <b>FROM</b><i> " + oldValue.toString() + " </i><b>TO</b><i> " + newValue.toString() + "</i><br />";
+				}
+			}
 			// the field type is not recognized
 			else {
-				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField);
+				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField + " for field name " + fieldName);
 			}
 		}
 		content += "</html>";

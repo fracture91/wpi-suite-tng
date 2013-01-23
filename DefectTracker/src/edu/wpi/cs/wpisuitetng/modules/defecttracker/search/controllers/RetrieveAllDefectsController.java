@@ -54,7 +54,7 @@ public class RetrieveAllDefectsController {
 			this.data = defects;
 
 			// set the column names
-			String[] columnNames = {"ID", "Title", "Description", "Creator", "Assignee", "Created", "Last Modified"};
+			String[] columnNames = {"ID", "Title", "Description", "Creator", "Assignee", "Status", "Created", "Last Modified"};
 			view.getSearchPanel().getResultsPanel().getModel().setColumnNames(columnNames);
 
 			// put the data in the table
@@ -70,8 +70,9 @@ public class RetrieveAllDefectsController {
 				else {
 					entries[i][4] = "";
 				}
-				entries[i][5] = defects[i].getCreationDate();
-				entries[i][6] = defects[i].getLastModifiedDate();
+				entries[i][5] = defects[i].getStatus().toString();
+				entries[i][6] = defects[i].getCreationDate();
+				entries[i][7] = defects[i].getLastModifiedDate();
 			}
 			view.getSearchPanel().getResultsPanel().getModel().setData(entries);
 			view.getSearchPanel().getResultsPanel().getModel().fireTableStructureChanged();
