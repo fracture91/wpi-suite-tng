@@ -1,0 +1,1 @@
+This project is for the swing client container.  (Janeway is the captain of USS Voyager, and thus commands things, like servers.)

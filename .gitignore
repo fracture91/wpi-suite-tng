@@ -1,6 +1,36 @@
 *.class
+.metadata
+.metadata\*
+.metadata/*
+.metadata\.plugins\*
+Servers\.settings\*
+Servers\.settings
+javadoc
+test-results
 
 # Package Files #
-*.jar
 *.war
 *.ear
+
+# Module jar files #
+Janeway/modules/*.jar
+!Janeway/modules/DummyModule.jar
+
+# Janeway configuration file (user specific) #
+Janeway/janeway.conf
+
+/Core/Servers3/.project
+/Core/Servers3/.settings/org.eclipse.wst.server.core.prefs
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/catalina.policy
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/catalina.properties
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/context.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/server.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/tomcat-users.xml
+/Core/Servers3/Tomcat v7.0 Server at localhost-config/web.xml
+/Core/WPISuite/build/classes/META-INF/MANIFEST.MF
+/Core/WPISuite-Interfaces/build/MANIFEST.MF
+/Core/WPISuite/src/META-INF/MANIFEST.MF
+/Core/WPISuite/WPISuite_TNG_local
+/Core/WPISuite/WebContent/WEB-INF/lib/DefectTracker.jar
+/Core/WPISuite/WebContent/WEB-INF/lib/WPISuite-Interfaces.jar
+

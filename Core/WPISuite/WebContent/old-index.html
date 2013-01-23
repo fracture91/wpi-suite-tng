@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>WPI Suite Temp Admin Console</title>
+
+<script type="text/javascript" >
+
+function showUser()
+{
+	 getUser(document.getElementById("showid").value);
+}
+function display(text)
+{
+	document.getElementById("display").value = text;
+}
+
+function addUser()
+{
+	User = new Object();
+	User.name = document.getElementById("name").value;
+	User.username = document.getElementById("id").value;
+	User.password = document.getElementById("password").value;
+	putUser(JSON.stringify(User));
+	
+}
+
+function delUser()
+{
+	deleteUser(document.getElementById("delid").value);
+}
+
+function updateUser()
+{
+	User = new Object();
+	User.name = document.getElementById("uname").value;
+	User.username = document.getElementById("uid").value;
+	postUser(JSON.stringify(User), User.username);
+}
+
+function postUser(user, id)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('POST', "API/core/user/"+id, true);
+    request.send(user);
+}
+
+function getMeACookie()
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display("Logged in as admin");
+		    }
+	    }
+    request.open('GET', "debug", true);
+    request.send();
+}
+
+
+function deleteUser(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('DELETE', "API/core/user/"+user, true);
+    request.send();
+}
+
+function getUser(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        display(request.responseText);
+		    }
+	    }
+    request.open('GET', "API/core/user/"+user, true);
+    request.send();
+}
+
+function putUser(user)
+{
+    var request = new XMLHttpRequest();
+    request.open('PUT', "API/core/user/", true);
+    request.send(user);
+}
+
+function showProject()
+{
+	 getProject(document.getElementById("showidp").value);
+}
+function displayp(text)
+{
+	document.getElementById("displayp").value = text;
+}
+
+function addProject()
+{
+	User = new Object();
+	User.name = document.getElementById("namep").value;
+	User.idNum = document.getElementById("idp").value;
+	putProject(JSON.stringify(User));
+	
+}
+
+
+function getProject(user)
+{
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() 
+	    {
+		    if(request.readyState == 4 && request.status == 200) 
+		    {
+		        displayp(request.responseText);
+		    }
+	    }
+    request.open('GET', "API/core/project/"+user, true);
+    request.send();
+}
+
+function putProject(user)
+{
+    var request = new XMLHttpRequest();
+    request.open('PUT', "API/core/project/", true);
+    request.send(user);
+}
+</script>
+
+</head>
+<body>
+<h1>WPI Suite Temporary Admin Console</h1>
+<br />
+         	
+            <button onclick="getMeACookie()">Get me a cookie</button>
+            
+            <br />
+         
+            <label>Name: </label><input id="name" maxlength="40" /> <br />
+            <label>username: </label><input id="id" maxlength="15" /> <br />
+            <label>password: </label><input id="password" maxlength="15" /> <br />
+            <button onclick="addUser()">Add User</button>
+            
+            <br />
+            
+            <label>Name: </label><input id="uname" maxlength="40" /> <br />
+            <label>username: </label><input id="uid" maxlength="15" /> <br />
+            <button onclick="updateUser()">update User</button>
+            
+            <br />
+           
+            <button onclick="delUser()">delete User</button><label> username: </label><input id="delid" maxlength="15" /> <br />
+            <br />
+           
+            <button onclick="showUser()">Show User</button><label> username: </label><input id="showid" maxlength="15" /> <br />
+            <textarea id="display" rows="10" cols="80"></textarea>
+            
+			<hr>
+			
+            <label>Name: </label><input id="namep" maxlength="40" /> <br />
+            <label>ID: </label><input id="idp" maxlength="15" /> <br />
+            <button onclick="addProject()">Add Project</button>
+            
+            <br />
+           
+            <button onclick="showProject()">Show Project</button><label> ID: </label><input id="showidp" maxlength="15" /> <br />
+            <textarea id="displayp" rows="10" cols="80"></textarea>
+</body>
+</html>

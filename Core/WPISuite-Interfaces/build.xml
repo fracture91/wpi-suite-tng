@@ -1,0 +1,64 @@
+<!-- 
+  Copyright (c) 2012 - WPI Suite
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+			twack
+-->
+
+<project name="WPISuite-Interfaces" default="compile">
+	<import file="../../build-common.xml"/>
+	<description>
+		Build file for the WPISuite-Interfaces project. Provides
+		options to build into the WPISuite Server project.
+	</description>
+	
+	<!-- define global directory shortcuts -->
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	
+	<!-- define the external jar class path reference -->
+	<path id="ext-lib">
+		<fileset dir="${core-lib}">
+			<include name="gson-*.jar" />
+			<include name="servlet-api.jar" />
+		</fileset>
+		
+		<pathelement path="${build}" />
+	</path>
+
+	<!-- creates the needed folders for compilation -->
+	<target name="init">
+		<mkdir dir="${build}" />
+	</target>
+	
+	<!-- compiles the project -->
+	<target name="compile-base" depends="init">
+		<javac srcdir="${src}" destdir="${build}" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="ext-lib" />
+		</javac>
+	</target>
+	
+	<!-- clears out the build folder and removes the existing JAR -->
+	<target name="clean">
+		<delete file="${build}/MANIFEST.MF" />
+		<delete file="${core-lib}/WPISuite-Interfaces.jar" />
+		<delete dir="${build}" />
+	</target>
+	
+	<!-- creates a manifest and jars up the project into the core-lib -->
+	<target name="compile" depends="compile-base">
+		<manifest file="${build}/MANIFEST.MF" >
+			<attribute name="Built-By" value="${user.name}" />
+		</manifest>
+		
+		<jar destfile="${core-lib}/WPISuite-Interfaces.jar"
+			basedir="${build}"
+			manifest="${build}/MANIFEST.MF">
+		</jar>
+	</target>
+</project>

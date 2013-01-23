@@ -1,0 +1,1 @@
+This project is for the Defect Tracker module.  The project contains entry points for both Janeway and the Core.
