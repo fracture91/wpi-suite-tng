@@ -7,6 +7,7 @@ import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.FieldChange;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 
@@ -91,9 +92,16 @@ public class DefectChangesetPanel extends DefectEventPanel {
 				}
 				content += "</i><br />";
 			}
+			else if (DefectStatus.class.isInstance(newField)) {
+				DefectStatus oldValue = (DefectStatus)oldField;
+				DefectStatus newValue = (DefectStatus)newField;
+				if (oldValue != null && newValue != null) {
+					content += " <b>FROM</b><i> " + oldValue.toString() + " </i><b>TO</b><i> " + newValue.toString() + "</i><br />";
+				}
+			}
 			// the field type is not recognized
 			else {
-				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField);
+				throw new RuntimeException("Cannot handle a FieldChange of generic type " + oldField + " for field name " + fieldName);
 			}
 		}
 		content += "</html>";

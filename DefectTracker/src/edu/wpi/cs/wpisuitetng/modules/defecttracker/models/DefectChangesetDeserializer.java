@@ -55,6 +55,12 @@ public class DefectChangesetDeserializer implements JsonDeserializer<DefectChang
 				Tag[] newTags = context.deserialize(tagsObj.get("newValue"), Tag[].class);
 				changesMap.put("tags", new FieldChange<Set<Tag>>(new HashSet<Tag>(new ArrayList<Tag>(Arrays.asList(oldTags))), new HashSet<Tag>(new ArrayList<Tag>(Arrays.asList(newTags)))));
 			}
+			if (changes.has("status")) {
+				JsonObject statusObj = changes.get("status").getAsJsonObject();
+				DefectStatus oldStatus = context.deserialize(statusObj.get("oldValue"), DefectStatus.class);
+				DefectStatus newStatus = context.deserialize(statusObj.get("newValue"), DefectStatus.class);
+				changesMap.put("status", new FieldChange<DefectStatus>(oldStatus, newStatus));
+			}
 			
 			// reconstruct the DefectChangeset
 			DefectChangeset retVal = new DefectChangeset();
