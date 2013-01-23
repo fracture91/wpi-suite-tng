@@ -140,7 +140,9 @@ public class DefectPanel extends JPanel {
 		tagPanel = new TagPanel(model);
 		defectEventView = new DefectEventView(model);
 		
-		cmbStatus.setEnabled(false);
+		if (editMode == Mode.CREATE) {
+			cmbStatus.setEnabled(false);
+		}
 
 		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
 		// These are required for TextUpdateListener to be able to get the correct field from panel's Defect model.
