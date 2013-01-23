@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
@@ -68,7 +69,18 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		// Instantiate the main create defect panel
 		mainPanel = new DefectPanel(this, defect, editMode);
 		this.setLayout(new BorderLayout());
-		JScrollPane mainPanelScrollPane = new JScrollPane(mainPanel);
+		final JScrollPane mainPanelScrollPane = new JScrollPane(mainPanel);
+		
+		// Prevent content of scroll pane from smearing (credit: https://gist.github.com/303464)
+		mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run(){
+                        mainPanelScrollPane.repaint();
+                    }
+                });
+            }
+        });
 		this.add(mainPanelScrollPane, BorderLayout.CENTER);
 		controller = new SaveDefectController(this);
 
