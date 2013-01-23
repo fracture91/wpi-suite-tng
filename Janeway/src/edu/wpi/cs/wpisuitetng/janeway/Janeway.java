@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginFrame;
+import edu.wpi.cs.wpisuitetng.janeway.modules.DummyModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.ModuleLoader;
 
@@ -44,6 +45,7 @@ public class Janeway {
 		// Load modules
 		ModuleLoader<IJanewayModule> moduleLoader = new ModuleLoader<IJanewayModule>("./modules.conf");
 		modules = moduleLoader.getModules();
+		modules.add(new DummyModule());
 		
 		// Check for modules
 		if (modules.size() < 1) {

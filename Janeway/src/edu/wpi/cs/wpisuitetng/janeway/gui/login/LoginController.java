@@ -13,10 +13,9 @@ import org.apache.commons.codec.binary.Base64;
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
-import edu.wpi.cs.wpisuitetng.network.Response;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
-
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * Controller to handle user login
@@ -81,28 +80,18 @@ public class LoginController implements ActionListener {
 	 * and password (base64 encoded)
 	 */
 	public void sendLoginRequest() {
-		try {
-			// Form the basic auth string
-			String basicAuth = "Authorization: Basic ";
-			String password = new String(view.getPasswordField().getPassword());
-			String credentials = view.getUserNameField().getText() + ":" + password;
-			basicAuth += Base64.encodeBase64String(credentials.getBytes());
-			
-			// Create and send the login request
-			Request request = Network.getInstance().makeRequest("login", RequestMethod.POST);
-			System.out.println(basicAuth);
-			request.addRequestHeader("Authorization", basicAuth);
-			request.addObserver(new LoginRequestObserver(this));
-			request.send();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
+		// Form the basic auth string
+		String basicAuth = "Authorization: Basic ";
+		String password = new String(view.getPasswordField().getPassword());
+		String credentials = view.getUserNameField().getText() + ":" + password;
+		basicAuth += Base64.encodeBase64String(credentials.getBytes());
+
+		// Create and send the login request
+		Request request = Network.getInstance().makeRequest("login", HttpMethod.POST);
+		System.out.println(basicAuth);
+		request.addHeader("Authorization", basicAuth);
+		request.addObserver(new LoginRequestObserver(this));
+		request.send();
 	}
 	
 	/**
@@ -110,9 +99,9 @@ public class LoginController implements ActionListener {
 	 * request was successful.
 	 * @param response the response returned by the server
 	 */
-	public void loginSuccessful(Response response) {
+	public void loginSuccessful(ResponseModel response) {
 		// Save the session cookie
-		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getResponseHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
+		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
 		
 		// Show the main GUI
 		mainGUI.setVisible(true);
@@ -124,7 +113,7 @@ public class LoginController implements ActionListener {
 	 * request was unsuccessful.
 	 * @param response the response returned by the server
 	 */
-	public void loginFailed(Response response) {
+	public void loginFailed(ResponseModel response) {
 		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
 	}
 }

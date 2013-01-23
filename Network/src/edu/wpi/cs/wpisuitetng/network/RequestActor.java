@@ -7,9 +7,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * This class makes a request asynchronously.
@@ -28,38 +29,36 @@ public class RequestActor extends Thread {
 	
 	/**
 	 * Overrides Thread's run method. This will be called when the thread is started.
-	 * TODO handle 400 and 500 error exceptions and whatnot
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
 		HttpURLConnection connection = null;
+		boolean requestSendFail = false;
+		boolean responseBodyReadTimeout = false;
+		Exception exceptionRecv = null;
 		
 		try {
 			// setup connection
-			connection = (HttpURLConnection) request.getURL().openConnection();
-			connection.setConnectTimeout(20*1000);
-			connection.setReadTimeout(5*1000);
-			connection.setRequestMethod(request.getRequestMethod());
+			connection = (HttpURLConnection) request.getUrl().openConnection();
+			connection.setConnectTimeout(request.getConnectTimeout());
+			connection.setReadTimeout(request.getReadTimeout());
+			connection.setRequestMethod(request.getHttpMethod().toString());
 			connection.setDoInput(true);
 			connection.setRequestProperty("Connection", "close");
 			
 			// set request headers
-			Iterator<String> requestHeaderKeysI = request.getRequestHeaders().keySet().iterator();
-			while (requestHeaderKeysI.hasNext()) {
-				String requestHeaderKey = requestHeaderKeysI.next();
-				Iterator<String> requestHeaderValuesI = request.getRequestHeaders().get(requestHeaderKey).iterator();
-				
-				while (requestHeaderValuesI.hasNext()) {
-					connection.setRequestProperty(requestHeaderKey, requestHeaderValuesI.next());
+			for (String requestHeaderKey : request.getHeaders().keySet()) {
+				for (String requestHeaderValue : request.getHeaders().get(requestHeaderKey)) {
+					connection.setRequestProperty(requestHeaderKey, requestHeaderValue);
 				}
 			}
 			
 			// if there is a body to send, send it
-			if (request.getRequestBody() != null) {
+			if (request.getBody() != null) {
 				connection.setDoOutput(true);
 				DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-				out.writeBytes(request.getRequestBody());
+				out.writeBytes(request.getBody());
 				out.flush();
 				out.close();
 			}
@@ -80,8 +79,8 @@ public class RequestActor extends Thread {
 					}
 				} catch (SocketTimeoutException e) {
 					// Note: this will be thrown if a read takes longer than 5 seconds
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					exceptionRecv = e;
+					responseBodyReadTimeout = true;
 				}
 				finally {
 					if (reader != null) {
@@ -91,7 +90,6 @@ public class RequestActor extends Thread {
 			}
 			catch (IOException e) {
 				// do nothing, received a 400, or 500 status code
-				System.out.println("Received a 400 or 500 status code.");
 			}
 			
 			// get the response headers
@@ -104,17 +102,41 @@ public class RequestActor extends Thread {
 			String responseMessage = connection.getResponseMessage();
 			
 			// create Response
-			Response response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
+			ResponseModel response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
 			
 			// set the Request's response to the newly created response
 			request.setResponse(response);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			exceptionRecv = e;
+			requestSendFail = true;
 		} finally {
 			// close the connection
 			if (connection != null) {
 				connection.disconnect(); 
+			}
+			
+			if (!request.isAsynchronous) {
+				// Do nothing
+			}
+			else if (requestSendFail) {
+				request.notifyObserversFail(exceptionRecv);
+			}
+			else if (responseBodyReadTimeout) {
+				request.notifyObserversFail(exceptionRecv);
+			}
+			else if (request.getResponse() != null) {
+				// On status code 2xx
+				if (request.getResponse().getStatusCode() >= 200 && request.getResponse().getStatusCode() < 300) {
+					request.notifyObserversResponseSuccess();
+				}
+				// On status code 4xx or 5xx
+				else if (request.getResponse().getStatusCode() >= 400 && request.getResponse().getStatusCode() < 600) {
+					request.notifyObserversResponseError();
+				}
+				// On other status codes
+				else {
+					request.notifyObserversFail(new Exception());
+				}
 			}
 		}
 	}

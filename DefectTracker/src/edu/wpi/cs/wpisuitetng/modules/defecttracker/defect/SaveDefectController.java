@@ -1,11 +1,10 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
-import java.net.MalformedURLException;
-
-import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Controller to handle the saving of a defect
@@ -14,13 +13,13 @@ import edu.wpi.cs.wpisuitetng.network.Request.RequestMethod;
 public class SaveDefectController {
 
 	/** The view object containing the request fields */
-	protected DefectPanel view;
+	protected DefectView view;
 
 	/**
 	 * Construct a new handler for the given view
 	 * @param view the view containing the request fields
 	 */
-	public SaveDefectController(DefectPanel view) {
+	public SaveDefectController(DefectView view) {
 		this.view = view;
 	}
 
@@ -28,23 +27,14 @@ public class SaveDefectController {
 	 * Save the view's Defect model to the server (asynchronous).
 	 */
 	public void save() {
-		final SaveRequestObserver requestObserver = new SaveRequestObserver();
-		// TODO Change PUT/POST depending on whether this is create or update
+		final DefectPanel panel = (DefectPanel) view.getDefectPanel();
+		final RequestObserver requestObserver = (panel.getEditMode() == Mode.CREATE) ? new CreateDefectRequestObserver(view) : new UpdateDefectRequestObserver(view);
 		Request request;
-		try {
-			request = Network.getInstance().makeRequest("defecttracker/defect", RequestMethod.PUT);
-			request.setRequestBody(view.getFieldModel().toJSON());
-			request.addObserver(requestObserver);
-			request.send();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
+		panel.getParent().setInputEnabled(false);
+		request = Network.getInstance().makeRequest("defecttracker/defect", (panel.getEditMode() == Mode.CREATE) ? HttpMethod.PUT : HttpMethod.POST);
+		request.setBody(panel.getEditedModel().toJSON());
+		request.addObserver(requestObserver);
+		request.send();
 	}
 
 }

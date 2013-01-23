@@ -1,8 +1,7 @@
 package edu.wpi.cs.wpisuitetng.network;
 
-import java.net.MalformedURLException;
-
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * Singleton for managing Network configuration.
@@ -17,10 +16,7 @@ public class Network {
 	/**
 	 * Constructs a new Network
 	 */
-	private Network() {
-		//TODO finish this
-		//TODO should we create a blank NetworkConfiguration as the default?
-	}
+	protected Network() {}
 	
 	/**
 	 * Makes a Request using the defaultNetworkConfiguration, the given path, and the given requestMethod.
@@ -30,9 +26,10 @@ public class Network {
 	 * 
 	 * @return	A Request.
 	 * 
-	 * @throws NullPointerException		If the requestMethod is null.
+	 * @throws RuntimeException			If there is an error using the configured URL.
+	 * @throws NullPointerException		If the requestMethod is null or there is a configuration error.
 	 */
-	public Request makeRequest(String path, Request.RequestMethod requestMethod) throws MalformedURLException, NullPointerException {		
+	public Request makeRequest(String path, HttpMethod requestMethod) {		
 		if (requestMethod == null) {
 			throw new NullPointerException("requestMethod may not be null");
 		}
@@ -53,6 +50,15 @@ public class Network {
 		}
 		
 		this.defaultNetworkConfiguration = config;
+	}
+	
+	/**
+	 * Replaces the Network instance with the provided instance. This method can be
+	 * used to replace instance with subclasses of Network for testing purposes.
+	 * @param network the new Network instance
+	 */
+	public static void initNetwork(Network network) {
+		instance = network;
 	}
 	
 	/**

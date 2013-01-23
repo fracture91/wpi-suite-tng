@@ -3,20 +3,31 @@ package edu.wpi.cs.wpisuitetng.network.configuration;
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 import org.junit.*;
 
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+
+/**
+ * Test NetworkConfiguration class.
+ */
 public class TestNetworkConfiguration {
-	class MockObserver implements Observer {
-		
+	class MockObserver implements RequestObserver {
+
 		public MockObserver() {}
 
-		/**
-		 * @see java.util.Observable#update
-		 */
 		@Override
-		public void update(Observable observable, Object arg) {
+		public void responseSuccess(IRequest iReq) {
+			// Do nothing
+		}
+
+		@Override
+		public void responseError(IRequest iReq) {
+			// Do nothing
+		}
+
+		@Override
+		public void fail(IRequest iReq, Exception exception) {
 			// Do nothing
 		}
 	}
@@ -34,51 +45,33 @@ public class TestNetworkConfiguration {
 		assertTrue(url.equals(config.getApiUrl()));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testAddObserverNullObserverException() {
-		try {
-			config.addObserver(null);
-			fail("No NullPointerException thrown when calling addObserver with null observer parameter.");
-		}
-		catch (NullPointerException e) {
-			assertTrue("The observer must not be null.".equals(e.getMessage()));
-		}
+		config.addObserver(null);
 	}
-	
+
 	@Test
 	public void testAddObserver() {
 		assertEquals(0, config.getObservers().size());
 		config.addObserver(new MockObserver());
 		config.addObserver(new MockObserver());
 		assertEquals(2, config.getObservers().size());
-		
-		Iterator<Observer> observersI = config.getObservers().iterator();
-		
+
+		Iterator<RequestObserver> observersI = config.getObservers().iterator();
+
 		while (observersI.hasNext()) {
 			assertTrue(observersI.next() instanceof MockObserver);
 		}
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testAddRequestHeaderNullKeyException() {
-		try {
-			config.addRequestHeader(null, "value");
-			fail("No NullPointerException thrown when calling addRequestHeader with null key parameter.");
-		}
-		catch (NullPointerException e) {
-			assertTrue("The key must not be null.".equals(e.getMessage()));
-		}
+		config.addRequestHeader(null, "value");
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testAddRequestHeaderNullValueException() {
-		try {
 			config.addRequestHeader("header", null);
-			fail("No NullPointerException thrown when calling addRequestHeader with null value parameter.");
-		}
-		catch (NullPointerException e) {
-			assertTrue("The value must not be null.".equals(e.getMessage()));
-		}
 	}
 
 	@Test
@@ -100,5 +93,34 @@ public class TestNetworkConfiguration {
 		assertTrue(config.getRequestHeaders().get("header2").contains("value2a"));
 		assertTrue(config.getRequestHeaders().get("header2").contains("value2b"));
 		assertTrue(config.getRequestHeaders().get("header3").contains("value3"));
+	}
+
+	@Test
+	public void testCloneConstructor() {
+		config.addRequestHeader("header1", "value1");
+		config.addRequestHeader("header2", "value2a");
+		config.addRequestHeader("header2", "value2b");
+		config.addRequestHeader("header3", "value3");
+
+		config.addObserver(new MockObserver());
+		config.addObserver(new MockObserver());
+
+		NetworkConfiguration config2 = new NetworkConfiguration(config);
+
+		assertTrue(url.equals(config2.getApiUrl()));
+		assertEquals(2, config2.getObservers().size());
+
+		assertTrue(config2.getRequestHeaders().containsKey("header1"));
+		assertTrue(config2.getRequestHeaders().containsKey("header2"));
+		assertTrue(config2.getRequestHeaders().containsKey("header3"));
+
+		assertEquals(1, config2.getRequestHeaders().get("header1").size());
+		assertEquals(2, config2.getRequestHeaders().get("header2").size());
+		assertEquals(1, config2.getRequestHeaders().get("header3").size());
+
+		assertTrue(config2.getRequestHeaders().get("header1").contains("value1"));
+		assertTrue(config2.getRequestHeaders().get("header2").contains("value2a"));
+		assertTrue(config2.getRequestHeaders().get("header2").contains("value2b"));
+		assertTrue(config2.getRequestHeaders().get("header3").contains("value3"));
 	}
 }

@@ -1,12 +1,11 @@
 package edu.wpi.cs.wpisuitetng.janeway.gui.login;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import edu.wpi.cs.wpisuitetng.network.Request;
-import edu.wpi.cs.wpisuitetng.network.Response;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
-public class LoginRequestObserver implements Observer {
+public class LoginRequestObserver implements RequestObserver {
 
 	protected LoginController controller;
 
@@ -14,30 +13,30 @@ public class LoginRequestObserver implements Observer {
 		this.controller = controller;
 	}
 
-	/**
-	 * @see java.util.Observer#update
-	 */
 	@Override
-	public void update(Observable observable, Object arg1) {
-		// If observable is a Request...
-		if (observable instanceof Request) {
-			// cast observable to a Request
-			Request request = (Request) observable;
+	public void responseSuccess(IRequest iReq) {
+		// cast observable to a Request
+		Request request = (Request) iReq;
 
-			// get the response from the request
-			Response response = request.getResponse();
-			
-			// check the response code
-			if (response.getResponseCode() == 200) {
-				controller.loginSuccessful(response);
-			}
-			else { // login failed
-				controller.loginFailed(response);
-			}
+		// get the response from the request
+		ResponseModel response = request.getResponse();
+
+		// check the response code
+		if (response.getStatusCode() == 200) {
+			controller.loginSuccessful(response);
 		}
-		// Otherwise...
-		else {
-			System.out.println("Observable is not a Request.");
+		else { // login failed
+			controller.loginFailed(response);
 		}
+	}
+
+	@Override
+	public void responseError(IRequest iReq) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void fail(IRequest iReq, Exception exception) {
+		// TODO Auto-generated method stub
 	}
 }

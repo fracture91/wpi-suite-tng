@@ -2,8 +2,6 @@ package edu.wpi.cs.wpisuitetng.janeway.modules;
 
 import java.util.List;
 
-
-
 /**
  * A module being used in Janeway must implement this interface.
  * Modules have a name and a list of tabs associated with them.
