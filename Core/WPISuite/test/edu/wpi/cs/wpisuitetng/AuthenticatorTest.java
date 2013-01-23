@@ -41,7 +41,8 @@ public class AuthenticatorTest {
 		
 		// add the test user to the database
 		DataStore db = DataStore.getDataStore();
-		this.u = new User("Tyler", "twack", "jayms", 1);
+		String hashedPassword = new Sha256Password().generateHash("jayms");
+		this.u = new User("Tyler", "twack", hashedPassword, 5);
 		db.save(this.u);
 	}
 	
@@ -74,28 +75,29 @@ public class AuthenticatorTest {
 	 */
 	public void testLogout()
 	{		
+		int test = this.sessions.sessionCount();
 		Session uSes = this.sessions.createSession(this.u);
 		
-		assertEquals(1, this.sessions.sessionCount());
+		assertEquals(test+1, this.sessions.sessionCount());
 		
 		// logout the user
 		this.auth.logout(uSes.toString());
 		
-		assertEquals(0, this.sessions.sessionCount());
+		assertEquals(test, this.sessions.sessionCount());
 	}
 	
 	@Test
 	public void testLoginSuccess() throws AuthenticationException
 	{
-		assertEquals(0, this.sessions.sessionCount());
-		
+		int test = this.sessions.sessionCount();
 		// generate a login token (password hardcoded)
-		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms");
+		String hashedPassword = new Sha256Password().generateHash("jayms");
+		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms"); 
 		
 		Session ses = this.auth.login(token); // login
 		
 		// check if session created for the user
-		assertEquals(1, this.sessions.sessionCount());
+		assertEquals(test+1, this.sessions.sessionCount());
 		assertEquals(this.u.getUsername(), ses.getUsername());
 	}
 	

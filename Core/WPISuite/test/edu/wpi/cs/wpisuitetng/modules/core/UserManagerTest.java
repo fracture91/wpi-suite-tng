@@ -53,7 +53,7 @@ public class UserManagerTest {
 		test = new UserManager(MockDataStore.getMockDataStore());
 		testWithRealDB = new UserManager(DataStore.getDataStore());
 		temp = new User("test","test","test",0);
-		secondUser = new User ("Sam", "sammy","trouty", 0);
+		secondUser = new User ("Sam", "sammy","trouty", 1);
 		conflict = new User("steve", "steve",null, 0);
 		tempSession = new Session(temp);
 		json = new Gson();

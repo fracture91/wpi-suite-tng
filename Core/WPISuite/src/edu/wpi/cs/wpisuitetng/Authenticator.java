@@ -80,9 +80,8 @@ public abstract class Authenticator {
 		
 		// check password
 		System.out.println("DEBUG: Authenticate Password");
-		
 		// password security
-		String hashedPassword = credentials[1]; // this.passwordHash.generateHash(credentials[1]);
+		String hashedPassword = this.passwordHash.generateHash(credentials[1]);
 		if(!user.matchPassword(hashedPassword))
 		{
 			throw new AuthenticationException();

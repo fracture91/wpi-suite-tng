@@ -12,6 +12,7 @@
 
 package edu.wpi.cs.wpisuitetng;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -43,7 +44,11 @@ public class Sha256Password implements PasswordCryptographer {
 		// TODO: salt the password
 		
 		this.hashDigest.reset(); // flush the digest buffer before use
-		this.hashDigest.update(password.getBytes()); // TODO: enforce encoding type
+		try {
+			this.hashDigest.update(password.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		byte[] hashedPassword = this.hashDigest.digest();
 		
