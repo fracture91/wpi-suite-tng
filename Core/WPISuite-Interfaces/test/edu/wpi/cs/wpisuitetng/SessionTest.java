@@ -67,8 +67,8 @@ public class SessionTest {
 		Date loginTime = this.ses1.getLoginTime();
 		
 		String json = "{\"user\":" + this.u1.toString() + ",\"loginTime\":\"" + format.format(loginTime) + "\"}";		
-		
-		assertTrue(json.equals(this.ses1.toString()));
+		String sessionJson = this.ses1.toString();
+		assertTrue(json.equals(sessionJson));
 	}
 	
 	@Test

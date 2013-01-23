@@ -41,7 +41,8 @@ public class AuthenticatorTest {
 		
 		// add the test user to the database
 		DataStore db = DataStore.getDataStore();
-		this.u = new User("Tyler", "twack", "jayms", 1);
+		String hashedPassword = new Sha256Password().generateHash("jayms");
+		this.u = new User("Tyler", "twack", hashedPassword, 5);
 		db.save(this.u);
 	}
 	
@@ -90,7 +91,8 @@ public class AuthenticatorTest {
 		assertEquals(0, this.sessions.sessionCount());
 		
 		// generate a login token (password hardcoded)
-		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms");
+		String hashedPassword = new Sha256Password().generateHash("jayms");
+		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms"); 
 		
 		Session ses = this.auth.login(token); // login
 		
