@@ -180,7 +180,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("No WPISuite cookie was given");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
@@ -208,7 +208,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("No  WPISuite cookie was given");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
@@ -237,7 +237,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("Could not find WPISuite cookie.");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).update(s, content);
@@ -266,7 +266,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("No WPISuite cookie was given");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
 		
@@ -298,7 +298,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("Could not find WPISuite cookie.");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
         return map.get(args[0]+args[1]).advancedGet(s, args);
@@ -332,7 +332,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("Could not find WPISuite cookie.");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
         return map.get(args[0]+args[1]).advancedPut(s,args,content);
@@ -366,7 +366,7 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException("Could not find WPISuite cookie.");
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
         return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
