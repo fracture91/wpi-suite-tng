@@ -73,7 +73,7 @@ public abstract class Authenticator {
 			System.out.println("DEBUG: Retrieve Login User");
 			u = manager.getUsers().getEntity(credentials[0]);
 		} catch (NotFoundException e) {
-			throw new AuthenticationException();	//"No user with the given username found");
+			throw new AuthenticationException("The user \"" + credentials[0] + "\" could not be found. Please check if the username was spelled correctly.");	//"No user with the given username found");
 		}
 
 		User user = u[0];
@@ -84,7 +84,7 @@ public abstract class Authenticator {
 		String hashedPassword = this.passwordHash.generateHash(credentials[1]);
 		if(!user.matchPassword(hashedPassword))
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("An invalid password was given. Please check the password and try again.");
 		}
 		
 		// create a Session mapping in the ManagerLayer

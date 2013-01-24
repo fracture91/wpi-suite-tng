@@ -31,12 +31,14 @@ public class WPICoreServlet extends HttpServlet
 {
 
 	private static final long serialVersionUID = -7156601241025735047L;
+	private ErrorResponseFormatter reponseFormatter;
 	
 	/**
 	 * Empty Constructor
 	 */
 	public WPICoreServlet()
 	{
+		this.reponseFormatter = new HtmlErrorResponseFormatter();
 	}
 	
 	/**
@@ -80,6 +82,9 @@ public class WPICoreServlet extends HttpServlet
         	out.println(ManagerLayer.getInstance().create(path,in.readLine(),req.getCookies()));
 		} catch (WPISuiteException e) {
 			res.setStatus(e.getStatus());
+			out.write(this.reponseFormatter.formatContent(e));
+			out.flush();
+			out.close();
 		}
         res.setStatus(HttpServletResponse.SC_CREATED);
         out.close();
@@ -104,6 +109,9 @@ public class WPICoreServlet extends HttpServlet
 			out.println(ManagerLayer.getInstance().update(path,in.readLine(),req.getCookies()));
 		} catch (WPISuiteException e) {
 			res.setStatus(e.getStatus());
+			out.write(this.reponseFormatter.formatContent(e));
+			out.flush();
+			out.close();
 		}
         
         out.close();
@@ -126,6 +134,9 @@ public class WPICoreServlet extends HttpServlet
 			out.println(ManagerLayer.getInstance().delete(path,req.getCookies()));
 		} catch (WPISuiteException e) {
 			res.setStatus(e.getStatus());
+			out.write(this.reponseFormatter.formatContent(e));
+			out.flush();
+			out.close();
 		}
         
         out.close();

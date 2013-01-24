@@ -14,6 +14,13 @@ public class BadRequestException extends WPISuiteException {
 	 */
 	private static final long serialVersionUID = -7362821691240580782L;
 
+	public BadRequestException(String message) {
+		super(message);
+	}
+	
+	public BadRequestException() {
+	}
+
 	@Override
 	public int getStatus() {
 		return HttpServletResponse.SC_BAD_REQUEST; //409
