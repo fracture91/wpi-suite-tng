@@ -23,8 +23,8 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 public class HtmlErrorResponseFormatter implements
 		ErrorResponseFormatter {
 
-	private String header = "<html> <head> <title> {0} </title> </head>";
-	private String body = "<body> <h1> Error {0} </h1> <h2> Info </h2> <p> {1} </p> </body> </html>";
+	private String header = "<html> <head> <title> %d </title> </head>";
+	private String body = " <body> <h1> Error %d </h1> <h2> Info </h2> <p> %s </p> </body> </html>";
 	
 	@Override
 	public String formatContent(WPISuiteException e) {
@@ -34,7 +34,13 @@ public class HtmlErrorResponseFormatter implements
 		content += String.format(this.header, e.getStatus());
 		
 		// format body
-		content += String.format(this.body, e.getStatus(), e.getMessage()); // TODO: add stack trace
+		String message = e.getMessage();
+		if(message == null)
+		{
+			message = "";
+		}
+		
+		content += String.format(this.body, e.getStatus(), message); // TODO: add stack trace
 		
 		return content;
 	}
