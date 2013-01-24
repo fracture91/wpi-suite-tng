@@ -21,6 +21,15 @@ public class UnauthorizedException extends WPISuiteException {
 	 * level
 	 */
 	private static final long serialVersionUID = 9127615601542990581L;
+	
+	public UnauthorizedException()
+	{
+	}
+	
+	public UnauthorizedException(String message)
+	{
+		super(message);
+	}
 
 	@Override
 	public int getStatus() {
