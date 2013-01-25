@@ -33,4 +33,5 @@ Janeway/janeway.conf
 /Core/WPISuite/WPISuite_TNG_local
 /Core/WPISuite/WebContent/WEB-INF/lib/DefectTracker.jar
 /Core/WPISuite/WebContent/WEB-INF/lib/WPISuite-Interfaces.jar
+/Core/WPISuite/WebContent/WEB-INF/lib/PostBoard.jar
 
