@@ -22,6 +22,8 @@ import com.db4o.cs.config.ClientConfiguration;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.query.Predicate;
 import com.db4o.reflect.jdk.JdkReflector;
+
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 public class DataStore implements Data {
@@ -67,6 +69,119 @@ public class DataStore implements Data {
 			//client.close();
 		return true;
 	}
+	
+	public <T> boolean save(T aTNG, int depth){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		theDB.activate(aTNG, depth);
+			//ObjectContainer client = server.openClient();
+			theDB.store(aTNG);
+			System.out.println("Stored " + aTNG);
+			//client.close();
+		return true;
+	}
+	
+	
+	public List<Model> notRetrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		//ObjectContainer client = server.openClient();
+		Method[] allMethods = anObjectQueried.getMethods();
+		Method methodToBeSaved = null;
+		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+			if(m.getName().equalsIgnoreCase("get"+aFieldName)){
+				methodToBeSaved = m; //saves the method called "get" + aFieldName
+			}
+		}
+		//TODO: IF Null solve this problem...
+		final Method theGetter = methodToBeSaved;
+		
+		List<Model> result = theDB.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
+				try {
+					Object foundobj = theGetter.invoke(anObjectQueried.cast(anObject));
+					return (!(foundobj.equals(theGivenValue)));//objects that have aFieldName equal to theGivenValue get added to the list 
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;         
+				}
+			}
+		});
+	
+		System.out.println(result);
+		//client.close();
+		return result;
+	}
+
+	
+	public List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException{
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		final int aFieldNameListSize = aFieldNameList.length;
+		final int theGivenValueListSize = theGivenValueList.size();
+		if(aFieldNameListSize != theGivenValueListSize)
+		{
+			throw new WPISuiteException();
+		}
+		//ObjectContainer client = server.openClient();
+		Method[] allMethods = anObjectQueried.getMethods();
+		List<Method> methodsToBeSaved = null;
+		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+			int i=0;
+			while(i <= aFieldNameListSize)
+			{
+				if(m.getName().equalsIgnoreCase("get" + aFieldNameList[i])){
+					methodsToBeSaved.add(m); //saves the method called "get" + aFieldName
+			}
+			}
+		}
+		//TODO: IF Null solve this problem...
+		final  List<Method> theGetter = methodsToBeSaved;
+		final int theGettersSize = theGetter.size();
+		int j = 0;
+		List<Model> result = null; 
+		for(j=0; j > theGettersSize ; j++){
+		result.add((Model) theDB.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
+				try {
+					
+					{
+					theGetter.get(j).invoke(anObjectQueried.cast(anObject)).equals(theGivenValueList.get(j));//objects that have aFieldName equal to theGivenValue get added to the list 
+					}
+					} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;         
+				}
+				return false;
+			}
+		}));
+		}
+		System.out.println(result);
+		//client.close();
+		return result;
+	}
+	*/
+	
+	
 	
 	/**
 	 *  For this function to work you need to have a getter that takes zero arguments,
@@ -144,6 +259,21 @@ public class DataStore implements Data {
 	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		//ObjectContainer client = server.openClient();
+		ObjectSet<T> result = theDB.queryByExample(aTNG);
+	    T found = (T) result.next();
+	    theDB.delete(found);
+		//client.close();
+		//return "Deleted "+aTNG;
+		return found;
+		
+	}
+	
+	public <T> T delete(T aTNG, int depth){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		theDB.activate(aTNG, depth);
 		
 		//ObjectContainer client = server.openClient();
 		ObjectSet<T> result = theDB.queryByExample(aTNG);

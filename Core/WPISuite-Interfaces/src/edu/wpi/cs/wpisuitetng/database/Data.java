@@ -59,4 +59,5 @@ public interface Data
 	 */
 	public <T> List<T> retrieveAll(T aSample);
 	public <T> List<T> deleteAll(T aSample);
+	public List<Model> notRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
 }
