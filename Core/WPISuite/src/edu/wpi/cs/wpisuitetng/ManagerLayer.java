@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -168,20 +169,11 @@ public class ManagerLayer {
 	 */
 	public synchronized String read(String[] args,Cookie[] cook) throws WPISuiteException
 	{		
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
+		   
+		
+		
+		
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
         //return (m == null) ? "null" : gson.toJson(m, m.getClass());
@@ -212,19 +204,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String create(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-			}
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
         
@@ -241,19 +221,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String update(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-			}
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).update(s, content);
 		
@@ -269,20 +237,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String delete(String[] args,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		
 		
 		boolean status = map.get(args[0]+args[1]).deleteEntity(s,args[2]);
@@ -301,20 +256,7 @@ public class ManagerLayer {
 	 */
 	public String advancedGet(String[] args, Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		
         return map.get(args[0]+args[1]).advancedGet(s, args);
 	}
@@ -335,20 +277,7 @@ public class ManagerLayer {
 	 */
 	public String advancedPut(String[] args, String content, Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		
         return map.get(args[0]+args[1]).advancedPut(s,args,content);
 	}
@@ -369,22 +298,34 @@ public class ManagerLayer {
 	 */
 	public String advancedPost(String[] args, String content, Cookie[] cook) throws WPISuiteException
 	{
+		Session s = getSessionFromCookies(cook);
+		
+        return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
+	}
+	
+	private Session getSessionFromCookies(Cookie[] cook) throws AuthenticationException, UnauthorizedException
+	{
 		Session s = null;
 		if(cook != null)
 		{
 			for(Cookie c : cook)
 			{
 				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
+					s = sessions.getSession(c.getValue());	
+			}
+			
+			if(s == null)
+			{
+				throw new UnauthorizedException();
+			}
 		}
 		else
 		{
 			throw new AuthenticationException();
 		}
 		
-        return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
+		return s;
+		
 	}
 	
 }
