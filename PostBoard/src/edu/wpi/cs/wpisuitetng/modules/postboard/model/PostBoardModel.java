@@ -49,7 +49,7 @@ public class PostBoardModel extends AbstractListModel {
 		for (int i = 0; i < messages.length; i++) {
 			this.messages.add(messages[i]);
 		}
-		this.fireIntervalAdded(this, 0, getSize() - 1);
+		this.fireIntervalAdded(this, 0, Math.max(getSize() - 1, 0));
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class PostBoardModel extends AbstractListModel {
 			iterator.next();
 			iterator.remove();
 		}
-		this.fireIntervalRemoved(this, 0, oldSize);
+		this.fireIntervalRemoved(this, 0, Math.max(oldSize - 1, 0));
 	}
 	
 	/* 
