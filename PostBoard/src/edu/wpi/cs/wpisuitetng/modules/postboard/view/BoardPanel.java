@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import edu.wpi.cs.wpisuitetng.modules.postboard.controller.AddMessageController;
 import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardModel;
 
 /**
@@ -49,13 +50,17 @@ public class BoardPanel extends JPanel {
 
 		// Construct the list box model
 		lstBoardModel = new PostBoardModel();
-		lstBoardModel.addMessage("world");
-		lstBoardModel.addMessage("hello");
 		
 		// Construct the components to be displayed
 		lstBoard = new JList(lstBoardModel);
 		txtNewMessage = new JTextField("Enter a message here.");
 		btnSubmit = new JButton("Submit");
+		
+		// Change the font of the JList
+		lstBoard.setFont(lstBoard.getFont().deriveFont(11));
+		
+		// Construct the add message controller and add it to the submit button
+		btnSubmit.addActionListener(new AddMessageController(lstBoardModel, this));
 
 		// Set the layout manager of this panel that controls the positions of the components
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS)); // components will  be arranged vertically
@@ -81,5 +86,12 @@ public class BoardPanel extends JPanel {
 		add(txtNewMessage);
 		add(Box.createVerticalStrut(20));
 		add(btnSubmit);
+	}
+	
+	/**
+	 * @return the txtNewMessage JTextField
+	 */
+	public JTextField getTxtNewMessage() {
+		return txtNewMessage;
 	}
 }

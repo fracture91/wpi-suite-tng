@@ -1,7 +1,10 @@
 package edu.wpi.cs.wpisuitetng.modules.postboard.model;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -52,7 +55,15 @@ public class PostBoardModel extends AbstractListModel implements Model {
 	 * @param newMessage the new message to add
 	 */
 	public void addMessage(String newMessage) {
-		messages.add(newMessage);
+		// Timestamp the message
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
+		
+		// Add the message
+		messages.add(dateFormat.format(date) + ":    " + newMessage);
+		
+		// Notify the model that it has changed so the GUI will be udpated
+		this.fireContentsChanged(this, 0, 0);
 	}
 	
 	/**
