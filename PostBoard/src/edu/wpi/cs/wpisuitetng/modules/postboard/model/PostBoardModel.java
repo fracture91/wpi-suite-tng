@@ -1,9 +1,17 @@
 package edu.wpi.cs.wpisuitetng.modules.postboard.model;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * This is a model for the post board. It contains all of the messages
@@ -14,7 +22,7 @@ import javax.swing.AbstractListModel;
  *
  */
 @SuppressWarnings({ "serial", "rawtypes" })
-public class PostBoardModel extends AbstractListModel {
+public class PostBoardModel extends AbstractListModel implements Model {
 	
 	/** The list of messages on the board */
 	private final List<String> messages;
@@ -77,4 +85,49 @@ public class PostBoardModel extends AbstractListModel {
 	public int getSize() {
 		return messages.size();
 	}
+	
+	/**
+	 * Returns a string representation of this model object, encoded in JSON.
+	 */
+	@Override
+	public String toJSON() {
+		String json;
+		final Gson gsonParser = new Gson();
+		Type listOfString = new TypeToken<List<String>>(){}.getType();
+		json = gsonParser.toJson(messages, listOfString);
+		return json;
+	}
+	
+	/**
+	 * Returns an instance of PostBoardModel constructed using the PostBoardModel
+	 * encoded as a JSON string.
+	 * @param json the json-encoded PostBoardModel to deserialize
+	 * @return the PostBoardModel contained in the given JSON
+	 */
+	public static PostBoardModel fromJson(String json) {
+		final Gson gsonParser = new Gson();
+		Type listOfString = new TypeToken<List<String>>(){}.getType();
+		List<String> messages = gsonParser.fromJson(json, listOfString);
+		return new PostBoardModel(messages);
+	}
+	
+	/*
+	 * The methods below are required by the model interface, however they
+	 * do not need to be implemented for a basic module like PostBoard. 
+	 */
+
+	@Override
+	public void save() {}
+
+	@Override
+	public void delete() {}
+
+	@Override
+	public Boolean identify(Object o) {return null;}
+
+	@Override
+	public Permission getPermission(User u) {return null;}
+
+	@Override
+	public void setPermission(Permission p, User u) {}
 }
