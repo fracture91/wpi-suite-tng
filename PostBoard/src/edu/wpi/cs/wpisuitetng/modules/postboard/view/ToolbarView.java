@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.postboard.view;
 
 import javax.swing.JToolBar;
 
+import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardModel;
+
 /**
  * This is the toolbar for the PostBoard module
  * 
@@ -16,14 +18,15 @@ public class ToolbarView extends JToolBar {
 
 	/**
 	 * Construct this view and all components in it.
+	 * @param boardModel 
 	 */
-	public ToolbarView() {
+	public ToolbarView(PostBoardModel boardModel) {
 		
 		// Prevent this toolbar from being moved
 		setFloatable(false);
 		
 		// Add the panel containing the toolbar buttons
-		toolbarPanel = new ToolbarPanel();
+		toolbarPanel = new ToolbarPanel(boardModel);
 		add(toolbarPanel);
 	}
 }

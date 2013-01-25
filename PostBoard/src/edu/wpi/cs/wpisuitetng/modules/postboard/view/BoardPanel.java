@@ -45,11 +45,12 @@ public class BoardPanel extends JPanel {
 	/**
 	 * Construct the panel, the three components, and add the
 	 * three components to the panel.
+	 * @param boardModel 
 	 */
-	public BoardPanel() {
+	public BoardPanel(PostBoardModel boardModel) {
 
 		// Construct the list box model
-		lstBoardModel = new PostBoardModel();
+		lstBoardModel = boardModel;
 		
 		// Construct the components to be displayed
 		lstBoard = new JList(lstBoardModel);
@@ -61,13 +62,13 @@ public class BoardPanel extends JPanel {
 		
 		// Construct the add message controller and add it to the submit button
 		btnSubmit.addActionListener(new AddMessageController(lstBoardModel, this));
-
+		
 		// Set the layout manager of this panel that controls the positions of the components
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS)); // components will  be arranged vertically
 		
 		// Put the listbox in a scroll pane
 		JScrollPane lstScrollPane = new JScrollPane(lstBoard);
-		lstScrollPane.setPreferredSize(new Dimension(300,300));
+		lstScrollPane.setPreferredSize(new Dimension(500,400));
 		
 		// Clear the contents of the text field when the user clicks on it
 		txtNewMessage.addMouseListener(new MouseAdapter() {

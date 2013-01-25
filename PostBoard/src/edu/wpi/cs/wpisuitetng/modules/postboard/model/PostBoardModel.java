@@ -1,20 +1,10 @@
 package edu.wpi.cs.wpisuitetng.modules.postboard.model;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * This is a model for the post board. It contains all of the messages
@@ -25,28 +15,16 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  *
  */
 @SuppressWarnings({ "serial", "rawtypes" })
-public class PostBoardModel extends AbstractListModel implements Model {
+public class PostBoardModel extends AbstractListModel {
 	
 	/** The list of messages on the board */
-	private final List<String> messages;
+	private List<PostBoardMessage> messages;
 	
 	/**
 	 * Constructs a new board with no messages.
 	 */
 	public PostBoardModel() {
-		messages = new ArrayList<String>();
-	}
-	
-	/**
-	 * Constructs a new board with the given list of messages
-	 * 
-	 * @param messages the list of messages to initialize the board with
-	 */
-	public PostBoardModel(List<String> messages) {
-		this();
-		for (String s : messages) {
-			this.messages.add(s);
-		}
+		messages = new ArrayList<PostBoardMessage>();
 	}
 
 	/**
@@ -54,24 +32,42 @@ public class PostBoardModel extends AbstractListModel implements Model {
 	 * 
 	 * @param newMessage the new message to add
 	 */
-	public void addMessage(String newMessage) {
-		// Timestamp the message
-		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
-		
+	public void addMessage(PostBoardMessage newMessage) {
 		// Add the message
-		messages.add(dateFormat.format(date) + ":    " + newMessage);
+		messages.add(newMessage);
 		
 		// Notify the model that it has changed so the GUI will be udpated
-		this.fireContentsChanged(this, 0, 0);
+		this.fireIntervalAdded(this, 0, 0);
 	}
 	
 	/**
-	 * Returns the list of messages
-	 * @return the list of messages
+	 * Adds the given array of messages to the board
+	 * 
+	 * @param messages the array of messages to add
 	 */
-	public List<String> getMessages() {
-		return messages;
+	public void addMessages(PostBoardMessage[] messages) {
+		for (int i = 0; i < messages.length; i++) {
+			this.messages.add(messages[i]);
+		}
+		this.fireIntervalAdded(this, 0, getSize() - 1);
+	}
+	
+	/**
+	 * Removes all messages from this model
+	 * 
+	 * NOTE: One cannot simply construct a new instance of
+	 * the model, because other classes in this module have
+	 * references to it. Hence, we manually remove each message
+	 * from the model.
+	 */
+	public void emptyModel() {
+		int oldSize = getSize();
+		Iterator<PostBoardMessage> iterator = messages.iterator();
+		while (iterator.hasNext()) {
+			iterator.next();
+			iterator.remove();
+		}
+		this.fireIntervalRemoved(this, 0, oldSize);
 	}
 	
 	/* 
@@ -83,7 +79,7 @@ public class PostBoardModel extends AbstractListModel implements Model {
 	 */
 	@Override
 	public Object getElementAt(int index) {
-		return messages.get(messages.size() - 1 - index);
+		return messages.get(messages.size() - 1 - index).toString();
 	}
 
 	/*
@@ -96,49 +92,4 @@ public class PostBoardModel extends AbstractListModel implements Model {
 	public int getSize() {
 		return messages.size();
 	}
-	
-	/**
-	 * Returns a string representation of this model object, encoded in JSON.
-	 */
-	@Override
-	public String toJSON() {
-		String json;
-		final Gson gsonParser = new Gson();
-		Type listOfString = new TypeToken<List<String>>(){}.getType();
-		json = gsonParser.toJson(messages, listOfString);
-		return json;
-	}
-	
-	/**
-	 * Returns an instance of PostBoardModel constructed using the PostBoardModel
-	 * encoded as a JSON string.
-	 * @param json the json-encoded PostBoardModel to deserialize
-	 * @return the PostBoardModel contained in the given JSON
-	 */
-	public static PostBoardModel fromJson(String json) {
-		final Gson gsonParser = new Gson();
-		Type listOfString = new TypeToken<List<String>>(){}.getType();
-		List<String> messages = gsonParser.fromJson(json, listOfString);
-		return new PostBoardModel(messages);
-	}
-	
-	/*
-	 * The methods below are required by the model interface, however they
-	 * do not need to be implemented for a basic module like PostBoard. 
-	 */
-
-	@Override
-	public void save() {}
-
-	@Override
-	public void delete() {}
-
-	@Override
-	public Boolean identify(Object o) {return null;}
-
-	@Override
-	public Permission getPermission(User u) {return null;}
-
-	@Override
-	public void setPermission(Permission p, User u) {}
 }
