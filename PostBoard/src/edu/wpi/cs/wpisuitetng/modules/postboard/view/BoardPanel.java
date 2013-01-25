@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardModel;
+
 /**
  * This class is a JPanel. It contains the actual post board, a text field
  * for entering a new message, and a submit button for submitting
@@ -38,7 +40,7 @@ public class BoardPanel extends JPanel {
 	 * This is a model for the lstBoard component. Basically it
 	 * contains the data to be displayed in the list box.
 	 */
-	private final DefaultListModel lstBoardModel;
+	private final PostBoardModel lstBoardModel;
 
 	/**
 	 * Construct the panel, the three components, and add the
@@ -47,10 +49,10 @@ public class BoardPanel extends JPanel {
 	public BoardPanel() {
 
 		// Construct the list box model
-		lstBoardModel = new DefaultListModel();
-		lstBoardModel.add(0, "hello");
-		lstBoardModel.add(0, "world");
-
+		lstBoardModel = new PostBoardModel();
+		lstBoardModel.addMessage("world");
+		lstBoardModel.addMessage("hello");
+		
 		// Construct the components to be displayed
 		lstBoard = new JList(lstBoardModel);
 		txtNewMessage = new JTextField("Enter a message here.");
