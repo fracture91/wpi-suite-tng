@@ -142,4 +142,25 @@ public class DefectManager implements EntityManager<Defect> {
 		return existingDefect;
 	}
 
+	@Override
+	public String advancedGet(Session arg0, String[] arg1)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String advancedPost(Session arg0, String arg1, String arg2)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String advancedPut(Session arg0, String[] arg1, String arg2)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

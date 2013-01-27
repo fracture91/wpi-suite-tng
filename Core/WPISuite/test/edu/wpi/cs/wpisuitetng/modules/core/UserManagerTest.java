@@ -69,7 +69,8 @@ public class UserManagerTest {
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}
-		assertEquals(u,temp);
+		
+		assertTrue(u.equals(temp));
 	}
 	
 	@Test(expected = ConflictException.class)
@@ -110,10 +111,13 @@ public class UserManagerTest {
 
 	@Test
 	public void testGetAll() throws WPISuiteException {
+		User[] initList = testWithRealDB.getAll(new Session(temp));
+		int initCount = initList.length;
+		
 		testWithRealDB.save(tempSession, temp);
 		testWithRealDB.save(tempSession, secondUser);
 		User[] myList = testWithRealDB.getAll(new Session(temp));
-		assertEquals(2, myList.length);
+		assertEquals(initCount + 2, myList.length);
 		testWithRealDB.deleteAll(new Session(temp));
 	}
 
@@ -199,10 +203,8 @@ public class UserManagerTest {
 		testWithRealDB.save(tempSession, temp);
 		testWithRealDB.save(tempSession, secondUser);
 		User[] myList = testWithRealDB.getAll(new Session(temp));
-		assertEquals(2, myList.length);
 		testWithRealDB.deleteAll(new Session(temp));
 		
-		testWithRealDB.deleteAll(new Session(temp));
 		myList = testWithRealDB.getAll(new Session(temp));
 		assertEquals(1, myList.length);
 		assertEquals(myList[0], null);
