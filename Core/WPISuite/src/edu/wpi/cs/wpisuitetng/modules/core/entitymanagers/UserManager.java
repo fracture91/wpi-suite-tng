@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -42,10 +44,18 @@ public class UserManager implements EntityManager<User> {
 	Gson gson;
 	Data data;
 
+	/**
+	 * Creates a UserManager operating on the given Data.
+	 * 	Attaches the custom serializer and deserializers for the Gson library.
+	 * @param data
+	 */
 	public UserManager(Data data)
 	{
 		this.data = data;
-		gson = new Gson();
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(this.user, new UserDeserializer());
+		
+		this.gson = builder.create();
 	}
 	
 	@Override
@@ -60,6 +70,10 @@ public class UserManager implements EntityManager<User> {
 		
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
+			String newPassword = UserDeserializer.parsePassword(content);
+			//TODO: password hashing
+			p.setPassword(newPassword);
+			
 			save(s,p);
 		}
 		else
@@ -169,42 +183,46 @@ public class UserManager implements EntityManager<User> {
 	{
 		// TODO: permissions checking here
 		
-		// convert updateString into a Map, then load into the User
+		User changes;
+		
+		// Inflate the changeSet into a User object.
 		try
 		{
-			HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
-		
-			// check if the changeSet contains each field of User
-			if(changeMap.containsKey("name"))
-			{
-				toUpdate.setName((String)changeMap.get("name"));
-			}
-			
-			if(changeMap.containsKey("username"))
-			{
-				toUpdate.setUserName((String)changeMap.get("username"));
-			}
-			
-			if(changeMap.containsKey("idNum"))
-			{
-				toUpdate.setIdNum((Integer)changeMap.get("idNum"));
-			}
-			
-			if(changeMap.containsKey("role"))
-			{
-				toUpdate.setRole(Role.valueOf((String)changeMap.get("role")));
-			}
+			changes = this.gson.fromJson(changeSet, this.user);
 		}
-		catch(Exception e)
+		catch(JsonParseException e)
 		{
-			throw new WPISuiteException(); // on Mapping failure
+			throw new WPISuiteException();
+		}
+		
+		// Resolve differences toUpdate using changes, field-by-field.
+		toUpdate.setIdNum(changes.getIdNum());
+		
+		if(changes.getName() != null)
+		{
+			toUpdate.setName(changes.getName());
+		}
+		
+		if(changes.getUsername() != null)
+		{
+			toUpdate.setUserName(changes.getUsername());
+		}
+		
+		if(!changes.getRole().equals(toUpdate.getRole()))
+		{
+			toUpdate.setRole(changes.getRole());
 		}
 		
 		// save the changes back
 		this.save(s, toUpdate);
 		
-		// check for changes in each field
 		return toUpdate;
+	}
+
+	@Override
+	public User update(Session s, String content) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

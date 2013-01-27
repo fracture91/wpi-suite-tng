@@ -15,6 +15,8 @@ package edu.wpi.cs.wpisuitetng.modules;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.annotations.Expose;
+
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -25,7 +27,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public abstract class AbstractModel implements Model {
 
-	private Map<User, Permission> permissionMap = new HashMap<User, Permission>();
+	@Expose private Map<User, Permission> permissionMap = new HashMap<User, Permission>(); // annotation for User serialization
+	
 	@Override
 	public Permission getPermission(User u) 
 	{
