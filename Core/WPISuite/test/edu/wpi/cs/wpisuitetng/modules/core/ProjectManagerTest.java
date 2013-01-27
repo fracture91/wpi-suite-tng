@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
@@ -41,6 +42,8 @@ public class ProjectManagerTest {
 		test = new ProjectManager(MockDataStore.getMockDataStore());
 		testWithRealDB = new ProjectManager(DataStore.getDataStore());
 		temp = new Project("test","8");
+		tempUser = new User("name", "username", "password", 1);
+		temp.setPermission(Permission.WRITE, tempUser);
 		updateTemp = new Project("0", "proj0");
 		conflict = new Project("test", "5");
 		tempSession = new Session(tempUser);
