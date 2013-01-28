@@ -132,8 +132,8 @@ public class ProjectManagerTest {
 		).save(null, null);
 	}
 
-	@Test
-	public void testDeleteEntityFail() throws NotFoundException {
+	@Test(expected = WPISuiteException.class)
+	public void testDeleteEntityFail() throws WPISuiteException, NotFoundException {
 		new ProjectManager(new Data(){
 			@Override
 			public <T> boolean save(T aTNG) {return false;}
@@ -161,7 +161,7 @@ public class ProjectManagerTest {
 	}
 	
 	@Test
-	public void testDeleteEntity() throws NotFoundException
+	public void testDeleteEntity() throws WPISuiteException, NotFoundException
 	{
 		new ProjectManager(new Data(){
 			@Override
@@ -215,7 +215,7 @@ public class ProjectManagerTest {
 	{
 		Session ses = null;
 		String updateString = "{ \"idNum\": \"2\", \"name\": \"proj2\" }";
-		Project newTemp = this.test.update(ses, updateTemp, updateString);
+		Project newTemp = this.test.update(tempSession, updateTemp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
 		
