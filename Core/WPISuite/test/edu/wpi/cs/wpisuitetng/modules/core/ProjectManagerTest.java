@@ -45,6 +45,7 @@ public class ProjectManagerTest {
 		tempUser = new User("name", "username", "password", 1);
 		temp.setPermission(Permission.WRITE, tempUser);
 		updateTemp = new Project("0", "proj0");
+		updateTemp.setPermission(Permission.WRITE, tempUser);
 		conflict = new Project("test", "5");
 		tempSession = new Session(tempUser);
 		json = new Gson();
@@ -184,7 +185,7 @@ public class ProjectManagerTest {
 				return null;
 			}
 			}
-		).deleteEntity(null, temp.getIdNum());
+		).deleteEntity(tempSession, temp.getIdNum());
 	}
 
 	@Test
