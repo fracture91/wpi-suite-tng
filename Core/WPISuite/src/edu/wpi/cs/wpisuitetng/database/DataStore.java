@@ -68,6 +68,18 @@ public class DataStore implements Data {
 		return true;
 	}
 	
+	
+	public <T> boolean save(T aTNG, int depth)
+	{
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		theDB.activate(aTNG, depth);
+			//ObjectContainer client = server.openClient();
+			theDB.store(aTNG);
+			System.out.println("Stored " + aTNG);
+			theDB.commit();
+		return true;
+	}
 	/**
 	 *  For this function to work you need to have a getter that takes zero arguments,
 	 *  and has the name
@@ -86,7 +98,6 @@ public class DataStore implements Data {
 	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -124,6 +135,48 @@ public class DataStore implements Data {
 	}
 	
 	
+	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue, int depth){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		//ObjectContainer client = server.openClient();
+		Method[] allMethods = anObjectQueried.getMethods();
+		Method methodToBeSaved = null;
+		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+			if(m.getName().equalsIgnoreCase("get"+aFieldName)){
+				methodToBeSaved = m; //saves the method called "get" + aFieldName
+			}
+		}
+		//TODO: IF Null solve this problem...
+		final Method theGetter = methodToBeSaved;
+		
+		List<Model> result = theDB.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
+				try {
+					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);//objects that have aFieldName equal to theGivenValue get added to the list 
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;         
+				}
+			}
+		});
+		theDB.activate(result, depth);
+		List<Model> activatedResult = retrieve(anObjectQueried, aFieldName, theGivenValue);
+	
+		System.out.println(activatedResult);
+		theDB.commit();
+		return activatedResult;
+	}
+	
+	
 	/**
 	 * Retrieves all objects of the given Class. 
 	 * @param aSample an object of the class we want to retrieve All of
@@ -145,7 +198,20 @@ public class DataStore implements Data {
 	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		//ObjectContainer client = server.openClient();
+		ObjectSet<T> result = theDB.queryByExample(aTNG);
+	    T found = (T) result.next();
+	    theDB.delete(found);
+		theDB.commit();
+		//return "Deleted "+aTNG;
+		return found;
 		
+	}
+	
+	public <T> T delete(T aTNG, int depth){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		theDB.activate(aTNG, depth);
 		//ObjectContainer client = server.openClient();
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
 	    T found = (T) result.next();
@@ -187,6 +253,41 @@ public class DataStore implements Data {
 	 */
 	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue){
 		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID);
+		Object theObject;
+		for(int i = 0; i < objectsToUpdate.size(); i++){
+			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
+			Method[] allMethods = objectClass.getMethods();
+			Method methodToBeSaved = null;
+			for(Method m: allMethods){
+				if(m.getName().equalsIgnoreCase("set"+changeField)){
+					methodToBeSaved = m;
+				}
+			}
+			//TODO: IF Null solve this problem...
+			final Method theSetter = methodToBeSaved;
+			
+			try {
+				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i), changeValue);
+				save(theObject);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			theDB.commit();
+			
+			
+		}
+	}
+	
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue, int depth){
+		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID, depth);
 		Object theObject;
 		for(int i = 0; i < objectsToUpdate.size(); i++){
 			final Class <?> objectClass = objectsToUpdate.get(i).getClass();
