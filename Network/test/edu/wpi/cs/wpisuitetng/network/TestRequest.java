@@ -16,13 +16,8 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 public class TestRequest {
 	class MockObserver implements RequestObserver {
 
-		private boolean updateCalled;
-		private ResponseModel response;
-
 		public MockObserver() {
 			super();
-			updateCalled = false;
-			response = null;
 		}
 
 		@Override
@@ -30,8 +25,6 @@ public class TestRequest {
 			synchronized (this) {
 				notifyAll(  );
 			}
-			// get the response from the request
-			response = iReq.getResponse();
 		}
 
 		@Override

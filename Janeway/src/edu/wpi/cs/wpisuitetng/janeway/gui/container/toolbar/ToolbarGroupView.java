@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.Hoverable;
 

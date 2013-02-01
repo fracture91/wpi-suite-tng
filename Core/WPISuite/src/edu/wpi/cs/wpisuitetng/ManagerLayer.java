@@ -33,6 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.CommentManager;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
 
 /**
@@ -70,6 +71,7 @@ public class ManagerLayer {
 		map.put("coreproject", new ProjectManager(data));
 		map.put("coreuser", new UserManager(data));
 		map.put("defecttrackerdefect", new DefectManager(data));
+		map.put("defecttrackercomment", new CommentManager(data));
 		Session s = null;
 		
 		try {

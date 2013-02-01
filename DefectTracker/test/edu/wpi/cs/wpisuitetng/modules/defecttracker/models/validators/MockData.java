@@ -12,11 +12,11 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * A mock data implementation for defect validation testing. 
  */
-public class MockDefectData implements Data {
+public class MockData implements Data {
 
 	private final Set<Model> models;
 	
-	public MockDefectData(Set<Model> models) {
+	public MockData(Set<Model> models) {
 		this.models = models;
 	}
 
@@ -33,7 +33,7 @@ public class MockDefectData implements Data {
 	}
 
 	@Override
-	public List<Model> retrieve(Class type, String fieldName, Object value) {
+	public List<Model> retrieve(@SuppressWarnings("rawtypes") Class type, String fieldName, Object value) {
 		List<Model> rv = new ArrayList<Model>();
 		for(Model model : models) {
 			if(!type.isInstance(model)) {
@@ -75,7 +75,7 @@ public class MockDefectData implements Data {
 	}
 
 	@Override
-	public void update(Class arg0, String arg1, Object arg2, String arg3,
+	public void update(@SuppressWarnings("rawtypes") Class arg0, String arg1, Object arg2, String arg3,
 			Object arg4) {
 		// TODO Auto-generated method stub
 
