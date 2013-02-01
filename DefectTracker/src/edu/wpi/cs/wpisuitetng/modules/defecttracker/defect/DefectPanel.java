@@ -140,11 +140,12 @@ public class DefectPanel extends JPanel {
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
-		defectEventView = new DefectEventView(model);
-		commentPanel = new NewCommentPanel();
+		defectEventView = new DefectEventView(model, this);
+		commentPanel = new NewCommentPanel(getModel(), this);
 		
 		if (editMode == Mode.CREATE) {
 			cmbStatus.setEnabled(false);
+			commentPanel.setInputEnabled(false);
 		}
 
 		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
@@ -269,6 +270,7 @@ public class DefectPanel extends JPanel {
 		cmbStatus.setEnabled(enabled);
 		txtAssignee.setEnabled(enabled);
 		tagPanel.setInputEnabled(enabled);
+		commentPanel.setInputEnabled(enabled);
 	}
 	
 	/**
@@ -301,6 +303,8 @@ public class DefectPanel extends JPanel {
 		tagPanel.updateModel(defect);
 		
 		updateFields();
+		defectEventView.update(defect);
+		refresh();
 	}
 
 	/**
@@ -317,8 +321,7 @@ public class DefectPanel extends JPanel {
 		if (editMode == Mode.EDIT) {
 			lblCreatedDate.setText("Created:");
 			txtCreatedDate.setText(model.getCreationDate().toString());
-		}
-		if (editMode == Mode.EDIT) {
+
 			lblModifiedDate.setText("Modified:");
 			txtModifiedDate.setText(model.getLastModifiedDate().toString());
 		}
@@ -334,6 +337,20 @@ public class DefectPanel extends JPanel {
 		cmbStatusListener.checkIfUpdated();
 		txtCreatorListener.checkIfUpdated();
 		txtAssigneeListener.checkIfUpdated();
+	}
+	
+	/**
+	 * Refresh the contents of this panel (e.g. invalidate and repaint everything)
+	 */
+	public void refresh() {
+		// Repaint the screen
+		getParent().invalidate();
+		invalidate();
+		defectEventView.invalidate();
+		getParent().validate();
+		getParent().repaint();
+		repaint();
+		defectEventView.repaint();
 	}
 
 	/**
@@ -404,5 +421,12 @@ public class DefectPanel extends JPanel {
 	 */
 	public JTextField getCreatorField() {
 		return txtCreator;
+	}
+	
+	/**
+	 * @return the inner DefectEventView
+	 */
+	public DefectEventView getDefectEventView() {
+		return defectEventView;
 	}
 }

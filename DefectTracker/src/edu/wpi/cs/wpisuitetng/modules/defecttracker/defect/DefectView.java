@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
@@ -27,6 +28,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	private JButton saveButton;
 	private DefectPanel mainPanel;
 	private SaveDefectController controller;
+	final JScrollPane mainPanelScrollPane;
 	private Tab containingTab;
 	private boolean inputEnabled = true;
 
@@ -69,7 +71,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		// Instantiate the main create defect panel
 		mainPanel = new DefectPanel(this, defect, editMode);
 		this.setLayout(new BorderLayout());
-		final JScrollPane mainPanelScrollPane = new JScrollPane(mainPanel);
+		mainPanelScrollPane = new JScrollPane(mainPanel);
 		
 		// Prevent content of scroll pane from smearing (credit: https://gist.github.com/303464)
 		mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
@@ -134,5 +136,13 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		containingTab.setTitle("Defect #" + defect.getId());
 		containingTab.setToolTipText("View defect " + defect.getTitle());
 		buttonGroup.setName("Edit Defect");
+	}
+	
+	/**
+	 * Scrolls the scroll pane containing the main panel to the bottom
+	 */
+	public void scrollToBottom() {
+		JScrollBar vBar = mainPanelScrollPane.getVerticalScrollBar();
+		vBar.setValue(vBar.getMaximum());
 	}
 }

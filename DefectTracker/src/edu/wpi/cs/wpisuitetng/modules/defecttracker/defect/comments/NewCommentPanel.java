@@ -11,17 +11,29 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+
+/**
+ * A panel containing a form for adding a new comment to a defect
+ */
 @SuppressWarnings("serial")
 public class NewCommentPanel extends JPanel {
 
+	
 	private final JTextArea commentField;
 	private final JButton addComment;
 	private final JLabel addCommentLabel;
-	
+
 	private static final int VERTICAL_PADDING = 5;
 	private static final int COMMENT_FIELD_HEIGHT = 50;
-	
-	public NewCommentPanel() {
+
+	/**
+	 * Construct the panel, add and layout components.
+	 * @param model the defect model
+	 * @param parentView the parent view
+	 */
+	public NewCommentPanel(Defect model, DefectPanel parentView) {
 		commentField = new JTextArea();
 		commentField.setLineWrap(true);
 		commentField.setWrapStyleWord(true);
@@ -29,6 +41,8 @@ public class NewCommentPanel extends JPanel {
 
 		addComment = new JButton("Add Comment");
 		addCommentLabel = new JLabel("Add a new comment:");
+		
+		addComment.setAction(new SaveCommentAction(new SaveCommentController(this, model, parentView)));
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -51,5 +65,27 @@ public class NewCommentPanel extends JPanel {
 		this.add(addCommentLabel);
 		this.add(commentFieldPane);
 		this.add(addComment);
+	}
+	
+	/**
+	 * @return the comment JTextArea
+	 */
+	public JTextArea getCommentField() {
+		return commentField;
+	}
+	
+	/**
+	 * Enables and disables input on this panel.
+	 * @param value if value is true, input is enabled, otherwise input is disabled.
+	 */
+	public void setInputEnabled(boolean value) {
+		commentField.setEnabled(value);
+		addComment.setEnabled(value);
+		if (value) {
+			addCommentLabel.setForeground(Color.black);
+		}
+		else {
+			addCommentLabel.setForeground(Color.gray);
+		}
 	}
 }
