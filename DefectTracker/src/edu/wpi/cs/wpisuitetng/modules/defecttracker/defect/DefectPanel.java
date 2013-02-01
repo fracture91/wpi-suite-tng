@@ -13,6 +13,7 @@ import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.comments.NewCommentPanel;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
@@ -40,6 +41,7 @@ public class DefectPanel extends JPanel {
 	protected JTextField txtAssignee;
 	protected TagPanel tagPanel;
 	protected DefectEventView defectEventView;
+	protected NewCommentPanel commentPanel;
 	
 	protected JLabel lblCreatedDate;
 	protected JLabel lblModifiedDate;
@@ -139,6 +141,7 @@ public class DefectPanel extends JPanel {
 		txtAssignee = new JTextField(20);
 		tagPanel = new TagPanel(model);
 		defectEventView = new DefectEventView(model);
+		commentPanel = new NewCommentPanel();
 		
 		if (editMode == Mode.CREATE) {
 			cmbStatus.setEnabled(false);
@@ -220,8 +223,14 @@ public class DefectPanel extends JPanel {
 		
 		layout.putConstraint(SpringLayout.NORTH, defectEventView, VERTICAL_PADDING, SpringLayout.SOUTH, tagPanel);
 		layout.putConstraint(SpringLayout.WEST, defectEventView, 0, SpringLayout.WEST, tagPanel);
-		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);
-		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
+		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);		
+		//layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
+		
+		// new
+		layout.putConstraint(SpringLayout.NORTH, commentPanel, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
+		layout.putConstraint(SpringLayout.WEST, commentPanel, 0, SpringLayout.WEST, defectEventView);
+		layout.putConstraint(SpringLayout.EAST, commentPanel, 0, SpringLayout.EAST, defectEventView);
+		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, commentPanel);
 
 		SpringLayout.Constraints defectPanelConstraint = layout.getConstraints(this);
 		defectPanelConstraint.setHeight(Spring.sum(Spring.constant(defectEventView.getHeight()), defectPanelConstraint.getConstraint(SpringLayout.SOUTH)));
@@ -243,6 +252,7 @@ public class DefectPanel extends JPanel {
 		add(txtAssignee);
 		add(tagPanel);
 		add(defectEventView);
+		add(commentPanel);
 	}
 
 	/**

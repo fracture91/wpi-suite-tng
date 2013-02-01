@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.comments.ViewCommentPanel;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
@@ -28,7 +29,7 @@ public class DefectEventView extends JPanel {
 					defectEventPanels.add(new DefectChangesetPanel((DefectChangeset)event));
 				}
 				else if (event instanceof Comment) {
-					defectEventPanels.add(new CommentPanel((Comment) event));
+					defectEventPanels.add(new ViewCommentPanel((Comment) event));
 				}
 			}
 	
