@@ -208,11 +208,11 @@ public class UserManager implements EntityManager<User> {
 		}
 		catch(JsonParseException e)
 		{
-			throw new SerializationException("Error inflating the changeset.");
+			throw new SerializationException("Error inflating the changeset: " + e.getMessage());
 		}
 
 		// Resolve differences toUpdate using changes, field-by-field.
-		toUpdate.setIdNum(changes.getIdNum());
+		toUpdate.setIdNum(changes.getIdNum()); // TODO: check if IDnums exist... should we even be updating the IdNum ever?
 
 		if(changes.getName() != null)
 		{
