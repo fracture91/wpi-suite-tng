@@ -344,13 +344,7 @@ public class DefectPanel extends JPanel {
 	 */
 	public void refresh() {
 		// Repaint the screen
-		getParent().invalidate();
-		invalidate();
-		defectEventView.invalidate();
-		getParent().validate();
-		getParent().repaint();
-		repaint();
-		defectEventView.repaint();
+		getParent().refresh();
 	}
 
 	/**

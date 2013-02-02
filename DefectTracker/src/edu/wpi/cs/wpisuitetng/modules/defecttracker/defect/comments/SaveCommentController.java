@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.comments;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
@@ -50,8 +51,13 @@ public class SaveCommentController {
 	 * Add the comment to the view if the server responded with a success message
 	 * @param response the response from the server
 	 */
-	public void success(ResponseModel response) {
-		parentView.getDefectEventView().addComment(Comment.fromJson(response.getBody()));
+	public void success(final ResponseModel response) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				parentView.getDefectEventView().addComment(Comment.fromJson(response.getBody()));
+			}
+		});
 	}
 	
 	/**
@@ -59,6 +65,10 @@ public class SaveCommentController {
 	 * @param response the response from the server
 	 */
 	public void failure(ResponseModel response) {
-		JOptionPane.showMessageDialog(parentView, "An error occurred sending your comment to the server.", "Error sending comment!", JOptionPane.ERROR_MESSAGE);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JOptionPane.showMessageDialog(parentView, "An error occurred sending your comment to the server.", "Error sending comment!", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 	}
 }

@@ -67,9 +67,8 @@ public class DefectEventView extends JPanel {
 			// TODO log this error
 		}
 		
-		// Refresh this view
-		this.validate();
-		this.repaint();
+		// Layout changed, invalidate this panel
+		invalidate();
 	}
 	
 	/**
@@ -83,8 +82,9 @@ public class DefectEventView extends JPanel {
 		this.add(panel);
 		
 		// Refresh the parent view
+		invalidate();
 		view.refresh();
-				
+		
 		// Scroll the scroll bar to the bottom
 		view.getParent().scrollToBottom();
 	}

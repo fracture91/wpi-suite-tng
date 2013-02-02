@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import javax.swing.SwingUtilities;
+
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
@@ -34,12 +36,17 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
 		// parse the defect from the body
-		Defect defect = Defect.fromJSON(response.getBody());
+		final Defect defect = Defect.fromJSON(response.getBody());
 
 		// make sure the defect isn't null
 		if (defect != null) {
-			((DefectPanel) view.getDefectPanel()).updateModel(defect);
-			view.setEditModeDescriptors(defect);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					((DefectPanel) view.getDefectPanel()).updateModel(defect);
+					view.setEditModeDescriptors(defect);
+				}
+			});
 		}
 		else {
 			// TODO notify user of server error
@@ -64,6 +71,11 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 	 * Should always be run when an update method is called.
 	 */
 	private void always() {
-		view.setInputEnabled(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				view.setInputEnabled(true);
+			}
+		});
 	}
 }

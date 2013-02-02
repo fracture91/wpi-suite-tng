@@ -1,15 +1,16 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -72,15 +73,16 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		mainPanel = new DefectPanel(this, defect, editMode);
 		this.setLayout(new BorderLayout());
 		mainPanelScrollPane = new JScrollPane(mainPanel);
+		mainPanelScrollPane.getVerticalScrollBar().setUnitIncrement(10);
 		
 		// Prevent content of scroll pane from smearing (credit: https://gist.github.com/303464)
 		mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
-                SwingUtilities.invokeLater(new Runnable(){
-                    public void run(){
+                //SwingUtilities.invokeLater(new Runnable(){
+                //    public void run(){
                         mainPanelScrollPane.repaint();
-                    }
-                });
+                //    }
+               // });
             }
         });
 		this.add(mainPanelScrollPane, BorderLayout.CENTER);
@@ -144,5 +146,15 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	public void scrollToBottom() {
 		JScrollBar vBar = mainPanelScrollPane.getVerticalScrollBar();
 		vBar.setValue(vBar.getMaximum());
+	}
+	
+	public void refresh() {
+		// What follows is necessary to get the GUI to refresh itself appropriately, but there
+		// is probably a better way.
+		Dimension frameSize = JanewayFrame.getInstance().getSize();
+		JanewayFrame.getInstance().setMinimumSize(new Dimension(frameSize.width + 20, frameSize.height + 20));
+		JanewayFrame.getInstance().pack();
+		JanewayFrame.getInstance().setMinimumSize(frameSize);
+		JanewayFrame.getInstance().pack();
 	}
 }
