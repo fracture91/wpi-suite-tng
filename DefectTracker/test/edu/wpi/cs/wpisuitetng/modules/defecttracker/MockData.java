@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.models.validators;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,13 +10,13 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
- * A mock data implementation for defect validation testing. 
+ * A mock data implementation for server-side testing. 
  */
-public class MockDefectData implements Data {
+public class MockData implements Data {
 
 	private final Set<Model> models;
 	
-	public MockDefectData(Set<Model> models) {
+	public MockData(Set<Model> models) {
 		this.models = models;
 	}
 

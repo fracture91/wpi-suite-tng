@@ -16,6 +16,7 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
@@ -76,7 +77,7 @@ public class DefectValidatorTest {
 		goodUpdatedDefect.getTags().add(tagCopy);
 		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
 		
-		db = new MockDefectData(models);
+		db = new MockData(models);
 		validator = new DefectValidator(db);
 	}
 	
