@@ -64,7 +64,7 @@ public class DefectValidatorTest {
 		ignoredEvents = new ArrayList<DefectEvent>();
 		goodNewDefect.setEvents(ignoredEvents); // ignored
 		
-		Set<Model> models = new HashSet<Model>();
+		Set<Object> models = new HashSet<Object>();
 		models.add(tag);
 		models.add(bob);
 		models.add(existingDefect);

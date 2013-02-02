@@ -78,7 +78,6 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public void save(Session s, Defect model) {
-		// TODO: validate updates
 		db.save(model);
 	}
 
