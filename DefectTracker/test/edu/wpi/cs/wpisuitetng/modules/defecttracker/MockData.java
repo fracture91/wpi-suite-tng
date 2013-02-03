@@ -26,14 +26,25 @@ public class MockData implements Data {
 
 	@Override
 	public <T> T delete(T arg0) {
-		// TODO Auto-generated method stub
+		if(objects.contains(arg0)) {
+			objects.remove(arg0);
+			return arg0;
+		}
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> List<T> deleteAll(T arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		List<T> deleted = new ArrayList<T>();
+		for(Object obj : objects) {
+			if(arg0.getClass().isInstance(obj)) {
+				deleted.add((T) obj);
+			}
+		}
+		// can't remove in the loop, otherwise you get an exception
+		objects.removeAll(deleted); 
+		return deleted;
 	}
 
 	@Override

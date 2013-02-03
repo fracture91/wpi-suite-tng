@@ -15,7 +15,10 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -36,9 +39,14 @@ public class DefectManagerTest {
 	User bob;
 	Defect goodUpdatedDefect;
 	Tag tag;
+	Session adminSession;
 	
 	@Before
 	public void setUp() throws Exception {
+		User admin = new User("admin", "admin", "1234", 27);
+		admin.setRole(Role.ADMIN);
+		adminSession = new Session(admin);
+		
 		existingUser = new User("joe", "joe", "1234", 2);
 		existingDefect = new Defect(1, "An existing defect", "", existingUser);
 		existingDefect.setCreationDate(new Date(0));
@@ -58,6 +66,7 @@ public class DefectManagerTest {
 		Set<Object> models = new HashSet<Object>();
 		models.add(existingDefect);
 		models.add(existingUser);
+		models.add(admin);
 		db = new MockData(models);
 		manager = new DefectManager(db);
 	}
@@ -119,6 +128,44 @@ public class DefectManagerTest {
 	}
 	
 	@Test
+	public void testDelete() throws WPISuiteException {
+		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
+		assertTrue(manager.deleteEntity(adminSession, "1"));
+		assertEquals(0, db.retrieve(Defect.class, "id", 1).size());
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void testDeleteMissing() throws WPISuiteException {
+		manager.deleteEntity(adminSession, "4534");
+	}
+	
+	@Test(expected=UnauthorizedException.class)
+	public void testDeleteNotAllowed() throws WPISuiteException {
+		manager.deleteEntity(defaultSession, "1");
+	}
+	
+	@Test
+	public void testDeleteAll() throws WPISuiteException {
+		Defect anotherDefect = new Defect(-1, "a title", "a description", existingUser);
+		manager.makeEntity(defaultSession, anotherDefect.toJSON());
+		assertEquals(2, db.retrieveAll(new Defect()).size());
+		manager.deleteAll(adminSession);
+		assertEquals(0, db.retrieveAll(new Defect()).size());
+	}
+	
+	@Test(expected=UnauthorizedException.class)
+	public void testDeleteAllNotAllowed() throws WPISuiteException {
+		manager.deleteAll(defaultSession);
+	}
+	
+	@Test
+	public void testDeleteAllWhenEmpty() throws WPISuiteException {
+		manager.deleteAll(adminSession);
+		manager.deleteAll(adminSession);
+		// no exceptions
+	}
+	
+	@Test
 	public void testCount() {
 		assertEquals(1, manager.Count());
 	}
@@ -163,6 +210,21 @@ public class DefectManagerTest {
 		// there were no changes - make sure lastModifiedDate is same, no new events
 		assertEquals(origLastModified, updated.getLastModifiedDate());
 		assertEquals(0, updated.getEvents().size());
+	}
+	
+	@Test(expected=NotImplementedException.class)
+	public void testAdvancedGet() throws WPISuiteException {
+		manager.advancedGet(defaultSession, new String[0]);
+	}
+	
+	@Test(expected=NotImplementedException.class)
+	public void testAdvancedPost() throws WPISuiteException {
+		manager.advancedPost(defaultSession, "", "");
+	}
+	
+	@Test(expected=NotImplementedException.class)
+	public void testAdvancedPut() throws WPISuiteException {
+		manager.advancedPut(defaultSession, new String[0], "");
 	}
 
 }
