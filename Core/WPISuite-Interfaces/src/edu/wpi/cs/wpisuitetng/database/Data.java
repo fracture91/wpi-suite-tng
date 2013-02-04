@@ -14,6 +14,7 @@ package edu.wpi.cs.wpisuitetng.database;
 
 import java.util.List;
 
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 public interface Data 
@@ -60,4 +61,5 @@ public interface Data
 	public <T> List<T> retrieveAll(T aSample);
 	public <T> List<T> deleteAll(T aSample);
 	public List<Model> notRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
+	public List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException;
 }

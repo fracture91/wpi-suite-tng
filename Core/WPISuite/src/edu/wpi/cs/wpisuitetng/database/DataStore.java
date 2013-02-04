@@ -13,6 +13,7 @@ package edu.wpi.cs.wpisuitetng.database;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
@@ -124,7 +125,7 @@ public class DataStore implements Data {
 	}
 
 	
-	public List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException{
+	public List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		final int aFieldNameListSize = aFieldNameList.length;
@@ -135,28 +136,32 @@ public class DataStore implements Data {
 		}
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
-		List<Method> methodsToBeSaved = null;
-		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
-			int i=0;
-			while(i <= aFieldNameListSize)
-			{
-				if(m.getName().equalsIgnoreCase("get" + aFieldNameList[i])){
-					methodsToBeSaved.add(m); //saves the method called "get" + aFieldName
-			}
-			}
+		int i=0;
+		List<Method> methodsToBeSaved = new ArrayList<Method>();
+		while(i < aFieldNameListSize){
+				for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+					if(i == aFieldNameListSize){
+						//do nothing
+					}
+					else if(m.getName().equalsIgnoreCase("get" + aFieldNameList[i])){
+						methodsToBeSaved.add(m); //saves the method called "get" + aFieldName
+						i++;
+					}
+				}
 		}
 		//TODO: IF Null solve this problem...
-		final  List<Method> theGetter = methodsToBeSaved;
+		final List<Method> theGetter = methodsToBeSaved;
 		final int theGettersSize = theGetter.size();
 		int j = 0;
-		List<Model> result = null; 
-		for(j=0; j > theGettersSize ; j++){
+		List<Model> result = new ArrayList<Model>(); 
+		for(j=0; j < theGettersSize ; j++){
+		final int finalcount = j;
 		result.add((Model) theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
 					
-					{
-					theGetter.get(j).invoke(anObjectQueried.cast(anObject)).equals(theGivenValueList.get(j));//objects that have aFieldName equal to theGivenValue get added to the list 
+					{   if(theGetter.get(finalcount).equals(theGivenValueList.get(finalcount)))
+						(theGetter.get(finalcount).invoke(anObjectQueried.cast(anObject))).equals(theGivenValueList.get(finalcount));//objects that have aFieldName equal to theGivenValue get added to the list 
 					}
 					} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
@@ -179,7 +184,6 @@ public class DataStore implements Data {
 		//client.close();
 		return result;
 	}
-	*/
 	
 	
 	
