@@ -6,13 +6,16 @@ import java.util.HashSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.comments.NewCommentPanel;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.defectevents.model.DefectEventListModel;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.defectevents.view.DefectEventListCellRenderer;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
@@ -20,17 +23,22 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 /**
  * Panel to display the fields of a Defect and allow editing
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "rawtypes"})
 public class DefectPanel extends JPanel {
 	public enum Mode {
 		CREATE,
 		EDIT;
 	}
 
+	/** The parent view **/
 	protected DefectView parent;
 	
+	/** The Defect displayed in this panel */
 	protected Defect model;
 
+	/*
+	 * Form elements
+	 */
 	protected JTextField txtTitle;
 	protected JTextArea txtDescription;
 	protected JComboBox cmbStatus;
@@ -38,21 +46,42 @@ public class DefectPanel extends JPanel {
 	protected JLabel txtModifiedDate;
 	protected JTextField txtCreator;
 	protected JTextField txtAssignee;
-	protected TagPanel tagPanel;
-	protected DefectEventView defectEventView;
-	
 	protected JLabel lblCreatedDate;
 	protected JLabel lblModifiedDate;
-
+	
+	/** The panel containing GUI components for adding tags to defects */
+	protected TagPanel tagPanel;
+	
+	/** A JList containing the change history for the defect */
+	protected JList changeSetsList;
+	
+	/** The data model for the ChangeSet list */
+	protected DefectEventListModel defectEventListModel;
+	
+	/** A panel containing GUI components for adding comments to the defect */
+	protected NewCommentPanel commentPanel;
+	
+	/** The layout manager for this panel */
+	protected SpringLayout layout;
+	
+	/*
+	 * Listeners for the form fields
+	 */
 	protected final TextUpdateListener txtTitleListener;
 	protected final TextUpdateListener txtDescriptionListener;
 	protected final ComboUpdateListener cmbStatusListener;
 	protected final TextUpdateListener txtCreatorListener;
 	protected final TextUpdateListener txtAssigneeListener;
 
+	/** A flag indicating if input is enabled on the form */
 	protected boolean inputEnabled;
+	
+	/** An enum indicating if the form is in create mode or edit mode */
 	protected Mode editMode;
 
+	/*
+	 * Constants used to layout the form
+	 */
 	protected static final int HORIZONTAL_PADDING = 5;
 	protected static final int VERTICAL_PADDING = 15;
 	protected static final int LABEL_ALIGNMENT = JLabel.TRAILING;
@@ -67,17 +96,18 @@ public class DefectPanel extends JPanel {
 	 */
 	public DefectPanel(DefectView parent, Defect defect, Mode mode) {
 		this.parent = parent;
+		this.model = defect;
 		editMode = mode;
 		
 		// Indicate that input is enabled
 		inputEnabled = true;
 
-		this.model = defect;
-
-		SpringLayout layout = new SpringLayout();
+		// Use a SpringLayout manager
+		layout = new SpringLayout();
 		this.setLayout(layout);
 
-		addComponents(layout);
+		// Add all components to this panel
+		addComponents();
 
 		// Add TextUpdateListeners. These check if the text component's text differs from the panel's Defect 
 		// model and highlights them accordingly every time a key is pressed.
@@ -121,7 +151,9 @@ public class DefectPanel extends JPanel {
 	 * for the SpringLayout manager.
 	 * @param layout the layout manager
 	 */
-	protected void addComponents(SpringLayout layout) {
+	@SuppressWarnings({ "unchecked" })
+	protected void addComponents() {
+		// Construct all of the components for the form
 		txtTitle = new JTextField(50);
 		txtDescription = new JTextArea();
 		txtDescription.setLineWrap(true);
@@ -137,11 +169,17 @@ public class DefectPanel extends JPanel {
 		txtCreator = new JTextField(20);
 		txtCreator.setEnabled(false);
 		txtAssignee = new JTextField(20);
+		
+		// Construct the tab panel
 		tagPanel = new TagPanel(model);
-		defectEventView = new DefectEventView(model);
+		commentPanel = new NewCommentPanel(getModel(), this);
+		defectEventListModel = new DefectEventListModel(getModel());
+		changeSetsList = new JList(defectEventListModel);
+		changeSetsList.setCellRenderer(new DefectEventListCellRenderer());
 		
 		if (editMode == Mode.CREATE) {
 			cmbStatus.setEnabled(false);
+			commentPanel.setInputEnabled(false);
 		}
 
 		// Set text component names. These names correspond to method names in the Defect model (ex: "Title" => Defect#getTitle()).
@@ -159,6 +197,7 @@ public class DefectPanel extends JPanel {
 		txtAssignee.setMaximumSize(txtAssignee.getPreferredSize());
 		tagPanel.setMaximumSize(tagPanel.getPreferredSize());
 
+		// Construct labels for the form fields
 		JLabel lblTitle = new JLabel("Title:", LABEL_ALIGNMENT);
 		JLabel lblDescription = new JLabel("Description:", LABEL_ALIGNMENT);
 		JLabel lblStatus = new JLabel("Status:", LABEL_ALIGNMENT);
@@ -169,6 +208,7 @@ public class DefectPanel extends JPanel {
 
 		int labelWidth = lblDescription.getPreferredSize().width;
 
+		// Setup all of the spring constraints
 		layout.putConstraint(SpringLayout.NORTH, lblTitle, VERTICAL_PADDING, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, lblTitle, 15, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.EAST, lblTitle, labelWidth, SpringLayout.WEST, lblTitle);
@@ -218,15 +258,17 @@ public class DefectPanel extends JPanel {
 		layout.putConstraint(SpringLayout.WEST, tagPanel, 0, SpringLayout.WEST, lblTitle);
 		layout.putConstraint(SpringLayout.EAST, tagPanel, 0, SpringLayout.EAST, txtTitle);
 		
-		layout.putConstraint(SpringLayout.NORTH, defectEventView, VERTICAL_PADDING, SpringLayout.SOUTH, tagPanel);
-		layout.putConstraint(SpringLayout.WEST, defectEventView, 0, SpringLayout.WEST, tagPanel);
-		layout.putConstraint(SpringLayout.EAST, defectEventView, 0, SpringLayout.EAST, tagPanel);
-		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, defectEventView);
-
-		SpringLayout.Constraints defectPanelConstraint = layout.getConstraints(this);
-		defectPanelConstraint.setHeight(Spring.sum(Spring.constant(defectEventView.getHeight()), defectPanelConstraint.getConstraint(SpringLayout.SOUTH)));
 		
+		layout.putConstraint(SpringLayout.NORTH, changeSetsList, VERTICAL_PADDING, SpringLayout.SOUTH, tagPanel);
+		layout.putConstraint(SpringLayout.WEST, changeSetsList, 0, SpringLayout.WEST, lblTitle);
+		layout.putConstraint(SpringLayout.EAST, changeSetsList, 0, SpringLayout.EAST, txtTitle);
+		
+		layout.putConstraint(SpringLayout.NORTH, commentPanel, VERTICAL_PADDING, SpringLayout.SOUTH, changeSetsList);
+		layout.putConstraint(SpringLayout.WEST, commentPanel, 0, SpringLayout.WEST, lblTitle);
+		layout.putConstraint(SpringLayout.EAST, commentPanel, 0, SpringLayout.EAST, txtTitle);
+		layout.putConstraint(SpringLayout.SOUTH, this, VERTICAL_PADDING, SpringLayout.SOUTH, commentPanel);
 
+		// Add all of the components to this panel
 		add(lblTitle);
 		add(txtTitle);
 		add(lblDescription);
@@ -242,7 +284,8 @@ public class DefectPanel extends JPanel {
 		add(lblAssignee);
 		add(txtAssignee);
 		add(tagPanel);
-		add(defectEventView);
+		add(changeSetsList);
+		add(commentPanel);
 	}
 
 	/**
@@ -259,6 +302,7 @@ public class DefectPanel extends JPanel {
 		cmbStatus.setEnabled(enabled);
 		txtAssignee.setEnabled(enabled);
 		tagPanel.setInputEnabled(enabled);
+		commentPanel.setInputEnabled(enabled);
 	}
 	
 	/**
@@ -291,8 +335,14 @@ public class DefectPanel extends JPanel {
 		tagPanel.updateModel(defect);
 		
 		updateFields();
+		defectEventListModel.update(defect);
+		this.revalidate();
+		layout.invalidateLayout(this);
+		layout.layoutContainer(this);
+		this.repaint();
+		parent.refreshScrollPane();
 	}
-
+	
 	/**
 	 * Updates the DefectPanel's fields to match those in the current model.
 	 */
@@ -307,8 +357,7 @@ public class DefectPanel extends JPanel {
 		if (editMode == Mode.EDIT) {
 			lblCreatedDate.setText("Created:");
 			txtCreatedDate.setText(model.getCreationDate().toString());
-		}
-		if (editMode == Mode.EDIT) {
+
 			lblModifiedDate.setText("Modified:");
 			txtModifiedDate.setText(model.getLastModifiedDate().toString());
 		}
@@ -394,5 +443,13 @@ public class DefectPanel extends JPanel {
 	 */
 	public JTextField getCreatorField() {
 		return txtCreator;
+	}
+	
+	/**
+	 * Returns the list model for the list of DefectChangesets
+	 * @return the list model for the list of DefectChangesets
+	 */
+	public DefectEventListModel getDefectEventListModel() {
+		return defectEventListModel;
 	}
 }

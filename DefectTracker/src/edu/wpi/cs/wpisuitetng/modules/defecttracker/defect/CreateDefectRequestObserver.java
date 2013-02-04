@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import javax.swing.SwingUtilities;
 import javax.swing.JOptionPane;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -38,12 +39,17 @@ public class CreateDefectRequestObserver implements RequestObserver {
 
 		if (response.getStatusCode() == 201) {
 			// parse the defect from the body
-			Defect defect = Defect.fromJSON(response.getBody());
+			final Defect defect = Defect.fromJSON(response.getBody());
 
 			// make sure the defect isn't null
 			if (defect != null) {
-				((DefectPanel) view.getDefectPanel()).updateModel(defect);
-				view.setEditModeDescriptors(defect);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						((DefectPanel) view.getDefectPanel()).updateModel(defect);
+						view.setEditModeDescriptors(defect);
+					}
+				});
 			}
 			else {
 				JOptionPane.showMessageDialog(view,	"Unable to parse defect received from server.", 
@@ -78,6 +84,11 @@ public class CreateDefectRequestObserver implements RequestObserver {
 	 * Should always be run when an update method is called.
 	 */
 	private void always() {
-		view.setInputEnabled(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				view.setInputEnabled(true);				
+			}
+		});
 	}
 }
