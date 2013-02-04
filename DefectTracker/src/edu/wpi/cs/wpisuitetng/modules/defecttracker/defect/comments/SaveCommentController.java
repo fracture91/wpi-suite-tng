@@ -38,14 +38,17 @@ public class SaveCommentController {
 	 * Save a comment to the server
 	 */
 	public void saveComment() {
-		final RequestObserver requestObserver = new SaveCommentObserver(this);
-		final Request request = Network.getInstance().makeRequest(
-				"defecttracker/comment", HttpMethod.PUT);
-		final Comment comment = new Comment(model.getId(), model.getCreator(), view.getCommentField().getText());
-		view.getCommentField().setText("");
-		request.setBody(comment.toJSON());
-		request.addObserver(requestObserver);
-		request.send();
+		final String commentText = view.getCommentField().getText();
+		if (commentText.length() > 0) {
+			final RequestObserver requestObserver = new SaveCommentObserver(this);
+			final Request request = Network.getInstance().makeRequest(
+					"defecttracker/comment", HttpMethod.PUT);
+			final Comment comment = new Comment(model.getId(), model.getCreator(), view.getCommentField().getText());
+			view.getCommentField().setText("");
+			request.setBody(comment.toJSON());
+			request.addObserver(requestObserver);
+			request.send();
+		}
 	}
 	
 	/**

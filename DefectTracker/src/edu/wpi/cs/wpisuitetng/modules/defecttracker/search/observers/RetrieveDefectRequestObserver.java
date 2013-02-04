@@ -33,7 +33,7 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 
 		// check the response code of the request
 		if (response.getStatusCode() != 200) {
-			controller.errorRetrievingDefect();
+			controller.errorRetrievingDefect("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 			return;
 		}
 
@@ -43,18 +43,18 @@ public class RetrieveDefectRequestObserver implements RequestObserver {
 			controller.showDefect(defects[0]);
 		}
 		else {
-			controller.errorRetrievingDefect();
+			controller.errorRetrievingDefect("No defects received.");
 		}
 	}
 
 	@Override
 	public void responseError(IRequest iReq) {
-		controller.errorRetrievingDefect();
+		controller.errorRetrievingDefect("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
 		// TODO deal with exception
-		controller.errorRetrievingDefect();
+		controller.errorRetrievingDefect("Unable to complete request: " + exception.getMessage());
 	}
 }

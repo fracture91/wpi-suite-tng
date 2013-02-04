@@ -113,7 +113,8 @@ public class LoginController implements ActionListener {
 	 * request was unsuccessful.
 	 * @param response the response returned by the server
 	 */
-	public void loginFailed(ResponseModel response) {
-		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
+	public void loginFailed(String error) {
+		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Login Error", 
+				JOptionPane.ERROR_MESSAGE);
 	}
 }

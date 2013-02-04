@@ -39,19 +39,19 @@ public class RetrieveAllDefectsRequestObserver implements RequestObserver {
 			controller.receivedData(defects);
 		}
 		else {
-
+			controller.errorReceivingData("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 		}
 	}
 
 	@Override
 	public void responseError(IRequest iReq) {
 		// an error occurred
-		controller.errorReceivingData();
+		controller.errorReceivingData("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
 		// an error occurred
-		controller.errorReceivingData();
+		controller.errorReceivingData("Unable to complete request: " + exception.getMessage());
 	}
 }
