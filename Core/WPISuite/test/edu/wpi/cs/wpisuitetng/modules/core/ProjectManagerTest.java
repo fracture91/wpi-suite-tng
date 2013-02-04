@@ -57,7 +57,7 @@ public class ProjectManagerTest {
 	public void testMakeEntity() {
 		Project u = null;
 		try {
-			u = test.makeEntity(new Session(tempUser), json.toJson(temp, Project.class));
+			u = test.makeEntity(new Session(tempUser), temp.toJSON());
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}

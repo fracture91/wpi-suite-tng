@@ -197,8 +197,4 @@ public class Project extends AbstractModel
 		return false;
 	}
 
-	@Override
-	public Model fromJSON(String json) {
-		return new Gson().fromJson(json, Project.class);
-	}
 }
