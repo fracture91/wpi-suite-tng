@@ -7,8 +7,11 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -78,18 +81,26 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public void save(Session s, Defect model) {
-		// TODO: validate updates
 		db.save(model);
 	}
 
+	private void ensureRole(Session session, Role role) throws UnauthorizedException {
+		User user = (User) db.retrieve(User.class, "username", session.getUsername()).get(0);
+		if(!user.getRole().equals(role)) {
+			throw new UnauthorizedException();
+		}
+	}
+	
 	@Override
-	public boolean deleteEntity(Session s, String id) throws NotFoundException {
+	public boolean deleteEntity(Session s, String id) throws NotFoundException, UnauthorizedException {
 		// TODO: are nested objects deleted?  Dates should be, but Users shouldn't!
+		ensureRole(s, Role.ADMIN);
 		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 	
 	@Override
-	public void deleteAll(Session s) {
+	public void deleteAll(Session s) throws UnauthorizedException {
+		ensureRole(s, Role.ADMIN);
 		db.deleteAll(new Defect());
 	}
 	
@@ -143,24 +154,18 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 
 	@Override
-	public String advancedGet(Session arg0, String[] arg1)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedGet(Session arg0, String[] arg1) throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public String advancedPost(Session arg0, String arg1, String arg2)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedPost(Session arg0, String arg1, String arg2) throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public String advancedPut(Session arg0, String[] arg1, String arg2)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedPut(Session arg0, String[] arg1, String arg2) throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 
 }
