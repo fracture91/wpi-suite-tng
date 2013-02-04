@@ -36,7 +36,7 @@
 
 	<!-- Note that WPISuite depends on DefectTracker because of the lack of dynamic loading -->
 	<target name="depend.WPISuite"
-		depends="depend.WPISuite-Interfaces, depend.DefectTracker">
+		depends="depend.WPISuite-Interfaces, depend.DefectTracker, depend.PostBoard">
 		<ant dir="${dependencies.basedir}/Core/WPISuite"
 			target="${dependency.target}"
 			inheritAll="false"/>
