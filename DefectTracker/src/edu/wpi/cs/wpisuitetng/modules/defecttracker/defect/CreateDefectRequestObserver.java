@@ -36,7 +36,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		// print the body
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
-		if (response.getStatusCode() == 200) {
+		if (response.getStatusCode() == 201) {
 			// parse the defect from the body
 			Defect defect = Defect.fromJSON(response.getBody());
 
@@ -50,7 +50,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(view, "Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(view, "Received " + iReq.getResponse().getStatusCode() + " status from server: " + iReq.getResponse().getStatusMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		always();
