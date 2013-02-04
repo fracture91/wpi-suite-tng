@@ -15,6 +15,7 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 /**
  * This controller handles saving defect comments to the server
  */
+@SuppressWarnings("unchecked")
 public class SaveCommentController {
 
 	private final NewCommentPanel view;
@@ -55,7 +56,7 @@ public class SaveCommentController {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				parentView.getDefectEventView().addComment(Comment.fromJson(response.getBody()));
+				parentView.getDefectEventListModel().addElement(Comment.fromJson(response.getBody()));
 			}
 		});
 	}
