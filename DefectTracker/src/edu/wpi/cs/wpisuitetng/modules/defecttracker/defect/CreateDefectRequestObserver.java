@@ -46,11 +46,14 @@ public class CreateDefectRequestObserver implements RequestObserver {
 				view.setEditModeDescriptors(defect);
 			}
 			else {
-				JOptionPane.showMessageDialog(view, "Unable to parse defect received from server.", "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(view,	"Unable to parse defect received from server.", 
+						"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(view, "Received " + iReq.getResponse().getStatusCode() + " status from server: " + iReq.getResponse().getStatusMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(view, 
+					"Received " + iReq.getResponse().getStatusCode() + " status from server: " + iReq.getResponse().getStatusMessage(), 
+					"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		always();
@@ -58,13 +61,16 @@ public class CreateDefectRequestObserver implements RequestObserver {
 
 	@Override
 	public void responseError(IRequest iReq) {
-		JOptionPane.showMessageDialog(view, "Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(view, 
+				"Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), 
+				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-		JOptionPane.showMessageDialog(view, "Unable to complete request: " + exception.getMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(view, "Unable to complete request: " + exception.getMessage(), 
+				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();
 	}
 

@@ -12,7 +12,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.search.views.ResultsPanel;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
-import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 
 /**
  * Controller to handle retrieving one defect from the server
@@ -72,6 +71,8 @@ public class RetrieveDefectController extends MouseAdapter {
 	 * occurred retrieving the defect from the server.
 	 */
 	public void errorRetrievingDefect(String error) {
-		JOptionPane.showMessageDialog(view, "An error occurred opening the defect you selected. " + error, "Error opening defect", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(view, 
+				"An error occurred opening the defect you selected. " + error, "Error opening defect", 
+				JOptionPane.ERROR_MESSAGE);
 	}
 }
