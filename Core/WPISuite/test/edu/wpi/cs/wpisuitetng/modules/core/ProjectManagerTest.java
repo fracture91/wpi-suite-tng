@@ -234,5 +234,14 @@ public class ProjectManagerTest {
 		
 		fail("Exception should have been thrown");
 	}
+	
+	/**
+	 * Tests fromJSON's ability to create a Project from a JSON String
+	 */
+	public void testProjectFromJSON(){
+		Project test = new Project("1","1");
+		test = test.fromJSON(temp.toJSON());
+		assertEquals(test, temp);
+	}
 
 }

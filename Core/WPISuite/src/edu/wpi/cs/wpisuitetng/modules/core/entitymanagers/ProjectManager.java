@@ -9,6 +9,7 @@
  * Contributors: mpdelladonna
  * rchamer
  * twack
+ * bgaffey
  *    
  *******************************************************************************/
 
@@ -18,6 +19,7 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -38,8 +40,13 @@ public class ProjectManager implements EntityManager<Project>{
 	
 	public ProjectManager(Data data)
 	{
-		gson = new Gson();
 		this.data = data;
+		
+		// hang the custom serializer/deserializer
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(this.project, new ProjectDeserializer());
+		
+		this.gson = builder.create();
 	}
 	
 	@Override
