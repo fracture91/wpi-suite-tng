@@ -74,15 +74,15 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		mainPanelScrollPane.getVerticalScrollBar().setUnitIncrement(10);
 		
 		// Prevent content of scroll pane from smearing (credit: https://gist.github.com/303464)
-		/*mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
-                //SwingUtilities.invokeLater(new Runnable(){
-                //    public void run(){
-                        mainPanelScrollPane.repaint();
-                //    }
-               // });
-            }
-        });*/
+		mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
+			public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
+				//SwingUtilities.invokeLater(new Runnable(){
+				//	public void run(){
+						mainPanelScrollPane.repaint();
+				//	}
+				//});
+			}
+		});
 		
 		this.add(mainPanelScrollPane, BorderLayout.CENTER);
 		controller = new SaveDefectController(this);
