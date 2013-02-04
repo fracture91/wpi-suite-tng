@@ -36,18 +36,23 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		// print the body
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
 
-		// parse the defect from the body
-		Defect defect = Defect.fromJSON(response.getBody());
+		if (response.getStatusCode() == 200) {
+			// parse the defect from the body
+			Defect defect = Defect.fromJSON(response.getBody());
 
-		// make sure the defect isn't null
-		if (defect != null) {
-			((DefectPanel) view.getDefectPanel()).updateModel(defect);
-			view.setEditModeDescriptors(defect);
+			// make sure the defect isn't null
+			if (defect != null) {
+				((DefectPanel) view.getDefectPanel()).updateModel(defect);
+				view.setEditModeDescriptors(defect);
+			}
+			else {
+				JOptionPane.showMessageDialog(view, "Unable to parse defect received from server.", "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else {
-			JOptionPane.showMessageDialog(view, "Unable to parse defect received from server.", "Save Defect Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(view, "Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 		always();
 	}
 
@@ -62,7 +67,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 		JOptionPane.showMessageDialog(view, "Unable to complete request: " + exception.getMessage(), "Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();
 	}
-	
+
 	/**
 	 * Should always be run when an update method is called.
 	 */
