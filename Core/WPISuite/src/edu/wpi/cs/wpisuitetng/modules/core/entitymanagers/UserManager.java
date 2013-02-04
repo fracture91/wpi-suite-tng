@@ -34,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.core.models.UserDeserializer;
 
 /**
  * The EntityManager implementation for the User class. Manages interaction with the 
@@ -74,7 +75,7 @@ public class UserManager implements EntityManager<User> {
 		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
-			p = gson.fromJson(content, user);
+			p = (User)new User(null, null, null, 0).fromJSON(content);
 		} catch(JsonSyntaxException e){
 			throw new BadRequestException();
 		}
@@ -202,7 +203,7 @@ public class UserManager implements EntityManager<User> {
 		// Inflate the changeSet into a User object.
 		try
 		{
-			changes = this.gson.fromJson(changeSet, this.user);
+			changes = (User)new User(null, null, null, 0).fromJSON(changeSet);
 		}
 		catch(JsonParseException e)
 		{
