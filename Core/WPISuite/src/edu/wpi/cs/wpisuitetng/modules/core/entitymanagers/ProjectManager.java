@@ -64,7 +64,7 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public Project makeEntity(Session s, String content) throws WPISuiteException {	
 		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN)){
+		if(theUser.getRole().equals(Role.ADMIN) ){
 		
 		Project p;
 		try{
@@ -143,9 +143,12 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public void save(Session s, Project model) throws WPISuiteException {
+		if(s == null){
+			throw new WPISuiteException("Null Session.");
+		}
 		User theUser = s.getUser();
-		if(model.getPermission(theUser).equals(Permission.WRITE) || 
-		   theUser.getRole().equals(Role.ADMIN)){
+		if(theUser.getRole().equals(Role.ADMIN) || 
+				model.getPermission(theUser).equals(Permission.WRITE)){
 			if(data.save(model))
 			{
 				return ;
@@ -163,6 +166,9 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public boolean deleteEntity(Session s1, String id) throws WPISuiteException
 	{
+		if(s1==null){
+			throw new WPISuiteException("Null Session.");
+		}
 		User theUser = s1.getUser();
 		Project[] model = this.getEntity(id);
 		if(model[0].getPermission(theUser).equals(Permission.WRITE) || 
@@ -194,6 +200,9 @@ public class ProjectManager implements EntityManager<Project>{
 	
 	public Project update(Session s, Project toUpdate, String changeSet) throws WPISuiteException
 	{
+		if(s == null){
+			throw new WPISuiteException("Null session.");
+		}
 		User theUser = s.getUser();
 		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
 		   theUser.getRole().equals(Role.ADMIN)){
