@@ -150,4 +150,25 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 		return getAll(null).length;
 	}
 
+	@Override
+	public String advancedGet(Session s, String[] args)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String advancedPut(Session s, String[] args, String content)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String advancedPost(Session s, String string, String content)
+			throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
