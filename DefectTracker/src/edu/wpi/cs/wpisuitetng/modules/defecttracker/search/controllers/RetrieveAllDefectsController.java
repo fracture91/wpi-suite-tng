@@ -9,6 +9,7 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 
 /**
  * Controller to handle retrieving all defects from the server and
@@ -86,7 +87,7 @@ public class RetrieveAllDefectsController {
 	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when an
 	 * error occurs retrieving the defects from the server.
 	 */
-	public void errorReceivingData() {
-		JOptionPane.showMessageDialog(view, "An error occurred retrieving defects from the server.", "Error Communicating with Server", JOptionPane.ERROR_MESSAGE);
+	public void errorReceivingData(String error) {
+		JOptionPane.showMessageDialog(view, "An error occurred retrieving defects from the server. " + error, "Error Communicating with Server", JOptionPane.ERROR_MESSAGE);
 	}
 }
