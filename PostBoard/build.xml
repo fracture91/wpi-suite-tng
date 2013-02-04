@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="DefectTracker" default="compile.deps">
+<project name="PostBoard" default="compile.deps">
 	<import file="../build-common.xml"/>
 
-	<property name="core-jar-dest" location="${core-lib}/DefectTracker.jar"/>
-	<property name="janeway-jar-dest" location="../Janeway/modules/DefectTracker.jar"/>
+	<property name="core-jar-dest" location="${core-lib}/PostBoard.jar"/>
+	<property name="janeway-jar-dest" location="../Janeway/modules/PostBoard.jar"/>
 
 	<path id="classpath">
 		<pathelement path="../Janeway/build"/>
@@ -67,9 +67,7 @@
 			<classpath refid="test-classpath"/>
 			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${test-results}">
-				<fileset dir="test">
-					<include name="**/*Test*.java"/>
-				</fileset>
+				<!-- add tests here... -->
 			</batchtest>
 		</junit>
 	</target>
