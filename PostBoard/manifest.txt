@@ -1,0 +1,1 @@
+module_class edu.wpi.cs.wpisuitetng.modules.postboard.PostBoard

@@ -35,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.CommentManager;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
+import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
@@ -72,6 +73,8 @@ public class ManagerLayer {
 		map.put("coreuser", new UserManager(data));
 		map.put("defecttrackerdefect", new DefectManager(data));
 		map.put("defecttrackercomment", new CommentManager(data));
+		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
+
 		Session s = null;
 		
 		try {
