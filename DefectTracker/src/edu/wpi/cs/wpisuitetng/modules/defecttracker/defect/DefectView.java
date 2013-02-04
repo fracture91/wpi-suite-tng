@@ -5,8 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.IToolbarGroupProvider;
@@ -27,6 +27,7 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 	private JButton saveButton;
 	private DefectPanel mainPanel;
 	private SaveDefectController controller;
+	final JScrollPane mainPanelScrollPane;
 	private Tab containingTab;
 	private boolean inputEnabled = true;
 
@@ -69,18 +70,20 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		// Instantiate the main create defect panel
 		mainPanel = new DefectPanel(this, defect, editMode);
 		this.setLayout(new BorderLayout());
-		final JScrollPane mainPanelScrollPane = new JScrollPane(mainPanel);
+		mainPanelScrollPane = new JScrollPane(mainPanel);
+		mainPanelScrollPane.getVerticalScrollBar().setUnitIncrement(10);
 		
 		// Prevent content of scroll pane from smearing (credit: https://gist.github.com/303464)
 		mainPanelScrollPane.getVerticalScrollBar().addAdjustmentListener(new java.awt.event.AdjustmentListener(){
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
-                SwingUtilities.invokeLater(new Runnable(){
-                    public void run(){
-                        mainPanelScrollPane.repaint();
-                    }
-                });
-            }
-        });
+			public void adjustmentValueChanged(java.awt.event.AdjustmentEvent ae){
+				//SwingUtilities.invokeLater(new Runnable(){
+				//	public void run(){
+						mainPanelScrollPane.repaint();
+				//	}
+				//});
+			}
+		});
+		
 		this.add(mainPanelScrollPane, BorderLayout.CENTER);
 		controller = new SaveDefectController(this);
 
@@ -134,5 +137,21 @@ public class DefectView extends JPanel implements IToolbarGroupProvider {
 		containingTab.setTitle("Defect #" + defect.getId());
 		containingTab.setToolTipText("View defect " + defect.getTitle());
 		buttonGroup.setName("Edit Defect");
+	}
+	
+	/**
+	 * Scrolls the scroll pane containing the main panel to the bottom
+	 */
+	public void scrollToBottom() {
+		JScrollBar vBar = mainPanelScrollPane.getVerticalScrollBar();
+		vBar.setValue(vBar.getMaximum());
+	}
+
+	/**
+	 * Revalidates and repaints the scroll pane containing the DefectPanel
+	 */
+	public void refreshScrollPane() {
+		mainPanelScrollPane.revalidate();
+		mainPanelScrollPane.repaint();
 	}
 }

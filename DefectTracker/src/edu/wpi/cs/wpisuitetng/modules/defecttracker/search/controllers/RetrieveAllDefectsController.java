@@ -86,7 +86,8 @@ public class RetrieveAllDefectsController {
 	 * This method is called by the {@link RetrieveAllDefectsRequestObserver} when an
 	 * error occurs retrieving the defects from the server.
 	 */
-	public void errorReceivingData() {
-		JOptionPane.showMessageDialog(view, "An error occurred retrieving defects from the server.", "Error Communicating with Server", JOptionPane.ERROR_MESSAGE);
+	public void errorReceivingData(String error) {
+		JOptionPane.showMessageDialog(view, "An error occurred retrieving defects from the server. " + error, 
+				"Error Communicating with Server", JOptionPane.ERROR_MESSAGE);
 	}
 }

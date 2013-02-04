@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
+package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.defectevents.view;
 
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class DefectChangesetPanel extends DefectEventPanel {
 	 */
 	@SuppressWarnings("unchecked")
 	public DefectChangesetPanel(DefectChangeset event) {
-		setTitle("<html>Modified by <i>" + event.getUser().getUsername() + " </i>on <i>" + new SimpleDateFormat("MM/dd/yy hh:mm a").format(event.getDate()) + "</i></html>");
+		setTitle("<html><font size=4><b>" + event.getUser().getName() + "</b><font size=.25> made changes on " + new SimpleDateFormat("MM/dd/yy hh:mm a").format(event.getDate()) + "</html>");
 
 		// build content from map of field changes
 		String content = "<html>";

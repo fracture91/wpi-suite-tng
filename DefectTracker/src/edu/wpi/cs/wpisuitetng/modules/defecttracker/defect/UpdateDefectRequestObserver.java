@@ -1,5 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
+
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
@@ -32,38 +35,58 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 
 		// print the body
 		System.out.println("Received response: " + response.getBody()); //TODO change this to logger
+		if (response.getStatusCode() == 200) {
+			// parse the defect from the body
+			final Defect defect = Defect.fromJSON(response.getBody());
 
-		// parse the defect from the body
-		Defect defect = Defect.fromJSON(response.getBody());
-
-		// make sure the defect isn't null
-		if (defect != null) {
-			((DefectPanel) view.getDefectPanel()).updateModel(defect);
-			view.setEditModeDescriptors(defect);
+			// make sure the defect isn't null
+			if (defect != null) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						((DefectPanel) view.getDefectPanel()).updateModel(defect);
+						view.setEditModeDescriptors(defect);
+					}
+				});
+			}
+			else {
+				JOptionPane.showMessageDialog(view, "Unable to parse defect received from server.", 
+						"Save Defect Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else {
-			// TODO notify user of server error
+			JOptionPane.showMessageDialog(view, 
+					"Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), 
+					"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 		always();
 	}
 
 	@Override
 	public void responseError(IRequest iReq) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(view, 
+				"Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), 
+				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(view, "Unable to complete request: " + exception.getMessage(), 
+				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();
 	}
-	
+
 	/**
 	 * Should always be run when an update method is called.
 	 */
 	private void always() {
-		view.setInputEnabled(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				view.setInputEnabled(true);
+			}
+		});
 	}
 }

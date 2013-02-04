@@ -14,7 +14,7 @@ String[] coreuser = {
 		"username",
 		"name",
 		"password",
-		"id"
+		"idNum"
 };
 int coreuserlength = 4;
 

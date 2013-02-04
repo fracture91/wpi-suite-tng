@@ -34,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.*;
 public class WPILoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authenticator auth;
+
        
     /**
      * @see HttpServlet#HttpServlet()

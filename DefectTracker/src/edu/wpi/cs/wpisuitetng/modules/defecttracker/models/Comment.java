@@ -101,4 +101,13 @@ public class Comment extends DefectEvent {
 		
 	}
 
+	/**
+	 * Converts the given JSON string into a Comment
+	 * @param json JSON string containing a serialized Comment
+	 * @return a Comment deserialized from the given JSON string
+	 */
+	public static Comment fromJson(String json) {
+		Gson parser = new Gson();
+		return parser.fromJson(json, Comment.class);
+	}
 }
