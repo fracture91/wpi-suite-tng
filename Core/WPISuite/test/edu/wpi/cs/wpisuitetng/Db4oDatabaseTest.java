@@ -70,14 +70,14 @@ public class Db4oDatabaseTest {
 		db.save(secondUser);
 		List<User> retrievedList = db.retrieveAll(firstUser);
 		
-		assertEquals(2, retrievedList.size());
+		int initCount = retrievedList.size();
 		assertTrue(retrievedList.contains(firstUser));
 		assertTrue(retrievedList.contains(secondUser));
 		
 		db.delete(firstUser);
 		retrievedList = db.retrieveAll(firstUser);
 		
-		assertEquals(1, retrievedList.size());
+		assertEquals(initCount - 1, retrievedList.size());
 		assertTrue(retrievedList.contains(secondUser));
 		assertFalse(retrievedList.contains(firstUser));
 		
@@ -94,14 +94,14 @@ public class Db4oDatabaseTest {
 		db.save(secondUser);
 		List<User> retrievedList = db.retrieveAll(firstUser);
 		
-		assertEquals(2, retrievedList.size());
+		int initCount = retrievedList.size();
 		assertTrue(retrievedList.contains(firstUser));
 		assertTrue(retrievedList.contains(secondUser));
 		
 		retrievedList = db.deleteAll(firstUser);
 		User me1 = db.retrieve(User.class, "username", "bgaffey").toArray(arr)[0];
 		User me2 = db.retrieve(User.class, "username", "gafftron").toArray(arr)[0];
-		assertEquals(2, retrievedList.size());
+		assertEquals(initCount, retrievedList.size());
 		assertEquals(me1, null);
 		assertEquals(me2, null);
 	}

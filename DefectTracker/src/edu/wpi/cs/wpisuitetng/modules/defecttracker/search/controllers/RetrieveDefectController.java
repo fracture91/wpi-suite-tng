@@ -70,7 +70,9 @@ public class RetrieveDefectController extends MouseAdapter {
 	 * Called by {@link RetrieveDefectRequestObserver} when an error
 	 * occurred retrieving the defect from the server.
 	 */
-	public void errorRetrievingDefect() {
-		JOptionPane.showMessageDialog(view, "An error occurred opening the defect you selected.", "Error opening defect", JOptionPane.ERROR_MESSAGE);
+	public void errorRetrievingDefect(String error) {
+		JOptionPane.showMessageDialog(view, 
+				"An error occurred opening the defect you selected. " + error, "Error opening defect", 
+				JOptionPane.ERROR_MESSAGE);
 	}
 }

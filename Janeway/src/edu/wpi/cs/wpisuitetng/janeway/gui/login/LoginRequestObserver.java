@@ -26,17 +26,22 @@ public class LoginRequestObserver implements RequestObserver {
 			controller.loginSuccessful(response);
 		}
 		else { // login failed
-			controller.loginFailed(response);
+			controller.loginFailed("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 		}
 	}
 
 	@Override
 	public void responseError(IRequest iReq) {
-		// TODO Auto-generated method stub
+		if (iReq.getResponse().getStatusCode() == 403) {
+			controller.loginFailed("Incorrect username, password or project.");
+
+		} else {
+			controller.loginFailed("Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
+		}
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-		// TODO Auto-generated method stub
+		controller.loginFailed("Unable to complete request: " + exception.getMessage());
 	}
 }

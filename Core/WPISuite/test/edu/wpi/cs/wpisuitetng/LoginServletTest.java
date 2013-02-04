@@ -37,6 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -63,6 +64,7 @@ public class LoginServletTest {
 	}
 	
 	@Test
+	@Ignore
 	/**
 	 * Acceptance Test 1: User with valid username but incorrect login credentials.
 	 * 	Expected Results: 	(1) 403 Forbidden error response
@@ -88,6 +90,7 @@ public class LoginServletTest {
 	}
 	
 	@Test
+	@Ignore
 	/**
 	 * Acceptance Test 2: User with an invalid username (no User).
 	 * 	Expected Results: 	(1) 403 Forbidden error response
@@ -115,6 +118,7 @@ public class LoginServletTest {
 	
 	
 	@Test
+	@Ignore
 	/**
 	 * Acceptence Test 3: User with valid credentials attempts to login.
 	 * 	Expected Results: 	(1) 200 OK Response Code

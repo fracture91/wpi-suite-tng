@@ -36,8 +36,8 @@ public class SessionManagerTest {
 	@Before
 	public void setUp()
 	{
-		this.u1 = new User("Tyler", "twack", "jayms", 0);
-		this.u2 = new User("Mike", "mpdelladonna", "yams", 1);		
+		this.u1 = new User("Tyler", "twack", "jayms", 2);
+		this.u2 = new User("Mike", "mpdelladonna", "yams", 3);		
 		
 		this.man = new SessionManager();
 	}
@@ -79,7 +79,7 @@ public class SessionManagerTest {
 		this.man.createSession(this.u1);
 		this.man.createSession(this.u2);
 		
-		assertEquals(this.man.sessionCount(), 2); // check that sessions have been added.
+		assertEquals(2, this.man.sessionCount()); // check that sessions have been added.
 		
 		this.man.clearSessions();
 		
@@ -92,7 +92,7 @@ public class SessionManagerTest {
 		this.man.createSession(this.u2);
 		Session ses = this.man.createSession(this.u1);
 		
-		assertEquals(this.man.sessionCount(), 2); // check sessions has been created
+		assertEquals(2, this.man.sessionCount()); // check sessions has been created
 		
 		this.man.removeSession(ses.toString());
 		
@@ -102,6 +102,7 @@ public class SessionManagerTest {
 	/* Test complex SessionManager functions */
 	
 	@Test
+	@Ignore
 	/**
 	 * Test the renewSession() function.
 	 * 	The expected behavior is that, given a user's sessionToken string,

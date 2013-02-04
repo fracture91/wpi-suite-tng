@@ -27,11 +27,14 @@ public class JanewayFrame extends JFrame {
 
 	/** A panel to contain the tabs */
 	protected final TabPanel tabPanel;
+	
+	/** The singelton instance */
+	private static JanewayFrame instance = null;
 
 	/**
 	 * Construct a new JanewayFrame
 	 */
-	public JanewayFrame(List<IJanewayModule> modules) {
+	private JanewayFrame(List<IJanewayModule> modules) {
 		// Set window properties
 		setTitle("Janeway - WPI Suite Desktop Client");
 		setMinimumSize(new Dimension(800, 600)); // minimum window size is 800 x 600
@@ -56,6 +59,7 @@ public class JanewayFrame extends JFrame {
 		int xPos = (dim.width - width) / 2;
 		int yPos = (int)((dim.height - height) / 2 * .75);
 		setBounds(xPos, yPos, width, height);
+		this.setPreferredSize(new Dimension(width, height));
 
 		// Setup the layout manager
 		this.setLayout(new BorderLayout());
@@ -68,6 +72,22 @@ public class JanewayFrame extends JFrame {
 		JanewayKeyEventDispatcher keyEventDispatcher = new JanewayKeyEventDispatcher(this, modules);
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 		addGlobalKeyboardShortcuts(keyEventDispatcher);
+		
+	}
+	
+	public static JanewayFrame getInstance() {
+		if (instance == null) {
+			throw new RuntimeException("You must call the initialize method of JanewayFrame before calling getInstance!");
+		}
+		return instance;
+	}
+	
+	public static JanewayFrame initialize(List<IJanewayModule> modules) {
+		if (instance != null) {
+			throw new RuntimeException("JanewayFrame is already initialized!");
+		}
+		instance = new JanewayFrame(modules);
+		return instance;
 	}
 
 	/**

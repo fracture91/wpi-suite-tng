@@ -16,6 +16,7 @@ import java.util.Date;
 import javax.servlet.http.Cookie;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -26,8 +27,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  *
  */
 public class Session {
-	private User user;
-	private Date loginTime;
+	@Expose private User user;
+	@Expose private Date loginTime;
 	
 	/**
 	 * Default constructor. Initializes the loginTime field to the time of construction.
@@ -52,10 +53,13 @@ public class Session {
 	@Override
 	public String toString()
 	{
+		String json;
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		
-		return gson.toJson(this, Session.class);
+		json = gson.toJson(this, Session.class);
+		
+		return json;
 	}
 	
 	/**
