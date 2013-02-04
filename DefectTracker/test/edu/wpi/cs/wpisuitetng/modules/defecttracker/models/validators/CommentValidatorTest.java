@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 
@@ -35,7 +35,7 @@ public class CommentValidatorTest {
 		User bobCopy = new User(null, "bob", null, -1);
 		goodNewComment = new Comment(1, bobCopy, "hello");
 		
-		Set<Model> models = new HashSet<Model>();
+		Set<Object> models = new HashSet<Object>();
 		models.add(defect);
 		models.add(bob);
 		

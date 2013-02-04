@@ -46,8 +46,7 @@ public class CommentManager implements EntityManager<Comment> {
 		Defect defect = validator.getLastExistingDefect();
 		defect.getEvents().add(newComment);
 		db.save(defect.getEvents());
-		
-		System.out.println("Created Comment");
+
 		return newComment;
 	}
 
