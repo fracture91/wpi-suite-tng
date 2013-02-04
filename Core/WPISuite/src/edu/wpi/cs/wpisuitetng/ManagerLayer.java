@@ -171,7 +171,15 @@ public class ManagerLayer {
 	{		
 		Session s = getSessionFromCookies(cook);
 		   
-		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
+		Model[] m;
+		if(args[2] == null || args[2].equalsIgnoreCase(""))
+		{
+			m = map.get(args[0]+args[1]).getAll(s);
+		}
+		else
+		{
+			m = map.get(args[0]+args[1]).getEntity(s,args[2]);
+		}
 		
         //return (m == null) ? "null" : gson.toJson(m, m.getClass());
 		
