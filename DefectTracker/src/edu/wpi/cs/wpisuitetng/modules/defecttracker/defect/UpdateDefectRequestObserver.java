@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.defect;
 
+import javax.swing.JOptionPane;
+
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
@@ -42,7 +44,7 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 			view.setEditModeDescriptors(defect);
 		}
 		else {
-			// TODO notify user of server error
+			JOptionPane.showMessageDialog(null, "Unable to parse defect received from server.");
 		}
 		
 		always();
@@ -50,13 +52,13 @@ public class UpdateDefectRequestObserver implements RequestObserver {
 
 	@Override
 	public void responseError(IRequest iReq) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(null, "Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage());
 		always();
 	}
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(null, "Unable to complete request: " + exception.getMessage());
 		always();
 	}
 	
