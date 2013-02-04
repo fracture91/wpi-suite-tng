@@ -177,7 +177,7 @@ public class DefectValidatorTest {
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
 	}
 	
-	public String makeLongString(int size) {
+	public static String makeLongString(int size) {
 		StringBuilder str = new StringBuilder(size);
 		for(int i = 0; i < size; i++) {
 			str.append('a');
@@ -274,6 +274,7 @@ public class DefectValidatorTest {
 		assertSame(existingDefect.getEvents(), goodUpdatedDefect.getEvents());
 		assertEquals(existingDefect.getCreationDate(), goodUpdatedDefect.getCreationDate());
 		assertNotNull(goodUpdatedDefect.getLastModifiedDate());
+		assertSame(existingDefect, validator.getLastExistingDefect());
 	}
 	
 	@Test

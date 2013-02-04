@@ -1,7 +1,5 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.toolbar;
 
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;

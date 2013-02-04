@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.KeyboardShortcut;
-
 
 /**
  * A dummy module to demonstrate the Janeway client
