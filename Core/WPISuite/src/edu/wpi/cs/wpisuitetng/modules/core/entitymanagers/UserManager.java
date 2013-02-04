@@ -255,8 +255,32 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public User update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+		String str = UserManager.parseUsername(content);
+		
+		return this.update(s, this.getEntity(str)[0], content);
+	}
+	
+	/**
+	 * This static utility method takes a JSON string and attempts to
+	 * 	retrieve a username field from it.
+	 * @param serializedUser	a JSON string containing a password
+	 * @return	the username field parsed.
+	 */
+	public static String parseUsername(String serializedUser)
+	{
+		if(!serializedUser.contains("username"))
+		{
+			throw new JsonParseException("The given JSON string did not contain a username field.");
+		}
+		
+		int fieldStartIndex = serializedUser.indexOf("username");
+		int separator = serializedUser.indexOf(':', fieldStartIndex);
+		int startIndex = serializedUser.indexOf('"', separator) + 1;
+		int endIndex = serializedUser.indexOf('"', startIndex);
+		
+		String username = serializedUser.substring(startIndex, endIndex);
+		
+		return username;
 	}
 
 }
