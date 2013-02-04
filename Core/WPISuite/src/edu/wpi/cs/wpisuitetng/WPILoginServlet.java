@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpResponse;
 
 import edu.wpi.cs.wpisuitetng.exceptions.*;
 
@@ -34,7 +37,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.*;
 public class WPILoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authenticator auth;
-
+	private ErrorResponseFormatter responseFormatter;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,6 +45,7 @@ public class WPILoginServlet extends HttpServlet {
     public WPILoginServlet() {
         super();
         this.auth = new BasicAuth(); // define Authorization implementation
+        this.responseFormatter = new HtmlErrorResponseFormatter(); // define Response content body format
     }
 
 	/**
@@ -66,7 +70,22 @@ public class WPILoginServlet extends HttpServlet {
 		catch(AuthenticationException e) // Authentication Failed.
 		{
 			//TODO: log error
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, Authentication Failed.
+			
+			// Set the response
+			response.setStatus(e.getStatus()); // 403 - Forbidden, Authentication Failed.
+			
+			String contentBody = this.responseFormatter.formatContent(e);
+			
+			// write the string to the body
+			try {
+				PrintWriter contentWriter = response.getWriter();
+				contentWriter.write(contentBody);
+				contentWriter.flush();
+				contentWriter.close();	
+			} 
+			catch (IOException writerException) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+			}
 		}
 	}
 
@@ -99,5 +118,5 @@ public class WPILoginServlet extends HttpServlet {
 				}
 			}
 		}
-	}	
+	}
 }

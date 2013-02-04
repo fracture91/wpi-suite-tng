@@ -23,6 +23,7 @@ import com.google.gson.JsonSyntaxException;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.DatabaseException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -56,7 +57,7 @@ public class ProjectManager implements EntityManager<Project>{
 		try{
 			p = gson.fromJson(content, project);
 		} catch(JsonSyntaxException e){
-			throw new BadRequestException();
+			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
@@ -65,7 +66,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			throw new ConflictException();
+			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
 		return p;
@@ -99,7 +100,7 @@ public class ProjectManager implements EntityManager<Project>{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
 		{
-			throw new NotFoundException();
+			throw new NotFoundException("No (blank) Project id given.");
 		}
 		else
 		{
@@ -107,7 +108,7 @@ public class ProjectManager implements EntityManager<Project>{
 			
 			if(m[0] == null)
 			{
-				throw new NotFoundException();
+				throw new NotFoundException("Project with id <" + id + "> not found.");
 			}
 			else
 			{
@@ -131,7 +132,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			throw new WPISuiteException();
+			throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
 		}
 		
 	}
@@ -179,7 +180,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		catch(Exception e)
 		{
-			throw new WPISuiteException(); // on Mapping failure
+			throw new DatabaseException("Failure in the ProjectManager.update() changeset mapper."); // on Mapping failure
 		}
 		
 		// save the changes back

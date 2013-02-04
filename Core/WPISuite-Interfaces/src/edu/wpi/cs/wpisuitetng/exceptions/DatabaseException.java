@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    mpdelladonna
+ *    twack
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.exceptions;
@@ -15,24 +15,18 @@ package edu.wpi.cs.wpisuitetng.exceptions;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Exception thrown when attempting to store an object already in the database
- * @author mpdelladonna
+ * DatabaseException is thrown for database errors.
+ * @author twack
  *
  */
-public class ConflictException extends WPISuiteException {
-
-	public ConflictException(String message) {
+public class DatabaseException extends WPISuiteException {
+	
+	public DatabaseException(String message) {
 		super(message);
 	}
 
 	@Override
 	public int getStatus() {
-		return HttpServletResponse.SC_CONFLICT; //409
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7823907873323480290L;
-
 }

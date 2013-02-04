@@ -171,9 +171,6 @@ public class ManagerLayer {
 	{		
 		Session s = getSessionFromCookies(cook);
 		   
-		
-		
-		
 		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
         //return (m == null) ? "null" : gson.toJson(m, m.getClass());
@@ -205,6 +202,7 @@ public class ManagerLayer {
 	public synchronized String create(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = getSessionFromCookies(cook);
+
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
         
@@ -222,6 +220,7 @@ public class ManagerLayer {
 	public synchronized String update(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = getSessionFromCookies(cook);
+
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).update(s, content);
 		
@@ -238,7 +237,6 @@ public class ManagerLayer {
 	public synchronized String delete(String[] args,Cookie[] cook) throws WPISuiteException
 	{
 		Session s = getSessionFromCookies(cook);
-		
 		
 		boolean status = map.get(args[0]+args[1]).deleteEntity(s,args[2]);
 		
@@ -321,11 +319,10 @@ public class ManagerLayer {
 		}
 		else
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
-		return s;
-		
+		return s;	
 	}
 	
 }
