@@ -45,6 +45,11 @@ public class Session {
 		return user.getUsername();
 	}
 	
+	public User getUser()
+	{
+		return user;
+	}
+	
 	public Date getLoginTime()
 	{
 		return loginTime;
