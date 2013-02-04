@@ -36,6 +36,13 @@ public interface Model {
 	 */
 	public String toJSON();
 	
+	/* deserializing */
+	
+	/** fromJSON : deserializing this Model's contents from a JSON string
+	 * @return	A Model that was represted by the json String
+	 */
+	public Model fromJSON(String json);
+	
 	
 	/* Built-in overrides/overloads */
 	

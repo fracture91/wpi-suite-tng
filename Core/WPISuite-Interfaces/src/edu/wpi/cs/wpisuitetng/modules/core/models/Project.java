@@ -16,6 +16,7 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
  * The Data Model representation of a Project. Offers
@@ -195,4 +196,5 @@ public class Project extends AbstractModel
 		}
 		return false;
 	}
+
 }

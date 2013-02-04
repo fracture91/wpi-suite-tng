@@ -85,6 +85,7 @@ public class WPICoreServlet extends HttpServlet
 			out.write(this.reponseFormatter.formatContent(e));
 			out.flush();
 			out.close();
+			return;
 		}
         res.setStatus(HttpServletResponse.SC_CREATED);
         out.close();

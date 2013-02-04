@@ -17,6 +17,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
  * The Data Model representation of a User. Implements
@@ -46,6 +47,8 @@ public class User extends AbstractModel
 		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
+		
+		
 	}
 	
 	@Override
@@ -228,5 +231,17 @@ public class User extends AbstractModel
 	public void setRole(Role r)
 	{
 		this.role = r;
+	}
+
+	@Override
+	public Model fromJSON(String json) {
+		// build the custom serializer/deserializer
+		Gson gson;
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(User.class, new UserDeserializer());
+
+		gson = builder.create();
+		
+		return gson.fromJson(json, User.class);
 	}
 }
