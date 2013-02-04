@@ -20,7 +20,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 
@@ -118,6 +118,25 @@ public class Project extends AbstractModel
 		
 	}
 	
+	/**
+	 * Deserializes the given JSON String into a Project's member variables
+	 * @return	the Project from the given JSON string representation 
+	 */
+	public Project fromJSON(String json)
+	{
+		//TODO: Confirm this is needed after deserializer was made
+		String[] splitProject = json.split("{\"projects\":[{\"name\":");
+		String[] splitName = splitProject[1].split(" ,");
+		String name = splitName[0].split("\"")[0];
+		
+		String idNum = splitName[1].split("\"")[1];
+		
+//		Gson gson = new Gson();
+//		
+//		json = gson.toJson(this, Project.class);
+//		return json;
+		return new Project(name, idNum);
+	}
 	
 	/* Built-in overrides/overloads */
 	
