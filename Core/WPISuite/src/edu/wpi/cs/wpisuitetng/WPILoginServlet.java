@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpResponse;
-
 import edu.wpi.cs.wpisuitetng.exceptions.*;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 /**
  * Servlet implementation class WPILoginServlet
@@ -46,7 +43,7 @@ public class WPILoginServlet extends HttpServlet {
     public WPILoginServlet() {
         super();
         this.auth = new BasicAuth(); // define Authorization implementation
-        this.responseFormatter = new HtmlErrorResponseFormatter(); // define Response content body format
+        this.responseFormatter = new JsonErrorResponseFormatter(); // define Response content body format
     }
     
     /**

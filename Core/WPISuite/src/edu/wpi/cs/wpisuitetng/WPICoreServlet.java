@@ -38,7 +38,7 @@ public class WPICoreServlet extends HttpServlet
 	 */
 	public WPICoreServlet()
 	{
-		this.reponseFormatter = new HtmlErrorResponseFormatter();
+		this.reponseFormatter = new JsonErrorResponseFormatter();
 	}
 	
 	/**
