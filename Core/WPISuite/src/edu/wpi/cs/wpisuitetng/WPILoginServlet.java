@@ -70,9 +70,15 @@ public class WPILoginServlet extends HttpServlet {
 				BufferedReader putBody = request.getReader();
 				String projectId = putBody.readLine();
 				
+				// swap out the Sessions and add the project.
 				ManagerLayer man = ManagerLayer.getInstance();
 				SessionManager sessions = man.getSessions();
-				sessions.switchToProject(ssid, projectId);
+				String newSsid = sessions.switchToProject(ssid, projectId);
+				
+				// attach the new cookie to give back to the user.
+				Session projectSession = sessions.getSession(newSsid);
+				Cookie switchedCookie = projectSession.toCookie();
+				response.addCookie(switchedCookie);
 				
 				response.setStatus(HttpServletResponse.SC_OK);
 			}
