@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 
 import edu.wpi.cs.wpisuitetng.exceptions.*;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 /**
  * Servlet implementation class WPILoginServlet
@@ -46,6 +47,56 @@ public class WPILoginServlet extends HttpServlet {
         super();
         this.auth = new BasicAuth(); // define Authorization implementation
         this.responseFormatter = new HtmlErrorResponseFormatter(); // define Response content body format
+    }
+    
+    /**
+     * Perform project switching action. Given a projectID in the PUT Body, switches the Session to an instance for a project.
+     */
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+    	Cookie[] cook = request.getCookies();
+    	String ssid = null;
+		for(Cookie c : cook)
+		{
+			if(c.getName().startsWith("WPISUITE-"))
+				ssid = c.getValue();
+		}
+		
+		if(ssid != null)
+		{			
+			try
+			{				
+				// find the project ID
+				BufferedReader putBody = request.getReader();
+				String projectId = putBody.readLine();
+				
+				ManagerLayer man = ManagerLayer.getInstance();
+				SessionManager sessions = man.getSessions();
+				sessions.switchToProject(ssid, projectId);
+				
+				response.setStatus(HttpServletResponse.SC_OK);
+			}
+			catch(WPISuiteException e)
+			{
+				response.setStatus(e.getStatus());
+				String contentBody = this.responseFormatter.formatContent(e);
+				
+				try {
+					PrintWriter contentWriter = response.getWriter();
+					contentWriter.write(contentBody);
+					contentWriter.flush();
+					contentWriter.close();
+				}
+				catch(IOException writerException)
+				{
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+				}
+			}
+		}
+		else
+		{
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 - no cookie given
+		}
     }
 
 	/**
@@ -68,9 +119,7 @@ public class WPILoginServlet extends HttpServlet {
 			System.out.println("DEBUG: response set");
 		}
 		catch(AuthenticationException e) // Authentication Failed.
-		{
-			//TODO: log error
-			
+		{			
 			// Set the response
 			response.setStatus(e.getStatus()); // 403 - Forbidden, Authentication Failed.
 			

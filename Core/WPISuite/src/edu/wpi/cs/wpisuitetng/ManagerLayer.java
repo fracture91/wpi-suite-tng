@@ -160,6 +160,16 @@ public class ManagerLayer {
 		return u;
 	}
 	
+	/**
+	 * Exposes the Projects in the database for direct access.
+	 * @return	the ProjectManager instance
+	 */
+	public ProjectManager getProjects()
+	{
+		ProjectManager p = (ProjectManager)map.get("coreproject");
+		return p;
+	}
+	
 	/**read()
 	 * Reads the WPISuite cookie and returns the session associated with it in JSON form
 	 * String args[] - {module,model,identifier}

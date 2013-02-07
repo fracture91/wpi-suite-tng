@@ -20,6 +20,7 @@ import javax.servlet.http.Cookie;
 import com.google.gson.*;
 import com.google.gson.annotations.Expose;
 
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -32,6 +33,7 @@ public class Session {
 	@Expose private User user;
 	@Expose private Date loginTime;
 	@Expose public String ssid;
+	@Expose private Project project;
 	
 	/**
 	 * Default constructor. Initializes the loginTime field to the time of construction.
@@ -41,6 +43,15 @@ public class Session {
 	{
 		this.user = user;
 		this.loginTime = new Date();
+		this.project = null;
+		this.ssid = this.generateSessionId();
+	}
+	
+	public Session(User user, Project p)
+	{
+		this.user = user;
+		this.loginTime = new Date();
+		this.project = p;
 		this.ssid = this.generateSessionId();
 	}
 	
@@ -62,6 +73,11 @@ public class Session {
 	public String getSessionId()
 	{
 		return this.ssid;
+	}
+	
+	public Project getProject()
+	{
+		return this.project;
 	}
 	
 	@Override

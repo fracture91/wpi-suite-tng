@@ -12,6 +12,8 @@
 
 package edu.wpi.cs.wpisuitetng.exceptions;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * WPISuiteException class for exceptions in the Sessions system.
  * @author twack
@@ -24,10 +26,13 @@ public class SessionException extends WPISuiteException {
 	 */
 	private static final long serialVersionUID = -522664020374920802L;
 
+	public SessionException(String message) {
+		super(message);
+	}
+
 	@Override
 	public int getStatus() {
-		// TODO Auto-generated method stub
-		return 0;
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
 	}
 	
 	

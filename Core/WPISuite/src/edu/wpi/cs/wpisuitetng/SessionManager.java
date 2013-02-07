@@ -17,7 +17,10 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -96,6 +99,23 @@ public class SessionManager {
 	}
 	
 	/**
+	 * Returns a new Session for the given User into the given project 
+	 * @param username
+	 * @return	the identifying session long ID.
+	 */
+	public String createSession(User user, Project p)
+	{
+		// ignore the possibility of duplicate sessions per-user.
+		
+		// add session
+		Session ses = new Session(user, p);
+		String ssid = ses.getSessionId();
+		sessions.put(ssid, ses);
+		
+		return ssid;
+	}
+	
+	/**
 	 * @return	Retrieves the number of sessions currently in the Manager
 	 */
 	public int sessionCount()
@@ -108,24 +128,33 @@ public class SessionManager {
 	 * 	Parses the username from the token, then creates
 	 * 		a new session for the given user.
 	 * @param sessionToken
-	 * @return	the new Session
+	 * @return	the new Session ID
 	 * @throws WPISuiteException 
 	 */
-	public String renewSession(String sessionToken) throws WPISuiteException
+	public String switchToProject(String sessionId, String projectId) throws WPISuiteException
 	{
-		// remove the old session
-		this.removeSession(sessionToken);
+		// get a copy of the session so we can touch projects.
+		Session current = this.getSession(sessionId);
+		if(current == null)
+		{
+			throw new SessionException("Session matching the givenId does not exist");
+		}
 		
-		// parse the username from the sessionToken
-		Gson gson = new Gson();
-		Session old = gson.fromJson(sessionToken, Session.class);
-		String sessionUsername = old.getUsername();
+		User u = current.getUser();
 		
-		// retrieve the User
+		// find the project
 		ManagerLayer manager = ManagerLayer.getInstance();
-		User sessionUser = manager.getUsers().getEntity(sessionUsername)[0]; // TODO: this looks ugly...
+		ProjectManager projects = manager.getProjects();
+		Project p = projects.getEntity(current, projectId)[0];
 		
-		return createSession(sessionUser);
+		if(p == null)
+		{
+			throw new SessionException("Session-project switch failed because requested project does not exist.");
+		}
+		
+		this.removeSession(sessionId);
+		
+		return createSession(u, p);
 	}
 
 }
