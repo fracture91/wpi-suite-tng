@@ -43,9 +43,9 @@ public class SessionManager {
 	 * @param u	
 	 * @return	True if the map contains a Session for this user, False otherwise.
 	 */
-	public boolean sessionExists(String sessionToken)
+	public boolean sessionExists(String sessionId)
 	{
-		return sessions.containsKey(sessionToken);
+		return sessions.containsKey(sessionId);
 	}
 	
 	/**
@@ -62,10 +62,10 @@ public class SessionManager {
 	 * @param sessionToken	the tokenize cookie given from the client
 	 * @return	The session matching the token.
 	 */
-	public Session getSession(String sessionToken)
+	public Session getSession(String sessionId)
 	{
 		
-		return sessions.get(sessionToken);
+		return sessions.get(sessionId);
 		//TODO: determine how to handle 'not found' case
 	}
 	
@@ -73,26 +73,26 @@ public class SessionManager {
 	 * Removes the session with the given username
 	 * @param sessionToken	
 	 */
-	public void removeSession(String sessionToken)
+	public void removeSession(String sessionId)
 	{
-		sessions.remove(sessionToken); 
+		sessions.remove(sessionId); 
 	}
 	
 	/**
-	 * Returns a new Session for the given User. If a Session already exists for this user,
-	 * 	then renew the Session with a new timestamp.
+	 * Returns a new Session for the given User. 
 	 * @param username
-	 * @return	the new Session for the user.
+	 * @return	the identifying session long ID.
 	 */
-	public Session createSession(User user)
+	public String createSession(User user)
 	{
 		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
 		Session ses = new Session(user);
-		sessions.put(ses.toCookie().getValue(), ses);
+		String ssid = ses.getSessionId();
+		sessions.put(ssid, ses);
 		
-		return ses;
+		return ssid;
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class SessionManager {
 	 * @return	the new Session
 	 * @throws WPISuiteException 
 	 */
-	public Session renewSession(String sessionToken) throws WPISuiteException
+	public String renewSession(String sessionToken) throws WPISuiteException
 	{
 		// remove the old session
 		this.removeSession(sessionToken);

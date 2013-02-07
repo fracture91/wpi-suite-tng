@@ -98,7 +98,10 @@ public abstract class Authenticator {
 		logger.log(Level.INFO, "Password authentication Success! <" + credentials[0] + ">");
 		
 		// create a Session mapping in the ManagerLayer
-		Session userSession = manager.getSessions().createSession(user);
+		SessionManager sessions = manager.getSessions();
+		String ssid = sessions.createSession(user);
+		Session userSession = sessions.getSession(ssid);
+		
 		System.out.println("DEBUG: Create Session");
 		
 		logger.log(Level.INFO, "Login Success. <" + credentials[0] + ">");

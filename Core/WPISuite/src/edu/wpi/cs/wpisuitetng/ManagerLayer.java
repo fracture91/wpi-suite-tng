@@ -34,7 +34,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
+//import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
 
 /**
  * This singleton class responds to API requests directed at 
@@ -70,17 +70,17 @@ public class ManagerLayer {
 		//TODO pull these mappings from some config file and reflect them
 		map.put("coreproject", new ProjectManager(data));
 		map.put("coreuser", new UserManager(data));
-		map.put("defecttrackerdefect", new DefectManager(data));
-		Session s = null;
+		//map.put("defecttrackerdefect", new DefectManager(data));
+		String ssid = null;
 		
 		try {
 			String adminJSON = "{username:\"admin\", name:\"Admin\", password:\"password\", idNum:0}";
-			s = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
+			ssid = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
 		} catch (BadRequestException e) {
 			e.printStackTrace();
 		} catch (ConflictException e) {
 			try {
-				s = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
+				ssid = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
 			} catch (NotFoundException e1) {
 				e1.printStackTrace();
 			} catch (WPISuiteException e1) {
@@ -90,7 +90,7 @@ public class ManagerLayer {
 			e.printStackTrace();
 		}
 		
-		superCookie = s.toCookie();
+		superCookie = sessions.getSession(ssid).toCookie();
 	}
 	
 	/**

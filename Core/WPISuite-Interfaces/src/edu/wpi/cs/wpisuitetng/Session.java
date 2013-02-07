@@ -13,6 +13,8 @@
 package edu.wpi.cs.wpisuitetng;
 
 import java.util.Date;
+import java.util.Random;
+
 import javax.servlet.http.Cookie;
 
 import com.google.gson.*;
@@ -29,6 +31,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class Session {
 	@Expose private User user;
 	@Expose private Date loginTime;
+	@Expose public String ssid;
 	
 	/**
 	 * Default constructor. Initializes the loginTime field to the time of construction.
@@ -38,6 +41,7 @@ public class Session {
 	{
 		this.user = user;
 		this.loginTime = new Date();
+		this.ssid = this.generateSessionId();
 	}
 	
 	public String getUsername()
@@ -53,6 +57,11 @@ public class Session {
 	public Date getLoginTime()
 	{
 		return loginTime;
+	}
+	
+	public String getSessionId()
+	{
+		return this.ssid;
 	}
 	
 	@Override
@@ -71,12 +80,31 @@ public class Session {
 	 * Converts this Session into a Cookie object.
 	 *	Cookie Format:
 	 *			Header 	- 	WPISUITE-{username}
-	 *			Body	-	JSON representation of this Session @see {@link Session#toString()}
+	 *			Body	-	a String containing a randomly generated long.
 	 * @return	a Cookie object representing this Session
 	 */
 	public Cookie toCookie()
 	{
 		String header = "WPISUITE-" + getUsername();
-		return new Cookie(header, this.toString());
+		return new Cookie(header, this.ssid);
+	}
+	
+	/**
+	 * Generates the Session ID as a random long. If the SSID has already been
+	 * 	instantiated then that value is returned.
+	 * @return	a long
+	 */
+	public String generateSessionId()
+	{
+		if(this.ssid != null)
+		{
+			return this.ssid;
+		}
+		
+		Random rand = new Random();
+
+		long ssid = rand.nextLong();
+		
+		return String.valueOf(ssid);
 	}
 }

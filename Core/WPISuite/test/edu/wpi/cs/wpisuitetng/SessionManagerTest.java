@@ -56,9 +56,9 @@ public class SessionManagerTest {
 	@Test
 	public void testCreateSession()
 	{
-		Session session = this.man.createSession(this.u1);
+		String ssid = this.man.createSession(this.u1);
 		
-		Session createdSession = this.man.getSession(session.toString());
+		Session createdSession = this.man.getSession(ssid);
 		
 		assertEquals(this.man.sessionCount(), 1); // check that only one exists in the Manager.
 		assertTrue(createdSession.getUsername().equals(this.u1.getUsername())); // check that the session is the right user
@@ -67,10 +67,10 @@ public class SessionManagerTest {
 	@Test
 	public void testSessionExists()
 	{
-		Session session = this.man.createSession(this.u2);
+		String session = this.man.createSession(this.u2);
 		
 		assertEquals(this.man.sessionCount(), 1);
-		assertTrue(this.man.sessionExists(session.toString()));
+		assertTrue(this.man.sessionExists(session));
 	}
 	
 	@Test
@@ -90,11 +90,11 @@ public class SessionManagerTest {
 	public void testRemoveSession()
 	{
 		this.man.createSession(this.u2);
-		Session ses = this.man.createSession(this.u1);
+		String ssid = this.man.createSession(this.u1);
 		
 		assertEquals(2, this.man.sessionCount()); // check sessions has been created
 		
-		this.man.removeSession(ses.toString());
+		this.man.removeSession(ssid);
 		
 		assertEquals(this.man.sessionCount(), 1);
 	}
@@ -119,12 +119,13 @@ public class SessionManagerTest {
 		SessionManager sessions = manager.getSessions();
 		
 		// create a session to use against the UserManager to create save u1
-		Session u2Ses = sessions.createSession(this.u2);
+		String u2ssid = sessions.createSession(this.u2);
+		Session u2ses = sessions.getSession(u2ssid);
 		
 		// log the user in (u1) using u2's session
 		BasicAuth auth = new BasicAuth();
 		try {
-			users.save(u2Ses, this.u1);
+			users.save(u2ses, this.u1);
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}
@@ -135,16 +136,18 @@ public class SessionManagerTest {
 		assertEquals(2, sessions.sessionCount());
 		
 		// renew the session
-		Session renewed = null;
+		String renewedSsid = null;
 		try {
-			renewed = sessions.renewSession(oldToken);
+			renewedSsid = sessions.renewSession(oldToken);
 		} catch (WPISuiteException e) {
 			fail("unexpeced exception");
 		}
 		
 		assertEquals(2, sessions.sessionCount()); // the new session has been added
-		assertTrue(sessions.sessionExists(renewed.toString()));
+		assertTrue(sessions.sessionExists(renewedSsid));
 		
+
+		Session renewed = sessions.getSession(renewedSsid);
 		//TODO: determine if we can use a wait to push the clock forward.
 		// assertFalse(this.man.sessionExists(oldToken)); 		
 		

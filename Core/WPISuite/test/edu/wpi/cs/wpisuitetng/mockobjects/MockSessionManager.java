@@ -23,7 +23,8 @@ public class MockSessionManager extends SessionManager {
 	public MockSessionManager(User u)
 	{
 		super();
-		ses = createSession(u);
+		String ssid = createSession(u);
+		ses = getSession(ssid);
 	}
 	
 	public Session getTestSession()
