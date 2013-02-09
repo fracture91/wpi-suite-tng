@@ -38,7 +38,7 @@ public class ProjectManagerTest {
 	User tempUser;
 	
 	@Before
-	public void setUp()
+	public void setUp() throws WPISuiteException
 	{
 		test = new ProjectManager(MockDataStore.getMockDataStore());
 		testWithRealDB = new ProjectManager(DataStore.getDataStore());
@@ -52,6 +52,8 @@ public class ProjectManagerTest {
 		conflict.setPermission(Permission.WRITE, tempUser);
 		tempSession = new Session(tempUser);
 		json = new Gson();
+		
+		testWithRealDB.deleteAll(new Session(tempUser)); // make sure we're testing with a clean db
 	}
 	
 	
@@ -100,7 +102,7 @@ public class ProjectManagerTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
-	public void testGetEntityStrinProjectDNE() throws NotFoundException {
+	public void testGetEntityStringProjectDNE() throws NotFoundException {
 		test.getEntity("jefferythegiraffe");
 	}
 
