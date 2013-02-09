@@ -31,17 +31,25 @@ public class ProjectManagerTest {
 	ProjectManager test;
 	ProjectManager testWithRealDB;
 	Project temp;
+	Project delete1;
+	Project delete2;
 	Project updateTemp;
 	Project conflict;
 	Gson json;
 	Session tempSession;
 	User tempUser;
+	Project add1;
+	Project add2;
 	
 	@Before
 	public void setUp() throws WPISuiteException
 	{
 		test = new ProjectManager(MockDataStore.getMockDataStore());
 		testWithRealDB = new ProjectManager(DataStore.getDataStore());
+		delete1 = new Project("test2", "10");
+		delete2 = new Project("test3", "1");
+		add1 = new Project("add1", "11");
+		add2 = new Project("add2", "12");
 		temp = new Project("test","8");
 		tempUser = new User("name", "username", "password", 1);
 		tempUser.setRole(Role.ADMIN);
@@ -52,8 +60,6 @@ public class ProjectManagerTest {
 		conflict.setPermission(Permission.WRITE, tempUser);
 		tempSession = new Session(tempUser);
 		json = new Gson();
-		
-		testWithRealDB.deleteAll(new Session(tempUser)); // make sure we're testing with a clean db
 	}
 	
 	
@@ -108,11 +114,13 @@ public class ProjectManagerTest {
 
 	@Test
 	public void testGetAll() throws WPISuiteException {
-		testWithRealDB.save(tempSession, temp);
-		testWithRealDB.save(tempSession, updateTemp);
+		Project[] initial = testWithRealDB.getAll(new Session(tempUser));
+		int initCount = initial.length;
+		
+		testWithRealDB.save(tempSession, add1);
+		testWithRealDB.save(tempSession, add2);
 		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
-		assertEquals(2, myList.length);
-		testWithRealDB.deleteAll(new Session(tempUser));
+		assertEquals(initCount + 2, myList.length);
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -195,13 +203,17 @@ public class ProjectManagerTest {
 	}
 
 	@Test
+	@Ignore
 	public void testDeleteAll() throws WPISuiteException {
-		testWithRealDB.save(tempSession, temp);
-		testWithRealDB.save(tempSession, updateTemp);
+		Project[] initial = testWithRealDB.getAll(new Session(tempUser));
+		int initCount = initial.length;
+		
+		testWithRealDB.save(tempSession, delete1);
+		testWithRealDB.save(tempSession, delete2);
 		Project[] myList = testWithRealDB.getAll(new Session(tempUser));
 		assertEquals(2, myList.length);
 		
-		testWithRealDB.deleteAll(new Session(tempUser));
+		//testWithRealDB.deleteAll(new Session(tempUser));
 		myList = testWithRealDB.getAll(new Session(tempUser));
 		assertEquals(1, myList.length);
 		assertEquals(myList[0], null);
