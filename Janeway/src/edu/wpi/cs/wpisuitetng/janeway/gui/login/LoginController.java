@@ -103,18 +103,42 @@ public class LoginController implements ActionListener {
 		// Save the session cookie
 		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
 		
+		// Select the project
+		Request projectSelectRequest = Network.getInstance().makeRequest("login", HttpMethod.POST);
+		projectSelectRequest.addObserver(new ProjectSelectRequestObserver(this));
+		projectSelectRequest.send();
+	}
+	
+	/**
+	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * request was unsuccessful.
+	 * @param response A string representing the error that occurred.
+	 */
+	public void loginFailed(String error) {
+		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Login Error", 
+				JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/**
+	 * Method that is called by {@link ProjectSelectRequestObserver} if the login
+	 * request was successful.
+	 * 
+	 * @param response the response returned by the server
+	 */
+	public void projectSelectSuccessful(ResponseModel response) {
 		// Show the main GUI
 		mainGUI.setVisible(true);
 		view.dispose();
 	}
 	
 	/**
-	 * Method that is called by {@link LoginRequestObserver} if the login
+	 * Method that is called by {@link ProjectSelectRequestObserver} if the project select
 	 * request was unsuccessful.
-	 * @param response the response returned by the server
+	 * 
+	 * @param error A string representing the error that occurred.
 	 */
-	public void loginFailed(String error) {
-		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Login Error", 
+	public void projectSelectFailed(String error) {
+		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Project Selection Error", 
 				JOptionPane.ERROR_MESSAGE);
 	}
 }
