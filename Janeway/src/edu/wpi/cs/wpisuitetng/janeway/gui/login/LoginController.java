@@ -81,7 +81,7 @@ public class LoginController implements ActionListener {
 	 */
 	public void sendLoginRequest() {
 		// Form the basic auth string
-		String basicAuth = "Authorization: Basic ";
+		String basicAuth = "Basic ";
 		String password = new String(view.getPasswordField().getPassword());
 		String credentials = view.getUserNameField().getText() + ":" + password;
 		basicAuth += Base64.encodeBase64String(credentials.getBytes());
