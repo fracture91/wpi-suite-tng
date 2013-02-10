@@ -76,5 +76,10 @@ public interface Model {
 	 */
 	public Project getProject();
 	
+	/** 
+	 * Sets the Model's project to the given Project
+	 */
+	public void setProject(Project aProject);
+	
 	
 }

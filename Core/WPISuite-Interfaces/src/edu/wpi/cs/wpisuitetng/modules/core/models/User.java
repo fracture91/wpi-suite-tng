@@ -250,4 +250,8 @@ public class User extends AbstractModel
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void setProject(Project aProject){
+		//Users are not currently Associated with projects directly 
+	}
 }

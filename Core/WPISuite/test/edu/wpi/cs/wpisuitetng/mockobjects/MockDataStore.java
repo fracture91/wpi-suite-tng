@@ -186,4 +186,22 @@ public class MockDataStore implements Data {
 		return tmp;
 	}
 
+	@Override
+	public <T> boolean save(T aModel, Project aProject) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> List<Model> deleteAll(T aSample, Project aProject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

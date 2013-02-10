@@ -148,6 +148,21 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).save(null, null);
 	}
@@ -182,6 +197,21 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getUsername());
 	}
@@ -213,6 +243,21 @@ public class UserManagerTest {
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
 					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
 				// TODO Auto-generated method stub
 				return null;
 			}

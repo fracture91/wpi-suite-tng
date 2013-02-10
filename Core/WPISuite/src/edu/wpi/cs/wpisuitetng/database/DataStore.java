@@ -59,16 +59,31 @@ public class DataStore implements Data {
 	}
 
 	/**
-	 * Saves T into the database
+	 * Saves a Model into the database
 	 * @param Model to save
 	 */
-	public <T> boolean save(T aTNG){
+	public <T> boolean save(T aModel){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+
+		theDB.store(aModel);
+		System.out.println("Stored " + aModel);
+		theDB.commit();
+		return true;
+	}
+	
+	/**
+	 * Saves a Model into the database
+	 * @param Model to save
+	 */
+	public <T> boolean save(T aModel, Project aProject){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 
 		//ObjectContainer client = server.openClient();
-		theDB.store(aTNG);
-		System.out.println("Stored " + aTNG);
+		((Model) aModel).setProject(aProject);
+		theDB.store(aModel);
+		System.out.println("Stored " + aModel);
 		theDB.commit();
 		return true;
 	}
@@ -216,6 +231,29 @@ public class DataStore implements Data {
 		theDB.commit();
 		return result;
 	}
+	
+	/**
+	 * Retrieves all objects of the given Class. 
+	 * @param aSample an object of the class we want to retrieve All of
+	 * @param aProject Project to search in for the objects
+	 * @return a List of all of the objects of the given class
+	 */
+	public <T> List<Model> retrieveAll(T aSample, Project aProject){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		ArrayList<Model> result = new ArrayList<Model>(); 
+		List<T> allResults = theDB.queryByExample(aSample.getClass());
+		for(Iterator iterator = result.iterator(); iterator.hasNext();){
+			Model theModel = (Model)iterator.next();
+			if(theModel.getProject() != null &&
+					theModel.getProject().getName().equalsIgnoreCase(aProject.getName())){
+				result.add(theModel);
+			}
+		}
+		System.out.println("retrievedAll: "+result);
+		theDB.commit();
+		return result;
+	}
 
 	/** Deletes the given object and returns the object if successful
 	 * @param The object to be deleted
@@ -242,6 +280,19 @@ public class DataStore implements Data {
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		List<T> toBeDeleted = retrieveAll(aSample);
 		for(T aTNG: toBeDeleted){
+			System.out.println("Deleting: "+aTNG);
+			theDB.delete(aTNG);
+		}
+		theDB.commit();
+		return toBeDeleted;
+
+	}
+	
+	public <T> List<Model> deleteAll(T aSample, Project aProject){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		List<Model> toBeDeleted = retrieveAll(aSample, aProject);
+		for(Model aTNG: toBeDeleted){
 			System.out.println("Deleting: "+aTNG);
 			theDB.delete(aTNG);
 		}

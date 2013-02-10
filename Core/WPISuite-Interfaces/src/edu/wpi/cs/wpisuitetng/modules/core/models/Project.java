@@ -9,6 +9,7 @@
  * Contributors:
  *    twack
  *    mpdelladonna
+ *    bgaffey
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.core.models;
@@ -278,6 +279,11 @@ public class Project extends AbstractModel
 	@Override
 	public Project getProject() {
 		return null;
+	}
+
+	@Override
+	public void setProject(Project aProject) {
+		//Can't set a project's project
 	}
 
 }

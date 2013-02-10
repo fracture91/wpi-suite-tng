@@ -22,10 +22,18 @@ public interface Data
 {
 	/**
 	 * Saves aTNG passed into the database
-	 * @param aTNG
+	 * @param aModel - The model to be saved
 	 * @return true if save was successful, false otherwise
 	 */
-	public <T> boolean save(T aTNG);
+	public <T> boolean save(T aModel);
+	
+	/**
+	 * Saves aTNG passed into the database
+	 * @param aModel - the Model to save
+	 * @param aProject - the Project the model is associated with 
+	 * @return true if save was successful, false otherwise
+	 */
+	public <T> boolean save(T aModel, Project aProject);
 	
 	/**
 	 * Retrieves the object of the class anObjectQueried with the value
@@ -76,5 +84,27 @@ public interface Data
 	 * @return List of all of the objects of the class of aSample
 	 */
 	public <T> List<T> retrieveAll(T aSample);
+	
+	/**
+	 * Retrieves all objects of the the same class as aSample in the database
+	 * @param aSample - Object whose class will be used 
+	 * @param aProject - Project to Query within
+	 * @return List of all of the objects of the class of aSample
+	 */
+	public <T> List<Model> retrieveAll(T aSample, Project aProject);
+	
+	/**
+	 * Deletes all objects of the same class as aSample in the database
+	 * @param aSample - Object whose class will be used
+	 * @return List of all the objects of the class of aSample which were deleted
+	 */
 	public <T> List<T> deleteAll(T aSample);
+	
+	/**
+	 * Deletes all objects of the same class as aSample in the database
+	 * @param aSample - Object whose class will be used
+	 * @param aProject - Project to query in to delete from
+	 * @return List of all the objects of the class of aSample which were deleted
+	 */
+	public <T> List<Model> deleteAll(T aSample, Project aProject);
 }
