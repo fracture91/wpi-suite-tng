@@ -30,7 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public class DataStore implements Data {
-	
+
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;
 	static ObjectContainer theDB;
@@ -40,8 +40,8 @@ public class DataStore implements Data {
 	static String DB4oUser = "bgaffey";
 	static String DB4oPass = "password";
 	static String DB4oServer = "localhost";
-		  
-	
+
+
 	public static DataStore getDataStore()
 	{
 		if(myself == null)
@@ -52,12 +52,12 @@ public class DataStore implements Data {
 			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
 			server.grantAccess(DB4oUser,DB4oPass);
-			
+
 			theDB = server.openClient();
 		}
 		return myself;
 	}
-	
+
 	/**
 	 * Saves T into the database
 	 * @param Model to save
@@ -65,14 +65,14 @@ public class DataStore implements Data {
 	public <T> boolean save(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
-			//ObjectContainer client = server.openClient();
-			theDB.store(aTNG);
-			System.out.println("Stored " + aTNG);
-			theDB.commit();
+
+		//ObjectContainer client = server.openClient();
+		theDB.store(aTNG);
+		System.out.println("Stored " + aTNG);
+		theDB.commit();
 		return true;
 	}
-	
+
 	/**
 	 *  For this function to work you need to have a getter that takes zero arguments,
 	 *  and has the name
@@ -92,7 +92,7 @@ public class DataStore implements Data {
 	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue) throws WPISuiteException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
+
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -105,11 +105,12 @@ public class DataStore implements Data {
 		if(theGetter == null){
 			throw new WPISuiteException("Null getter method.");
 		}
-		
+
 		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
-					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);//objects that have aFieldName equal to theGivenValue get added to the list 
+					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
+					//objects that have aFieldName equal to theGivenValue get added to the list 
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -125,12 +126,12 @@ public class DataStore implements Data {
 				}
 			}
 		});
-	
+
 		System.out.println(result);
 		theDB.commit();
 		return result;
 	}
-	
+
 	/**
 	 * Retrieves the objects of the given class type with the given field value from only
 	 * the given project. 
@@ -160,71 +161,48 @@ public class DataStore implements Data {
 			//If no project is given, just search the entire database
 			retrieve(anObjectQueried, aFieldName, theGivenValue);
 		}
-		
+
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-
-		try {
-			final Method projectName = anObjectQueried.getMethod("getProjectName");
-			ArrayList<Model> correctModels = new ArrayList<Model>();
-
-			List<Model> filteredProjects = theDB.query(new Predicate<Model>(){
-				public boolean match(Model anObject){
-					try {
-						return projectName.invoke(anObject).equals(theProject.getName()) ||
-								projectName.invoke(anObject).equals("");
-					} catch (IllegalAccessException e) {
-						return false;
-					} catch (IllegalArgumentException e) {
-						return false;
-					} catch (InvocationTargetException e) {
-						return false;
-					}//objects that have aFieldName equal to theGivenValue get added to the list 
-				}
-			});
-			
-			//ObjectContainer client = server.openClient();
-			Method[] allMethods = anObjectQueried.getMethods();
-			Method methodToBeSaved = null;
-			for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
-				if(m.getName().equalsIgnoreCase("get"+aFieldName)){
-					methodToBeSaved = m; //saves the method called "get" + aFieldName
-				}
+		//ObjectContainer client = server.openClient();
+		Method[] allMethods = anObjectQueried.getMethods();
+		Method methodToBeSaved = null;
+		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+			if(m.getName().equalsIgnoreCase("get"+aFieldName)){
+				methodToBeSaved = m; //saves the method called "get" + aFieldName
 			}
-
-			final Method theGetter = methodToBeSaved;
-			if(theGetter == null){
-				throw new WPISuiteException("Null getter method.");
-			}
-			
-			for(Iterator<Model> iterator = filteredProjects.iterator(); iterator.hasNext();){
-				Model thisModel = iterator.next();
-				try {
-					if(theGetter.invoke(thisModel).equals(theGivenValue)){
-						correctModels.add(thisModel);
-					}
-				} catch (IllegalAccessException e) {
-					//Skip to next Model
-				} catch (IllegalArgumentException e) {
-					//Skip to next Model
-				} catch (InvocationTargetException e) {
-					//Skip to next Model
-				}
-				
-			}
-
-			System.out.println(correctModels);
-			theDB.commit();
-			return correctModels;
-			
-		} catch (NoSuchMethodException e1) {
-			throw new WPISuiteException("Project did not have method \"getName()\"");
-		} catch (SecurityException e1) {
-			throw new WPISuiteException("Project did not have method \"getName()\"");
 		}
 
+		final Method theGetter = methodToBeSaved;
+		if(theGetter == null){
+			throw new WPISuiteException("Null getter method.");
+		}
+
+
+		List<Model> result = theDB.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
+				try {
+					return (anObject.getProject() == null ||
+							anObject.getProject().getName().equals(theProject.getName())) &&
+							theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
+					//objects that have aFieldName equal to theGivenValue get added to the list
+
+				} catch (IllegalAccessException e) {
+					return false;
+				} catch (IllegalArgumentException e) {
+					return false;
+				} catch (InvocationTargetException e) {
+					return false;
+				}//objects that have aFieldName equal to theGivenValue get added to the list 
+			}
+		});
+
+		System.out.println(result);
+		theDB.commit();
+		return result;
+
 	}
-	
+
 	/**
 	 * Retrieves all objects of the given Class. 
 	 * @param aSample an object of the class we want to retrieve All of
@@ -238,7 +216,7 @@ public class DataStore implements Data {
 		theDB.commit();
 		return result;
 	}
-	
+
 	/** Deletes the given object and returns the object if successful
 	 * @param The object to be deleted
 	 * @return The object being deleted
@@ -246,19 +224,19 @@ public class DataStore implements Data {
 	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
+
 		//ObjectContainer client = server.openClient();
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
-	    T found = (T) result.next();
-	    theDB.delete(found);
+		T found = (T) result.next();
+		theDB.delete(found);
 		theDB.commit();
 		//return "Deleted "+aTNG;
 		return found;
-		
+
 	}
-	
-	
-	
+
+
+
 	public <T> List<T> deleteAll(T aSample){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -269,11 +247,11 @@ public class DataStore implements Data {
 		}
 		theDB.commit();
 		return toBeDeleted;
-		
+
 	}
-	
-	
-	 /** For this function to work you need to have a setter that takes the value to change,
+
+
+	/** For this function to work you need to have a setter that takes the value to change,
 	 *  the field to and is named in the convention
 	 *  convention of set + the given fieldName (ie setID for the field ID from an object). 
 	 *  The value can be of any type, provided that there is a .equals method for it. 
@@ -301,7 +279,7 @@ public class DataStore implements Data {
 			}
 			//TODO: IF Null solve this problem...
 			final Method theSetter = methodToBeSaved;
-			
+
 			try {
 				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i), changeValue);
 				save(theObject);
@@ -315,10 +293,10 @@ public class DataStore implements Data {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			theDB.commit();
-			
-			
+
+
 		}
 	}
 

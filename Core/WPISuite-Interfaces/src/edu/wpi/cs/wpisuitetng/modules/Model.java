@@ -32,11 +32,6 @@ public interface Model {
 	public void save();
 	public void delete();
 	
-	/** getProjectName : Get the name of this model's associated project
-	 * @return	A string containing the name of this Model's project name.
-	 */
-	public String getProjectName();
-	
 	/* serializing */
 	
 	/** toJSON : serializing this Model's contents into a JSON/GSON string

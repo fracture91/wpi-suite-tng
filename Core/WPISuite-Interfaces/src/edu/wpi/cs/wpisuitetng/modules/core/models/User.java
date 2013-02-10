@@ -131,11 +131,6 @@ public class User extends AbstractModel
 		return;
 	}
 	
-	public String getProjectName() {
-		// Users do not have a specific project so return the empty string. 
-		return "";
-	}
-	
 	/* Serializing */
 	
 	/**

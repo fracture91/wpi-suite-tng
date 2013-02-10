@@ -43,12 +43,6 @@ public class PermissionTest {
 			public Project getProject() {
 				return null;
 			}
-
-			@Override
-			public String getProjectName() {
-				// TODO Auto-generated method stub
-				return null;
-			}
 			
 		};
 		u = new User("ted", "tdude", "nothing", 1);
