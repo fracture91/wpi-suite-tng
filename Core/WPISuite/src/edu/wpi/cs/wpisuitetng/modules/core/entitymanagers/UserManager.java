@@ -77,7 +77,7 @@ public class UserManager implements EntityManager<User> {
 		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
 		User p;
 		try{
-			p = (User)new User(null, null, null, 0).fromJSON(content);
+			p = User.fromJSON(content);
 		} catch(JsonSyntaxException e){
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
@@ -205,7 +205,7 @@ public class UserManager implements EntityManager<User> {
 		// Inflate the changeSet into a User object.
 		try
 		{
-			changes = (User)new User(null, null, null, 0).fromJSON(changeSet);
+			changes = User.fromJSON(changeSet);
 		}
 		catch(JsonParseException e)
 		{
@@ -220,10 +220,11 @@ public class UserManager implements EntityManager<User> {
 			toUpdate.setName(changes.getName());
 		}
 
-		if(changes.getUsername() != null)
+		//shouldn't be able to change unique identifier
+		/*if(changes.getUsername() != null)
 		{
 			toUpdate.setUserName(changes.getUsername());
-		}
+		}*/
 
 		if(!changes.getRole().equals(toUpdate.getRole()))
 		{

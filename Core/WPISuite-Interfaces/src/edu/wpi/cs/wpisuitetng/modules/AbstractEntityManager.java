@@ -12,6 +12,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules;
 
+import com.google.gson.JsonParseException;
+
 import edu.wpi.cs.wpisuitetng.database.Data;
 
 
@@ -22,5 +24,28 @@ public abstract class AbstractEntityManager implements EntityManager<Model>
 	public AbstractEntityManager(Data data)
 	{
 		this.data = data;
+	}
+	
+	/**
+	 * This static utility method takes a JSON string and attempts to
+	 * 	retrieve a username field from it.
+	 * @param serializedUser	a JSON string containing a password
+	 * @return	the username field parsed.
+	 */
+	public static String parseFieldFromJSON(String serializedModel, String FieldName)
+	{
+		if(!serializedModel.contains(FieldName))
+		{
+			throw new JsonParseException("The given JSON string did not contain specified field.");
+		}
+		
+		int fieldStartIndex = serializedModel.indexOf(FieldName);
+		int separator = serializedModel.indexOf(':', fieldStartIndex);
+		int startIndex = serializedModel.indexOf('"', separator) + 1;
+		int endIndex = serializedModel.indexOf('"', startIndex);
+		
+		String field = serializedModel.substring(startIndex, endIndex);
+		
+		return field;
 	}
 }

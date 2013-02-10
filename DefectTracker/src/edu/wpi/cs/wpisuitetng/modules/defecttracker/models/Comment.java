@@ -3,6 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -99,6 +100,12 @@ public class Comment extends DefectEvent {
 	public void setPermission(Permission p, User u) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

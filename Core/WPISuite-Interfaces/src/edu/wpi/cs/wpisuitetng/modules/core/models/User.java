@@ -96,7 +96,7 @@ public class User extends AbstractModel
 	}
 	
 	/**
-	 * Sets password (plain text for now, crypto is in the future)
+	 * Sets password (please encrypt before using this method)
 	 * @param pass
 	 */
 	public void setPassword(String pass)
@@ -238,8 +238,8 @@ public class User extends AbstractModel
 		this.role = r;
 	}
 
-	@Override
-	public Model fromJSON(String json) {
+	
+	public static User fromJSON(String json) {
 		// build the custom serializer/deserializer
 		Gson gson;
 		GsonBuilder builder = new GsonBuilder();
@@ -248,5 +248,11 @@ public class User extends AbstractModel
 		gson = builder.create();
 		
 		return gson.fromJson(json, User.class);
+	}
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

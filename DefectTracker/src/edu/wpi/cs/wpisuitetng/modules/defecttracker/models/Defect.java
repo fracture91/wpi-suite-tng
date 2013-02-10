@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
 
@@ -288,6 +289,12 @@ public class Defect implements Model {
 	public void setPermission(Permission p, User u) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
