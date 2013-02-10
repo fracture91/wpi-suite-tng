@@ -200,10 +200,10 @@ public class ManagerLayer {
 			response = "[";
 			for(Model n : m)
 			{
-				response.concat(n.toJSON()+",");
+				response = response.concat(n.toJSON()+",");
 			}
-			response = response.replace(response.substring(response.length()-1), "");
-			response.concat("]");
+			response = response.substring(0, response.length() - 1); // remove trailing comma
+			response = response.concat("]");
 		}
 		
 		return response;
