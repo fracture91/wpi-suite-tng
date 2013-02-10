@@ -20,13 +20,15 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class Db4oDatabaseTest {
 	
 
 	@Test
-	public void testSaveandRetrieve() {
+	public void testSaveandRetrieve() throws WPISuiteException {
 		Data db = DataStore.getDataStore();
 		User[] arr = new User[1];
 		User firstUser = new User("Ryan", "rchamer", "password", 0);
@@ -37,7 +39,7 @@ public class Db4oDatabaseTest {
 	}
 	
 	@Test
-	public void testDelete(){
+	public void testDelete() throws WPISuiteException{
 		Data db = DataStore.getDataStore();
 		User[] arr = new User[1];
 		User firstUser = new User("Ryan", "rchamer", "password", 0);
@@ -48,7 +50,7 @@ public class Db4oDatabaseTest {
 	}
 	
 	@Test
-	public void testUpdate(){
+	public void testUpdate() throws WPISuiteException{
 		Data db = DataStore.getDataStore();
 		User[] arr = new User[2];
 		User firstUser = new User("Ryan", "rchamer", "password", 0);
@@ -85,7 +87,7 @@ public class Db4oDatabaseTest {
 	}
 	
 	@Test
-	public void testDeleteAll(){
+	public void testDeleteAll() throws WPISuiteException{
 		Data db = DataStore.getDataStore();
 		User[] arr = new User[2];
 		User firstUser = new User("Brian", "bgaffey", "password", 0);
@@ -104,6 +106,22 @@ public class Db4oDatabaseTest {
 		assertEquals(initCount, retrievedList.size());
 		assertEquals(me1, null);
 		assertEquals(me2, null);
+	}
+	
+	@Test
+	public void testRetrieveWithProjects() throws WPISuiteException{
+		Data db = DataStore.getDataStore();
+		User[] arr = new User[2];
+		User firstUser = new User("Brian", "bgaffey", "password", 0);
+		User secondUser = new User("Alex", "alex", "password1", 1);
+		Project myProject = new Project("myProject", "0");
+		Project notMyProject = new Project("notMyProject", "1");
+		db.save(firstUser);
+		db.save(myProject);
+		User result = db.retrieve(User.class, "username", "bgaffey", myProject).toArray(arr)[0];
+		assertEquals(firstUser, result);
+		db.deleteAll(firstUser);
+		db.deleteAll(myProject);	
 	}
 
 }

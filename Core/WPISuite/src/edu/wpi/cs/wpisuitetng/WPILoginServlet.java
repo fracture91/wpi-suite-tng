@@ -138,6 +138,22 @@ public class WPILoginServlet extends HttpServlet {
 			catch (IOException writerException) {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
 			}
+		} catch (WPISuiteException e) {
+			// Set the response
+			response.setStatus(e.getStatus()); // 403 - Forbidden, Authentication Failed.
+			
+			String contentBody = this.responseFormatter.formatContent(e);
+			
+			// write the string to the body
+			try {
+				PrintWriter contentWriter = response.getWriter();
+				contentWriter.write(contentBody);
+				contentWriter.flush();
+				contentWriter.close();	
+			} 
+			catch (IOException writerException) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+			}
 		}
 	}
 

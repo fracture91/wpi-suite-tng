@@ -313,9 +313,10 @@ public class ManagerLayerTest {
 	/**
 	 * Make sure that each time you get an object from the data base you're getting the same one
 	 * be careful with this test, it touches the actual database
+	 * @throws WPISuiteException 
 	 */
 	@Test
-	public void testDBSession()
+	public void testDBSession() throws WPISuiteException
 	{
 		Data db = DataStore.getDataStore();
 		User[] arr = new User[1];

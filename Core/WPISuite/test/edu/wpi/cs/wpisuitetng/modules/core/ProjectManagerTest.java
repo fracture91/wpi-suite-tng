@@ -92,12 +92,12 @@ public class ProjectManagerTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void testGetEntityStringEmptyString() throws NotFoundException {
+	public void testGetEntityStringEmptyString() throws WPISuiteException {
 		test.getEntity("");
 	}
 	
 	@Test
-	public void testGetEntityStringProjectExists() {
+	public void testGetEntityStringProjectExists() throws WPISuiteException {
 		Project[] u = null;
 		try {
 			u = test.getEntity("5");
@@ -108,7 +108,7 @@ public class ProjectManagerTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
-	public void testGetEntityStringProjectDNE() throws NotFoundException {
+	public void testGetEntityStringProjectDNE() throws WPISuiteException {
 		test.getEntity("jefferythegiraffe");
 	}
 
@@ -143,6 +143,13 @@ public class ProjectManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).save(null, null);
 	}
@@ -171,6 +178,13 @@ public class ProjectManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
@@ -196,6 +210,13 @@ public class ProjectManagerTest {
 			}
 			@Override
 			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			}

@@ -14,7 +14,9 @@ package edu.wpi.cs.wpisuitetng.database;
 
 import java.util.List;
 
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public interface Data 
 {
@@ -32,8 +34,23 @@ public interface Data
 	 * @param aFieldName - field that object will be retrieved by
 	 * @param theGivenValue - value of aFieldName
 	 * @return
+	 * @throws WPISuiteException 
 	 */
-	public List<Model> retrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
+	public List<Model> retrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue) throws WPISuiteException;
+	
+	
+	/**
+	 * Retrieves the object of the class anObjectQueried with the value
+	 * theGivenValue in the field aFieldName
+	 * @param anObjectQueried - class of object to be retrieved
+	 * @param aFieldName - field that object will be retrieved by
+	 * @param theGivenValue - value of aFieldName
+	 * @param theProject - what Project to search in 
+	 * @return
+	 * @throws WPISuiteException 
+	 */
+	public List<Model> retrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue, final Project theProject) throws WPISuiteException;
+	
 	
 	/**
 	 * Deletes aTNG from the database
@@ -49,8 +66,9 @@ public interface Data
 	 * @param uniqueID - Value of fieldName
 	 * @param changeField - Field that will be changed through the update
 	 * @param changeValue - Value that changeField will be changed to
+	 * @throws WPISuiteException 
 	 */
-	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue);
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException;
 	
 	/**
 	 * Retrieves all objects of the the same class as aSample in the database

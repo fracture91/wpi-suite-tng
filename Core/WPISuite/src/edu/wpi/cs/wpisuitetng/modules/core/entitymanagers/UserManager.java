@@ -102,7 +102,7 @@ public class UserManager implements EntityManager<User> {
 	
 	
 	@Override
-	public User[] getEntity(Session s,String id) 
+	public User[] getEntity(Session s,String id) throws WPISuiteException 
 	{
 		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
@@ -122,9 +122,9 @@ public class UserManager implements EntityManager<User> {
 	 * 
 	 * @param id - the id of the user, in this case it's the username
 	 * @return a list of matching users
-	 * @throws NotFoundException if the user cannot be found
+	 * @throws WPISuiteException 
 	 */
-	public User[] getEntity(String id) throws NotFoundException
+	public User[] getEntity(String id) throws WPISuiteException
 	{
 		User[] m = new User[1];
 		if(id.equalsIgnoreCase(""))
@@ -167,7 +167,7 @@ public class UserManager implements EntityManager<User> {
 	}
 
 	@Override
-	public boolean deleteEntity(Session s1 ,String id) {
+	public boolean deleteEntity(Session s1 ,String id) throws WPISuiteException {
 		
 		Model m = data.delete(data.retrieve(user, "username", id).get(0));
 		
