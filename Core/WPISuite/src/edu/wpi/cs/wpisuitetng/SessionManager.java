@@ -17,7 +17,10 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -43,9 +46,9 @@ public class SessionManager {
 	 * @param u	
 	 * @return	True if the map contains a Session for this user, False otherwise.
 	 */
-	public boolean sessionExists(String sessionToken)
+	public boolean sessionExists(String sessionId)
 	{
-		return sessions.containsKey(sessionToken);
+		return sessions.containsKey(sessionId);
 	}
 	
 	/**
@@ -62,10 +65,10 @@ public class SessionManager {
 	 * @param sessionToken	the tokenize cookie given from the client
 	 * @return	The session matching the token.
 	 */
-	public Session getSession(String sessionToken)
+	public Session getSession(String sessionId)
 	{
 		
-		return sessions.get(sessionToken);
+		return sessions.get(sessionId);
 		//TODO: determine how to handle 'not found' case
 	}
 	
@@ -73,26 +76,43 @@ public class SessionManager {
 	 * Removes the session with the given username
 	 * @param sessionToken	
 	 */
-	public void removeSession(String sessionToken)
+	public void removeSession(String sessionId)
 	{
-		sessions.remove(sessionToken); 
+		sessions.remove(sessionId); 
 	}
 	
 	/**
-	 * Returns a new Session for the given User. If a Session already exists for this user,
-	 * 	then renew the Session with a new timestamp.
+	 * Returns a new Session for the given User. 
 	 * @param username
-	 * @return	the new Session for the user.
+	 * @return	the identifying session long ID.
 	 */
-	public Session createSession(User user)
+	public String createSession(User user)
 	{
 		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
 		Session ses = new Session(user);
-		sessions.put(ses.toCookie().getValue(), ses);
+		String ssid = ses.getSessionId();
+		sessions.put(ssid, ses);
 		
-		return ses;
+		return ssid;
+	}
+	
+	/**
+	 * Returns a new Session for the given User into the given project 
+	 * @param username
+	 * @return	the identifying session long ID.
+	 */
+	public String createSession(User user, Project p)
+	{
+		// ignore the possibility of duplicate sessions per-user.
+		
+		// add session
+		Session ses = new Session(user, p);
+		String ssid = ses.getSessionId();
+		sessions.put(ssid, ses);
+		
+		return ssid;
 	}
 	
 	/**
@@ -108,24 +128,33 @@ public class SessionManager {
 	 * 	Parses the username from the token, then creates
 	 * 		a new session for the given user.
 	 * @param sessionToken
-	 * @return	the new Session
+	 * @return	the new Session ID
 	 * @throws WPISuiteException 
 	 */
-	public Session renewSession(String sessionToken) throws WPISuiteException
+	public String switchToProject(String sessionId, String projectId) throws WPISuiteException
 	{
-		// remove the old session
-		this.removeSession(sessionToken);
+		// get a copy of the session so we can touch projects.
+		Session current = this.getSession(sessionId);
+		if(current == null)
+		{
+			throw new SessionException("Session matching the givenId does not exist");
+		}
 		
-		// parse the username from the sessionToken
-		Gson gson = new Gson();
-		Session old = gson.fromJson(sessionToken, Session.class);
-		String sessionUsername = old.getUsername();
+		User u = current.getUser();
 		
-		// retrieve the User
+		// find the project
 		ManagerLayer manager = ManagerLayer.getInstance();
-		User sessionUser = manager.getUsers().getEntity(sessionUsername)[0]; // TODO: this looks ugly...
+		ProjectManager projects = manager.getProjects();
+		Project p = projects.getEntity(current, projectId)[0];
 		
-		return createSession(sessionUser);
+		if(p == null)
+		{
+			throw new SessionException("Session-project switch failed because requested project does not exist.");
+		}
+		
+		this.removeSession(sessionId);
+		
+		return createSession(u, p);
 	}
 
 }

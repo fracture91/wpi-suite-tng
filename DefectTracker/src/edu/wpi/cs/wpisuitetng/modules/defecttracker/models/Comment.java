@@ -3,6 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -110,4 +111,11 @@ public class Comment extends DefectEvent {
 		Gson parser = new Gson();
 		return parser.fromJson(json, Comment.class);
 	}
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

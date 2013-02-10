@@ -13,14 +13,18 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
  * The Data Model representation of a Project. Offers
  * 	serialization and database interaction.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 
@@ -29,9 +33,29 @@ public class Project extends AbstractModel
 
 	private String name;
 	private String idNum;
+	private String[] supportedModules;
+	private User owner;
+	private ArrayList<User> team;
 	
 	/**
 	 * Primary constructor for a Project
+	 * @param name - the project name
+	 * @param idNum - the project ID number as a string
+	 * @param owner - The User who owns this project
+	 * @param team - The User[] who are associated with the project
+	 * @param supportedModules - the modules supported by this project
+	 */
+	public Project(String name, String idNum, User owner, User[] team, String[] supportedModules)
+	{
+		this.name = name;
+		this.idNum = idNum;
+		this.owner = owner;
+		this.supportedModules = supportedModules;
+		this.team = new ArrayList<User>(Arrays.asList(team));
+	}
+	
+	/**
+	 * Secondary constructor for a Project
 	 * @param name	the project name
 	 * @param idNum	the ID number to associate with this Project.
 	 */
@@ -58,7 +82,7 @@ public class Project extends AbstractModel
 		this.name = newName;
 	}
 	
-	public void setIdNum(String newId)
+	private void setIdNum(String newId)
 	{
 		this.idNum = newId;
 	}
@@ -118,6 +142,25 @@ public class Project extends AbstractModel
 		
 	}
 	
+	/**
+	 * Deserializes the given JSON String into a Project's member variables
+	 * @return	the Project from the given JSON string representation 
+	 */
+	public static Project fromJSON(String json)
+	{
+		//TODO: Confirm this is needed after deserializer was made
+		String[] splitProject = json.split("{\"projects\":[{\"name\":");
+		String[] splitName = splitProject[1].split(" ,");
+		String name = splitName[0].split("\"")[0];
+		
+		String idNum = splitName[1].split("\"")[1];
+		
+//		Gson gson = new Gson();
+//		
+//		json = gson.toJson(this, Project.class);
+//		return json;
+		return new Project(name, idNum);
+	}
 	
 	/* Built-in overrides/overloads */
 	
@@ -176,4 +219,62 @@ public class Project extends AbstractModel
 		}
 		return false;
 	}
+
+	public String[] getSupportedModules() {
+		return supportedModules;
+	}
+
+	public void setSupportedModules(String[] supportedModules) {
+		this.supportedModules = supportedModules;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public User[] getTeam() {
+		User[] a = new User[1];
+		return team.toArray(a);
+	}
+	
+	/**
+	 * adds a team member to the team
+	 * @param u - the user to add to the team
+	 * @return true if the user was added, false if the user was already in the team
+	 */
+	public boolean addTeamMember(User u)
+	{
+		if(!team.contains(u))
+		{
+			team.add(u);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * removes a team member from the team
+	 * @param u - the team member to remove from the team
+	 * @return - true if the member was removed, false if they were not in the team
+	 */
+	public boolean removeTeamMember(User u)
+	{
+		if(!team.contains(u))
+		{
+			team.remove(u);
+			return true;
+		}
+		return false;
+	}
+
+	
+	@Override
+	public Project getProject() {
+		return null;
+	}
+
 }

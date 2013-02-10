@@ -56,7 +56,8 @@ public class AuthenticatorTest {
 		SessionManager sessions = man.getSessions();
 		UserManager users = man.getUsers();
 		
-		users.deleteAll(this.sessions.createSession(this.u));
+		String ssid = this.sessions.createSession(this.u);
+		users.deleteAll(this.sessions.getSession(ssid));
 		sessions.clearSessions();
 	}
 	
@@ -75,21 +76,23 @@ public class AuthenticatorTest {
 	 */
 	public void testLogout()
 	{		
-		Session uSes = this.sessions.createSession(this.u);
+		int test = this.sessions.sessionCount();
+		String ssid = this.sessions.createSession(this.u);
 		
-		assertEquals(1, this.sessions.sessionCount());
+		Session uSes = this.sessions.getSession(ssid);
+		
+		assertEquals(test+1, this.sessions.sessionCount());
 		
 		// logout the user
-		this.auth.logout(uSes.toString());
+		this.auth.logout(ssid);
 		
-		assertEquals(0, this.sessions.sessionCount());
+		assertEquals(test, this.sessions.sessionCount());
 	}
 	
 	@Test
 	public void testLoginSuccess() throws AuthenticationException
 	{
-		assertEquals(0, this.sessions.sessionCount());
-		
+		int test = this.sessions.sessionCount();
 		// generate a login token (password hardcoded)
 		String hashedPassword = new Sha256Password().generateHash("jayms");
 		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms"); 
@@ -97,7 +100,7 @@ public class AuthenticatorTest {
 		Session ses = this.auth.login(token); // login
 		
 		// check if session created for the user
-		assertEquals(1, this.sessions.sessionCount());
+		assertEquals(test+1, this.sessions.sessionCount());
 		assertEquals(this.u.getUsername(), ses.getUsername());
 	}
 	

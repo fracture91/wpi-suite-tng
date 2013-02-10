@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng.modules;
 import java.lang.String;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -25,6 +26,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public interface Model {
 
+	
 	/* database interaction */
 	public void save();
 	public void delete();
@@ -35,6 +37,11 @@ public interface Model {
 	 * @return	A string containing the serialized JSON representation of this Model.
 	 */
 	public String toJSON();
+	
+	/* deserializing */
+	
+	
+	
 	
 	/* Built-in overrides/overloads */
 	
@@ -62,6 +69,11 @@ public interface Model {
 	public Permission getPermission(User u);
 	
 	public void setPermission(Permission p, User u);
+	
+	/**
+	 * @return the project associated with this model
+	 */
+	public Project getProject();
 	
 	
 }

@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.*;
 public class WPILoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authenticator auth;
-
+	private ErrorResponseFormatter responseFormatter;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,6 +43,63 @@ public class WPILoginServlet extends HttpServlet {
     public WPILoginServlet() {
         super();
         this.auth = new BasicAuth(); // define Authorization implementation
+        this.responseFormatter = new JsonErrorResponseFormatter(); // define Response content body format
+    }
+    
+    /**
+     * Perform project switching action. Given a projectID in the PUT Body, switches the Session to an instance for a project.
+     */
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+    	Cookie[] cook = request.getCookies();
+    	String ssid = null;
+		for(Cookie c : cook)
+		{
+			if(c.getName().startsWith("WPISUITE-"))
+				ssid = c.getValue();
+		}
+		
+		if(ssid != null)
+		{			
+			try
+			{				
+				// find the project ID
+				BufferedReader putBody = request.getReader();
+				String projectId = putBody.readLine();
+				
+				// swap out the Sessions and add the project.
+				ManagerLayer man = ManagerLayer.getInstance();
+				SessionManager sessions = man.getSessions();
+				String newSsid = sessions.switchToProject(ssid, projectId);
+				
+				// attach the new cookie to give back to the user.
+				Session projectSession = sessions.getSession(newSsid);
+				Cookie switchedCookie = projectSession.toCookie();
+				response.addCookie(switchedCookie);
+				
+				response.setStatus(HttpServletResponse.SC_OK);
+			}
+			catch(WPISuiteException e)
+			{
+				response.setStatus(e.getStatus());
+				String contentBody = this.responseFormatter.formatContent(e);
+				
+				try {
+					PrintWriter contentWriter = response.getWriter();
+					contentWriter.write(contentBody);
+					contentWriter.flush();
+					contentWriter.close();
+				}
+				catch(IOException writerException)
+				{
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+				}
+			}
+		}
+		else
+		{
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 - no cookie given
+		}
     }
 
 	/**
@@ -64,9 +122,22 @@ public class WPILoginServlet extends HttpServlet {
 			System.out.println("DEBUG: response set");
 		}
 		catch(AuthenticationException e) // Authentication Failed.
-		{
-			//TODO: log error
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 - Forbidden, Authentication Failed.
+		{			
+			// Set the response
+			response.setStatus(e.getStatus()); // 403 - Forbidden, Authentication Failed.
+			
+			String contentBody = this.responseFormatter.formatContent(e);
+			
+			// write the string to the body
+			try {
+				PrintWriter contentWriter = response.getWriter();
+				contentWriter.write(contentBody);
+				contentWriter.flush();
+				contentWriter.close();	
+			} 
+			catch (IOException writerException) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+			}
 		}
 	}
 
@@ -99,5 +170,5 @@ public class WPILoginServlet extends HttpServlet {
 				}
 			}
 		}
-	}	
+	}
 }

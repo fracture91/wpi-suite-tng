@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    mpdelladonna
+ *    twack
  *******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.exceptions;
@@ -15,24 +15,24 @@ package edu.wpi.cs.wpisuitetng.exceptions;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Exception thrown when attempting to store an object already in the database
- * @author mpdelladonna
+ * Thrown for serialization errors in Models and EntityManagers.
+ * @author twack
  *
  */
-public class ConflictException extends WPISuiteException {
+public class SerializationException extends WPISuiteException {
 
-	public ConflictException(String message) {
+	/**`
+	 * 
+	 */
+	private static final long serialVersionUID = 3607525121952037935L;
+	
+	public SerializationException(String message)
+	{
 		super(message);
 	}
 
 	@Override
 	public int getStatus() {
-		return HttpServletResponse.SC_CONFLICT; //409
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7823907873323480290L;
-
 }

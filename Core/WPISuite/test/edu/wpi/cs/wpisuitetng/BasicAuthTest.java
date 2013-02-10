@@ -50,7 +50,7 @@ public class BasicAuthTest {
 	 */
 	public void testInvalidCredentialFormat() throws AuthenticationException
 	{
-		String authToken = "Authorization: Basic ";
+		String authToken = "Basic ";
 		String credentials = "abcdefg123456";
 		authToken += Base64.encodeBase64String(credentials.getBytes());
 		

@@ -19,8 +19,14 @@ import org.junit.*;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.SessionManager;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -37,7 +43,8 @@ public class SessionManagerTest {
 	public void setUp()
 	{
 		this.u1 = new User("Tyler", "twack", "jayms", 2);
-		this.u2 = new User("Mike", "mpdelladonna", "yams", 3);		
+		this.u2 = new User("Mike", "mpdelladonna", "yams", 3);
+		this.u2.setRole(Role.ADMIN);
 		
 		this.man = new SessionManager();
 	}
@@ -56,9 +63,9 @@ public class SessionManagerTest {
 	@Test
 	public void testCreateSession()
 	{
-		Session session = this.man.createSession(this.u1);
+		String ssid = this.man.createSession(this.u1);
 		
-		Session createdSession = this.man.getSession(session.toString());
+		Session createdSession = this.man.getSession(ssid);
 		
 		assertEquals(this.man.sessionCount(), 1); // check that only one exists in the Manager.
 		assertTrue(createdSession.getUsername().equals(this.u1.getUsername())); // check that the session is the right user
@@ -67,10 +74,10 @@ public class SessionManagerTest {
 	@Test
 	public void testSessionExists()
 	{
-		Session session = this.man.createSession(this.u2);
+		String session = this.man.createSession(this.u2);
 		
 		assertEquals(this.man.sessionCount(), 1);
-		assertTrue(this.man.sessionExists(session.toString()));
+		assertTrue(this.man.sessionExists(session));
 	}
 	
 	@Test
@@ -90,11 +97,11 @@ public class SessionManagerTest {
 	public void testRemoveSession()
 	{
 		this.man.createSession(this.u2);
-		Session ses = this.man.createSession(this.u1);
+		String ssid = this.man.createSession(this.u1);
 		
 		assertEquals(2, this.man.sessionCount()); // check sessions has been created
 		
-		this.man.removeSession(ses.toString());
+		this.man.removeSession(ssid);
 		
 		assertEquals(this.man.sessionCount(), 1);
 	}
@@ -102,54 +109,98 @@ public class SessionManagerTest {
 	/* Test complex SessionManager functions */
 	
 	@Test
-	@Ignore
 	/**
-	 * Test the renewSession() function.
-	 * 	The expected behavior is that, given a user's sessionToken string,
-	 * 	Remove the session matching that token, and created/add a new
-	 * 	Session for the user.
+	 * Test the switchProject function in SessionManger. It should replace the
+	 * 	given session with a session logged into the given project. 
 	 * 
 	 * 	DB Test -- interacts with database
 	 */
-	public void testRenewSession() throws AuthenticationException
+	public void testSwitchSessionProject() throws WPISuiteException
 	{
 		// get the Managers out
 		ManagerLayer manager = ManagerLayer.getInstance();
 		UserManager users = manager.getUsers();
 		SessionManager sessions = manager.getSessions();
+		ProjectManager projects = manager.getProjects();
 		
-		// create a session to use against the UserManager to create save u1
-		Session u2Ses = sessions.createSession(this.u2);
+		String originalSsid = sessions.createSession(u2);
+		Session originalSession = sessions.getSession(originalSsid);
 		
-		// log the user in (u1) using u2's session
-		BasicAuth auth = new BasicAuth();
-		try {
-			users.save(u2Ses, this.u1);
-		} catch (WPISuiteException e) {
-			fail("unexpected exception");
+		String projectId = "proj1";
+		Project p = new Project("wpisuite", projectId);
+		try
+		{
+			projects.makeEntity(originalSession, p.toJSON());
 		}
-		Session oldSession = auth.login(BasicAuth.generateBasicAuth(this.u1.getUsername(), "jayms"));
-		
-		// add the session to renew
-		String oldToken = oldSession.toString(); // the key in the manager map for the created Session
-		assertEquals(2, sessions.sessionCount());
-		
-		// renew the session
-		Session renewed = null;
-		try {
-			renewed = sessions.renewSession(oldToken);
-		} catch (WPISuiteException e) {
-			fail("unexpeced exception");
+		catch(ConflictException e)
+		{
+			// this is okay because it means the project already exists in the database.
 		}
 		
-		assertEquals(2, sessions.sessionCount()); // the new session has been added
-		assertTrue(sessions.sessionExists(renewed.toString()));
+		String newSsid = sessions.switchToProject(originalSsid, projectId);
+		Session projectSession = sessions.getSession(newSsid);
 		
-		//TODO: determine if we can use a wait to push the clock forward.
-		// assertFalse(this.man.sessionExists(oldToken)); 		
+		assertFalse(sessions.sessionExists(originalSsid));
+		assertTrue(projectSession != null);
 		
-		// clear the database for the next test.
-		users.deleteEntity(renewed, this.u1.getUsername());
+		assertTrue(originalSession.getProject() == null);
+		assertTrue(projectSession.getProject().equals(p));
+		
+		try
+		{
+			projects.deleteEntity(projectSession, p.toJSON());	
+		}
+		catch(NotFoundException e)
+		{
+			// this is okay since we are trying to make the project 'not found'
+		}
+	}
+	
+	@Test(expected=SessionException.class)
+	/**
+	 * Test the switchProject function in SessionManger. This tests the integrity checks
+	 * 	for the session to switch. Should throw an exception because the given SSID is
+	 * 	not a held session.
+	 * 
+	 * 	DB Test -- interacts with database
+	 */
+	public void testSwitchProjectInvalidSession() throws WPISuiteException
+	{
+		// get the Managers out
+		ManagerLayer manager = ManagerLayer.getInstance();
+		UserManager users = manager.getUsers();
+		SessionManager sessions = manager.getSessions();
+		ProjectManager projects = manager.getProjects();
+		
+		String originalSsid = new Session(u2).getSessionId();
+		
+		String projectId = "proj1";
+		
+		String newSsid = sessions.switchToProject(originalSsid, projectId); // exception expected here
+	}
+	
+	@Test(expected=SessionException.class)
+	/**
+	 * Test the switchProject function in SessionManger. It should replace the
+	 * 	given session with a session logged into the given project. 
+	 * 
+	 * 	DB Test -- interacts with database
+	 */
+	public void testSwitchProjectInvalidProject() throws WPISuiteException
+	{
+		// get the Managers out
+		ManagerLayer manager = ManagerLayer.getInstance();
+		UserManager users = manager.getUsers();
+		SessionManager sessions = manager.getSessions();
+		ProjectManager projects = manager.getProjects();
+		
+		String originalSsid = sessions.createSession(u2);
+		Session originalSession = sessions.getSession(originalSsid);
+		
+		String projectId = "proj00";
+		
+		String newSsid = sessions.switchToProject(originalSsid, projectId); // should throw an exception
+
 	}
 
 }
