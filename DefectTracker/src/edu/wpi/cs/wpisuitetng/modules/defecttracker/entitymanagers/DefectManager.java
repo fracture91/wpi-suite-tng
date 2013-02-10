@@ -59,10 +59,6 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public Defect[] getEntity(Session s, String id) throws NotFoundException {
-		if(id == null || id.equals("")) {
-			// TODO: getAll should be called from the servlet directly
-			return getAll(s);
-		}
 		final int intId = Integer.parseInt(id);
 		if(intId < 1) {
 			throw new NotFoundException();
