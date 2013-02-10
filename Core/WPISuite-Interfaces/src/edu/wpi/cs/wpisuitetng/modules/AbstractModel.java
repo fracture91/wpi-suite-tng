@@ -27,7 +27,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public abstract class AbstractModel implements Model {
 
-	@Expose private Map<User, Permission> permissionMap = new HashMap<User, Permission>(); // annotation for User serialization
+	private Map<User, Permission> permissionMap = new HashMap<User, Permission>(); // annotation for User serialization
 	
 	@Override
 	public Permission getPermission(User u) 
