@@ -12,6 +12,7 @@
 
 package edu.wpi.cs.wpisuitetng.database;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -61,5 +62,7 @@ public interface Data
 	public <T> List<T> retrieveAll(T aSample);
 	public <T> List<T> deleteAll(T aSample);
 	public List<Model> notRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String aFieldName, final Object theGivenValue);
-	public List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException;
+	public List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	public List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
+	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 }
