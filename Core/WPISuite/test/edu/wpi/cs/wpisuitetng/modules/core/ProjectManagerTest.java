@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.core;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,6 +126,38 @@ public class ProjectManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).save(null, null);
 	}
@@ -153,6 +186,38 @@ public class ProjectManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			@Override
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getIdNum());
 	}
@@ -178,6 +243,38 @@ public class ProjectManagerTest {
 			}
 			@Override
 			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
+			@Override
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			}
