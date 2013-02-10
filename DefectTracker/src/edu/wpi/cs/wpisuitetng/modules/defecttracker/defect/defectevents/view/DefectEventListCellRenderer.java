@@ -15,7 +15,6 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
 /**
  * A cell renderer for a list of DefectEvents
  */
-@SuppressWarnings({ "rawtypes" })
 public class DefectEventListCellRenderer implements ListCellRenderer {
 	
 	/*

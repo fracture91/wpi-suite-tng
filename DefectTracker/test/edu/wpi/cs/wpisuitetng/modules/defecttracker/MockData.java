@@ -47,6 +47,7 @@ public class MockData implements Data {
 		return deleted;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Model> retrieve(Class type, String fieldName, Object value) {
 		List<Model> rv = new ArrayList<Model>();
@@ -95,6 +96,7 @@ public class MockData implements Data {
 		return true;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void update(Class arg0, String arg1, Object arg2, String arg3,
 			Object arg4) {
