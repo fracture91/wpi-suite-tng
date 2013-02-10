@@ -17,5 +17,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/WPISuite-Interfaces.jar" sourcepath="/WPISuite-Interfaces"/>
+	<classpathentry kind="lib" path="C:/Users/Michael/Documents/MQP/wpi-suite-tng/Core/WPISuite/WebContent/WEB-INF/lib/DefectTracker.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

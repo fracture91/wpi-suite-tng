@@ -218,10 +218,11 @@ public class ProjectManager implements EntityManager<Project>{
 					toUpdate.setName((String)changeMap.get("name"));
 				}
 				
-				if(changeMap.containsKey("idNum"))
+				//probs shouldn't be able to change the idNum of a project once it's been created
+				/*if(changeMap.containsKey("idNum"))
 				{
 					toUpdate.setIdNum((String)changeMap.get("idNum"));
-				}
+				}*/
 			}
 			catch(Exception e)
 			{

@@ -17,8 +17,6 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-import com.google.gson.Gson;
-
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
@@ -49,7 +47,6 @@ public class ManagerLayer {
 	
 	private static final ManagerLayer layer = new ManagerLayer();
 	private Data data;
-	private Gson gson;
 	@SuppressWarnings("rawtypes")
 	private Map<String, EntityManager> map;
 	private SessionManager sessions;
@@ -63,7 +60,6 @@ public class ManagerLayer {
 	private ManagerLayer()
 	{
 		data = DataStore.getDataStore();
-		gson = new Gson();
 		map = new HashMap<String, EntityManager>();
 		sessions = new SessionManager();
 		
@@ -104,7 +100,6 @@ public class ManagerLayer {
 	@SuppressWarnings("rawtypes")
 	private ManagerLayer(Map<String, EntityManager> map, SessionManager ses)
 	{
-		gson = new Gson();
 		this.map = map;		
 		this.sessions = ses;
 	}
