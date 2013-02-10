@@ -88,6 +88,10 @@ public class MockDataStore implements Data {
 		}
 	}
 	
+	public Model[] retrieve(Class<? extends Model> type, Object id, Project aProject)
+	{
+		return retrieve(type, id);
+	}
 	public String remove(Class<? extends Model> type, Object id)
 	{
 		if(id != null)
@@ -145,6 +149,11 @@ public class MockDataStore implements Data {
 		}
 	}
 
+	public List<Model> retrieve(Class anObjectQueried, String aFieldName,
+			Object theGivenValue, Project aProject) {
+		return retrieve(anObjectQueried, aFieldName, theGivenValue);
+	}
+	
 	@Override
 	public <T> T delete(T aTNG) {
 		System.out.println("DEBUG: Inside delete");

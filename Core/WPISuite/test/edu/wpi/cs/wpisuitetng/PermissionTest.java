@@ -42,6 +42,12 @@ public class PermissionTest {
 			public Model fromJSON(String json) {
 				return null;
 			}
+
+			@Override
+			public String getProjectName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			
 		};
 		u = new User("ted", "tdude", "nothing", 1);

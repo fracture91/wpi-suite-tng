@@ -82,6 +82,9 @@ public class Project extends AbstractModel
 		return; // TODO: implement deleting during API - DB Layer Link up
 	}
 	
+	public String getProjectName() {
+		return this.name;
+	}
 	
 	/* Serializing */
 	

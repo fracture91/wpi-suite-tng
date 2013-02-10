@@ -16,6 +16,7 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static org.junit.Assert.*;
@@ -90,7 +91,7 @@ public class AuthenticatorTest {
 	}
 	
 	@Test
-	public void testLoginSuccess() throws AuthenticationException
+	public void testLoginSuccess() throws WPISuiteException
 	{
 		int test = this.sessions.sessionCount();
 		// generate a login token (password hardcoded)
@@ -110,7 +111,7 @@ public class AuthenticatorTest {
 	 * 	Should throw an AuthenticationException for test pass
 	 * @throws AuthenticationException
 	 */
-	public void testLoginFailureBadPass() throws AuthenticationException
+	public void testLoginFailureBadPass() throws AuthenticationException, WPISuiteException
 	{		
 		assertEquals(0, this.sessions.sessionCount());
 		
@@ -126,7 +127,7 @@ public class AuthenticatorTest {
 	 * 	Should throw an AuthenticationException for test pass
 	 * @throws AuthenticationException
 	 */
-	public void testLoginFailureBadUsername() throws AuthenticationException
+	public void testLoginFailureBadUsername() throws AuthenticationException, WPISuiteException
 	{
 		assertEquals(0, this.sessions.sessionCount());
 		

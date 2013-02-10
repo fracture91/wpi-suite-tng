@@ -22,7 +22,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 public class User extends AbstractModel
@@ -129,6 +129,11 @@ public class User extends AbstractModel
 	public void delete()
 	{
 		return;
+	}
+	
+	public String getProjectName() {
+		// Users do not have a specific project so return the empty string. 
+		return "";
 	}
 	
 	/* Serializing */

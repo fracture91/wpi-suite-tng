@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -63,8 +64,9 @@ public abstract class Authenticator {
 	 * @param postString	the POST body from the request object.
 	 * @return	a Session for the authenticated user, if login is successful.
 	 * @throws AuthenticationException	When the user's credentials are invalid or do not parse.
+	 * @throws WPISuiteException if an error occurs in getEntity
 	 */
-	public Session login(String postString) throws AuthenticationException
+	public Session login(String postString) throws AuthenticationException, WPISuiteException
 	{
 		// parse the post string for credentials
 		logger.log(Level.INFO, "Begin POST body parsing <" + postString + ">");

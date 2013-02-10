@@ -90,7 +90,7 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 
 	@Override
-	public Project[] getEntity(Session s, String id) 
+	public Project[] getEntity(Session s, String id) throws WPISuiteException 
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
@@ -111,8 +111,9 @@ public class ProjectManager implements EntityManager<Project>{
 	 * @param id - the id of the user, in this case it's the idNum
 	 * @return a list of matching projects
 	 * @throws NotFoundException if the project cannot be found
+	 * @throws WPISuiteException if retrieve fails
 	 */
-	public Project[] getEntity(String id) throws NotFoundException
+	public Project[] getEntity(String id) throws NotFoundException, WPISuiteException
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
