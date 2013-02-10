@@ -66,7 +66,13 @@ public class DefectManager implements EntityManager<Defect> {
 		if(intId < 1) {
 			throw new NotFoundException();
 		}
-		final Defect[] defects = db.retrieve(Defect.class, "id", intId).toArray(new Defect[0]);
+		Defect[] defects = null;
+		try {
+			defects = db.retrieve(Defect.class, "id", intId).toArray(new Defect[0]);
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(defects.length < 1 || defects[0] == null) {
 			throw new NotFoundException();
 		}

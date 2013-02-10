@@ -97,4 +97,10 @@ public class DefectChangeset extends DefectEvent {
 		return null;
 	}
 
+	@Override
+	public String getProjectName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

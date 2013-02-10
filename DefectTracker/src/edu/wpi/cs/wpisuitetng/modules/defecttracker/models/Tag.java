@@ -97,4 +97,10 @@ public class Tag implements Model {
 		return null;
 	}
 
+	@Override
+	public String getProjectName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

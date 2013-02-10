@@ -108,4 +108,10 @@ public class Comment extends DefectEvent {
 		return null;
 	}
 
+	@Override
+	public String getProjectName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
