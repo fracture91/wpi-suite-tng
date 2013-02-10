@@ -5,8 +5,6 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -52,49 +50,11 @@ public class DefectChangeset extends DefectEvent {
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public String toJSON() {
 		String json;
 		Gson gson = new Gson();
 		json = gson.toJson(this, DefectChangeset.class);
 		return json;
-	}
-
-	// this model will only be created server side and then retrieved as part of a Defect in the future
-	// so I'm not sure if this is necessary
-	@Override
-	public Boolean identify(Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Permission getPermission(User u) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPermission(Permission p, User u) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Project getProject() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

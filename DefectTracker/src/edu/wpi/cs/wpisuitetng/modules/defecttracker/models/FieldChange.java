@@ -1,18 +1,12 @@
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
-import com.google.gson.Gson;
-
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-
 /**
- * Persistent Model that holds and old and new value for some field.
+ * Model that holds and old and new value for some field.
+ * Doesn't implement Model since it will see no use outside of DefectChangesets.
  *
  * @param <T> the type of the field that was changed
  */
-public class FieldChange<T> implements Model {
+public class FieldChange<T> {
 	private final T oldValue;
 	private final T newValue;
 	
@@ -38,50 +32,5 @@ public class FieldChange<T> implements Model {
 	public T getNewValue() {
 		return newValue;
 	}
-
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String toJSON() {
-		String json;
-		Gson gson = new Gson();
-		json = gson.toJson(this, FieldChange.class);
-		return json;
-	}
-
-	@Override
-	public Boolean identify(Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Permission getPermission(User u) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPermission(Permission p, User u) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Project getProject() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 }

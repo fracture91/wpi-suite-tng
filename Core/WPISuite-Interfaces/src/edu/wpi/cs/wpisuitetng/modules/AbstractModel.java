@@ -18,6 +18,7 @@ import java.util.Map;
 import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -28,6 +29,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public abstract class AbstractModel implements Model {
 
 	private Map<User, Permission> permissionMap = new HashMap<User, Permission>(); // annotation for User serialization
+	private Project project;
 	
 	@Override
 	public Permission getPermission(User u) 
@@ -40,6 +42,16 @@ public abstract class AbstractModel implements Model {
 	public void setPermission(Permission p, User u) 
 	{
 		permissionMap.put(u, p);
+	}
+	
+	@Override
+	public Project getProject() {
+		return project;
+	}
+	
+	@Override
+	public void setProject(Project p) {
+		this.project = p;
 	}
 
 
