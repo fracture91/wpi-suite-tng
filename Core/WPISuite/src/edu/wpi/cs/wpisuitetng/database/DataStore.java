@@ -197,11 +197,14 @@ public class DataStore implements Data {
 		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
-					return (anObject.getProject() == null ||
-							anObject.getProject().getName().equals(theProject.getName())) &&
-							theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
-					//objects that have aFieldName equal to theGivenValue get added to the list
-
+					if(anObject.getProject() == null){
+						return false;
+					}
+					else{
+						return (anObject.getProject().getName().equals(theProject.getName())) &&
+								theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
+						//objects that have aFieldName equal to theGivenValue get added to the list
+					}
 				} catch (IllegalAccessException e) {
 					return false;
 				} catch (IllegalArgumentException e) {
