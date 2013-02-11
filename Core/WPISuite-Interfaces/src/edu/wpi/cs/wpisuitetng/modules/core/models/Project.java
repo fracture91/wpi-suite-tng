@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -118,11 +119,40 @@ public class Project extends AbstractModel
 	 */
 	public String toJSON()
 	{
-		String json;
+		String json = null;
 		
-		Gson gson = new Gson();
+		json = "{";
 		
-		json = gson.toJson(this, Project.class);
+		json += "\"name\":\"" + this.name +"\"";
+		
+		json += ",\"idNum\":\"" + this.idNum+"\"";
+		
+		json += ",\"owner\":" + this.owner.toJSON();
+		
+		json += ",\"supportedModules\":[";
+		
+		for(String str : this.supportedModules)
+		{
+			json += "\"" + str + "\",";
+		}
+		
+		//remove that last comma
+		json = json.substring(0, json.length()-1);
+		
+		json += "]";
+		
+		json += ",\"team\":[";
+		
+		for(User u : this.team)
+		{
+			json += u.toJSON() + ",";
+		}
+		
+		//remove that last comma
+		json = json.substring(0, json.length()-1);
+		
+		json += "]}";
+		
 		return json;
 	}
 	
@@ -151,18 +181,13 @@ public class Project extends AbstractModel
 	 */
 	public static Project fromJSON(String json)
 	{
-		//TODO: Confirm this is needed after deserializer was made
-		String[] splitProject = json.split("{\"projects\":[{\"name\":");
-		String[] splitName = splitProject[1].split(" ,");
-		String name = splitName[0].split("\"")[0];
+		Gson gson;
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Project.class, new ProjectDeserializer());
+
+		gson = builder.create();
 		
-		String idNum = splitName[1].split("\"")[1];
-		
-//		Gson gson = new Gson();
-//		
-//		json = gson.toJson(this, Project.class);
-//		return json;
-		return new Project(name, idNum);
+		return gson.fromJson(json, Project.class);
 	}
 	
 	/* Built-in overrides/overloads */

@@ -35,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.ProjectDeserializer;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -64,11 +65,10 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public Project makeEntity(Session s, String content) throws WPISuiteException {	
 		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) ){
 		
 		Project p;
 		try{
-			p = gson.fromJson(content, project);
+			p = Project.fromJSON(content);
 		} catch(JsonSyntaxException e){
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
@@ -83,10 +83,6 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		
 		return p;
-		}
-		else{
-			throw new UnauthorizedException("You do not have enough priveldges to create a project.");
-		}
 	}
 
 	@Override
@@ -211,13 +207,16 @@ public class ProjectManager implements EntityManager<Project>{
 			// convert updateString into a Map, then load into the User
 			try
 			{
-				HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
+				Project change = Project.fromJSON(changeSet);
 			
-				// check if the changeSet contains each field of User
-				if(changeMap.containsKey("name"))
+				// check if the changes contains each field of name
+				if(change.getName() != null)
 				{
-					toUpdate.setName((String)changeMap.get("name"));
+					toUpdate.setName(change.getName());
 				}
+				
+				
+				
 				
 				//probs shouldn't be able to change the idNum of a project once it's been created
 				/*if(changeMap.containsKey("idNum"))
