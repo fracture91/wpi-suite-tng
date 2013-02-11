@@ -15,7 +15,6 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 /**
  * This controller handles saving defect comments to the server
  */
-@SuppressWarnings("unchecked")
 public class SaveCommentController {
 
 	private final NewCommentPanel view;

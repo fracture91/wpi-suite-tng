@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.Permission;
 
@@ -34,6 +36,11 @@ public class PermissionTest {
 
 			@Override
 			public String toJSON() {
+				return null;
+			}
+
+			@Override
+			public Project getProject() {
 				return null;
 			}
 			

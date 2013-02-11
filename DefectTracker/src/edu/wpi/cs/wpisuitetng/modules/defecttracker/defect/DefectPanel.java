@@ -23,7 +23,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Tag;
 /**
  * Panel to display the fields of a Defect and allow editing
  */
-@SuppressWarnings({"serial", "rawtypes"})
+@SuppressWarnings({"serial"})
 public class DefectPanel extends JPanel {
 	public enum Mode {
 		CREATE,
@@ -151,7 +151,6 @@ public class DefectPanel extends JPanel {
 	 * for the SpringLayout manager.
 	 * @param layout the layout manager
 	 */
-	@SuppressWarnings({ "unchecked" })
 	protected void addComponents() {
 		// Construct all of the components for the form
 		txtTitle = new JTextField(50);
