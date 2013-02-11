@@ -101,17 +101,6 @@ public class DefectManagerTest {
 	public void testGetMissingEntity() throws NotFoundException {
 		manager.getEntity(defaultSession, "2");
 	}
-
-	@Test
-	public void testGetAllWorkaround() throws NotFoundException {
-		// TODO: this should just be a temporary thing
-		// core should eventually call getAll directly
-		Defect[] gotten1 = manager.getEntity(defaultSession, "");
-		Defect[] gotten2 = manager.getEntity(defaultSession, null);
-		Defect[] expected = manager.getAll(defaultSession);
-		assertArrayEquals(expected, gotten1);
-		assertArrayEquals(expected, gotten2);
-	}
 	
 	@Test
 	public void testGetAll() {

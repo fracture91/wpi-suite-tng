@@ -10,30 +10,23 @@
  *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.exceptions;
+package edu.wpi.cs.wpisuitetng;
 
-import javax.servlet.http.HttpServletResponse;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 
 /**
- * WPISuiteException class for exceptions in the Sessions system.
+ * Handles the formatting strategy of the content body String. Implementations
+ * 	of this interface determine the content body's format.
  * @author twack
  *
  */
-public class SessionException extends WPISuiteException {
-
+public interface ErrorResponseFormatter {
+	
 	/**
-	 * 
+	 * the algorithm used to format the Exception data into a
+	 * 	content body String.
+	 * @param e
+	 * @return	the content body
 	 */
-	private static final long serialVersionUID = -522664020374920802L;
-
-	public SessionException(String message) {
-		super(message);
-	}
-
-	@Override
-	public int getStatus() {
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
-	}
-	
-	
+	String formatContent(WPISuiteException e);
 }

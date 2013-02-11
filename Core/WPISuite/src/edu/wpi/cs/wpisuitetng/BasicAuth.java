@@ -37,17 +37,17 @@ public class BasicAuth extends Authenticator {
 		
 		if(!isValidBasicAuth(parts))
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("The <" + this.getAuthType() + "> authentication token is invalid format");
 		}
 		
-		byte[] decoded = Base64.decodeBase64(parts[2]);
+		byte[] decoded = Base64.decodeBase64(parts[1]);
 		
 		String[] credentials = (new String(decoded)).split(":"); // split decoded token username:password
 		
 		// check if the credential array has space for username and password elements.
 		if(credentials.length != 2)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("The <" + this.getAuthType() + "> token's encoded portion is missing a piece");
 		}
 		
 		return credentials;
@@ -62,14 +62,13 @@ public class BasicAuth extends Authenticator {
 	private boolean isValidBasicAuth(String[] authParts)
 	{
 		// check if the post string is in the correct format
-		if((authParts.length != 3) || (!authParts[0].equals("Authorization:")) 
-									|| (!authParts[1].equalsIgnoreCase("Basic")))
+		if((authParts.length != 2) || (!authParts[0].equalsIgnoreCase("Basic")))
 		{
 			return false;
 		}
 		
 		// check if the credential section is encoded properly
-		if(!Base64.isBase64(authParts[2]))
+		if(!Base64.isBase64(authParts[1]))
 		{
 			return false;
 		}
@@ -86,7 +85,7 @@ public class BasicAuth extends Authenticator {
 	 */
 	public static String generateBasicAuth(String username, String pass)
 	{
-		String authToken = "Authorization: Basic ";
+		String authToken = "Basic ";
 		String credentials = username + ":" + pass;
 		
 		authToken += Base64.encodeBase64String(credentials.getBytes());

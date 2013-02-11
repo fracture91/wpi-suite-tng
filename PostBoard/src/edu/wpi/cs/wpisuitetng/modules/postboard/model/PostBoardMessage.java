@@ -6,9 +6,7 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * Model to contain a single message on the PostBoard
@@ -16,7 +14,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * @author Chris Casola
  *
  */
-public class PostBoardMessage implements Model {
+public class PostBoardMessage extends AbstractModel {
 
 	/** The message */
 	private final String message;
@@ -90,9 +88,4 @@ public class PostBoardMessage implements Model {
 	@Override
 	public Boolean identify(Object o) {return null;}
 
-	@Override
-	public Permission getPermission(User u) {return null;}
-
-	@Override
-	public void setPermission(Permission p, User u) {}
 }

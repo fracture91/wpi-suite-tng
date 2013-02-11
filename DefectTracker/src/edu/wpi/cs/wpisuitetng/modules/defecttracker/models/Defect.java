@@ -9,15 +9,15 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
 
 /**
  * Persistent Model that represents a Defect.
  */
-public class Defect implements Model {
+public class Defect extends AbstractModel {
 	private int id;
 	private String title, description;
 	private DefectStatus status;
@@ -263,6 +263,22 @@ public class Defect implements Model {
 	public static void addGsonDependencies(GsonBuilder builder) {
 		DefectEvent.addGsonDependencies(builder);
 	}
+	
+	@Override
+	public void setProject(Project project) {
+		super.setProject(project);
+		// we need to make sure nested models get the correct project
+		if(tags != null) {
+			for(Tag t : tags) {
+				t.setProject(project);
+			}
+		}
+		if(events != null) {
+			for(DefectEvent e : events) {
+				e.setProject(project);
+			}
+		}
+	}
 
 	// interface documentation says this is necessary for the mock database
 	// not sure if this is still needed otherwise
@@ -276,18 +292,6 @@ public class Defect implements Model {
 			returnValue = true;
 		}
 		return returnValue;
-	}
-
-	@Override
-	public Permission getPermission(User u) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPermission(Permission p, User u) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
