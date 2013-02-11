@@ -22,6 +22,7 @@ import javax.servlet.http.Cookie;
 import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -115,5 +116,14 @@ public class SessionTest {
 		String generated = ses1.generateSessionId();
 		
 		assertTrue(ssid.equals(generated));
+	}
+	
+	@Test
+	public void testGetProject()
+	{
+		Project p1 = new Project("defectTracker", "proj1");
+		Session projectSes = new Session(u2, p1);
+		
+		assertTrue(p1.equals(projectSes.getProject()));
 	}
 }
