@@ -13,6 +13,7 @@ import org.junit.Before;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -82,13 +83,34 @@ public class DefectValidatorTest {
 	
 	@Test
 	public void testDBState() {
-		assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
-		assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
-		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
+		try {
+			assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public List<ValidationIssue> checkNumIssues(int num, Session session, Defect defect, Mode mode) {
-		List<ValidationIssue> issues = validator.validate(session, defect, mode);
+		List<ValidationIssue> issues = null;
+		try {
+			issues = validator.validate(session, defect, mode);
+		} catch (WPISuiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(num, issues.size());
 		return issues;
 	}

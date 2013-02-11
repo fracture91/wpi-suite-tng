@@ -169,4 +169,12 @@ public class ProjectTest {
 		assertFalse(p3.getOwner().equals(oldOwner));
 		assertTrue(p3.getOwner().equals(u2));
 	}
+
+	@Test
+	public void testProjectToJson() {
+		User[] u = {new User("steve","ste","pass",7),new User("tom","t","pas",8)};
+		String[] s = {"core","bugs","chat"};
+		System.out.println(new Project("windows","001",u[0],u,s).toJSON());
+		assert(true);
+	}
 }

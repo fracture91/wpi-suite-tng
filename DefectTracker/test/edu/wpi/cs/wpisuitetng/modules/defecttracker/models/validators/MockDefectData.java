@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 /**
  * A mock data implementation for defect validation testing. 
@@ -79,6 +81,13 @@ public class MockDefectData implements Data {
 			Object arg4) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<Model> retrieve(Class arg0, String arg1, Object arg2,
+			Project arg3) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
