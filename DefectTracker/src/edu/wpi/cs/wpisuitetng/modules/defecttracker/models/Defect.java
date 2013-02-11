@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus.*;
 
@@ -261,6 +262,22 @@ public class Defect extends AbstractModel {
 	 */
 	public static void addGsonDependencies(GsonBuilder builder) {
 		DefectEvent.addGsonDependencies(builder);
+	}
+	
+	@Override
+	public void setProject(Project project) {
+		super.setProject(project);
+		// we need to make sure nested models get the correct project
+		if(tags != null) {
+			for(Tag t : tags) {
+				t.setProject(project);
+			}
+		}
+		if(events != null) {
+			for(DefectEvent e : events) {
+				e.setProject(project);
+			}
+		}
 	}
 
 	// interface documentation says this is necessary for the mock database
