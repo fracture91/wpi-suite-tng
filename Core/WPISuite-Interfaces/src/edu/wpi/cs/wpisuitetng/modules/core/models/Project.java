@@ -267,7 +267,7 @@ public class Project extends AbstractModel
 	 */
 	public boolean removeTeamMember(User u)
 	{
-		if(!team.contains(u))
+		if(team.contains(u))
 		{
 			team.remove(u);
 			return true;
