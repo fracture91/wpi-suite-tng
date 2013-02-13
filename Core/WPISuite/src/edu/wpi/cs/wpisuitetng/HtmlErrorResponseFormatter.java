@@ -12,6 +12,9 @@
 
 package edu.wpi.cs.wpisuitetng;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 
 /**
@@ -23,11 +26,13 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 public class HtmlErrorResponseFormatter implements
 		ErrorResponseFormatter {
 
+	private static final Logger logger = Logger.getLogger(HtmlErrorResponseFormatter.class.getName());
 	private String header = "<html> <head> <title> %d </title> </head>";
 	private String body = " <body> <h1> Error %d </h1> <h2> Info </h2> <p> %s </p> </body> </html>";
 	
 	@Override
 	public String formatContent(WPISuiteException e) {
+		logger.log(Level.WARNING, "Formatting exception details for error response [HTML]");
 		String content = "";
 		
 		// format header

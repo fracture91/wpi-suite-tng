@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
@@ -40,12 +43,15 @@ public class DataStore implements Data {
 	static String DB4oUser = "bgaffey";
 	static String DB4oPass = "password";
 	static String DB4oServer = "localhost";
+	
+	private static final Logger logger = Logger.getLogger(DataStore.class.getName());
 
 
 	public static DataStore getDataStore()
 	{
 		if(myself == null)
 		{
+			logger.log(Level.FINE, "Opening connection to db4o database...");
 			myself = new DataStore();
 			// accessLocalServer
 			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
@@ -54,6 +60,7 @@ public class DataStore implements Data {
 			server.grantAccess(DB4oUser,DB4oPass);
 
 			theDB = server.openClient();
+			logger.log(Level.FINE, "Connected to db4o database!");
 		}
 		return myself;
 	}
@@ -68,6 +75,7 @@ public class DataStore implements Data {
 
 		theDB.store(aModel);
 		System.out.println("Stored " + aModel);
+		logger.log(Level.FINE, "Saving model [" + aModel + "]");
 		theDB.commit();
 		return true;
 	}
@@ -84,6 +92,7 @@ public class DataStore implements Data {
 		((Model) aModel).setProject(aProject);
 		theDB.store(aModel);
 		System.out.println("Stored " + aModel);
+		logger.log(Level.FINE, "Saving model [" + aModel + "]");
 		theDB.commit();
 		return true;
 	}
@@ -108,6 +117,8 @@ public class DataStore implements Data {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 
+		logger.log(Level.FINE, "Attempting Database Retrieve...");
+		
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -118,6 +129,7 @@ public class DataStore implements Data {
 		}
 		final Method theGetter = methodToBeSaved;
 		if(theGetter == null){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
 			throw new WPISuiteException("Null getter method.");
 		}
 
@@ -144,6 +156,8 @@ public class DataStore implements Data {
 
 		System.out.println(result);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Retrieve Success!");
 		return result;
 	}
 
@@ -179,6 +193,8 @@ public class DataStore implements Data {
 
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		logger.log(Level.FINE, "Attempting Database Retrieve...");
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
@@ -190,6 +206,7 @@ public class DataStore implements Data {
 
 		final Method theGetter = methodToBeSaved;
 		if(theGetter == null){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
 			throw new WPISuiteException("Null getter method.");
 		}
 
@@ -217,6 +234,8 @@ public class DataStore implements Data {
 
 		System.out.println(result);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Retrieve Success!");
 		return result;
 
 	}
@@ -232,6 +251,8 @@ public class DataStore implements Data {
 		List<T> result = theDB.queryByExample(aSample.getClass());
 		System.out.println("retrievedAll: "+result);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database RetrieveAll Performed");
 		return result;
 	}
 	
@@ -255,6 +276,7 @@ public class DataStore implements Data {
 		}
 		System.out.println("retrievedAll: "+result);
 		theDB.commit();
+		logger.log(Level.FINE, "Database RetrieveAll Performed");
 		return result;
 	}
 
@@ -266,11 +288,14 @@ public class DataStore implements Data {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 
+		logger.log(Level.FINE, "Database Delete Attempt...");
 		//ObjectContainer client = server.openClient();
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
 		T found = (T) result.next();
 		theDB.delete(found);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Delete Success!");
 		//return "Deleted "+aTNG;
 		return found;
 
@@ -281,12 +306,14 @@ public class DataStore implements Data {
 	public <T> List<T> deleteAll(T aSample){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
 		List<T> toBeDeleted = retrieveAll(aSample);
 		for(T aTNG: toBeDeleted){
 			System.out.println("Deleting: "+aTNG);
 			theDB.delete(aTNG);
 		}
 		theDB.commit();
+		logger.log(Level.INFO, "Database Delete All performed");
 		return toBeDeleted;
 
 	}
@@ -300,6 +327,8 @@ public class DataStore implements Data {
 			theDB.delete(aTNG);
 		}
 		theDB.commit();
+		
+		logger.log(Level.INFO, "Database Delete All performed");
 		return toBeDeleted;
 
 	}
@@ -320,6 +349,8 @@ public class DataStore implements Data {
 	 * @throws WPISuiteException 
 	 */
 	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException{
+		logger.log(Level.INFO, "Database Update Attempt...");
+		
 		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID);
 		Object theObject;
 		for(int i = 0; i < objectsToUpdate.size(); i++){
@@ -339,19 +370,22 @@ public class DataStore implements Data {
 				save(theObject);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			}
 
 			theDB.commit();
-
-
 		}
+		
+		logger.log(Level.INFO, "Database Update Success!");
 	}
 
 

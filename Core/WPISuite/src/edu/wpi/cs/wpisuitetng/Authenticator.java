@@ -31,7 +31,7 @@ public abstract class Authenticator {
 	
 	private String authType;
 	private PasswordCryptographer passwordHash;
-	private static final Logger logger = Logger.getLogger("edu.wpi.cs.wpisuitetng.Authenticator");
+	private static final Logger logger = Logger.getLogger(Authenticator.class.getName());
 	
 	/**
 	 * Default constructor with a type definition parameter
@@ -56,6 +56,7 @@ public abstract class Authenticator {
 	{
 		ManagerLayer manager = ManagerLayer.getInstance();
 		manager.getSessions().removeSession(sessionToken);
+		logger.log(Level.INFO, "Session <" + sessionToken + "> logged out");
 	}
 	
 	/**
@@ -70,7 +71,7 @@ public abstract class Authenticator {
 	{
 		// parse the post string for credentials
 		logger.log(Level.INFO, "Begin POST body parsing <" + postString + ">");
-		String[] credentials = parsePost(postString); // [0] - username, [1] - password	
+		String[] credentials = parsePost(postString); // [0] - username, [1] - password
 		logger.log(Level.INFO, "End POST body parsing <" + postString + ">");
 		
 		// attempt to retrieve the User from the Manager layer

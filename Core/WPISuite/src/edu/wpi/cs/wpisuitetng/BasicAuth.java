@@ -12,6 +12,9 @@
 
 package edu.wpi.cs.wpisuitetng;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,7 +26,8 @@ import org.apache.commons.codec.binary.Base64;
  *
  */
 public class BasicAuth extends Authenticator {
-	
+	private static final Logger logger = Logger.getLogger(BasicAuth.class.getName());
+
 	public BasicAuth()
 	{
 		super("BasicAuth");
@@ -37,6 +41,7 @@ public class BasicAuth extends Authenticator {
 		
 		if(!isValidBasicAuth(parts))
 		{
+			logger.log(Level.WARNING, "Login attempted with invalid BasicAuth token");
 			throw new AuthenticationException("The <" + this.getAuthType() + "> authentication token is invalid format");
 		}
 		
@@ -47,6 +52,7 @@ public class BasicAuth extends Authenticator {
 		// check if the credential array has space for username and password elements.
 		if(credentials.length != 2)
 		{
+			logger.log(Level.WARNING, "Login attempted with invalid BasicAuth token");
 			throw new AuthenticationException("The <" + this.getAuthType() + "> token's encoded portion is missing a piece");
 		}
 		
