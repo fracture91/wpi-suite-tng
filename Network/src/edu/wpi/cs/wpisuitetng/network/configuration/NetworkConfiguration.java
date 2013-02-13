@@ -48,6 +48,56 @@ public class NetworkConfiguration {
 	}
 
 	/**
+	 * Adds a cookie to the request headers.
+	 * 
+	 * @param name  The name of the cookie.
+	 * @param value The value of the cookie.
+	 */
+	public void addCookie(String name, String value) {
+		if (name == null) {
+			throw new NullPointerException("The name must not be null.");
+		}
+		if (value == null) {
+			throw new NullPointerException("The value must not be null.");
+		}
+		
+		String cookieJar;
+
+		if (defaultRequestHeaders.get("cookie") != null && !defaultRequestHeaders.get("cookie").isEmpty()) {
+			cookieJar = defaultRequestHeaders.get("cookie").get(0);
+		}
+		else {
+			cookieJar = "";
+		}
+
+		String cookies[] = cookieJar.split(";\n");
+
+		for (int i = 0; i < cookies.length; i++) {
+			if (cookies[i].split("=")[0].equals(name)) {
+				return;
+			}
+		}
+
+		if (cookieJar.length() > 0) {
+			cookieJar += ";\n";
+		}
+
+		cookieJar += name + "=" + value;
+
+		if (defaultRequestHeaders.get("cookie") == null) {
+			List<String> cookieList = new ArrayList<String>();
+			defaultRequestHeaders.put("cookie", cookieList);
+		}
+		
+		if (defaultRequestHeaders.get("cookie").isEmpty()) {
+			defaultRequestHeaders.get("cookie").add(cookieJar);
+		}
+		else {
+			defaultRequestHeaders.get("cookie").set(0, cookieJar);
+		}
+	}
+
+	/**
 	 * Adds an observer to the observers.
 	 * 
 	 * @param observer	The observer to add to the observers.

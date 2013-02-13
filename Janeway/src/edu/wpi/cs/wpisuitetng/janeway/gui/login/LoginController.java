@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,16 +23,16 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
  *
  */
 public class LoginController implements ActionListener {
-	
+
 	/** The view containing the login form */
 	protected LoginFrame view;
-	
+
 	/** The main application GUI to load after login */
 	protected JFrame mainGUI;
-	
+
 	/** The title of error dialogs */
 	private static final String errorTitle = "Login Error";
-	
+
 	/**
 	 * Construct a new login controller
 	 * @param mainGUI the main application GUI to load after login
@@ -44,11 +45,11 @@ public class LoginController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		// Save the field values
 		ConfigManager.getConfig().setUserName(view.getUserNameField().getText());
 		ConfigManager.getConfig().setProjectName(view.getProjectField().getText());
-		
+
 		// Check the core URL and display the main application window
 		if (view.getUrlTextField().getText().length() > 0) { // ensure the URL field has content
 			final String URLText = view.getUrlTextField().getText();
@@ -58,23 +59,23 @@ public class LoginController implements ActionListener {
 				ConfigManager.getConfig().setCoreUrl(coreURL);
 				ConfigManager.writeConfig();
 				Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration(URLText));
-				
+
 				// Send the request
 				sendLoginRequest();
-				
+
 			} catch (MalformedURLException e1) { // failed, bad URL
 				JOptionPane.showMessageDialog(view,
-				                              "The server address \"" + URLText + "\" is not a valid URL!",
-				                              errorTitle, JOptionPane.ERROR_MESSAGE);
+						"The server address \"" + URLText + "\" is not a valid URL!",
+						errorTitle, JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else { // a URL was not entered
 			JOptionPane.showMessageDialog(view, "You must specify the server address!", errorTitle,
-			                              JOptionPane.ERROR_MESSAGE);
+					JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Constructs a login request and sends it. Uses basic auth to send username
 	 * and password (base64 encoded)
@@ -93,23 +94,46 @@ public class LoginController implements ActionListener {
 		request.addObserver(new LoginRequestObserver(this));
 		request.send();
 	}
-	
+
 	/**
 	 * Method that is called by {@link LoginRequestObserver} if the login
 	 * request was successful.
 	 * @param response the response returned by the server
 	 */
 	public void loginSuccessful(ResponseModel response) {
-		// Save the session cookie
-		Network.getInstance().getDefaultNetworkConfiguration().addRequestHeader("cookie", response.getHeaders().get("Set-Cookie").get(0).split(";")[0] + ";");
-		
-		// Select the project
-		Request projectSelectRequest = Network.getInstance().makeRequest("login", HttpMethod.POST);
-		projectSelectRequest.addObserver(new ProjectSelectRequestObserver(this));
-		projectSelectRequest.setBody(view.getProjectField().getText());
-		projectSelectRequest.send();
+		// Save the cookies
+		List<String> cookieList = response.getHeaders().get("Set-Cookie");
+		String cookieParts[];
+		String cookieNameVal[];
+		if (cookieList != null) { // if the server returned cookies
+			for (String cookie : cookieList) { // for each returned cookie
+				cookieParts = cookie.split(";"); // split the cookie
+				if (cookieParts.length >= 1) { // if there is at least one part to the cookie
+					cookieNameVal = cookieParts[0].split("="); // split the cookie into its name and value
+					if (cookieNameVal.length == 2) { // if the split worked, add the cookie to the default NetworkConfiguration
+						Network.getInstance().getDefaultNetworkConfiguration().addCookie(cookieNameVal[0], cookieNameVal[1]);
+					}
+					else {
+						System.err.println("Received unparsable cookie: " + cookie);
+					}
+				}
+				else {
+					System.err.println("Received unparsable cookie: " + cookie);
+				}
+			}
+
+			// Select the project
+			Request projectSelectRequest = Network.getInstance().makeRequest("project", HttpMethod.PUT);
+			projectSelectRequest.addObserver(new ProjectSelectRequestObserver(this));
+			projectSelectRequest.setBody(view.getProjectField().getText());
+			projectSelectRequest.send();
+		}
+		else {
+			JOptionPane.showMessageDialog(view, "Unable to login: no cookies returned.", "Login Error", 
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
-	
+
 	/**
 	 * Method that is called by {@link LoginRequestObserver} if the login
 	 * request was unsuccessful.
@@ -119,7 +143,7 @@ public class LoginController implements ActionListener {
 		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Login Error", 
 				JOptionPane.ERROR_MESSAGE);
 	}
-	
+
 	/**
 	 * Method that is called by {@link ProjectSelectRequestObserver} if the login
 	 * request was successful.
@@ -127,11 +151,37 @@ public class LoginController implements ActionListener {
 	 * @param response the response returned by the server
 	 */
 	public void projectSelectSuccessful(ResponseModel response) {
-		// Show the main GUI
-		mainGUI.setVisible(true);
-		view.dispose();
+		// Save the cookies
+		List<String> cookieList = response.getHeaders().get("Set-Cookie");
+		String cookieParts[];
+		String cookieNameVal[];
+		if (cookieList != null) { // if the server returned cookies
+			for (String cookie : cookieList) { // for each returned cookie
+				cookieParts = cookie.split(";");
+				if (cookieParts.length >= 1) {
+					cookieNameVal = cookieParts[0].split("=");
+					if (cookieNameVal.length == 2) {
+						Network.getInstance().getDefaultNetworkConfiguration().addCookie(cookieNameVal[0], cookieNameVal[1]);
+					}
+					else {
+						System.err.println("Received unparsable cookie: " + cookie);
+					}
+				}
+				else {
+					System.err.println("Received unparsable cookie: " + cookie);
+				}
+			}
+
+			// Show the main GUI
+			mainGUI.setVisible(true);
+			view.dispose();
+		}
+		else {
+			JOptionPane.showMessageDialog(view, "Unable to select project: no cookies returned.", "Project Selection Error", 
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
-	
+
 	/**
 	 * Method that is called by {@link ProjectSelectRequestObserver} if the project select
 	 * request was unsuccessful.
@@ -139,7 +189,7 @@ public class LoginController implements ActionListener {
 	 * @param error A string representing the error that occurred.
 	 */
 	public void projectSelectFailed(String error) {
-		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Project Selection Error", 
+		JOptionPane.showMessageDialog(view, "Unable to select projectc: " + error, "Project Selection Error", 
 				JOptionPane.ERROR_MESSAGE);
 	}
 }

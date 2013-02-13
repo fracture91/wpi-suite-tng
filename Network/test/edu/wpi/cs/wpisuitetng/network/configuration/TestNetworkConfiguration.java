@@ -44,6 +44,46 @@ public class TestNetworkConfiguration {
 	public void testGetApiUrl() {
 		assertTrue(url.equals(config.getApiUrl()));
 	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testAddCookieNullNameException() {
+		config.addCookie(null, "");
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testAddCookieNullValueException() {
+		config.addCookie("", null);
+	}
+	
+	@Test
+	public void testAddCookie() {
+		assertNull(config.getRequestHeaders().get("cookie"));
+		
+		config.addCookie("cookie1", "value1");
+		assertNotNull(config.getRequestHeaders().get("cookie"));
+		assertEquals(1, config.getRequestHeaders().get("cookie").size());
+		assertTrue("cookie1=value1".equals(config.getRequestHeaders().get("cookie").get(0)));
+		
+		config.addCookie("cookie2", "value2");
+		assertNotNull(config.getRequestHeaders().get("cookie"));
+		assertEquals(1, config.getRequestHeaders().get("cookie").size());
+		assertTrue("cookie1=value1;\ncookie2=value2".equals(config.getRequestHeaders().get("cookie").get(0)));
+		
+		config.addCookie("cookie1", "value1");
+		assertNotNull(config.getRequestHeaders().get("cookie"));
+		assertEquals(1, config.getRequestHeaders().get("cookie").size());
+		assertTrue("cookie1=value1;\ncookie2=value2".equals(config.getRequestHeaders().get("cookie").get(0)));
+		
+		config.addCookie("cookie2", "value2");
+		assertNotNull(config.getRequestHeaders().get("cookie"));
+		assertEquals(1, config.getRequestHeaders().get("cookie").size());
+		assertTrue("cookie1=value1;\ncookie2=value2".equals(config.getRequestHeaders().get("cookie").get(0)));
+		
+		config.addCookie("cookie3", "value3");
+		assertNotNull(config.getRequestHeaders().get("cookie"));
+		assertEquals(1, config.getRequestHeaders().get("cookie").size());
+		assertTrue("cookie1=value1;\ncookie2=value2;\ncookie3=value3".equals(config.getRequestHeaders().get("cookie").get(0)));
+	}
 
 	@Test(expected = NullPointerException.class)
 	public void testAddObserverNullObserverException() {
