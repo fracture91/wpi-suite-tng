@@ -13,10 +13,9 @@ import org.junit.Before;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
@@ -64,7 +63,7 @@ public class DefectValidatorTest {
 		ignoredEvents = new ArrayList<DefectEvent>();
 		goodNewDefect.setEvents(ignoredEvents); // ignored
 		
-		Set<Model> models = new HashSet<Model>();
+		Set<Object> models = new HashSet<Object>();
 		models.add(tag);
 		models.add(bob);
 		models.add(existingDefect);
@@ -77,40 +76,19 @@ public class DefectValidatorTest {
 		goodUpdatedDefect.getTags().add(tagCopy);
 		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
 		
-		db = new MockDefectData(models);
+		db = new MockData(models);
 		validator = new DefectValidator(db);
 	}
 	
 	@Test
 	public void testDBState() {
-		try {
-			assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
-		} catch (WPISuiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
-		} catch (WPISuiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
-		} catch (WPISuiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
+		assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
+		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
 	}
 	
 	public List<ValidationIssue> checkNumIssues(int num, Session session, Defect defect, Mode mode) {
-		List<ValidationIssue> issues = null;
-		try {
-			issues = validator.validate(session, defect, mode);
-		} catch (WPISuiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		List<ValidationIssue> issues = validator.validate(session, defect, mode);
 		assertEquals(num, issues.size());
 		return issues;
 	}
@@ -198,7 +176,7 @@ public class DefectValidatorTest {
 		checkFieldIssue(defaultSession, goodNewDefect, Mode.CREATE, "title");
 	}
 	
-	public String makeLongString(int size) {
+	public static String makeLongString(int size) {
 		StringBuilder str = new StringBuilder(size);
 		for(int i = 0; i < size; i++) {
 			str.append('a');
@@ -295,6 +273,7 @@ public class DefectValidatorTest {
 		assertSame(existingDefect.getEvents(), goodUpdatedDefect.getEvents());
 		assertEquals(existingDefect.getCreationDate(), goodUpdatedDefect.getCreationDate());
 		assertNotNull(goodUpdatedDefect.getLastModifiedDate());
+		assertSame(existingDefect, validator.getLastExistingDefect());
 	}
 	
 	@Test

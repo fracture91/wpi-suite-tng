@@ -8,7 +8,6 @@ import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -60,19 +59,31 @@ public class DefectValidator {
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The User with the given username, or null if they don't exist
 	 */
-	private User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) {
-		List<Model> existingUsers = null;
-		try {
-			existingUsers = data.retrieve(User.class, "username", username);
-		} catch (WPISuiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) {
+		final List<Model> existingUsers = data.retrieve(User.class, "username", username);
 		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
 			return (User) existingUsers.get(0);
 		} else {
 			issues.add(new ValidationIssue("User doesn't exist", fieldName));
 			return null;
+		}
+	}
+	
+	/**
+	 * Return the Defect with the given id if it already exists in the database.
+	 * 
+	 * @param id the id of the Defect
+	 * @param issues list of errors to add to if defect doesn't exist
+	 * @param fieldName name of field to use in error if necessary
+	 * @return The Defect with the given id, or null if it doesn't exist
+	 */
+	Defect getExistingDefect(int id, List<ValidationIssue> issues, String fieldName) {
+		List<Model> oldDefects = data.retrieve(Defect.class, "id", id);
+		if(oldDefects.size() < 1 || oldDefects.get(0) == null) {
+			issues.add(new ValidationIssue("Defect with id does not exist", fieldName));
+			return null;
+		} else {
+			return (Defect) oldDefects.get(0);
 		}
 	}
 	
@@ -84,9 +95,8 @@ public class DefectValidator {
 	 * @param defect The defect model to validate
 	 * @param mode The mode to validate for
 	 * @return A list of ValidationIssues (possibly empty)
-	 * @throws WPISuiteException 
 	 */
-	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) throws WPISuiteException {
+	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
 		if(defect == null) {
 			issues.add(new ValidationIssue("Defect cannot be null"));
@@ -95,18 +105,7 @@ public class DefectValidator {
 		
 		Defect oldDefect = null;
 		if(mode == Mode.EDIT) {
-			List<Model> oldDefects = null;
-			try {
-				oldDefects = data.retrieve(Defect.class, "id", defect.getId());
-			} catch (WPISuiteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(oldDefects.size() < 1 || oldDefects.get(0) == null) {
-				issues.add(new ValidationIssue("Defect with id does not exist", "id"));
-			} else {
-				oldDefect = (Defect) oldDefects.get(0);
-			}
+			oldDefect = getExistingDefect(defect.getId(), issues, "id");
 		}
 		lastExistingDefect = oldDefect;
 		

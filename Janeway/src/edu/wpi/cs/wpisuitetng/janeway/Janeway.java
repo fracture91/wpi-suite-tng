@@ -55,7 +55,7 @@ public class Janeway {
 		// Start the GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JanewayFrame gui = new JanewayFrame(modules);
+				final JanewayFrame gui = JanewayFrame.initialize(modules);
 				final LoginFrame loginGui = new LoginFrame("Janeway");
 				
 				if (args.length > 0 && args[0].equals("-nologin")) {

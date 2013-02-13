@@ -17,14 +17,16 @@
 
 	<target name="compile">
 		<mkdir dir="build"/>
-		<javac srcdir="src" destdir="build" includeJavaRuntime="yes">
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="classpath"/>
 		</javac>
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test"/>
-		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes">
+		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="test-classpath"/>
 		</javac>
 	</target>

@@ -34,7 +34,9 @@ import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
-//import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.CommentManager;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager;
+import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
@@ -70,7 +72,10 @@ public class ManagerLayer {
 		//TODO pull these mappings from some config file and reflect them
 		map.put("coreproject", new ProjectManager(data));
 		map.put("coreuser", new UserManager(data));
-		//map.put("defecttrackerdefect", new DefectManager(data));
+		map.put("defecttrackerdefect", new DefectManager(data));
+		map.put("defecttrackercomment", new CommentManager(data));
+		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
+
 		String ssid = null;
 		
 		try {
@@ -200,10 +205,10 @@ public class ManagerLayer {
 			response = "[";
 			for(Model n : m)
 			{
-				response.concat(n.toJSON()+",");
+				response = response.concat(n.toJSON()+",");
 			}
-			response = response.replace(response.substring(response.length()-1), "");
-			response.concat("]");
+			response = response.substring(0, response.length() - 1); // remove trailing comma
+			response = response.concat("]");
 		}
 		
 		return response;

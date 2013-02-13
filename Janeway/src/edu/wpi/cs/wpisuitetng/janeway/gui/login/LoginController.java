@@ -81,7 +81,7 @@ public class LoginController implements ActionListener {
 	 */
 	public void sendLoginRequest() {
 		// Form the basic auth string
-		String basicAuth = "Authorization: Basic ";
+		String basicAuth = "Basic ";
 		String password = new String(view.getPasswordField().getPassword());
 		String credentials = view.getUserNameField().getText() + ":" + password;
 		basicAuth += Base64.encodeBase64String(credentials.getBytes());
@@ -113,7 +113,8 @@ public class LoginController implements ActionListener {
 	 * request was unsuccessful.
 	 * @param response the response returned by the server
 	 */
-	public void loginFailed(ResponseModel response) {
-		JOptionPane.showMessageDialog(view, "Invalid login information!", "Login Error", JOptionPane.WARNING_MESSAGE);
+	public void loginFailed(String error) {
+		JOptionPane.showMessageDialog(view, "Unable to login: " + error, "Login Error", 
+				JOptionPane.ERROR_MESSAGE);
 	}
 }

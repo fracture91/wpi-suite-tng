@@ -2,8 +2,6 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.models;
 
 import com.google.gson.Gson;
 
-import edu.wpi.cs.wpisuitetng.Permission;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -67,16 +65,6 @@ public class Comment extends DefectEvent {
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public String toJSON() {
 		String json;
 		Gson gson = new Gson();
@@ -84,28 +72,14 @@ public class Comment extends DefectEvent {
 		return json;
 	}
 
-	@Override
-	public Boolean identify(Object o) {
-		// TODO
-		return false;
-	}
-
-	@Override
-	public Permission getPermission(User u) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPermission(Permission p, User u) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Project getProject() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Converts the given JSON string into a Comment
+	 * @param json JSON string containing a serialized Comment
+	 * @return a Comment deserialized from the given JSON string
+	 */
+	public static Comment fromJson(String json) {
+		Gson parser = new Gson();
+		return parser.fromJson(json, Comment.class);
 	}
 
 	@Override
