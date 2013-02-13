@@ -81,10 +81,6 @@ public interface Model {
 	 */
 	public void setProject(Project p);
 	
-	/** 
-	 * Sets the Model's project to the given Project
-	 */
-	public void setProject(Project aProject);
 	
 	
 }
