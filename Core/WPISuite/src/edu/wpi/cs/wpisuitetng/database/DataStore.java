@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
@@ -30,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public class DataStore implements Data {
-	
+
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
 	private static DataStore myself = null;
 	static ObjectContainer theDB;
@@ -40,39 +43,60 @@ public class DataStore implements Data {
 	static String DB4oUser = "bgaffey";
 	static String DB4oPass = "password";
 	static String DB4oServer = "localhost";
-		  
 	
+	private static final Logger logger = Logger.getLogger(DataStore.class.getName());
+
+
 	public static DataStore getDataStore()
 	{
 		if(myself == null)
 		{
+			logger.log(Level.FINE, "Opening connection to db4o database...");
 			myself = new DataStore();
 			// accessLocalServer
 			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
 			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
 			server.grantAccess(DB4oUser,DB4oPass);
-			
+
 			theDB = server.openClient();
+			logger.log(Level.FINE, "Connected to db4o database!");
 		}
 		return myself;
 	}
-	
+
 	/**
-	 * Saves T into the database
+	 * Saves a Model into the database
 	 * @param Model to save
 	 */
-	public <T> boolean save(T aTNG){
+	public <T> boolean save(T aModel){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
-			//ObjectContainer client = server.openClient();
-			theDB.store(aTNG);
-			System.out.println("Stored " + aTNG);
-			theDB.commit();
+
+		theDB.store(aModel);
+		System.out.println("Stored " + aModel);
+		logger.log(Level.FINE, "Saving model [" + aModel + "]");
+		theDB.commit();
 		return true;
 	}
 	
+	/**
+	 * Saves a Model into the database
+	 * @param Model to save
+	 */
+	public <T> boolean save(T aModel, Project aProject){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+
+		//ObjectContainer client = server.openClient();
+		((Model) aModel).setProject(aProject);
+		theDB.store(aModel);
+		System.out.println("Stored " + aModel);
+		logger.log(Level.FINE, "Saving model [" + aModel + "]");
+		theDB.commit();
+		return true;
+	}
+
 	/**
 	 *  For this function to work you need to have a getter that takes zero arguments,
 	 *  and has the name
@@ -92,6 +116,8 @@ public class DataStore implements Data {
 	public List<Model> retrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue) throws WPISuiteException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+
+		logger.log(Level.FINE, "Attempting Database Retrieve...");
 		
 		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
@@ -103,13 +129,15 @@ public class DataStore implements Data {
 		}
 		final Method theGetter = methodToBeSaved;
 		if(theGetter == null){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
 			throw new WPISuiteException("Null getter method.");
 		}
-		
+
 		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
-					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);//objects that have aFieldName equal to theGivenValue get added to the list 
+					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
+					//objects that have aFieldName equal to theGivenValue get added to the list 
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -125,12 +153,14 @@ public class DataStore implements Data {
 				}
 			}
 		});
-	
+
 		System.out.println(result);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Retrieve Success!");
 		return result;
 	}
-	
+
 	/**
 	 * Retrieves the objects of the given class type with the given field value from only
 	 * the given project. 
@@ -160,71 +190,56 @@ public class DataStore implements Data {
 			//If no project is given, just search the entire database
 			retrieve(anObjectQueried, aFieldName, theGivenValue);
 		}
-		
+
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-
-		try {
-			final Method projectName = anObjectQueried.getMethod("getProjectName");
-			ArrayList<Model> correctModels = new ArrayList<Model>();
-
-			List<Model> filteredProjects = theDB.query(new Predicate<Model>(){
-				public boolean match(Model anObject){
-					try {
-						return projectName.invoke(anObject).equals(theProject.getName()) ||
-								projectName.invoke(anObject).equals("");
-					} catch (IllegalAccessException e) {
-						return false;
-					} catch (IllegalArgumentException e) {
-						return false;
-					} catch (InvocationTargetException e) {
-						return false;
-					}//objects that have aFieldName equal to theGivenValue get added to the list 
-				}
-			});
-			
-			//ObjectContainer client = server.openClient();
-			Method[] allMethods = anObjectQueried.getMethods();
-			Method methodToBeSaved = null;
-			for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
-				if(m.getName().equalsIgnoreCase("get"+aFieldName)){
-					methodToBeSaved = m; //saves the method called "get" + aFieldName
-				}
+		
+		logger.log(Level.FINE, "Attempting Database Retrieve...");
+		//ObjectContainer client = server.openClient();
+		Method[] allMethods = anObjectQueried.getMethods();
+		Method methodToBeSaved = null;
+		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
+			if(m.getName().equalsIgnoreCase("get"+aFieldName)){
+				methodToBeSaved = m; //saves the method called "get" + aFieldName
 			}
-
-			final Method theGetter = methodToBeSaved;
-			if(theGetter == null){
-				throw new WPISuiteException("Null getter method.");
-			}
-			
-			for(Iterator<Model> iterator = filteredProjects.iterator(); iterator.hasNext();){
-				Model thisModel = iterator.next();
-				try {
-					if(theGetter.invoke(thisModel).equals(theGivenValue)){
-						correctModels.add(thisModel);
-					}
-				} catch (IllegalAccessException e) {
-					//Skip to next Model
-				} catch (IllegalArgumentException e) {
-					//Skip to next Model
-				} catch (InvocationTargetException e) {
-					//Skip to next Model
-				}
-				
-			}
-
-			System.out.println(correctModels);
-			theDB.commit();
-			return correctModels;
-			
-		} catch (NoSuchMethodException e1) {
-			throw new WPISuiteException("Project did not have method \"getName()\"");
-		} catch (SecurityException e1) {
-			throw new WPISuiteException("Project did not have method \"getName()\"");
 		}
 
+		final Method theGetter = methodToBeSaved;
+		if(theGetter == null){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
+			throw new WPISuiteException("Null getter method.");
+		}
+
+
+		List<Model> result = theDB.query(new Predicate<Model>(){
+			public boolean match(Model anObject){
+				try {
+					if(anObject.getProject() == null){
+						return false;
+					}
+					else{
+						return (anObject.getProject().getName().equals(theProject.getName())) &&
+								theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
+						//objects that have aFieldName equal to theGivenValue get added to the list
+					}
+				} catch (IllegalAccessException e) {
+					return false;
+				} catch (IllegalArgumentException e) {
+					return false;
+				} catch (InvocationTargetException e) {
+					return false;
+				}//objects that have aFieldName equal to theGivenValue get added to the list 
+			}
+		});
+
+		System.out.println(result);
+		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Retrieve Success!");
+		return result;
+
 	}
-	
+
 	/**
 	 * Retrieves all objects of the given Class. 
 	 * @param aSample an object of the class we want to retrieve All of
@@ -236,9 +251,35 @@ public class DataStore implements Data {
 		List<T> result = theDB.queryByExample(aSample.getClass());
 		System.out.println("retrievedAll: "+result);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database RetrieveAll Performed");
 		return result;
 	}
 	
+	/**
+	 * Retrieves all objects of the given Class. 
+	 * @param aSample an object of the class we want to retrieve All of
+	 * @param aProject Project to search in for the objects
+	 * @return a List of all of the objects of the given class
+	 */
+	public <T> List<Model> retrieveAll(T aSample, Project aProject){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		ArrayList<Model> result = new ArrayList<Model>(); 
+		List<T> allResults = theDB.queryByExample(aSample.getClass());
+		for(Iterator iterator = result.iterator(); iterator.hasNext();){
+			Model theModel = (Model)iterator.next();
+			if(theModel.getProject() != null &&
+					theModel.getProject().getName().equalsIgnoreCase(aProject.getName())){
+				result.add(theModel);
+			}
+		}
+		System.out.println("retrievedAll: "+result);
+		theDB.commit();
+		logger.log(Level.FINE, "Database RetrieveAll Performed");
+		return result;
+	}
+
 	/** Deletes the given object and returns the object if successful
 	 * @param The object to be deleted
 	 * @return The object being deleted
@@ -246,34 +287,54 @@ public class DataStore implements Data {
 	public <T> T delete(T aTNG){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
+
+		logger.log(Level.FINE, "Database Delete Attempt...");
 		//ObjectContainer client = server.openClient();
 		ObjectSet<T> result = theDB.queryByExample(aTNG);
-	    T found = (T) result.next();
-	    theDB.delete(found);
+		T found = (T) result.next();
+		theDB.delete(found);
 		theDB.commit();
+		
+		logger.log(Level.FINE, "Database Delete Success!");
 		//return "Deleted "+aTNG;
 		return found;
-		
+
 	}
-	
-	
-	
+
+
+
 	public <T> List<T> deleteAll(T aSample){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
 		List<T> toBeDeleted = retrieveAll(aSample);
 		for(T aTNG: toBeDeleted){
 			System.out.println("Deleting: "+aTNG);
 			theDB.delete(aTNG);
 		}
 		theDB.commit();
+		logger.log(Level.INFO, "Database Delete All performed");
 		return toBeDeleted;
-		
+
 	}
 	
-	
-	 /** For this function to work you need to have a setter that takes the value to change,
+	public <T> List<Model> deleteAll(T aSample, Project aProject){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		List<Model> toBeDeleted = retrieveAll(aSample, aProject);
+		for(Model aTNG: toBeDeleted){
+			System.out.println("Deleting: "+aTNG);
+			theDB.delete(aTNG);
+		}
+		theDB.commit();
+		
+		logger.log(Level.INFO, "Database Delete All performed");
+		return toBeDeleted;
+
+	}
+
+
+	/** For this function to work you need to have a setter that takes the value to change,
 	 *  the field to and is named in the convention
 	 *  convention of set + the given fieldName (ie setID for the field ID from an object). 
 	 *  The value can be of any type, provided that there is a .equals method for it. 
@@ -288,6 +349,8 @@ public class DataStore implements Data {
 	 * @throws WPISuiteException 
 	 */
 	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException{
+		logger.log(Level.INFO, "Database Update Attempt...");
+		
 		List<? extends Object> objectsToUpdate = retrieve(anObjectToBeModified, fieldName, uniqueID);
 		Object theObject;
 		for(int i = 0; i < objectsToUpdate.size(); i++){
@@ -301,25 +364,28 @@ public class DataStore implements Data {
 			}
 			//TODO: IF Null solve this problem...
 			final Method theSetter = methodToBeSaved;
-			
+
 			try {
 				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i), changeValue);
 				save(theObject);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
+				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			}
-			
+
 			theDB.commit();
-			
-			
 		}
+		
+		logger.log(Level.INFO, "Database Update Success!");
 	}
 
 

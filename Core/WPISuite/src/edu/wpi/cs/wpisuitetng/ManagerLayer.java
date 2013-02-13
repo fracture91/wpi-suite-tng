@@ -14,6 +14,8 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
@@ -54,6 +56,8 @@ public class ManagerLayer {
 	private Map<String, EntityManager> map;
 	private SessionManager sessions;
 	public Cookie superCookie;
+	
+	private static final Logger logger = Logger.getLogger(ManagerLayer.class.getName());
 	
 	/**
 	 * initializes the database
@@ -116,6 +120,7 @@ public class ManagerLayer {
 	 */
 	public static ManagerLayer getInstance()
 	{
+		logger.log(Level.FINE, "ManagerLayer Instance Requested");
 		return layer;
 	}
 	

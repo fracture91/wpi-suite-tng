@@ -14,6 +14,8 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -50,6 +52,8 @@ public class UserManager implements EntityManager<User> {
 	private PasswordCryptographer passwordHash;
 	Gson gson;
 	Data data;
+	
+	private static final Logger logger = Logger.getLogger(UserManager.class.getName());
 
 	/**
 	 * Creates a UserManager operating on the given Data.
@@ -75,17 +79,20 @@ public class UserManager implements EntityManager<User> {
 	public User makeEntity(Session s, String content) throws WPISuiteException{
 
 		//TODO: create a custom de-serializer & serializer so we can hash the desired password & remove it from others.
+		
+		logger.log(Level.FINE, "Attempting new User creation...");
+
 		User p;
 		try{
-			p = (User)new User(null, null, null, 0).fromJSON(content);
+			p = User.fromJSON(content);
 		} catch(JsonSyntaxException e){
+			logger.log(Level.WARNING, "Invalid User entity creation string.");
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
 
 		if(getEntity(s,p.getUsername())[0] == null)
 		{
 			String newPassword = UserDeserializer.parsePassword(content);
-
 			String hashedPassword = this.passwordHash.generateHash(newPassword);
 
 			p.setPassword(hashedPassword);
@@ -94,8 +101,11 @@ public class UserManager implements EntityManager<User> {
 		}
 		else
 		{
+			logger.log(Level.WARNING, "Conflict Exception during User creation.");
 			throw new ConflictException("A user with the given ID already exists. Entity String: " + content);
 		}
+
+		logger.log(Level.FINE, "User creation success!");
 
 		return p;
 	}
@@ -157,10 +167,13 @@ public class UserManager implements EntityManager<User> {
 	public void save(Session s,User model) throws WPISuiteException {
 		if(data.save(model))
 		{
+			logger.log(Level.FINE, "User Saved :" + model);
+
 			return ;
 		}
 		else
 		{
+			logger.log(Level.WARNING, "User Save Failure!");
 			throw new DatabaseException("Save failure for User."); // Session User: " + s.getUsername() + " User: " + model.getName());
 		}
 		
@@ -168,8 +181,9 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public boolean deleteEntity(Session s1 ,String id) throws WPISuiteException {
-		
+
 		Model m = data.delete(data.retrieve(user, "username", id).get(0));
+		logger.log(Level.INFO, "UserManager deleting user <" + id + ">");
 		
 		return (m != null) ? true : false;
 		
@@ -177,6 +191,7 @@ public class UserManager implements EntityManager<User> {
 
 	@Override
 	public void deleteAll(Session s) {
+		logger.log(Level.INFO, "UserManager invoking DeleteAll...");
 		data.deleteAll(new User("","","",0));
 	}
 
@@ -205,10 +220,13 @@ public class UserManager implements EntityManager<User> {
 		// Inflate the changeSet into a User object.
 		try
 		{
-			changes = (User)new User(null, null, null, 0).fromJSON(changeSet);
+			logger.log(Level.FINE, "User update being attempted...");
+			changes = User.fromJSON(changeSet);
 		}
 		catch(JsonParseException e)
 		{
+			logger.log(Level.WARNING, "UserManager.update() had a failure in the changeset mapper.");
+
 			throw new SerializationException("Error inflating the changeset: " + e.getMessage());
 		}
 
@@ -220,10 +238,11 @@ public class UserManager implements EntityManager<User> {
 			toUpdate.setName(changes.getName());
 		}
 
-		if(changes.getUsername() != null)
+		//shouldn't be able to change unique identifier
+		/*if(changes.getUsername() != null)
 		{
 			toUpdate.setUserName(changes.getUsername());
-		}
+		}*/
 
 		if(!changes.getRole().equals(toUpdate.getRole()))
 		{
@@ -270,6 +289,8 @@ public class UserManager implements EntityManager<User> {
 	 */
 	public static String parseUsername(String serializedUser)
 	{
+		logger.log(Level.FINE, "Attempting username parsing...");
+		
 		if(!serializedUser.contains("username"))
 		{
 			throw new JsonParseException("The given JSON string did not contain a username field.");
@@ -282,6 +303,7 @@ public class UserManager implements EntityManager<User> {
 		
 		String username = serializedUser.substring(startIndex, endIndex);
 		
+		logger.log(Level.FINE, "Username parsing success!");
 		return username;
 	}
 

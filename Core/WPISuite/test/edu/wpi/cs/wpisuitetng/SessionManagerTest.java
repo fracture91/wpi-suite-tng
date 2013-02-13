@@ -128,6 +128,8 @@ public class SessionManagerTest {
 		
 		String projectId = "proj1";
 		Project p = new Project("wpisuite", projectId);
+		p.setOwner(u2);
+		
 		try
 		{
 			projects.makeEntity(originalSession, p.toJSON());

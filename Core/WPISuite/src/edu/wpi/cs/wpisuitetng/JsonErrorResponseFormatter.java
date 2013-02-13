@@ -12,6 +12,9 @@
 
 package edu.wpi.cs.wpisuitetng;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 
 /**
@@ -21,9 +24,12 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
  * @author twack
  */
 public class JsonErrorResponseFormatter implements ErrorResponseFormatter {
-
+	private static final Logger logger = Logger.getLogger(JsonErrorResponseFormatter.class.getName());
+	
 	@Override
 	public String formatContent(WPISuiteException e) {
+		logger.log(Level.WARNING, "Formatting exception details for error response [JSON]");
+
 		StringBuilder json = new StringBuilder();
 		json.append("{");
 		
