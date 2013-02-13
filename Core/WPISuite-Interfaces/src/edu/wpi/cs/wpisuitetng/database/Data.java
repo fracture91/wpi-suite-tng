@@ -12,6 +12,7 @@
 
 package edu.wpi.cs.wpisuitetng.database;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -84,7 +85,7 @@ public interface Data
 	 * @return List of all of the objects of the class of aSample
 	 */
 	public <T> List<T> retrieveAll(T aSample);
-	
+
 	/**
 	 * Retrieves all objects of the the same class as aSample in the database
 	 * @param aSample - Object whose class will be used 
@@ -107,4 +108,11 @@ public interface Data
 	 * @return List of all the objects of the class of aSample which were deleted
 	 */
 	public <T> List<Model> deleteAll(T aSample, Project aProject);
+	
+	List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	
+	List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
+	
+	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+
 }

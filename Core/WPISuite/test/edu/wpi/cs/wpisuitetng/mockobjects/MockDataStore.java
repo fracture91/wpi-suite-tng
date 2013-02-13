@@ -12,12 +12,14 @@
 
 package edu.wpi.cs.wpisuitetng.mockobjects;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -194,12 +196,44 @@ public class MockDataStore implements Data {
 
 	@Override
 	public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+	public List<Model> notRetrieve(Class anObjectQueried, String aFieldName,
+			Object theGivenValue) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Model> andRetrieve(Class anObjectQueried,
+			String[] aFieldNameList, List<Object> theGivenValueList)
+			throws WPISuiteException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Model> orRetrieve(Class anObjectQueried,
+			String[] aFieldNameList, List<Object> theGivenValueList)
+			throws WPISuiteException, IllegalAccessException,
+			InvocationTargetException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+	public List<Model> complexRetrieve(Class andanObjectQueried,
+			String[] andFieldNameList, List<Object> andGivenValueList,
+			Class orAnObjectQueried, String[] orFieldNameList,
+			List<Object> orGivenValueList) throws WPISuiteException,
+			IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
 		// TODO Auto-generated method stub
 		return null;
 	}

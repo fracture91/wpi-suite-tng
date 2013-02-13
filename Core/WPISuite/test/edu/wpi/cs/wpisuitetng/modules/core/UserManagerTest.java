@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng.modules.core;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,9 +143,16 @@ public class UserManagerTest {
 				return null;
 			}
 			@Override
+
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
 					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -155,11 +163,35 @@ public class UserManagerTest {
 			}
 			@Override
 			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+							// TODO Auto-generated method stub
+				return null;
+				}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
 			@Override
 			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -191,9 +223,15 @@ public class UserManagerTest {
 				return null;
 			}
 			@Override
+
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
 					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -207,8 +245,32 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			@Override
 			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -246,6 +308,11 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			@Override
 			public <T> boolean save(T aModel, Project aProject) {
 				// TODO Auto-generated method stub
@@ -256,8 +323,32 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			@Override
 			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
