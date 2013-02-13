@@ -47,7 +47,7 @@ public class WPILoginServlet extends HttpServlet {
     }
     
     /**
-     * Perform project switching action. Given a projectID in the PUT Body, switches the Session to an instance for a project.
+     * Perform project switching action. Given a project name in the PUT Body, switches the Session to an instance for a project.
      */
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -65,12 +65,12 @@ public class WPILoginServlet extends HttpServlet {
 			{				
 				// find the project ID
 				BufferedReader putBody = request.getReader();
-				String projectId = putBody.readLine();
+				String projectName = putBody.readLine();
 				
 				// swap out the Sessions and add the project.
 				ManagerLayer man = ManagerLayer.getInstance();
 				SessionManager sessions = man.getSessions();
-				String newSsid = sessions.switchToProject(ssid, projectId);
+				String newSsid = sessions.switchToProject(ssid, projectName);
 				
 				// attach the new cookie to give back to the user.
 				Session projectSession = sessions.getSession(newSsid);

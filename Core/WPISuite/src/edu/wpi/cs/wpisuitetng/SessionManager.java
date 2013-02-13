@@ -132,11 +132,12 @@ public class SessionManager {
 	 * Renews the Session for a given sessionToken.
 	 * 	Parses the username from the token, then creates
 	 * 		a new session for the given user.
-	 * @param sessionToken
+	 * @param sessionId		the ID of the session being switched.
+	 * @param projectName	the name of the project being switched to.
 	 * @return	the new Session ID
 	 * @throws WPISuiteException 
 	 */
-	public String switchToProject(String sessionId, String projectId) throws WPISuiteException
+	public String switchToProject(String sessionId, String projectName) throws WPISuiteException
 	{
 		logger.log(Level.INFO, "User attempting Project Session Switch...");
 		// get a copy of the session so we can touch projects.
@@ -152,7 +153,7 @@ public class SessionManager {
 		// find the project
 		ManagerLayer manager = ManagerLayer.getInstance();
 		ProjectManager projects = manager.getProjects();
-		Project p = projects.getEntity(current, projectId)[0];
+		Project p = projects.getEntityByName(current, projectName)[0];
 		
 		if(p == null)
 		{
