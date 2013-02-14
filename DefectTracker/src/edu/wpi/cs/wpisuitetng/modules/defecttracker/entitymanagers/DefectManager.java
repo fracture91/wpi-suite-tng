@@ -48,6 +48,9 @@ public class DefectManager implements EntityManager<Defect> {
 		List<ValidationIssue> issues = validator.validate(s, newDefect, Mode.CREATE);
 		if(issues.size() > 0) {
 			// TODO: pass errors to client through exception
+			for (ValidationIssue issue : issues) {
+				System.out.println("Validation issue: " + issue.getMessage());
+			}
 			throw new BadRequestException();
 		}
 
@@ -86,7 +89,7 @@ public class DefectManager implements EntityManager<Defect> {
 		db.save(model);
 	}
 
-	private void ensureRole(Session session, Role role) throws UnauthorizedException {
+	private void ensureRole(Session session, Role role) throws WPISuiteException {
 		User user = (User) db.retrieve(User.class, "username", session.getUsername()).get(0);
 		if(!user.getRole().equals(role)) {
 			throw new UnauthorizedException();
@@ -94,14 +97,14 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 	
 	@Override
-	public boolean deleteEntity(Session s, String id) throws NotFoundException, UnauthorizedException {
+	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
 		// TODO: are nested objects deleted?  Dates should be, but Users shouldn't!
 		ensureRole(s, Role.ADMIN);
 		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 	
 	@Override
-	public void deleteAll(Session s) throws UnauthorizedException {
+	public void deleteAll(Session s) throws WPISuiteException {
 		ensureRole(s, Role.ADMIN);
 		db.deleteAll(new Defect());
 	}

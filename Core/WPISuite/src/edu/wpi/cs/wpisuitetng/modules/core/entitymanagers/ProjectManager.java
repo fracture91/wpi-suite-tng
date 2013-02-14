@@ -176,8 +176,8 @@ public class ProjectManager implements EntityManager<Project>{
 			throw new WPISuiteException("Null Session.");
 		}
 		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) || 
-				model.getPermission(theUser).equals(Permission.WRITE)){
+		//if(theUser.getRole().equals(Role.ADMIN) || 
+		//		model.getPermission(theUser).equals(Permission.WRITE)){
 			if(data.save(model))
 			{
 				logger.log(Level.FINE, "Project Saved :" + model);
@@ -188,12 +188,12 @@ public class ProjectManager implements EntityManager<Project>{
 				logger.log(Level.WARNING, "Project Save Failure!");
 				throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
 			}
-		}
-		else
+		//}
+		/*else
 		{
 			logger.log(Level.WARNING, "ProjectManager Save attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the requred permissions to perform this action.");
-		}
+		}*/
 		
 	}
 

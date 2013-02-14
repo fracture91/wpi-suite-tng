@@ -8,6 +8,7 @@ import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -58,8 +59,9 @@ public class DefectValidator {
 	 * @param issues list of errors to add to if user doesn't exist
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The User with the given username, or null if they don't exist
+	 * @throws WPISuiteException 
 	 */
-	User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) {
+	User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) throws WPISuiteException {
 		final List<Model> existingUsers = data.retrieve(User.class, "username", username);
 		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
 			return (User) existingUsers.get(0);
@@ -76,8 +78,9 @@ public class DefectValidator {
 	 * @param issues list of errors to add to if defect doesn't exist
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The Defect with the given id, or null if it doesn't exist
+	 * @throws WPISuiteException 
 	 */
-	Defect getExistingDefect(int id, List<ValidationIssue> issues, String fieldName) {
+	Defect getExistingDefect(int id, List<ValidationIssue> issues, String fieldName) throws WPISuiteException {
 		List<Model> oldDefects = data.retrieve(Defect.class, "id", id);
 		if(oldDefects.size() < 1 || oldDefects.get(0) == null) {
 			issues.add(new ValidationIssue("Defect with id does not exist", fieldName));
@@ -95,8 +98,9 @@ public class DefectValidator {
 	 * @param defect The defect model to validate
 	 * @param mode The mode to validate for
 	 * @return A list of ValidationIssues (possibly empty)
+	 * @throws WPISuiteException 
 	 */
-	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) {
+	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) throws WPISuiteException {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
 		if(defect == null) {
 			issues.add(new ValidationIssue("Defect cannot be null"));

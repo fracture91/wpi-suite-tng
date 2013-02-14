@@ -8,6 +8,7 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -34,7 +35,7 @@ public class CommentManager implements EntityManager<Comment> {
 	}
 	
 	@Override
-	public Comment makeEntity(Session s, String content) throws BadRequestException {
+	public Comment makeEntity(Session s, String content) throws WPISuiteException {
 		Comment newComment = gson.fromJson(content, Comment.class);
 		
 		List<ValidationIssue> issues = validator.validate(s, newComment);

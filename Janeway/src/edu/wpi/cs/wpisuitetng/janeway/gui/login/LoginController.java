@@ -121,6 +121,8 @@ public class LoginController implements ActionListener {
 					System.err.println("Received unparsable cookie: " + cookie);
 				}
 			}
+			
+			System.out.println(Network.getInstance().getDefaultNetworkConfiguration().getRequestHeaders().get("cookie").get(0));
 
 			// Select the project
 			Request projectSelectRequest = Network.getInstance().makeRequest("login", HttpMethod.PUT);
@@ -172,6 +174,8 @@ public class LoginController implements ActionListener {
 				}
 			}
 
+			System.out.println(Network.getInstance().getDefaultNetworkConfiguration().getRequestHeaders().get("cookie").get(0));
+			
 			// Show the main GUI
 			mainGUI.setVisible(true);
 			view.dispose();
