@@ -157,16 +157,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		else
 		{
-			m = data.retrieve(project, "name", projectName).toArray(m);
-			
-			if(m[0] == null)
-			{
-				throw new NotFoundException("Project with name <" + projectName + "> not found.");
-			}
-			else
-			{
-				return m;
-			}
+			return data.retrieve(project, "name", projectName).toArray(m);
 		}
 	}
 

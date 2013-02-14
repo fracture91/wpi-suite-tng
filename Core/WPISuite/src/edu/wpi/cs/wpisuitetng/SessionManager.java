@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
@@ -153,9 +154,18 @@ public class SessionManager {
 		// find the project
 		ManagerLayer manager = ManagerLayer.getInstance();
 		ProjectManager projects = manager.getProjects();
-		Project p = projects.getEntityByName(current, projectName)[0];
+		Project p = null;
 		
-		if(p == null)
+		try
+		{
+			p = projects.getEntityByName(current, projectName)[0];
+		
+			if(p == null)
+			{
+				throw new NotFoundException("Could not find project with given name to switch to.");
+			}
+		}
+		catch(NotFoundException e)
 		{
 			logger.log(Level.WARNING, "Project Session switch attempted with nonexistent project");
 			throw new SessionException("Session-project switch failed because requested project does not exist.");

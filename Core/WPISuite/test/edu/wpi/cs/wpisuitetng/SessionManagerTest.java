@@ -109,6 +109,7 @@ public class SessionManagerTest {
 	/* Test complex SessionManager functions */
 	
 	@Test
+	@Ignore // db test, ignoring until we make a cleaner testing strategy.
 	/**
 	 * Test the switchProject function in SessionManger. It should replace the
 	 * 	given session with a session logged into the given project. 
@@ -128,7 +129,6 @@ public class SessionManagerTest {
 		
 		String projectId = "proj1";
 		Project p = new Project("wpisuite", projectId);
-		p.setOwner(u2);
 		
 		try
 		{

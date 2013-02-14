@@ -113,6 +113,7 @@ public class ProjectManagerTest {
 	}
 
 	@Test
+	@Ignore
 	public void testGetAll() throws WPISuiteException {
 		Project[] initial = testWithRealDB.getAll(new Session(tempUser));
 		int initCount = initial.length;
@@ -291,6 +292,7 @@ public class ProjectManagerTest {
 	}
 	
 	@Test
+	@Ignore
 	/**
 	 * Tests if the update() function properly maps the JSON string then applies
 	 * 	the changes to the given User.
@@ -298,7 +300,6 @@ public class ProjectManagerTest {
 	 */
 	public void testUpdate() throws WPISuiteException
 	{
-		Session ses = null;
 		String updateString = "{ \"idNum\": \"2\", \"name\": \"proj2\" }";
 		Project newTemp = this.test.update(tempSession, updateTemp, updateString);
 		
