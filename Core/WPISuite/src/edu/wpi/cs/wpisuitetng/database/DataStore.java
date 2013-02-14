@@ -119,7 +119,6 @@ public class DataStore implements Data {
 
 		logger.log(Level.FINE, "Attempting Database Retrieve...");
 		
-		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
@@ -139,16 +138,10 @@ public class DataStore implements Data {
 					return theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
 					//objects that have aFieldName equal to theGivenValue get added to the list 
 				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					return false;
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					return false;
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					return false;         
 				}
 			}
@@ -362,22 +355,22 @@ public class DataStore implements Data {
 					methodToBeSaved = m;
 				}
 			}
-			//TODO: IF Null solve this problem...
 			final Method theSetter = methodToBeSaved;
+			if(theSetter == null){
+				logger.log(Level.WARNING, "Setter method was null during retrieve attempt");
+				throw new WPISuiteException("Null setter method.");
+			}
 
 			try {
 				theObject = (Object) theSetter.invoke(objectsToUpdate.get(i), changeValue);
 				save(theObject);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				logger.log(Level.WARNING, "Database Update Failed!");
 				e.printStackTrace();
 			}
@@ -388,11 +381,10 @@ public class DataStore implements Data {
 		logger.log(Level.INFO, "Database Update Success!");
 	}
 	
-	public List<Model> notRetrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue){
+	public List<Model> notRetrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue) throws WPISuiteException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 		
-		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		Method methodToBeSaved = null;
 		for(Method m: allMethods){//Cycles through all of the methods in the class anObjectQueried
@@ -400,8 +392,11 @@ public class DataStore implements Data {
 				methodToBeSaved = m; //saves the method called "get" + aFieldName
 			}
 		}
-		//TODO: IF Null solve this problem...
 		final Method theGetter = methodToBeSaved;
+		if(theGetter == null){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
+			throw new WPISuiteException("Null getter method.");
+		}
 		
 		List<Model> result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
@@ -409,15 +404,12 @@ public class DataStore implements Data {
 					Object foundobj = theGetter.invoke(anObjectQueried.cast(anObject));
 					return (!(foundobj.equals(theGivenValue)));//objects that have aFieldName equal to theGivenValue get added to the list 
 				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return false;
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return false;
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return false;         
 				}
@@ -425,7 +417,6 @@ public class DataStore implements Data {
 		});
 	
 		System.out.println(result);
-		//client.close();
 		return result;
 	}
 
@@ -439,7 +430,6 @@ public class DataStore implements Data {
 		{
 			throw new WPISuiteException();
 		}
-		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		int i=0;
 		List<Method> methodsToBeSaved = new ArrayList<Method>();
@@ -454,43 +444,36 @@ public class DataStore implements Data {
 					}
 				}
 		}
-		//TODO: IF Null solve this problem...
 		final List<Method> theGetter = methodsToBeSaved;
+		if(theGetter.size() == 0){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
+			throw new WPISuiteException("Null getter method.");
+		}
 		final int theGettersSize = theGetter.size();
 		int j = 0;
 		List<Model> fullresult = new ArrayList<Model>();
 		List<Model> result = new ArrayList<Model>(); 
 		for(j=0; j < theGettersSize ; j++){
-		final int finalcount = j;
-		final Method getBack = theGetter.get(finalcount);
-		final Object givenValue = theGivenValueList.get(finalcount);
-		//final Object getBackValue = getBack.invoke(anObjectQueried.cast(bob));
-		//final Object givenValue = theGivenValueList.get(finalcount);
-		result = theDB.query(new Predicate<Model>(){
-			public boolean match(Model anObject){
-				try {
-						//Object getBack = theGetter.get(finalcount).invoke(anObjectQueried.cast(anObject));
+			final int finalcount = j;
+			final Method getBack = theGetter.get(finalcount);
+			final Object givenValue = theGivenValueList.get(finalcount);
+			result = theDB.query(new Predicate<Model>(){
+				public boolean match(Model anObject){
+					try {
 						return getBack.invoke(anObjectQueried.cast(anObject)).equals(givenValue);
-						//(theGetter.get(finalcount).invoke(anObjectQueried.cast(anObject))).equals(theGivenValueList.get(finalcount));//objects that have aFieldName equal to theGivenValue get added to the list 
-						//theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
 					} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				return false;
-			}
-		});
+					return false;
+				}
+			});
 		fullresult.addAll(result);
 		}
 		System.out.println(fullresult);
-		//client.close();
 		return fullresult;
 	}
 	
@@ -503,7 +486,6 @@ public class DataStore implements Data {
 		{
 			throw new WPISuiteException();
 		}
-		//ObjectContainer client = server.openClient();
 		Method[] allMethods = anObjectQueried.getMethods();
 		int i=0;
 		List<Method> methodsToBeSaved = new ArrayList<Method>();
@@ -518,8 +500,11 @@ public class DataStore implements Data {
 					}
 				}
 		}
-		//TODO: IF Null solve this problem...
 		final List<Method> theGetter = methodsToBeSaved;
+		if(theGetter.size() == 0){
+			logger.log(Level.WARNING, "Getter method was null during retrieve attempt");
+			throw new WPISuiteException("Null getter method.");
+		}
 		final int theGettersSize = theGetter.size();
 		int j = 0;
 		List<Model> fullresult = new ArrayList<Model>();
@@ -528,26 +513,17 @@ public class DataStore implements Data {
 		final int finalcount = j;
 		final Method getBack = theGetter.get(finalcount);
 		final Object givenValue = theGivenValueList.get(finalcount);
-		//final Object getBackValue = getBack.invoke(anObjectQueried.cast(bob));
-		//final Object givenValue = theGivenValueList.get(finalcount);
 		result = theDB.query(new Predicate<Model>(){
 			public boolean match(Model anObject){
 				try {
-						//Object getBack = theGetter.get(finalcount).invoke(anObjectQueried.cast(anObject));
 						return getBack.invoke(anObjectQueried.cast(anObject)).equals(givenValue);
-						//(theGetter.get(finalcount).invoke(anObjectQueried.cast(anObject))).equals(theGivenValueList.get(finalcount));//objects that have aFieldName equal to theGivenValue get added to the list 
-						//theGetter.invoke(anObjectQueried.cast(anObject)).equals(theGivenValue);
-					} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
+				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
-					return false;
 				} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
 				return false;
 			}
 		});
@@ -569,7 +545,6 @@ public class DataStore implements Data {
 		}
 		}
 		System.out.println(fullresult);
-		//client.close();
 		return fullresult;
 	}
 	 
