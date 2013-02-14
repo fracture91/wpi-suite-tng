@@ -76,6 +76,9 @@ public class ManagerLayer {
 //		map.put("defecttrackercomment", new CommentManager(data));
 //		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 
+		//add just your module to this list
+		String[] fullModuleList = {"core","defecttracker","postboard"};
+		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		
 		try {

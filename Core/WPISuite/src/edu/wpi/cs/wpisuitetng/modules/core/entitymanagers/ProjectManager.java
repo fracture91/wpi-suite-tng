@@ -46,6 +46,7 @@ public class ProjectManager implements EntityManager<Project>{
 	Class<Project> project = Project.class;
 	Gson gson;
 	Data data;
+	private String[] allModules;
 	
 	private static final Logger logger = Logger.getLogger(ProjectManager.class.getName());
 	
@@ -63,7 +64,8 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public String advancedGet(Session s, String[] args)
 			throws WPISuiteException {
-		throw new NotImplementedException();
+		
+		return this.getEntity(s, s.getProject().getIdNum())[0].toJSON();
 	}
 
 	@Override
@@ -291,13 +293,17 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public void setAllModules(String[] mods)
+	{
+		this.allModules = mods;
+	}
+	
 	@Override
 	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {
-		throw new NotImplementedException();
+		return gson.toJson(allModules, String[].class);
 	}
 
 	@Override

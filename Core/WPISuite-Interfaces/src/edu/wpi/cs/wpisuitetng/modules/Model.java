@@ -78,9 +78,8 @@ public interface Model {
 
 	/**
 	 * Sets the Model's project to the given Project
-	 * @param aProject The project associated with this model to set
+	 * @param p The project associated with this model to set
 	 */
-	public void setProject(Project aProject);
-	
+	public void setProject(Project p);	
 	
 }
