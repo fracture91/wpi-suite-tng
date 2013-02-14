@@ -123,7 +123,7 @@ public class LoginController implements ActionListener {
 			}
 
 			// Select the project
-			Request projectSelectRequest = Network.getInstance().makeRequest("project", HttpMethod.PUT);
+			Request projectSelectRequest = Network.getInstance().makeRequest("login", HttpMethod.PUT);
 			projectSelectRequest.addObserver(new ProjectSelectRequestObserver(this));
 			projectSelectRequest.setBody(ConfigManager.getConfig().getProjectName());
 			projectSelectRequest.send();
