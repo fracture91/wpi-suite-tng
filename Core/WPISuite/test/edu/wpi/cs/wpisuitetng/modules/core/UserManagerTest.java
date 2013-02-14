@@ -382,13 +382,12 @@ public class UserManagerTest {
 	public void testUpdate() throws WPISuiteException
 	{
 		Session ses = null;
-		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\" }";
+		String updateString = "{ \"idNum\": 99, \"role\": \"ADMIN\",  \"name\": \"zach\" }";
 		User newTemp = this.test.update(ses, temp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
 		
 		assertEquals(99, newTemp.getIdNum());
-		assertTrue(newTemp.getUsername().equals("updated"));
 		assertEquals(newTemp.getRole(), Role.ADMIN);
 		assertTrue(newTemp.getName().equals("zach"));
 	}

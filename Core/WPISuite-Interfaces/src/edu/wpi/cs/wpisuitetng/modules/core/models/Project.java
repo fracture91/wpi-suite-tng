@@ -53,7 +53,15 @@ public class Project extends AbstractModel
 		this.idNum = idNum;
 		this.owner = owner;
 		this.supportedModules = supportedModules;
-		this.team = new ArrayList<User>(Arrays.asList(team));
+		
+		if(team != null)
+		{
+			this.team = new ArrayList<User>(Arrays.asList(team));
+		}
+		else
+		{
+			this.team = null;
+		}
 	}
 	
 	/**
@@ -128,31 +136,41 @@ public class Project extends AbstractModel
 		
 		json += ",\"idNum\":\"" + this.idNum+"\"";
 		
-		json += ",\"owner\":" + this.owner.toJSON();
-		
-		json += ",\"supportedModules\":[";
-		
-		for(String str : this.supportedModules)
+		if(this.owner != null)
 		{
-			json += "\"" + str + "\",";
+			json += ",\"owner\":" + this.owner.toJSON();
 		}
 		
-		//remove that last comma
-		json = json.substring(0, json.length()-1);
-		
-		json += "]";
-		
-		json += ",\"team\":[";
-		
-		for(User u : this.team)
+		if(this.supportedModules != null && this.supportedModules.length > 0)
 		{
-			json += u.toJSON() + ",";
+			json += ",\"supportedModules\":[";
+			
+			for(String str : this.supportedModules)
+			{
+				json += "\"" + str + "\",";
+			}
+			
+			//remove that last comma
+			json = json.substring(0, json.length()-1);
+			
+			json += "]";
+		}		
+		
+		if(this.team != null && this.team.size() > 0)
+		{
+			json += ",\"team\":[";
+		
+			for(User u : this.team)
+			{
+				json += u.toJSON() + ",";
+			}
+			//remove that last comma
+			json = json.substring(0, json.length()-1);
+		
+			json += "]";
 		}
 		
-		//remove that last comma
-		json = json.substring(0, json.length()-1);
-		
-		json += "]}";
+		json += "}";
 		
 		return json;
 	}

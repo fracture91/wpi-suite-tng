@@ -82,11 +82,19 @@ public class ProjectManager implements EntityManager<Project>{
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
 		{
-			save(s,p);
+			if(getEntityByName(s, p.getName())[0] == null)
+			{
+				save(s,p);
+			}
+			else
+			{
+				logger.log(Level.WARNING, "Project Name Conflict Exception during Project creation.");
+				throw new ConflictException("A project with the given name already exists. Entity String: " + content);
+			}
 		}
 		else
 		{
-			logger.log(Level.WARNING, "Conflict Exception during Project creation.");
+			logger.log(Level.WARNING, "ID Conflict Exception during Project creation.");
 			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
@@ -137,6 +145,19 @@ public class ProjectManager implements EntityManager<Project>{
 			{
 				return m;
 			}
+		}
+	}
+	
+	public Project[] getEntityByName(Session s, String projectName) throws NotFoundException, WPISuiteException
+	{
+		Project[] m = new Project[1];
+		if(projectName.equalsIgnoreCase(""))
+		{
+			throw new NotFoundException("No (blank) Project name given.");
+		}
+		else
+		{
+			return data.retrieve(project, "name", projectName).toArray(m);
 		}
 	}
 
@@ -220,6 +241,7 @@ public class ProjectManager implements EntityManager<Project>{
 		if(s == null){
 			throw new WPISuiteException("Null session.");
 		}
+		
 		User theUser = s.getUser();
 		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
 		   theUser.getRole().equals(Role.ADMIN)){
@@ -233,8 +255,20 @@ public class ProjectManager implements EntityManager<Project>{
 				// check if the changes contains each field of name
 				if(change.getName() != null)
 				{
+					// check for conflict for changing the project name
+					Project isConflict = getEntityByName(s, change.getName())[0];
+					if(isConflict != null && !isConflict.getIdNum().equals(change.getIdNum()))
+					{
+						throw new ConflictException("ProjectManager attempted to update a Project's name to be the same as an existing project");
+					}
+					
 					toUpdate.setName(change.getName());
 				}
+			}
+			catch(ConflictException e)
+			{
+				logger.log(Level.WARNING, "ProjectManager attempted to update a Project's name to be the same as an existing project");
+				throw e;
 			}
 			catch(Exception e)
 			{
