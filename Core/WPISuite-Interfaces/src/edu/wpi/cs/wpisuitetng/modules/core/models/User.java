@@ -22,7 +22,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 public class User extends AbstractModel
@@ -249,5 +249,9 @@ public class User extends AbstractModel
 	public Project getProject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void setProject(Project aProject){
+		//Users are not currently Associated with projects directly 
 	}
 }
