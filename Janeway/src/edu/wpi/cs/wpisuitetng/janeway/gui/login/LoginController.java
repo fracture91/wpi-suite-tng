@@ -125,7 +125,7 @@ public class LoginController implements ActionListener {
 			// Select the project
 			Request projectSelectRequest = Network.getInstance().makeRequest("project", HttpMethod.PUT);
 			projectSelectRequest.addObserver(new ProjectSelectRequestObserver(this));
-			projectSelectRequest.setBody(view.getProjectField().getText());
+			projectSelectRequest.setBody(ConfigManager.getConfig().getProjectName());
 			projectSelectRequest.send();
 		}
 		else {
