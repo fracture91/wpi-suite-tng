@@ -61,39 +61,59 @@ public class NetworkConfiguration {
 			throw new NullPointerException("The value must not be null.");
 		}
 		
-		String cookieJar;
+		
+		String cookiesString;
 
 		if (defaultRequestHeaders.get("cookie") != null && !defaultRequestHeaders.get("cookie").isEmpty()) {
-			cookieJar = defaultRequestHeaders.get("cookie").get(0);
+			cookiesString = defaultRequestHeaders.get("cookie").get(0);
 		}
 		else {
-			cookieJar = "";
+			cookiesString = "";
 		}
 
-		String cookies[] = cookieJar.split(";\n");
-
+		String cookies[] = cookiesString.split(";\n");
+		Map<String, String> cookiesVals = new HashMap<String, String>();
+		String cookieVal[];
+		boolean cookieMatch = false;
+		
 		for (int i = 0; i < cookies.length; i++) {
-			if (cookies[i].split("=")[0].equals(name)) {
-				return;
+			cookieVal = cookies[i].split("=");
+			
+			if (cookieVal.length == 2) {
+				if (name.equals(cookieVal[0])) {
+					cookieMatch = true;
+					cookiesVals.put(cookieVal[0], value);
+				}
+				else {
+					cookiesVals.put(cookieVal[0], cookieVal[1]);
+				}
 			}
 		}
-
-		if (cookieJar.length() > 0) {
-			cookieJar += ";\n";
+		
+		if (!cookieMatch) {
+			cookiesVals.put(name, value);
 		}
-
-		cookieJar += name + "=" + value;
-
+		
+		cookiesString = "";
+		boolean firstCookie = true;
+		for (String cookieName : cookiesVals.keySet()) {
+			cookiesString += (firstCookie ? "" : ";\n") + cookieName + "=" + cookiesVals.get(cookieName);
+			
+			if (firstCookie) {
+				firstCookie = false;
+			}
+		}
+		
 		if (defaultRequestHeaders.get("cookie") == null) {
 			List<String> cookieList = new ArrayList<String>();
 			defaultRequestHeaders.put("cookie", cookieList);
 		}
 		
 		if (defaultRequestHeaders.get("cookie").isEmpty()) {
-			defaultRequestHeaders.get("cookie").add(cookieJar);
+			defaultRequestHeaders.get("cookie").add(cookiesString);
 		}
 		else {
-			defaultRequestHeaders.get("cookie").set(0, cookieJar);
+			defaultRequestHeaders.get("cookie").set(0, cookiesString);
 		}
 	}
 
