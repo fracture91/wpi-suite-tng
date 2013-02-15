@@ -80,6 +80,41 @@ public String createModelScript(String title, String path, String[] args, int le
 <body>
 <h1>WPI Suite Admin Console</h1>
 
+<script type="text/javascript">
+
+
+function login()
+{
+	//generate unencoded authentication header
+	var authString = document.getElementById("loginusername").value + ":" + document.getElementById("loginpassword").value;
+	//Base64 encode the header
+	authString = window.btoa(authString);
+	//add the word Basic plus a space
+	authString = 'Basic ' + authString;
+	
+	//create new XHR
+	var xml = new XMLHttpRequest();
+	
+	//define behavior for when the response is recieved
+	xml.onreadystatechange = function()
+	{
+		document.getElementById("loginresponsespan").innerHTML = xml.statusText;
+	}
+	
+	//setup reuqest to POST to /API/Login
+	xml.open('POST','API/login',false);
+	//set the request header
+	xml.setRequestHeader('Authorization', authString);
+	//send the request
+	xml.send();             
+}
+
+</script>
+
+Login:<br>
+Username:<input type="text" id="loginusername"></input><br>
+Password:<input type="password" id="loginpassword"></input><br>
+<input type="button" value="Submit" onclick="login()"><span id="loginresponsespan"></span>
 
 <%= createModelField(coreusertitle, coreuserpath, coreuser, coreuserlength) %>
 <%= createModelField(coreprojecttitle, coreprojectpath, coreproject, coreprojectlength) %>

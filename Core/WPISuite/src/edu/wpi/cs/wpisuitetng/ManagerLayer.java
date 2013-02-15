@@ -82,7 +82,7 @@ public class ManagerLayer {
 		String ssid = null;
 		
 		try {
-			String adminJSON = "{username:\"admin\", name:\"Admin\", password:\"password\", idNum:0}";
+			String adminJSON = "{username:\"admin\", name:\"Admin\", password:\"password\", idNum:0, role:\"ADMIN\"}";
 			ssid = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
 		} catch (BadRequestException e) {
 			e.printStackTrace();
