@@ -72,7 +72,7 @@ public class ProjectManager implements EntityManager<Project>{
 	public Project makeEntity(Session s, String content) throws WPISuiteException {	
 		User theUser = s.getUser();
 		
-		logger.log(Level.FINE, "Attempting new Project creation...");
+		logger.log(Level.FINER, "Attempting new Project creation...");
 		
 		Project p;
 		try{
@@ -81,6 +81,10 @@ public class ProjectManager implements EntityManager<Project>{
 			logger.log(Level.WARNING, "Invalid Project entity creation string.");
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
+		
+		 
+		logger.log(Level.FINE, "New project: "+ p.getName() +" submitted by: "+ theUser.getName() );
+		p.setOwner(theUser);
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
 		{
@@ -100,7 +104,7 @@ public class ProjectManager implements EntityManager<Project>{
 			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
-		logger.log(Level.FINE, "Project creation success!");
+		logger.log(Level.FINER, "Project creation success!");
 		return p;
 	}
 
@@ -175,25 +179,26 @@ public class ProjectManager implements EntityManager<Project>{
 		if(s == null){
 			throw new WPISuiteException("Null Session.");
 		}
-		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) || 
-				model.getPermission(theUser).equals(Permission.WRITE)){
-			if(data.save(model))
-			{
-				logger.log(Level.FINE, "Project Saved :" + model);
-				return ;
-			}
-			else
-			{
-				logger.log(Level.WARNING, "Project Save Failure!");
-				throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
-			}
+		//permissions checking happens in update, create, and delete methods only
+		/*User theUser = s.getUser();
+		if(Role.ADMIN.equals(theUser.getRole()) || 
+				Permission.WRITE.equals(model.getPermission(theUser))){*/
+		if(data.save(model))
+		{
+			logger.log(Level.FINE, "Project Saved :" + model);
+			return ;
 		}
+		else
+		{
+			logger.log(Level.WARNING, "Project Save Failure!");
+			throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
+		}
+		/*}
 		else
 		{
 			logger.log(Level.WARNING, "ProjectManager Save attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the requred permissions to perform this action.");
-		}
+		}*/
 		
 	}
 
