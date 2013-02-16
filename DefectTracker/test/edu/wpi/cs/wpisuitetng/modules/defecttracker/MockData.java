@@ -106,6 +106,7 @@ public class MockData implements Data {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Model> andRetrieve(Class arg0, String[] arg1, List<Object> arg2)
 			throws WPISuiteException, IllegalArgumentException,
@@ -114,6 +115,7 @@ public class MockData implements Data {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Model> complexRetrieve(Class arg0, String[] arg1,
 			List<Object> arg2, Class arg3, String[] arg4, List<Object> arg5)
@@ -130,6 +132,7 @@ public class MockData implements Data {
 		return toDelete;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Model> orRetrieve(Class arg0, String[] arg1, List<Object> arg2)
 			throws WPISuiteException, IllegalAccessException,

@@ -36,6 +36,7 @@ public class DefectManager implements EntityManager<Defect> {
 		db = data;
 		validator = new DefectValidator(db);
 		updateMapper = new ModelMapper();
+		updateMapper.getBlacklist().add("project"); // never allow project changing
 	}
 
 	@Override

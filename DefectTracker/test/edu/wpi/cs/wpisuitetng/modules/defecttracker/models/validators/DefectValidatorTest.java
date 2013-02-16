@@ -41,6 +41,8 @@ public class DefectValidatorTest {
 	Session defaultSession;
 	Data db;
 	DefectValidator validator;
+	Defect otherDefect;
+	Project otherProject;
 	
 	@Before
 	public void setUp() {
@@ -53,6 +55,9 @@ public class DefectValidatorTest {
 		existingDefect.setCreationDate(new Date(0));
 		existingDefect.setLastModifiedDate(new Date(0));
 		existingDefect.setEvents(new ArrayList<DefectEvent>());
+		
+		otherDefect = new Defect(2, "A defect in a different project", "", bob);
+		otherProject = new Project("other", "2");
 		
 		testProject = new Project("test", "1");
 		defaultSession = new Session(bob, testProject);
@@ -79,6 +84,7 @@ public class DefectValidatorTest {
 		db.save(bob);
 		db.save(existingDefect, testProject);
 		db.save(existingUser);
+		db.save(otherDefect, otherProject);
 		validator = new DefectValidator(db);
 	}
 	
@@ -87,6 +93,7 @@ public class DefectValidatorTest {
 		assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
 		assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
 		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
+		assertSame(otherDefect, db.retrieve(Defect.class, "id", 2).get(0));
 	}
 	
 	public List<ValidationIssue> checkNumIssues(int num, Session session, Defect defect, Mode mode) {
@@ -287,6 +294,12 @@ public class DefectValidatorTest {
 	@Test
 	public void testUpdateBadId() {
 		goodUpdatedDefect.setId(999);
+		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "id");
+	}
+	
+	@Test
+	public void testUpdateDefectInOtherProject() {
+		goodUpdatedDefect.setId(otherDefect.getId());
 		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "id");
 	}
 	

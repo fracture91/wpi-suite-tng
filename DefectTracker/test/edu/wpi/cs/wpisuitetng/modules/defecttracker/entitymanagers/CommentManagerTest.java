@@ -3,7 +3,6 @@ package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +46,7 @@ public class CommentManagerTest {
 		Comment created = manager.makeEntity(defaultSession, goodComment.toJSON());
 		assertEquals(1, created.getDefectId());
 		assertSame(created, defect.getEvents().get(0));
+		assertSame(testProject, created.getProject());
 	}
 	
 	@Test(expected=BadRequestException.class)

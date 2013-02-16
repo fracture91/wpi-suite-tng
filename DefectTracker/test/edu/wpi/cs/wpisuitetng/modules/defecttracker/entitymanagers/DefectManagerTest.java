@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,12 +41,15 @@ public class DefectManagerTest {
 	Tag tag;
 	Session adminSession;
 	Project testProject;
+	Project otherProject;
+	Defect otherDefect;
 	
 	@Before
 	public void setUp() throws Exception {
 		User admin = new User("admin", "admin", "1234", 27);
 		admin.setRole(Role.ADMIN);
 		testProject = new Project("test", "1");
+		otherProject = new Project("other", "2");
 		adminSession = new Session(admin, testProject);
 		
 		existingUser = new User("joe", "joe", "1234", 2);
@@ -55,6 +57,8 @@ public class DefectManagerTest {
 		existingDefect.setCreationDate(new Date(0));
 		existingDefect.setLastModifiedDate(new Date(0));
 		existingDefect.setEvents(new ArrayList<DefectEvent>());
+		
+		otherDefect = new Defect(2, "A defect in a different project", "", existingUser);
 		
 		tag = new Tag("tag");
 		goodUpdatedDefect = new Defect(1, "A changed title", "A changed description", bob);
@@ -69,6 +73,7 @@ public class DefectManagerTest {
 		db = new MockData(new HashSet<Object>());
 		db.save(existingDefect, testProject);
 		db.save(existingUser);
+		db.save(otherDefect, otherProject);
 		db.save(admin);
 		manager = new DefectManager(db);
 	}
@@ -76,9 +81,9 @@ public class DefectManagerTest {
 	@Test
 	public void testMakeEntity() throws WPISuiteException {
 		Defect created = manager.makeEntity(defaultSession, newDefect.toJSON());
-		assertEquals(2, created.getId());
+		assertEquals(3, created.getId()); // IDs are unique across projects
 		assertEquals("A new defect", created.getTitle());
-		assertSame(db.retrieve(Defect.class, "id", 2).get(0), created);
+		assertSame(db.retrieve(Defect.class, "id", 3).get(0), created);
 	}
 	
 	@Test(expected=BadRequestException.class)
@@ -116,6 +121,7 @@ public class DefectManagerTest {
 		Defect newDefect = new Defect(3, "A title", "", existingUser);
 		manager.save(defaultSession, newDefect);
 		assertSame(newDefect, db.retrieve(Defect.class, "id", 3).get(0));
+		assertSame(testProject, newDefect.getProject());
 	}
 	
 	@Test
@@ -130,18 +136,25 @@ public class DefectManagerTest {
 		manager.deleteEntity(adminSession, "4534");
 	}
 	
+	@Test(expected=NotFoundException.class)
+	public void testDeleteFromOtherProject() throws WPISuiteException {
+		manager.deleteEntity(adminSession, Integer.toString(otherDefect.getId()));
+	}
+	
 	@Test(expected=UnauthorizedException.class)
 	public void testDeleteNotAllowed() throws WPISuiteException {
-		manager.deleteEntity(defaultSession, "1");
+		manager.deleteEntity(defaultSession, Integer.toString(existingDefect.getId()));
 	}
 	
 	@Test
 	public void testDeleteAll() throws WPISuiteException {
 		Defect anotherDefect = new Defect(-1, "a title", "a description", existingUser);
 		manager.makeEntity(defaultSession, anotherDefect.toJSON());
-		assertEquals(2, db.retrieveAll(new Defect()).size());
+		assertEquals(2, db.retrieveAll(new Defect(), testProject).size());
 		manager.deleteAll(adminSession);
-		assertEquals(0, db.retrieveAll(new Defect()).size());
+		assertEquals(0, db.retrieveAll(new Defect(), testProject).size());
+		// otherDefect should still be around
+		assertEquals(1, db.retrieveAll(new Defect(), otherProject).size());
 	}
 	
 	@Test(expected=UnauthorizedException.class)
@@ -158,7 +171,7 @@ public class DefectManagerTest {
 	
 	@Test
 	public void testCount() {
-		assertEquals(1, manager.Count());
+		assertEquals(2, manager.Count());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -201,6 +214,15 @@ public class DefectManagerTest {
 		// there were no changes - make sure lastModifiedDate is same, no new events
 		assertEquals(origLastModified, updated.getLastModifiedDate());
 		assertEquals(0, updated.getEvents().size());
+	}
+	
+	@Test
+	public void testProjectChangeIgnored() throws WPISuiteException {
+		Defect existingDefectCopy = new Defect(1, "An existing defect", "", existingUser);
+		existingDefectCopy.setProject(otherProject);
+		Defect updated = manager.update(defaultSession, existingDefectCopy.toJSON());
+		assertEquals(0, updated.getEvents().size());
+		assertSame(testProject, updated.getProject());
 	}
 	
 	@Test(expected=NotImplementedException.class)
