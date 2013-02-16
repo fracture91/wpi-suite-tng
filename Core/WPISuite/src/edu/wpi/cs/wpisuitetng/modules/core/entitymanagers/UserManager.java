@@ -254,7 +254,7 @@ public class UserManager implements EntityManager<User> {
 				toUpdate.setPassword(encryptedPass);
 			}
 	
-			if(changes.getRole() != null)
+			if((changes.getRole() != null) && s.getUser().getRole().equals(Role.ADMIN))
 			{
 				toUpdate.setRole(changes.getRole());
 			}
