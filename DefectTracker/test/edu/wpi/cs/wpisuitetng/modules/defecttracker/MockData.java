@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 /**
  * A mock data implementation for server-side testing. 
@@ -102,6 +104,71 @@ public class MockData implements Data {
 			Object arg4) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Model> andRetrieve(Class arg0, String[] arg1, List<Object> arg2)
+			throws WPISuiteException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Model> complexRetrieve(Class arg0, String[] arg1,
+			List<Object> arg2, Class arg3, String[] arg4, List<Object> arg5)
+			throws WPISuiteException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> List<Model> deleteAll(T arg0, Project arg1) {
+		List<Model> toDelete = retrieveAll(arg0, arg1);
+		objects.removeAll(toDelete);
+		return toDelete;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Model> orRetrieve(Class arg0, String[] arg1, List<Object> arg2)
+			throws WPISuiteException, IllegalAccessException,
+			InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<Model> filterByProject(List<Model> models, Project project) {
+		List<Model> filteredModels = new ArrayList<Model>();
+		for(Model m : models) {
+			if(m.getProject().getName().equalsIgnoreCase(project.getName())) {
+				filteredModels.add(m);
+			}
+		}
+		return filteredModels;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Model> retrieve(Class arg0, String arg1, Object arg2,
+			Project arg3) throws WPISuiteException {
+		return filterByProject(retrieve(arg0, arg1, arg2), arg3);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> List<Model> retrieveAll(T arg0, Project arg1) {
+		return filterByProject((List<Model>) retrieveAll(arg0), arg1);
+	}
+
+	@Override
+	public <T> boolean save(T arg0, Project arg1) {
+		((Model)arg0).setProject(arg1);
+		save(arg0);
+		return true;
 	}
 
 }

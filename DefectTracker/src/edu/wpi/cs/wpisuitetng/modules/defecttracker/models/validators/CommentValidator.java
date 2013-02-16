@@ -57,7 +57,8 @@ public class CommentValidator {
 			}
 		}
 		
-		lastExistingDefect = defectValidator.getExistingDefect(comment.getDefectId(), issues, "defectId");
+		lastExistingDefect = defectValidator.getExistingDefect(comment.getDefectId(), session.getProject(),
+				issues, "defectId");
 		
 		String body = comment.getBody();
 		if(body == null || body.length() < 1 || body.length() > 10000) {
