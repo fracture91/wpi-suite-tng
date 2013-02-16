@@ -18,6 +18,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
@@ -40,12 +41,14 @@ public class DefectManagerTest {
 	Defect goodUpdatedDefect;
 	Tag tag;
 	Session adminSession;
+	Project testProject;
 	
 	@Before
 	public void setUp() throws Exception {
 		User admin = new User("admin", "admin", "1234", 27);
 		admin.setRole(Role.ADMIN);
-		adminSession = new Session(admin);
+		testProject = new Project("test", "1");
+		adminSession = new Session(admin, testProject);
 		
 		existingUser = new User("joe", "joe", "1234", 2);
 		existingDefect = new Defect(1, "An existing defect", "", existingUser);
@@ -60,14 +63,13 @@ public class DefectManagerTest {
 		goodUpdatedDefect.getTags().add(tag);
 		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
 		
-		defaultSession = new Session(existingUser);
+		defaultSession = new Session(existingUser, testProject);
 		newDefect = new Defect(-1, "A new defect", "A description", existingUser);
 		
-		Set<Object> models = new HashSet<Object>();
-		models.add(existingDefect);
-		models.add(existingUser);
-		models.add(admin);
-		db = new MockData(models);
+		db = new MockData(new HashSet<Object>());
+		db.save(existingDefect, testProject);
+		db.save(existingUser);
+		db.save(admin);
 		manager = new DefectManager(db);
 	}
 
