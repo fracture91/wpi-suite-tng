@@ -210,7 +210,10 @@ public class ManagerLayer {
 			{
 				response = response.concat(n.toJSON()+",");
 			}
-			response = response.substring(0, response.length() - 1); // remove trailing comma
+			if(m.length > 0)
+			{
+				response = response.substring(0, response.length() - 1); // remove trailing comma
+			}
 			response = response.concat("]");
 		}
 		
