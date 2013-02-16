@@ -14,9 +14,12 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
@@ -32,6 +35,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class SessionManager {
 	
 	private Map<String, Session> sessions; // key: cookie value, value: Session
+	
+	private static final Logger logger = Logger.getLogger(SessionManager.class.getName()); 
 	
 	/**
 	 * The default constructor. 
@@ -56,6 +61,7 @@ public class SessionManager {
 	 */
 	public void clearSessions()
 	{
+		logger.log(Level.INFO, "Session Manager clearing all sessions...");
 		sessions = new HashMap<String, Session>();
 	}
 	
@@ -78,7 +84,7 @@ public class SessionManager {
 	 */
 	public void removeSession(String sessionId)
 	{
-		sessions.remove(sessionId); 
+		sessions.remove(sessionId);
 	}
 	
 	/**
@@ -127,16 +133,19 @@ public class SessionManager {
 	 * Renews the Session for a given sessionToken.
 	 * 	Parses the username from the token, then creates
 	 * 		a new session for the given user.
-	 * @param sessionToken
+	 * @param sessionId		the ID of the session being switched.
+	 * @param projectName	the name of the project being switched to.
 	 * @return	the new Session ID
 	 * @throws WPISuiteException 
 	 */
-	public String switchToProject(String sessionId, String projectId) throws WPISuiteException
+	public String switchToProject(String sessionId, String projectName) throws WPISuiteException
 	{
+		logger.log(Level.INFO, "User attempting Project Session Switch...");
 		// get a copy of the session so we can touch projects.
 		Session current = this.getSession(sessionId);
 		if(current == null)
 		{
+			logger.log(Level.WARNING, "Project Session switch attempted with invalid SSID");
 			throw new SessionException("Session matching the givenId does not exist");
 		}
 		
@@ -145,15 +154,26 @@ public class SessionManager {
 		// find the project
 		ManagerLayer manager = ManagerLayer.getInstance();
 		ProjectManager projects = manager.getProjects();
-		Project p = projects.getEntity(current, projectId)[0];
+		Project p = null;
 		
-		if(p == null)
+		try
 		{
+			p = projects.getEntityByName(current, projectName)[0];
+		
+			if(p == null)
+			{
+				throw new NotFoundException("Could not find project with given name to switch to.");
+			}
+		}
+		catch(NotFoundException e)
+		{
+			logger.log(Level.WARNING, "Project Session switch attempted with nonexistent project");
 			throw new SessionException("Session-project switch failed because requested project does not exist.");
 		}
 		
 		this.removeSession(sessionId);
 		
+		logger.log(Level.INFO, "User Project Session Switch successful!");
 		return createSession(u, p);
 	}
 

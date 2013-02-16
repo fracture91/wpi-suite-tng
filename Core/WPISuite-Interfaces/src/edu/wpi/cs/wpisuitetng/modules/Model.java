@@ -22,6 +22,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * Model : The interface for all data models. Prototypes methods for model handling
  * 		and serializing.
  * @author twack
+ * @author bgaffey
  *
  */
 public interface Model {
@@ -76,9 +77,9 @@ public interface Model {
 	public Project getProject();
 
 	/**
+	 * Sets the Model's project to the given Project
 	 * @param p The project associated with this model to set
 	 */
-	public void setProject(Project p);
-	
+	public void setProject(Project p);	
 	
 }

@@ -14,6 +14,8 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
@@ -54,6 +56,8 @@ public class ManagerLayer {
 	private SessionManager sessions;
 	public Cookie superCookie;
 	
+	private static final Logger logger = Logger.getLogger(ManagerLayer.class.getName());
+	
 	/**
 	 * initializes the database
 	 * initializes the JSON serializer
@@ -70,8 +74,11 @@ public class ManagerLayer {
 		map.put("coreuser", new UserManager(data));
 		map.put("defecttrackerdefect", new DefectManager(data));
 		map.put("defecttrackercomment", new CommentManager(data));
-		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
+//		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 
+		//add just your module to this list
+		String[] fullModuleList = {"core","defecttracker","postboard"};
+		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		
 		try {
@@ -116,6 +123,7 @@ public class ManagerLayer {
 	 */
 	public static ManagerLayer getInstance()
 	{
+		logger.log(Level.FINE, "ManagerLayer Instance Requested");
 		return layer;
 	}
 	
@@ -202,7 +210,10 @@ public class ManagerLayer {
 			{
 				response = response.concat(n.toJSON()+",");
 			}
-			response = response.substring(0, response.length() - 1); // remove trailing comma
+			if(m.length > 0)
+			{
+				response = response.substring(0, response.length() - 1); // remove trailing comma
+			}
 			response = response.concat("]");
 		}
 		

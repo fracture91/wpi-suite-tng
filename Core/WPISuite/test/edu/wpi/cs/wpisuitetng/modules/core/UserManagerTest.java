@@ -15,6 +15,7 @@ package edu.wpi.cs.wpisuitetng.modules.core;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.mockobjects.MockDataStore;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -89,12 +91,12 @@ public class UserManagerTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void testGetEntityStringEmptyString() throws NotFoundException {
+	public void testGetEntityStringEmptyString() throws NotFoundException, WPISuiteException {
 		test.getEntity("");
 	}
 	
 	@Test
-	public void testGetEntityStringUserExists() {
+	public void testGetEntityStringUserExists()throws WPISuiteException {
 		User[] u = null;
 		try {
 			u = test.getEntity("steve");
@@ -105,7 +107,7 @@ public class UserManagerTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
-	public void testGetEntityStringUserDNE() throws NotFoundException {
+	public void testGetEntityStringUserDNE() throws NotFoundException, WPISuiteException {
 		test.getEntity("jefferythegiraffe");
 	}
 
@@ -140,12 +142,65 @@ public class UserManagerTest {
 			public <T> List<T> deleteAll(T aSample) {
 				return null;
 			}
+			@Override
+
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+							// TODO Auto-generated method stub
+				return null;
+				}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).save(null, null);
 	}
 
 	@Test
-	public void testDeleteEntityFail() {
+	public void testDeleteEntityFail() throws WPISuiteException {
 		new UserManager(new Data(){
 			@Override
 			public <T> boolean save(T aTNG) {return false;}
@@ -167,12 +222,64 @@ public class UserManagerTest {
 			public <T> List<T> deleteAll(T aSample) {
 				return null;
 			}
+			@Override
+
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			}
 		).deleteEntity(null, temp.getUsername());
 	}
 	
 	@Test
-	public void testDeleteEntity()
+	public void testDeleteEntity() throws WPISuiteException
 	{
 		new UserManager(new Data(){
 			@Override
@@ -192,6 +299,57 @@ public class UserManagerTest {
 			}
 			@Override
 			public <T> List<T> deleteAll(T aSample) {
+				return null;
+			}
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue, Project theProject)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> notRetrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> andRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public List<Model> orRetrieve(Class anObjectQueried,
+					String[] aFieldNameList, List<Object> theGivenValueList)
+					throws WPISuiteException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public List<Model> complexRetrieve(Class andanObjectQueried,
+					String[] andFieldNameList, List<Object> andGivenValueList,
+					Class orAnObjectQueried, String[] orFieldNameList,
+					List<Object> orGivenValueList) throws WPISuiteException,
+					IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			}
@@ -224,13 +382,12 @@ public class UserManagerTest {
 	public void testUpdate() throws WPISuiteException
 	{
 		Session ses = null;
-		String updateString = "{ \"idNum\": 99,  \"username\": \"updated\", \"role\": \"ADMIN\",  \"name\": \"zach\" }";
+		String updateString = "{ \"idNum\": 99, \"role\": \"ADMIN\",  \"name\": \"zach\" }";
 		User newTemp = this.test.update(ses, temp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
 		
 		assertEquals(99, newTemp.getIdNum());
-		assertTrue(newTemp.getUsername().equals("updated"));
 		assertEquals(newTemp.getRole(), Role.ADMIN);
 		assertTrue(newTemp.getName().equals("zach"));
 	}

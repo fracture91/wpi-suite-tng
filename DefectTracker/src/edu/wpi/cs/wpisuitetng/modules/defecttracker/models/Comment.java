@@ -81,5 +81,4 @@ public class Comment extends DefectEvent {
 		Gson parser = new Gson();
 		return parser.fromJson(json, Comment.class);
 	}
-
 }

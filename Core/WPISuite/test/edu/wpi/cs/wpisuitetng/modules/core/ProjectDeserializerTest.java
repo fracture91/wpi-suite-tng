@@ -22,8 +22,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
-import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectDeserializer;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.ProjectDeserializer;
 
 /**
  * Tests for the UserDeserializer class.

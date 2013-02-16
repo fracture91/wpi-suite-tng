@@ -13,6 +13,8 @@ import org.junit.Before;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
@@ -35,9 +37,12 @@ public class DefectValidatorTest {
 	Tag tag;
 	Tag tagCopy;
 	List<DefectEvent> ignoredEvents;
+	Project testProject;
 	Session defaultSession;
 	Data db;
 	DefectValidator validator;
+	Defect otherDefect;
+	Project otherProject;
 	
 	@Before
 	public void setUp() {
@@ -51,7 +56,11 @@ public class DefectValidatorTest {
 		existingDefect.setLastModifiedDate(new Date(0));
 		existingDefect.setEvents(new ArrayList<DefectEvent>());
 		
-		defaultSession = new Session(bob);
+		otherDefect = new Defect(2, "A defect in a different project", "", bob);
+		otherProject = new Project("other", "2");
+		
+		testProject = new Project("test", "1");
+		defaultSession = new Session(bob, testProject);
 		
 		//need copies to simulate db4o cross-container problem
 		tagCopy = new Tag("tag");
@@ -63,12 +72,6 @@ public class DefectValidatorTest {
 		ignoredEvents = new ArrayList<DefectEvent>();
 		goodNewDefect.setEvents(ignoredEvents); // ignored
 		
-		Set<Object> models = new HashSet<Object>();
-		models.add(tag);
-		models.add(bob);
-		models.add(existingDefect);
-		models.add(existingUser);
-		
 		existingUserCopy = new User(null, "joe", null, -1);
 		goodUpdatedDefect = new Defect(1, "A changed title", "A changed description", bobCopy);
 		goodUpdatedDefect.setAssignee(existingUserCopy);
@@ -76,20 +79,31 @@ public class DefectValidatorTest {
 		goodUpdatedDefect.getTags().add(tagCopy);
 		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
 		
-		db = new MockData(models);
+		db = new MockData(new HashSet<Object>());
+		db.save(tag, testProject);
+		db.save(bob);
+		db.save(existingDefect, testProject);
+		db.save(existingUser);
+		db.save(otherDefect, otherProject);
 		validator = new DefectValidator(db);
 	}
 	
 	@Test
-	public void testDBState() {
+	public void testDBState() throws WPISuiteException {
 		assertSame(tag, db.retrieve(Tag.class, "name", "tag").get(0));
 		assertSame(bob, db.retrieve(User.class, "username", "bob").get(0));
 		assertSame(existingDefect, db.retrieve(Defect.class, "id", 1).get(0));
+		assertSame(otherDefect, db.retrieve(Defect.class, "id", 2).get(0));
 	}
 	
 	public List<ValidationIssue> checkNumIssues(int num, Session session, Defect defect, Mode mode) {
-		List<ValidationIssue> issues = validator.validate(session, defect, mode);
-		assertEquals(num, issues.size());
+		List<ValidationIssue> issues;
+		try {
+			issues = validator.validate(session, defect, mode);
+			assertEquals(num, issues.size());
+		} catch(WPISuiteException e) {
+			throw new RuntimeException("Unexpected WPISuiteException", e);
+		}
 		return issues;
 	}
 	
@@ -261,7 +275,8 @@ public class DefectValidatorTest {
 	@Test
 	public void testGoodUpdatedDefect() {
 		// make sure users other than creator can update
-		checkNoIssues(new Session(new User(null, "someguy", null, 50)), goodUpdatedDefect, Mode.EDIT);
+		checkNoIssues(new Session(new User(null, "someguy", null, 50), testProject), goodUpdatedDefect,
+				Mode.EDIT);
 		assertEquals("A changed title", goodUpdatedDefect.getTitle());
 		assertEquals("A changed description", goodUpdatedDefect.getDescription());
 		assertSame(existingUser, goodUpdatedDefect.getAssignee());
@@ -279,6 +294,12 @@ public class DefectValidatorTest {
 	@Test
 	public void testUpdateBadId() {
 		goodUpdatedDefect.setId(999);
+		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "id");
+	}
+	
+	@Test
+	public void testUpdateDefectInOtherProject() {
+		goodUpdatedDefect.setId(otherDefect.getId());
 		checkFieldIssue(defaultSession, goodUpdatedDefect, Mode.EDIT, "id");
 	}
 	

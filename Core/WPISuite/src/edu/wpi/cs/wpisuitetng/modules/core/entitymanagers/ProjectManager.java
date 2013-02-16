@@ -16,6 +16,8 @@
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -35,6 +37,7 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.ProjectDeserializer;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -43,6 +46,9 @@ public class ProjectManager implements EntityManager<Project>{
 	Class<Project> project = Project.class;
 	Gson gson;
 	Data data;
+	private String[] allModules;
+	
+	private static final Logger logger = Logger.getLogger(ProjectManager.class.getName());
 	
 	public ProjectManager(Data data)
 	{
@@ -58,39 +64,48 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public String advancedGet(Session s, String[] args)
 			throws WPISuiteException {
-		throw new NotImplementedException();
+		
+		return this.getEntity(s, s.getProject().getIdNum())[0].toJSON();
 	}
 
 	@Override
 	public Project makeEntity(Session s, String content) throws WPISuiteException {	
 		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) ){
+		
+		logger.log(Level.FINE, "Attempting new Project creation...");
 		
 		Project p;
 		try{
-			p = gson.fromJson(content, project);
+			p = Project.fromJSON(content);
 		} catch(JsonSyntaxException e){
+			logger.log(Level.WARNING, "Invalid Project entity creation string.");
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
 		{
-			save(s,p);
+			if(getEntityByName(s, p.getName())[0] == null)
+			{
+				save(s,p);
+			}
+			else
+			{
+				logger.log(Level.WARNING, "Project Name Conflict Exception during Project creation.");
+				throw new ConflictException("A project with the given name already exists. Entity String: " + content);
+			}
 		}
 		else
 		{
+			logger.log(Level.WARNING, "ID Conflict Exception during Project creation.");
 			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
+		logger.log(Level.FINE, "Project creation success!");
 		return p;
-		}
-		else{
-			throw new UnauthorizedException("You do not have enough priveldges to create a project.");
-		}
 	}
 
 	@Override
-	public Project[] getEntity(Session s, String id) 
+	public Project[] getEntity(Session s, String id) throws WPISuiteException 
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
@@ -111,8 +126,9 @@ public class ProjectManager implements EntityManager<Project>{
 	 * @param id - the id of the user, in this case it's the idNum
 	 * @return a list of matching projects
 	 * @throws NotFoundException if the project cannot be found
+	 * @throws WPISuiteException if retrieve fails
 	 */
-	public Project[] getEntity(String id) throws NotFoundException
+	public Project[] getEntity(String id) throws NotFoundException, WPISuiteException
 	{
 		Project[] m = new Project[1];
 		if(id.equalsIgnoreCase(""))
@@ -133,6 +149,19 @@ public class ProjectManager implements EntityManager<Project>{
 			}
 		}
 	}
+	
+	public Project[] getEntityByName(Session s, String projectName) throws NotFoundException, WPISuiteException
+	{
+		Project[] m = new Project[1];
+		if(projectName.equalsIgnoreCase(""))
+		{
+			throw new NotFoundException("No (blank) Project name given.");
+		}
+		else
+		{
+			return data.retrieve(project, "name", projectName).toArray(m);
+		}
+	}
 
 	@Override
 	public Project[] getAll(Session s) {
@@ -147,19 +176,24 @@ public class ProjectManager implements EntityManager<Project>{
 			throw new WPISuiteException("Null Session.");
 		}
 		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) || 
-				model.getPermission(theUser).equals(Permission.WRITE)){
+		//if(theUser.getRole().equals(Role.ADMIN) || 
+		//		model.getPermission(theUser).equals(Permission.WRITE)){
 			if(data.save(model))
 			{
+				logger.log(Level.FINE, "Project Saved :" + model);
 				return ;
 			}
 			else
 			{
+				logger.log(Level.WARNING, "Project Save Failure!");
 				throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
 			}
-		}
-		else
+		//}
+		/*else
+		{
+			logger.log(Level.WARNING, "ProjectManager Save attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the requred permissions to perform this action.");
+		}*/
 		
 	}
 
@@ -174,10 +208,12 @@ public class ProjectManager implements EntityManager<Project>{
 		if(model[0].getPermission(theUser).equals(Permission.WRITE) || 
 		   theUser.getRole().equals(Role.ADMIN)){
 			Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
+			logger.log(Level.INFO, "ProjectManager deleting project <" + id + ">");
 			
 			return (m != null) ? true : false;
 		}
 		else{
+			logger.log(Level.WARNING, "ProjectManager Delete attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the required permissions to perform this action.");
 		}
 	}
@@ -185,11 +221,15 @@ public class ProjectManager implements EntityManager<Project>{
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 		User theUser = s.getUser();
+		logger.log(Level.INFO, "ProjectManager invoking DeleteAll...");
 		if(theUser.getRole().equals(Role.ADMIN)){
 		data.deleteAll(new Project("",""));
 		}
 		else
+		{
+			logger.log(Level.WARNING, "ProjectManager DeleteAll attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the required permissions to perform this action.");
+		}
 	}
 
 	@Override
@@ -203,6 +243,7 @@ public class ProjectManager implements EntityManager<Project>{
 		if(s == null){
 			throw new WPISuiteException("Null session.");
 		}
+		
 		User theUser = s.getUser();
 		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
 		   theUser.getRole().equals(Role.ADMIN)){
@@ -210,22 +251,30 @@ public class ProjectManager implements EntityManager<Project>{
 			// convert updateString into a Map, then load into the User
 			try
 			{
-				HashMap<String, Object> changeMap = new ObjectMapper().readValue(changeSet, HashMap.class);
+				logger.log(Level.FINE, "Project update being attempted...");
+				Project change = Project.fromJSON(changeSet);
 			
-				// check if the changeSet contains each field of User
-				if(changeMap.containsKey("name"))
+				// check if the changes contains each field of name
+				if(change.getName() != null)
 				{
-					toUpdate.setName((String)changeMap.get("name"));
+					// check for conflict for changing the project name
+					Project isConflict = getEntityByName(s, change.getName())[0];
+					if(isConflict != null && !isConflict.getIdNum().equals(change.getIdNum()))
+					{
+						throw new ConflictException("ProjectManager attempted to update a Project's name to be the same as an existing project");
+					}
+					
+					toUpdate.setName(change.getName());
 				}
-				
-				//probs shouldn't be able to change the idNum of a project once it's been created
-				/*if(changeMap.containsKey("idNum"))
-				{
-					toUpdate.setIdNum((String)changeMap.get("idNum"));
-				}*/
+			}
+			catch(ConflictException e)
+			{
+				logger.log(Level.WARNING, "ProjectManager attempted to update a Project's name to be the same as an existing project");
+				throw e;
 			}
 			catch(Exception e)
 			{
+				logger.log(Level.WARNING, "ProjectManager.update() had a failure in the changeset mapper.");
 				throw new DatabaseException("Failure in the ProjectManager.update() changeset mapper."); // on Mapping failure
 			}
 			
@@ -236,18 +285,25 @@ public class ProjectManager implements EntityManager<Project>{
 			return toUpdate;
 		}
 		else
+		{
+			logger.log(Level.WARNING, "Unauthorized Project update attempted.");
 			throw new UnauthorizedException("You do not have the required permissions to perform this action.");
+		}
 	}
 
 	@Override
 	public Project update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public void setAllModules(String[] mods)
+	{
+		this.allModules = mods;
+	}
+	
 	@Override
 	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {
-		throw new NotImplementedException();
+		return gson.toJson(allModules, String[].class);
 	}
 
 	@Override
