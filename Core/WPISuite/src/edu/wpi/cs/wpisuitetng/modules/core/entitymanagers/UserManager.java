@@ -33,6 +33,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.DatabaseException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.SerializationException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -230,28 +231,42 @@ public class UserManager implements EntityManager<User> {
 			throw new SerializationException("Error inflating the changeset: " + e.getMessage());
 		}
 
-		// Resolve differences toUpdate using changes, field-by-field.
-		toUpdate.setIdNum(changes.getIdNum()); // TODO: check if IDnums exist... should we even be updating the IdNum ever?
-
-		if(changes.getName() != null)
+		
+		if(s.getUser().getUsername().equals(toUpdate.getUsername()) || s.getUser().getRole().equals(Role.ADMIN))
 		{
-			toUpdate.setName(changes.getName());
+			// Resolve differences toUpdate using changes, field-by-field.
+			toUpdate.setIdNum(changes.getIdNum()); 
+	
+			if(changes.getName() != null)
+			{
+				toUpdate.setName(changes.getName());
+			}
+	
+			//shouldn't be able to change unique identifier
+			/*if(changes.getUsername() != null)
+			{
+				toUpdate.setUserName(changes.getUsername());
+			}*/
+			
+			if(changes.getPassword() != null)
+			{
+				String encryptedPass = this.passwordHash.generateHash(changes.getPassword());
+				toUpdate.setPassword(encryptedPass);
+			}
+	
+			if(changes.getRole() != null)
+			{
+				toUpdate.setRole(changes.getRole());
+			}
+	
+			// save the changes back
+			this.save(s, toUpdate);
 		}
-
-		//shouldn't be able to change unique identifier
-		/*if(changes.getUsername() != null)
+		else
 		{
-			toUpdate.setUserName(changes.getUsername());
-		}*/
-
-		if(!changes.getRole().equals(toUpdate.getRole()))
-		{
-			toUpdate.setRole(changes.getRole());
+			logger.log(Level.WARNING, "Access denied to user: "+s.getUser().getUsername());
+			throw new UnauthorizedException("Users accessible only by Admins and themselves");
 		}
-
-		// save the changes back
-		this.save(s, toUpdate);
-
 		return toUpdate;
 	}
 
