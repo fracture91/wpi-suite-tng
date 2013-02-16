@@ -34,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.modules.AbstractEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -298,7 +299,25 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project update(Session s, String content) throws WPISuiteException {
-		return null;
+		Project[] p = null;
+		
+		String id = AbstractEntityManager.parseFieldFromJSON(content, "idNum");
+		
+		if(id.equalsIgnoreCase(""))
+		{
+			throw new NotFoundException("No (blank) Project id given.");
+		}
+		else
+		{
+			p = data.retrieve(project, "idNum", id).toArray(p);
+			
+			if(p[0] == null)
+			{
+				throw new NotFoundException("Project with id <" + id + "> not found.");
+			}
+		}
+		
+		return update(s, p[0], content);
 	}
 
 	public void setAllModules(String[] mods)
