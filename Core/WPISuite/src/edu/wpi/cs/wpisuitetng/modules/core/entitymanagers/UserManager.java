@@ -97,7 +97,9 @@ public class UserManager implements EntityManager<User> {
 			String hashedPassword = this.passwordHash.generateHash(newPassword);
 
 			p.setPassword(hashedPassword);
-
+			
+			p.setRole(Role.USER);
+			
 			save(s,p);
 		}
 		else
@@ -183,10 +185,20 @@ public class UserManager implements EntityManager<User> {
 	@Override
 	public boolean deleteEntity(Session s1 ,String id) throws WPISuiteException {
 
-		Model m = data.delete(data.retrieve(user, "username", id).get(0));
-		logger.log(Level.INFO, "UserManager deleting user <" + id + ">");
+		if(s1.getUser().getRole().equals(Role.ADMIN))
+		{
+			Model m = data.delete(data.retrieve(user, "username", id).get(0));
+			logger.log(Level.INFO, "UserManager deleting user <" + id + ">");
+			return (m != null) ? true : false;
+		}
+		else
+		{
+			logger.log(Level.WARNING,"User: "+s1.getUser().getUsername()+"attempted to delete: "+id);
+			throw new UnauthorizedException("Delete not authorized");
+		}
 		
-		return (m != null) ? true : false;
+		
+		
 		
 	}
 
