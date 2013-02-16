@@ -298,7 +298,10 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project update(Session s, String content) throws WPISuiteException {
-		return null;
+		
+		Project p = null;
+		
+		return update(s, p, content);
 	}
 
 	public void setAllModules(String[] mods)
