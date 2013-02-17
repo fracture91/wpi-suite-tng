@@ -111,7 +111,9 @@ public class LoginController implements ActionListener {
 				if (cookieParts.length >= 1) { // if there is at least one part to the cookie
 					cookieNameVal = cookieParts[0].split("="); // split the cookie into its name and value
 					if (cookieNameVal.length == 2) { // if the split worked, add the cookie to the default NetworkConfiguration
-						Network.getInstance().getDefaultNetworkConfiguration().addCookie(cookieNameVal[0], cookieNameVal[1]);
+						NetworkConfiguration config = Network.getInstance().getDefaultNetworkConfiguration();
+						config.addCookie(cookieNameVal[0], cookieNameVal[1]);
+						Network.getInstance().setDefaultNetworkConfiguration(config);
 					}
 					else {
 						System.err.println("Received unparsable cookie: " + cookie);
@@ -163,7 +165,9 @@ public class LoginController implements ActionListener {
 				if (cookieParts.length >= 1) {
 					cookieNameVal = cookieParts[0].split("=");
 					if (cookieNameVal.length == 2) {
-						Network.getInstance().getDefaultNetworkConfiguration().addCookie(cookieNameVal[0], cookieNameVal[1]);
+						NetworkConfiguration config = Network.getInstance().getDefaultNetworkConfiguration();
+						config.addCookie(cookieNameVal[0], cookieNameVal[1]);
+						Network.getInstance().setDefaultNetworkConfiguration(config);
 					}
 					else {
 						System.err.println("Received unparsable cookie: " + cookie);
