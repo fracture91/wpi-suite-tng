@@ -36,7 +36,6 @@
 	<target name="clean">
 		<delete dir="build"/>
 		<delete dir="build-test"/>
-		<delete dir="dist"/>
 	</target>
 
 	<target name="test" depends="compile-test">

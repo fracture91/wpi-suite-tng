@@ -54,6 +54,10 @@
 			<lib dir="WebContent/WEB-INF/lib"/>
 			<classes dir="build/"/>
 		</war>
-	</target>	
+	</target>
+
+	<target name="dist" depends="war">
+		<copy file="build/WPISuite.war" todir="${dist}/core" overwrite="true"/>
+	</target>
 
 </project>
