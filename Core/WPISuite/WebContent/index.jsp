@@ -98,8 +98,11 @@ function login()
 	//define behavior for when the response is recieved
 	xml.onreadystatechange = function()
 	{
-		document.getElementById("loginresponsespan").innerHTML = xml.statusText;
-	}
+		if(xml.readyState == 4)//wait until response is available
+		{
+			document.getElementById("loginresponsespan").innerHTML = xml.statusText;
+		}
+	};
 	
 	//setup reuqest to POST to /API/Login
 	xml.open('POST','API/login',false);
@@ -109,14 +112,48 @@ function login()
 	xml.send();             
 }
 
+function roleChange()
+{
+	//create new XHR
+	var xml = new XMLHttpRequest();
+	//define behavior for when the response is recieved
+	xml.onreadystatechange = function()
+	{
+		if(xml.readyState == 4)//wait until response is available
+		{
+			document.getElementById("rolechangeresponse").innerHTML = xml.statusText;
+		}
+		
+	};
+	
+	
+	var user = new Object();
+	user.username = document.getElementById("rolechangeusername").value;
+	user.role = document.getElementById("roleselector").options[document.getElementById("roleselector").selectedIndex].value;
+	
+	var juser = JSON.stringify(user);
+	if(user.username == "")
+	{return;}
+	
+	//setup reuqest to POST to /API/Login
+	xml.open('POST','API/core/user/'+user.username,false);
+	//send the request
+	xml.send(juser); 
+}
+
 </script>
 
-Login:<br>
+<h4>Login:</h4>
 Username:<input type="text" id="loginusername"></input><br>
 Password:<input type="password" id="loginpassword"></input><br>
 <input type="button" value="Submit" onclick="login()"><span id="loginresponsespan"></span>
 
 <%= createModelField(coreusertitle, coreuserpath, coreuser, coreuserlength) %>
+<h4>Role Change:</h4>
+Username:<input type="text" id="rolechangeusername"></input><br>
+Role:<select id="roleselector"><option value="USER">User</option><option value="ADMIN">Admin</option></select>
+<input type="button" value="Submit" onclick="roleChange()"><span id="rolechangeresponse"></span>
+
 <%= createModelField(coreprojecttitle, coreprojectpath, coreproject, coreprojectlength) %>
 </body>
 </html>

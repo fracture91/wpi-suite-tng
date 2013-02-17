@@ -266,9 +266,16 @@ public class UserManager implements EntityManager<User> {
 				toUpdate.setPassword(encryptedPass);
 			}
 	
-			if((changes.getRole() != null) && s.getUser().getRole().equals(Role.ADMIN))
+			if((changes.getRole() != null))
 			{
-				toUpdate.setRole(changes.getRole());
+				if(s.getUser().getRole().equals(Role.ADMIN))
+				{
+					toUpdate.setRole(changes.getRole());
+				}
+				else
+				{
+					logger.log(Level.WARNING,"User: "+s.getUser().getUsername()+" attempted unauthorized priveledge elevation");
+				}
 			}
 	
 			// save the changes back
@@ -318,7 +325,7 @@ public class UserManager implements EntityManager<User> {
 	{
 		logger.log(Level.FINE, "Attempting username parsing...");
 		
-		if(!serializedUser.contains("username"))
+		if(serializedUser == null || !serializedUser.contains("username"))
 		{
 			throw new JsonParseException("The given JSON string did not contain a username field.");
 		}
