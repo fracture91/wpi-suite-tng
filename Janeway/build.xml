@@ -50,4 +50,19 @@
 		</junit>
 	</target>
 
+	<target name="dist" depends="compile">
+		<jar destfile="${dist}/janeway/janeway.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="edu.wpi.cs.wpisuitetng.janeway.Janeway"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			<fileset dir="build"/>
+			<fileset dir="../Core/WPISuite-Interfaces/build"/>
+			<fileset dir="../Network/build"/>
+			<zipfileset src="${core-lib}/gson-2.2.2.jar"/>
+			<zipfileset src="${core-lib}/commons-codec-1.7.jar"/>
+		</jar>
+		<copy file="modules.conf" todir="${dist}/janeway" overwrite="true"/>
+	</target>
+
 </project>
