@@ -35,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 public class DataStore implements Data {
 
 	static String WPI_TNG_DB ="WPISuite_TNG_local";
+	static String WPI_TNG_DB_TEST = "WpiSuite_TNG_local_Test";
 	private static DataStore myself = null;
 	static ObjectContainer theDB;
 	static ObjectServer server;
@@ -57,6 +58,23 @@ public class DataStore implements Data {
 			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
 			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
+			server.grantAccess(DB4oUser,DB4oPass);
+
+			theDB = server.openClient();
+			logger.log(Level.FINE, "Connected to db4o database!");
+		}
+		return myself;
+	}
+	
+	public static DataStore getTestDataStore(){
+		if(myself == null)
+		{
+			logger.log(Level.FINE, "Opening connection to db4o database...");
+			myself = new DataStore();
+			// accessLocalServer
+			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
+			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+			server = Db4oClientServer.openServer(config, WPI_TNG_DB_TEST, PORT);
 			server.grantAccess(DB4oUser,DB4oPass);
 
 			theDB = server.openClient();

@@ -53,7 +53,7 @@ public class UserManagerTest {
 	public void setUp()
 	{
 		test = new UserManager(MockDataStore.getMockDataStore());
-		testWithRealDB = new UserManager(DataStore.getDataStore());
+		testWithRealDB = new UserManager(DataStore.getTestDataStore());
 		temp = new User("test","test","test",0);
 		secondUser = new User ("Sam", "sammy","trouty", 1);
 		conflict = new User("steve", "steve",null, 0);

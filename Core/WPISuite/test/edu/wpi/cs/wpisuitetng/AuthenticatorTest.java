@@ -41,7 +41,7 @@ public class AuthenticatorTest {
 		this.sessions = man.getSessions();
 		
 		// add the test user to the database
-		DataStore db = DataStore.getDataStore();
+		DataStore db = DataStore.getTestDataStore();
 		String hashedPassword = new Sha256Password().generateHash("jayms");
 		this.u = new User("Tyler", "twack", hashedPassword, 5);
 		db.save(this.u);

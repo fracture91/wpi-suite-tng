@@ -319,7 +319,7 @@ public class ManagerLayerTest {
 	@Test
 	public void testDBSession() throws WPISuiteException
 	{
-		Data db = DataStore.getDataStore();
+		Data db = DataStore.getTestDataStore();
 		User[] arr = new User[1];
 		db.save(new User("andrew", "ahurle", "p", 0));
 		User me = db.retrieve(User.class, "username", "ahurle").toArray(arr)[0];

@@ -46,7 +46,7 @@ public class ProjectManagerTest {
 	public void setUp() throws WPISuiteException
 	{
 		test = new ProjectManager(MockDataStore.getMockDataStore());
-		testWithRealDB = new ProjectManager(DataStore.getDataStore());
+		testWithRealDB = new ProjectManager(DataStore.getTestDataStore());
 		delete1 = new Project("test2", "10");
 		delete2 = new Project("test3", "1");
 		add1 = new Project("add1", "11");
