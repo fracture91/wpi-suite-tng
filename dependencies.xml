@@ -5,6 +5,9 @@
 	<!-- All test targets should output JUnit's XML reports to this directory -->
 	<property name="test-results" location="${dependencies.basedir}/test-results"/>
 
+	<!-- All dist targets should put distributables somewhere within this directory -->
+	<property name="dist" location="${dependencies.basedir}/dist"/>
+
 	<!-- This target should have dependencies such that all projects are depended upon -->
 	<target name="depend.all"
 		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker, depend.PostBoard">
