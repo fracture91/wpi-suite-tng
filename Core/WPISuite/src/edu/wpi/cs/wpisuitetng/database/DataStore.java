@@ -69,7 +69,7 @@ public class DataStore implements Data {
 	public static DataStore getTestDataStore(){
 		if(myself == null)
 		{
-			logger.log(Level.FINE, "Opening connection to db4o database...");
+			logger.log(Level.FINE, "Opening connection to test db4o database...");
 			myself = new DataStore();
 			// accessLocalServer
 			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
@@ -78,7 +78,7 @@ public class DataStore implements Data {
 			server.grantAccess(DB4oUser,DB4oPass);
 
 			theDB = server.openClient();
-			logger.log(Level.FINE, "Connected to db4o database!");
+			logger.log(Level.FINE, "Connected to test db4o database!");
 		}
 		return myself;
 	}
@@ -399,6 +399,22 @@ public class DataStore implements Data {
 		logger.log(Level.INFO, "Database Update Success!");
 	}
 	
+	/**
+	 *  For this function to work you need to have a getter that takes zero arguments,
+	 *  and has the name
+	 *  convention of get + the given fieldName (ie getID for the field id from an object). The value can
+	 *  be of any type, provided that there is a .equals method for it.  To query
+	 *  by something else, like by a user object or defect object, you must create a .equals 
+	 *  function for it, that will return true if and only if all the fields of the object 
+	 *  have the same values.
+	 * @param anObjectQueried the class type of the object being queried. You can get this by giving
+	 * an object of the desired type and calling .getClass()
+	 * @param aFieldName the field Name of the value in the object you are querying about (this should be 
+	 * the suffix of the getter. So for getID you would make this field be "ID".
+	 * @param theGivenValue The value of field aFieldName that you want all returned objects to have
+	 * @return a List of objects of the given type that do not have the given field match the given value
+	 * @throws WPISuiteException 
+	 */
 	public List<Model> notRetrieve(final Class anObjectQueried, String aFieldName, final Object theGivenValue) throws WPISuiteException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -438,7 +454,24 @@ public class DataStore implements Data {
 		return result;
 	}
 
-	
+	/**
+	 *  For this function to work you need to have a getter that takes zero arguments,
+	 *  and has the name
+	 *  convention of get + the given fieldName (ie getID for the field id from an object). The value can
+	 *  be of any type, provided that there is a .equals method for it.  To query
+	 *  by something else, like by a user object or defect object, you must create a .equals 
+	 *  function for it, that will return true if and only if all the fields of the object 
+	 *  have the same values.
+	 * @param anObjectQueried the class type of the object being queried. You can get this by giving
+	 * an object of the desired type and calling .getClass()
+	 * @param aFieldNameList the field Names of the values in the object you are querying about (this should be 
+	 * the suffix of the getter. So for getID you would make this field be "ID".)  The order of field names and 
+	 * values must correspond.  If the first field is Id, the first value in theGivenValueList must be the value for the id
+	 * @param theGivenValue The values of fields in aFieldNameList that you want all returned objects to have
+	 * at least one of.  
+	 * @return a List of objects of the given type that have at least one of the given fields match the given value for that field
+	 * @throws WPISuiteException 
+	 */
 	public List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -495,6 +528,24 @@ public class DataStore implements Data {
 		return fullresult;
 	}
 	
+	/**
+	 *  For this function to work you need to have a getter that takes zero arguments,
+	 *  and has the name
+	 *  convention of get + the given fieldName (ie getID for the field id from an object). The value can
+	 *  be of any type, provided that there is a .equals method for it.  To query
+	 *  by something else, like by a user object or defect object, you must create a .equals 
+	 *  function for it, that will return true if and only if all the fields of the object 
+	 *  have the same values.
+	 * @param anObjectQueried the class type of the object being queried. You can get this by giving
+	 * an object of the desired type and calling .getClass()
+	 * @param aFieldNameList the field Names of the values in the object you are querying about (this should be 
+	 * the suffix of the getter. So for getID you would make this field be "ID".)  The order of field names and 
+	 * values must correspond.  If the first field is Id, the first value in theGivenValueList must be the value for the Id
+	 * @param theGivenValue The values of fields in aFieldNameList that you want all returned objects to have
+	 * all of.  
+	 * @return a List of objects of the given type that have all of the given fields match the given value for that field
+	 * @throws WPISuiteException 
+	 */
 	 public List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
@@ -566,8 +617,32 @@ public class DataStore implements Data {
 		return fullresult;
 	}
 	 
-	 
-	 public List<Model> complexRetrieve(final Class andAnObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	 /**
+		 *  For this function to work you need to have a getter that takes zero arguments,
+		 *  and has the name
+		 *  convention of get + the given fieldName (ie getID for the field id from an object). The value can
+		 *  be of any type, provided that there is a .equals method for it.  To query
+		 *  by something else, like by a user object or defect object, you must create a .equals 
+		 *  function for it, that will return true if and only if all the fields of the object 
+		 *  have the same values
+		 *  @param andAnObjectQueried - Class of the object you wish the and part of the query to be about
+		 *  @param andFieldNameList - List of field names to be used in the and part of the query
+		 *  @param andGivenValueList - List of given values to be used in the and part of the query.
+		 *  These values will be compared to the values of the fields in the andFieldNameList
+		 *  The order of the orGivenValueList and the orFieldNameList must be the same. If Id is first
+		 *  in the orFieldNameList, it must be first in the orGivenValueList.
+		 *  @param orAnObjectQueried - Class of the object you wish the or part of the query to be about
+		 *  @param orFieldNameList - List of field names to be used in the or part of the query
+		 *  @param orGivenValueList - List of given values to be used in the and part of the query.
+		 *  These values will be compared to the values of the fields in the orFieldNameList.  
+		 *  The order of the orGivenValueList and the orFieldNameList must be the same. If Id is first
+		 *  in the orFieldNameList, it must be first in the orGivenValueList.
+		 *  @return a List of objects that match the or query as well the objects that match the and query
+		 *  @throws WPISuiteException 
+		 */
+	 public List<Model> complexRetrieve(final Class andAnObjectQueried, String[] andFieldNameList, 
+			 final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, 
+			 final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
 	 {
 		 List<Model> returnList = new ArrayList<Model>();
 		 List<Model> bothList = new ArrayList<Model>();
@@ -581,7 +656,12 @@ public class DataStore implements Data {
 		 return returnList;
 	 }
 	 
-	 public List<Model> removeDuplicates(List<Model> listWithDuplicates)
+	 /**
+	  * Method used to filter out duplicates in the complexRetrieve return list
+	  * @param listWithDuplicates
+	  * @return List of objects with the duplicates removed.  
+	  */
+	 private List<Model> removeDuplicates(List<Model> listWithDuplicates)
 	 {
 		 List<Model> oldList = new ArrayList<Model>();
 		 oldList = listWithDuplicates;
