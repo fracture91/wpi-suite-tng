@@ -69,7 +69,7 @@ public class Network {
 	 */
 	public NetworkConfiguration getDefaultNetworkConfiguration() {
 		if (defaultNetworkConfiguration == null) {
-			// TODO should we log it or throw an exception?
+			throw new RuntimeException("Default network configuration is null.");
 		}
 		
 		return defaultNetworkConfiguration;
