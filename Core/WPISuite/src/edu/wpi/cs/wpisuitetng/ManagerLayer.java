@@ -74,7 +74,7 @@ public class ManagerLayer {
 		map.put("coreuser", new UserManager(data));
 		map.put("defecttrackerdefect", new DefectManager(data));
 		map.put("defecttrackercomment", new CommentManager(data));
-//		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
+		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 
 		//add just your module to this list
 		String[] fullModuleList = {"core","defecttracker","postboard"};

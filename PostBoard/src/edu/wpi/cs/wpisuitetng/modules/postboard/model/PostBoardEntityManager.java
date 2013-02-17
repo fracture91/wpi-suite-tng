@@ -9,6 +9,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
  * This is the entity manager for the PostBoardMessage in the
@@ -48,7 +49,8 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 		final PostBoardMessage newMessage = PostBoardMessage.fromJson(content);
 
 		// Save the message in the database if possible, otherwise throw an exception
-		if (!db.save(newMessage)) {
+		// We want the message to be associated with the project the user logged in to
+		if (!db.save(newMessage, s.getProject())) {
 			throw new WPISuiteException();
 		}
 
@@ -64,13 +66,6 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 	@Override
 	public PostBoardMessage[] getEntity(Session s, String id)
 			throws NotFoundException, WPISuiteException {
-
-		// If no specific id was requested (as is always the case with this module)
-		// pass the request on to the getAll() method.
-		if(id == null || id.equals("")) {
-			return getAll(s);
-		}
-
 		// Throw an exception if an ID was specified, as this module does not support
 		// retrieving specific PostBoardMessages.
 		throw new WPISuiteException();
@@ -85,7 +80,8 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 	public PostBoardMessage[] getAll(Session s) throws WPISuiteException {
 		// Ask the database to retrieve all objects of the type PostBoardMessage.
 		// Passing a dummy PostBoardMessage lets the db know what type of object to retrieve
-		List<PostBoardMessage> messages = db.retrieveAll(new PostBoardMessage(null));
+		// Passing the project makes it only get messages from that project
+		List<Model> messages = db.retrieveAll(new PostBoardMessage(null), s.getProject());
 
 		// Return the list of messages as an array
 		return messages.toArray(new PostBoardMessage[0]);
