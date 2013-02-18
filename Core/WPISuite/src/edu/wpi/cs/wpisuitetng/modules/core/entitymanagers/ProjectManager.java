@@ -253,7 +253,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		
 		User theUser = s.getUser();
-		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
+		if(theUser.equals(toUpdate.getOwner()) || 
 		   theUser.getRole().equals(Role.ADMIN)){
 		
 			// convert updateString into a Map, then load into the User
@@ -263,7 +263,7 @@ public class ProjectManager implements EntityManager<Project>{
 				Project change = Project.fromJSON(changeSet);
 			
 				// check if the changes contains each field of name
-				if(change.getName() != null)
+				if(change.getName() != null && !change.getName().equals(""))
 				{
 					// check for conflict for changing the project name
 					Project isConflict = getEntityByName(s, change.getName())[0];
@@ -273,6 +273,11 @@ public class ProjectManager implements EntityManager<Project>{
 					}
 					
 					toUpdate.setName(change.getName());
+				}
+				
+				if(change.getOwner() != null)
+				{
+					toUpdate.setOwner(change.getOwner());
 				}
 			}
 			catch(ConflictException e)
