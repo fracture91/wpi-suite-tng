@@ -72,4 +72,8 @@
 		</junit>
 	</target>
 
+	<target name="dist" depends="compile">
+		<copy file="${janeway-jar-dest}" todir="${dist}/janeway/modules" overwrite="true"/>
+	</target>
+
 </project>

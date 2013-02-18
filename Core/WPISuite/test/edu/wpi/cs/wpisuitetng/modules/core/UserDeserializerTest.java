@@ -22,9 +22,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
-import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserDeserializer;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.core.models.UserDeserializer;
 
 /**
  * Tests for the UserDeserializer class.

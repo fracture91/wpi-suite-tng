@@ -30,7 +30,7 @@ public class ConfigManager {
 		config = new Configuration();
 
 		// Set the default core URL
-		config.setCoreUrl("http://localhost:8080");
+		config.setCoreUrl("http://localhost:8080/WPISuite/API");
 	}
 	
 	/**
@@ -62,17 +62,17 @@ public class ConfigManager {
 			instance = new ConfigManager();
 		}
 		
+		Configuration fileConfig = null;
 		// Load the config from the configuration file if it exists
 		try {
 			FileInputStream fin = new FileInputStream(configFileName);
 			ObjectInputStream in = new ObjectInputStream(fin);
-			config = (Configuration) in.readObject();
+			fileConfig = (Configuration) in.readObject();
 			in.close();
 			fin.close();
 		}
-		catch (FileNotFoundException e) { // there is no config file, create a new Configuration
-			config = new Configuration();
-			config.setCoreUrl("http://localhost:8080");
+		catch (FileNotFoundException e) {
+			// there is no config file, use the default one
 		}
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -80,6 +80,9 @@ public class ConfigManager {
 		catch (IOException e) {
 			System.out.println("An error occurred reading the Janeway config from a file!");
 			e.printStackTrace();
+		}
+		if(fileConfig != null) {
+			config = fileConfig;
 		}
 	}
 	

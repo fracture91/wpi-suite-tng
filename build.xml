@@ -12,6 +12,7 @@
 
 	<target name="clean" description="Deletes build files">
 		<delete dir="${test-results}"/>
+		<delete dir="${dist}"/>
 		<antcall target="depend.all">
 			<param name="dependency.target" value="clean"/>
 		</antcall>
@@ -24,6 +25,10 @@
 	</target>
 
 	<target name="dist" description="Creates distributable">
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist}/janeway"/>
+		<mkdir dir="${dist}/janeway/modules"/>
+		<mkdir dir="${dist}/core"/>
 		<antcall target="depend.all">
 			<param name="dependency.target" value="dist"/>
 		</antcall>

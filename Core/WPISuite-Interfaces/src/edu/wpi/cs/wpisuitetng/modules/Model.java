@@ -15,16 +15,19 @@ package edu.wpi.cs.wpisuitetng.modules;
 import java.lang.String;
 
 import edu.wpi.cs.wpisuitetng.Permission;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Model : The interface for all data models. Prototypes methods for model handling
  * 		and serializing.
  * @author twack
+ * @author bgaffey
  *
  */
 public interface Model {
 
+	
 	/* database interaction */
 	public void save();
 	public void delete();
@@ -35,6 +38,11 @@ public interface Model {
 	 * @return	A string containing the serialized JSON representation of this Model.
 	 */
 	public String toJSON();
+	
+	/* deserializing */
+	
+	
+	
 	
 	/* Built-in overrides/overloads */
 	
@@ -63,5 +71,15 @@ public interface Model {
 	
 	public void setPermission(Permission p, User u);
 	
+	/**
+	 * @return the project associated with this model
+	 */
+	public Project getProject();
+
+	/**
+	 * Sets the Model's project to the given Project
+	 * @param p The project associated with this model to set
+	 */
+	public void setProject(Project p);	
 	
 }

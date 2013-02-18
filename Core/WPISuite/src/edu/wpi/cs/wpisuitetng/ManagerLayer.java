@@ -14,10 +14,10 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
-
-import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
@@ -50,11 +51,12 @@ public class ManagerLayer {
 	
 	private static final ManagerLayer layer = new ManagerLayer();
 	private Data data;
-	private Gson gson;
 	@SuppressWarnings("rawtypes")
 	private Map<String, EntityManager> map;
 	private SessionManager sessions;
 	public Cookie superCookie;
+	
+	private static final Logger logger = Logger.getLogger(ManagerLayer.class.getName());
 	
 	/**
 	 * initializes the database
@@ -64,7 +66,6 @@ public class ManagerLayer {
 	private ManagerLayer()
 	{
 		data = DataStore.getDataStore();
-		gson = new Gson();
 		map = new HashMap<String, EntityManager>();
 		sessions = new SessionManager();
 		
@@ -75,16 +76,19 @@ public class ManagerLayer {
 		map.put("defecttrackercomment", new CommentManager(data));
 		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 
-		Session s = null;
+		//add just your module to this list
+		String[] fullModuleList = {"core","defecttracker","postboard"};
+		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
+		String ssid = null;
 		
 		try {
 			String adminJSON = "{username:\"admin\", name:\"Admin\", password:\"password\", idNum:0}";
-			s = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
+			ssid = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
 		} catch (BadRequestException e) {
 			e.printStackTrace();
 		} catch (ConflictException e) {
 			try {
-				s = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
+				ssid = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
 			} catch (NotFoundException e1) {
 				e1.printStackTrace();
 			} catch (WPISuiteException e1) {
@@ -94,7 +98,7 @@ public class ManagerLayer {
 			e.printStackTrace();
 		}
 		
-		superCookie = s.toCookie();
+		superCookie = sessions.getSession(ssid).toCookie();
 	}
 	
 	/**
@@ -108,7 +112,6 @@ public class ManagerLayer {
 	@SuppressWarnings("rawtypes")
 	private ManagerLayer(Map<String, EntityManager> map, SessionManager ses)
 	{
-		gson = new Gson();
 		this.map = map;		
 		this.sessions = ses;
 	}
@@ -120,6 +123,7 @@ public class ManagerLayer {
 	 */
 	public static ManagerLayer getInstance()
 	{
+		logger.log(Level.FINE, "ManagerLayer Instance Requested");
 		return layer;
 	}
 	
@@ -164,6 +168,16 @@ public class ManagerLayer {
 		return u;
 	}
 	
+	/**
+	 * Exposes the Projects in the database for direct access.
+	 * @return	the ProjectManager instance
+	 */
+	public ProjectManager getProjects()
+	{
+		ProjectManager p = (ProjectManager)map.get("coreproject");
+		return p;
+	}
+	
 	/**read()
 	 * Reads the WPISuite cookie and returns the session associated with it in JSON form
 	 * String args[] - {module,model,identifier}
@@ -173,23 +187,37 @@ public class ManagerLayer {
 	 */
 	public synchronized String read(String[] args,Cookie[] cook) throws WPISuiteException
 	{		
-		Session s = null;
-		if(cook != null)
+		Session s = getSessionFromCookies(cook);
+		   
+		Model[] m;
+		if(args[2] == null || args[2].equalsIgnoreCase(""))
 		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}
+			m = map.get(args[0]+args[1]).getAll(s);
 		}
 		else
 		{
-			throw new AuthenticationException();
+			m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		}
-		Model[] m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		
-        return (m == null) ? "null" : gson.toJson(m, m.getClass());
+        //return (m == null) ? "null" : gson.toJson(m, m.getClass());
+		
+		String response = "null";
+		
+		if(m != null)
+		{
+			response = "[";
+			for(Model n : m)
+			{
+				response = response.concat(n.toJSON()+",");
+			}
+			if(m.length > 0)
+			{
+				response = response.substring(0, response.length() - 1); // remove trailing comma
+			}
+			response = response.concat("]");
+		}
+		
+		return response;
 	}
 	
 	/**create()
@@ -202,23 +230,12 @@ public class ManagerLayer {
 	 */
 	public synchronized String create(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-			}
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
+
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).makeEntity(s,content);
         
-        return gson.toJson(m, m.getClass());
+        return m.toJSON();
 	}
 	
 	/**update
@@ -231,23 +248,12 @@ public class ManagerLayer {
 	 */
 	public synchronized String update(String[] args, String content,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-			}
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
+
 		Model m;
 		m = (Model) map.get(args[0]+args[1]).update(s, content);
 		
-		return gson.toJson(m, m.getClass());
+		return m.toJSON();
 	
 	}
 	
@@ -259,21 +265,7 @@ public class ManagerLayer {
 	 */
 	public synchronized String delete(String[] args,Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
-		
+		Session s = getSessionFromCookies(cook);
 		
 		boolean status = map.get(args[0]+args[1]).deleteEntity(s,args[2]);
 		
@@ -291,20 +283,7 @@ public class ManagerLayer {
 	 */
 	public String advancedGet(String[] args, Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		
         return map.get(args[0]+args[1]).advancedGet(s, args);
 	}
@@ -325,20 +304,7 @@ public class ManagerLayer {
 	 */
 	public String advancedPut(String[] args, String content, Cookie[] cook) throws WPISuiteException
 	{
-		Session s = null;
-		if(cook != null)
-		{
-			for(Cookie c : cook)
-			{
-				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
-		}
-		else
-		{
-			throw new AuthenticationException();
-		}
+		Session s = getSessionFromCookies(cook);
 		
         return map.get(args[0]+args[1]).advancedPut(s,args,content);
 	}
@@ -359,22 +325,33 @@ public class ManagerLayer {
 	 */
 	public String advancedPost(String[] args, String content, Cookie[] cook) throws WPISuiteException
 	{
+		Session s = getSessionFromCookies(cook);
+		
+        return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
+	}
+	
+	private Session getSessionFromCookies(Cookie[] cook) throws AuthenticationException, UnauthorizedException
+	{
 		Session s = null;
 		if(cook != null)
 		{
 			for(Cookie c : cook)
 			{
 				if(c.getName().startsWith("WPISUITE-"))
-					s = sessions.getSession(c.getValue());
-					
-			}	
+					s = sessions.getSession(c.getValue());	
+			}
+			
+			if(s == null)
+			{
+				throw new UnauthorizedException();
+			}
 		}
 		else
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException("Could not find WPISuite cookie. Please Login to recieve one.");
 		}
 		
-        return map.get(args[0]+args[1]).advancedPost(s,args[2],content);
+		return s;	
 	}
 	
 }

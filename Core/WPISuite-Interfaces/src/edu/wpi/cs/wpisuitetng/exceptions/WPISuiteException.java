@@ -14,21 +14,40 @@ package edu.wpi.cs.wpisuitetng.exceptions;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Base WPI Suite Exception class.
+ * Base WPI Suite Exception class. 
  * @author twack
  *
  */
 public class WPISuiteException extends Exception {
 
-	
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5271354512939175980L;
+	
+	/**
+	 * 
+	 * @param message details the cause of the error and any other pertinant information
+	 */
+	public WPISuiteException(String message)
+	{
+		super(message);
+	}
+	
+	/**
+	 * Blank Constructor
+	 */
+	public WPISuiteException()
+	{
+		
+	}
 
+	/**
+	 * Holds the HTTP response code related to the cause of the exception
+	 * @return
+	 */
 	public int getStatus()
 	{
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; //500
+		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 	}
 }

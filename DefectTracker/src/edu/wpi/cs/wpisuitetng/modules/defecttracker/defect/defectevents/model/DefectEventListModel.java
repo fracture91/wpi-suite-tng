@@ -8,7 +8,7 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
 /**
  * A data model for a list of DefectEvents.
  */
-@SuppressWarnings({ "serial", "rawtypes", "unchecked"})
+@SuppressWarnings({"serial"})
 public class DefectEventListModel extends DefaultListModel {
 	
 	/**

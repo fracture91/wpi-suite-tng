@@ -15,6 +15,8 @@ package edu.wpi.cs.wpisuitetng;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A SHA-256 algorithm implementation of PasswordCryptographer.
@@ -26,6 +28,8 @@ public class Sha256Password implements PasswordCryptographer {
 
 	private MessageDigest hashDigest;
 	
+	private static final Logger logger = Logger.getLogger(Sha256Password.class.getName());
+	
 	/**
 	 * 
 	 * @throws NoSuchAlgorithmException	when the MessageDigest's SHA-256 implementation cannot be found.
@@ -36,21 +40,25 @@ public class Sha256Password implements PasswordCryptographer {
 			this.hashDigest = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO: this should be a fatal error, but I'm not sure how to handle it.
+			logger.log(Level.SEVERE, "Password Hashing System has failed to instantiate. NoSuchAlgorithmException thrown.");
 		}
 	}
 	
 	@Override
 	public String generateHash(String password) {
 		// TODO: salt the password
-		
+		logger.log(Level.FINE, "Attempting password hashing...");
 		this.hashDigest.reset(); // flush the digest buffer before use
 		try {
 			this.hashDigest.update(password.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+			logger.log(Level.WARNING, "Hashing failed due to unsupported encoding in the given String to hash.");
 		}
 		
 		byte[] hashedPassword = this.hashDigest.digest();
+		
+		logger.log(Level.FINE, "Password hashing success!");
 		
 		return new String(hashedPassword);
 	}
