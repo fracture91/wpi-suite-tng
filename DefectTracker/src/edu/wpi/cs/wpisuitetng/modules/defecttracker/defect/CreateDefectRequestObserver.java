@@ -67,6 +67,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 
 	@Override
 	public void responseError(IRequest iReq) {
+		System.out.println("Error: " + iReq.getResponse().getBody());
 		JOptionPane.showMessageDialog(view, 
 				"Received " + iReq.getResponse().getStatusCode() + " error from server: " + iReq.getResponse().getStatusMessage(), 
 				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
@@ -75,6 +76,7 @@ public class CreateDefectRequestObserver implements RequestObserver {
 
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
+		System.out.println("Fail: " + iReq.getResponse().getBody());
 		JOptionPane.showMessageDialog(view, "Unable to complete request: " + exception.getMessage(), 
 				"Save Defect Error", JOptionPane.ERROR_MESSAGE);
 		always();

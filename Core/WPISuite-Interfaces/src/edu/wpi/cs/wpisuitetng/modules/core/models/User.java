@@ -17,11 +17,12 @@ import com.google.gson.*;
 import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
- * @author mdelladonna, twack
+ * @author mdelladonna, twack, bgaffey
  */
 
 public class User extends AbstractModel
@@ -46,6 +47,8 @@ public class User extends AbstractModel
 		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
+		
+		
 	}
 	
 	@Override
@@ -93,7 +96,7 @@ public class User extends AbstractModel
 	}
 	
 	/**
-	 * Sets password (plain text for now, crypto is in the future)
+	 * Sets password (please encrypt before using this method)
 	 * @param pass
 	 */
 	public void setPassword(String pass)
@@ -228,5 +231,27 @@ public class User extends AbstractModel
 	public void setRole(Role r)
 	{
 		this.role = r;
+	}
+
+	
+	public static User fromJSON(String json) {
+		// build the custom serializer/deserializer
+		Gson gson;
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(User.class, new UserDeserializer());
+
+		gson = builder.create();
+		
+		return gson.fromJson(json, User.class);
+	}
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void setProject(Project aProject){
+		//Users are not currently Associated with projects directly 
 	}
 }

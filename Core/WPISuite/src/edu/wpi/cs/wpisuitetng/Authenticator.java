@@ -13,8 +13,12 @@
 
 package edu.wpi.cs.wpisuitetng;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -27,6 +31,7 @@ public abstract class Authenticator {
 	
 	private String authType;
 	private PasswordCryptographer passwordHash;
+	private static final Logger logger = Logger.getLogger(Authenticator.class.getName());
 	
 	/**
 	 * Default constructor with a type definition parameter
@@ -51,6 +56,7 @@ public abstract class Authenticator {
 	{
 		ManagerLayer manager = ManagerLayer.getInstance();
 		manager.getSessions().removeSession(sessionToken);
+		logger.log(Level.INFO, "Session <" + sessionToken + "> logged out");
 	}
 	
 	/**
@@ -59,21 +65,25 @@ public abstract class Authenticator {
 	 * @param postString	the POST body from the request object.
 	 * @return	a Session for the authenticated user, if login is successful.
 	 * @throws AuthenticationException	When the user's credentials are invalid or do not parse.
+	 * @throws WPISuiteException if an error occurs in getEntity
 	 */
-	public Session login(String postString) throws AuthenticationException
+	public Session login(String postString) throws AuthenticationException, WPISuiteException
 	{
 		// parse the post string for credentials
-		System.out.println("DEBUG: login parsing");
-		String[] credentials = parsePost(postString); // [0] - username, [1] - password	
+		logger.log(Level.INFO, "Begin POST body parsing <" + postString + ">");
+		String[] credentials = parsePost(postString); // [0] - username, [1] - password
+		logger.log(Level.INFO, "End POST body parsing <" + postString + ">");
 		
 		// attempt to retrieve the User from the Manager layer
 		ManagerLayer manager = ManagerLayer.getInstance();
 		User[] u;
 		try {
 			System.out.println("DEBUG: Retrieve Login User");
+			logger.log(Level.INFO, "Attempting to retrieve User...");
 			u = manager.getUsers().getEntity(credentials[0]);
 		} catch (NotFoundException e) {
-			throw new AuthenticationException();	//"No user with the given username found");
+			logger.log(Level.WARNING, "Login attempted with non-existant user <" + credentials[0] + ">");
+			throw new AuthenticationException("The user \"" + credentials[0] + "\" could not be found. Please check if the username was spelled correctly.");
 		}
 
 		User user = u[0];
@@ -81,16 +91,23 @@ public abstract class Authenticator {
 		// check password
 		System.out.println("DEBUG: Authenticate Password");
 		// password security
+		logger.log(Level.INFO, "Authenticating password for User <" + credentials[0] + ">...");
 		String hashedPassword = this.passwordHash.generateHash(credentials[1]);
 		if(!user.matchPassword(hashedPassword))
 		{
-			throw new AuthenticationException();
+			logger.log(Level.WARNING, "Login attempted with bad password for User <" + credentials[0] + ">");
+			throw new AuthenticationException("An invalid password was given. Please check the password and try again.");
 		}
+		logger.log(Level.INFO, "Password authentication Success! <" + credentials[0] + ">");
 		
 		// create a Session mapping in the ManagerLayer
-		Session userSession = manager.getSessions().createSession(user);
+		SessionManager sessions = manager.getSessions();
+		String ssid = sessions.createSession(user);
+		Session userSession = sessions.getSession(ssid);
 		
 		System.out.println("DEBUG: Create Session");
+		
+		logger.log(Level.INFO, "Login Success. <" + credentials[0] + ">");
 		return userSession;
 	}
 	

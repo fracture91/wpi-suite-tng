@@ -19,14 +19,16 @@
 
 	<target name="compile">
 		<mkdir dir="build"/>
-		<javac srcdir="src" destdir="build" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="classpath"/>
 		</javac>
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test"/>
-		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
+		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="test-classpath"/>
 		</javac>
 	</target>
@@ -46,6 +48,21 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar destfile="${dist}/janeway/janeway.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="edu.wpi.cs.wpisuitetng.janeway.Janeway"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			<fileset dir="build"/>
+			<fileset dir="../Core/WPISuite-Interfaces/build"/>
+			<fileset dir="../Network/build"/>
+			<zipfileset src="${core-lib}/gson-2.2.2.jar"/>
+			<zipfileset src="${core-lib}/commons-codec-1.7.jar"/>
+		</jar>
+		<copy file="modules.conf" todir="${dist}/janeway" overwrite="true"/>
 	</target>
 
 </project>

@@ -17,14 +17,16 @@
 
 	<target name="compile">
 		<mkdir dir="build"/>
-		<javac srcdir="src" destdir="build" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
+		<javac srcdir="src" destdir="build" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="classpath"/>
 		</javac>
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test"/>
-		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" debuglevel="lines,vars,source">
+		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" target="1.6"
+				debuglevel="lines,vars,source">
 			<classpath refid="test-classpath"/>
 		</javac>
 	</target>
@@ -44,6 +46,18 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
+	
+	<target name="war" depends="clean,compile">
+		<war destfile="build/WPISuite.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent"/>
+			<lib dir="WebContent/WEB-INF/lib"/>
+			<classes dir="build/"/>
+		</war>
+	</target>
+
+	<target name="dist" depends="war">
+		<copy file="build/WPISuite.war" todir="${dist}/core" overwrite="true"/>
 	</target>
 
 </project>

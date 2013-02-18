@@ -10,7 +10,7 @@
  *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
+package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import java.lang.reflect.Type;
 import java.util.Map.Entry;
@@ -22,8 +22,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * A custom deserializer class for the GSON JSON library.

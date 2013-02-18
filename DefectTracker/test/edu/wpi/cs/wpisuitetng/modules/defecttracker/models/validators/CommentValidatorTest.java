@@ -5,13 +5,14 @@ import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.MockData;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
@@ -23,29 +24,34 @@ public class CommentValidatorTest {
 	Data db;
 	CommentValidator validator;
 	User bob;
+	Project testProject;
 	Session defaultSession;
 	Comment goodNewComment;
 	
 	@Before
 	public void setUp() throws Exception {
 		bob = new User("bob", "bob", "1234", 1);
-		defaultSession = new Session(bob);
+		testProject = new Project("test", "1");
+		defaultSession = new Session(bob, testProject);
 		defect = new Defect(1, "title", "description", bob);
 		
 		User bobCopy = new User(null, "bob", null, -1);
 		goodNewComment = new Comment(1, bobCopy, "hello");
 		
-		Set<Object> models = new HashSet<Object>();
-		models.add(defect);
-		models.add(bob);
-		
-		db = new MockData(models);
+		db = new MockData(new HashSet<Object>());
+		db.save(defect, testProject);
+		db.save(bob);
 		validator = new CommentValidator(db);
 	}
 
 	public List<ValidationIssue> checkNumIssues(int num, Session session, Comment comment) {
-		List<ValidationIssue> issues = validator.validate(session, comment);
-		assertEquals(num, issues.size());
+		List<ValidationIssue> issues;
+		try {
+			issues = validator.validate(session, comment);
+			assertEquals(num, issues.size());
+		} catch(WPISuiteException e) {
+			throw new RuntimeException("Unexpected WPISuiteException", e);
+		}
 		return issues;
 	}
 	

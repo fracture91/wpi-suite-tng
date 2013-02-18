@@ -4,14 +4,14 @@ import java.util.Date;
 
 import com.google.gson.GsonBuilder;
 
-import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Implementations of this interface represent some kind of event in a defect.
  * For example, the addition of a comment or the modification of fields.
  */
-public abstract class DefectEvent implements Model {
+public abstract class DefectEvent extends AbstractModel {
 	
 	public enum EventType {
 		COMMENT,
@@ -62,6 +62,24 @@ public abstract class DefectEvent implements Model {
 	public static void addGsonDependencies(GsonBuilder builder) {
 		builder.registerTypeAdapter(DefectEvent.class, new DefectEventDeserializer());
 		builder.registerTypeAdapter(DefectChangeset.class, new DefectChangesetDeserializer());
+	}
+	
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void delete() {
+		// TODO Auto-generated method stub
+	}
+	
+	// this model will only be created server side and then retrieved as part of a Defect in the future
+	// so I'm not sure if this is necessary
+	@Override
+	public Boolean identify(Object o) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

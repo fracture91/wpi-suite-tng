@@ -16,6 +16,7 @@ import org.junit.*;
 
 import edu.wpi.cs.wpisuitetng.database.DataStore;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.UserManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import static org.junit.Assert.*;
@@ -56,7 +57,8 @@ public class AuthenticatorTest {
 		SessionManager sessions = man.getSessions();
 		UserManager users = man.getUsers();
 		
-		users.deleteAll(this.sessions.createSession(this.u));
+		String ssid = this.sessions.createSession(this.u);
+		users.deleteAll(this.sessions.getSession(ssid));
 		sessions.clearSessions();
 	}
 	
@@ -75,21 +77,23 @@ public class AuthenticatorTest {
 	 */
 	public void testLogout()
 	{		
-		Session uSes = this.sessions.createSession(this.u);
+		int test = this.sessions.sessionCount();
+		String ssid = this.sessions.createSession(this.u);
 		
-		assertEquals(1, this.sessions.sessionCount());
+		Session uSes = this.sessions.getSession(ssid);
+		
+		assertEquals(test+1, this.sessions.sessionCount());
 		
 		// logout the user
-		this.auth.logout(uSes.toString());
+		this.auth.logout(ssid);
 		
-		assertEquals(0, this.sessions.sessionCount());
+		assertEquals(test, this.sessions.sessionCount());
 	}
 	
 	@Test
-	public void testLoginSuccess() throws AuthenticationException
+	public void testLoginSuccess() throws WPISuiteException
 	{
-		assertEquals(0, this.sessions.sessionCount());
-		
+		int test = this.sessions.sessionCount();
 		// generate a login token (password hardcoded)
 		String hashedPassword = new Sha256Password().generateHash("jayms");
 		String token = BasicAuth.generateBasicAuth(this.u.getUsername(), "jayms"); 
@@ -97,7 +101,7 @@ public class AuthenticatorTest {
 		Session ses = this.auth.login(token); // login
 		
 		// check if session created for the user
-		assertEquals(1, this.sessions.sessionCount());
+		assertEquals(test+1, this.sessions.sessionCount());
 		assertEquals(this.u.getUsername(), ses.getUsername());
 	}
 	
@@ -107,7 +111,7 @@ public class AuthenticatorTest {
 	 * 	Should throw an AuthenticationException for test pass
 	 * @throws AuthenticationException
 	 */
-	public void testLoginFailureBadPass() throws AuthenticationException
+	public void testLoginFailureBadPass() throws AuthenticationException, WPISuiteException
 	{		
 		assertEquals(0, this.sessions.sessionCount());
 		
@@ -123,7 +127,7 @@ public class AuthenticatorTest {
 	 * 	Should throw an AuthenticationException for test pass
 	 * @throws AuthenticationException
 	 */
-	public void testLoginFailureBadUsername() throws AuthenticationException
+	public void testLoginFailureBadUsername() throws AuthenticationException, WPISuiteException
 	{
 		assertEquals(0, this.sessions.sessionCount());
 		

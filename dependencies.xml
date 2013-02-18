@@ -5,9 +5,12 @@
 	<!-- All test targets should output JUnit's XML reports to this directory -->
 	<property name="test-results" location="${dependencies.basedir}/test-results"/>
 
+	<!-- All dist targets should put distributables somewhere within this directory -->
+	<property name="dist" location="${dependencies.basedir}/dist"/>
+
 	<!-- This target should have dependencies such that all projects are depended upon -->
 	<target name="depend.all"
-		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker">
+		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker, depend.PostBoard">
 	</target>
 
 	<!--
@@ -36,7 +39,7 @@
 
 	<!-- Note that WPISuite depends on DefectTracker because of the lack of dynamic loading -->
 	<target name="depend.WPISuite"
-		depends="depend.WPISuite-Interfaces, depend.DefectTracker">
+		depends="depend.WPISuite-Interfaces, depend.DefectTracker, depend.PostBoard">
 		<ant dir="${dependencies.basedir}/Core/WPISuite"
 			target="${dependency.target}"
 			inheritAll="false"/>
@@ -45,6 +48,13 @@
 	<target name="depend.DefectTracker"
 		depends="depend.Janeway">
 		<ant dir="${dependencies.basedir}/DefectTracker"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
+	<target name="depend.PostBoard"
+		depends="depend.Janeway">
+		<ant dir="${dependencies.basedir}/PostBoard"
 			target="${dependency.target}"
 			inheritAll="false"/>
 	</target>

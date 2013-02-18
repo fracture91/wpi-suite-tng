@@ -48,6 +48,76 @@ public class NetworkConfiguration {
 	}
 
 	/**
+	 * Adds a cookie to the request headers.
+	 * 
+	 * @param name  The name of the cookie.
+	 * @param value The value of the cookie.
+	 */
+	public void addCookie(String name, String value) {
+		if (name == null) {
+			throw new NullPointerException("The name must not be null.");
+		}
+		if (value == null) {
+			throw new NullPointerException("The value must not be null.");
+		}
+		
+		
+		String cookiesString;
+
+		if (defaultRequestHeaders.get("cookie") != null && !defaultRequestHeaders.get("cookie").isEmpty()) {
+			cookiesString = defaultRequestHeaders.get("cookie").get(0);
+		}
+		else {
+			cookiesString = "";
+		}
+
+		String cookies[] = cookiesString.split(";\n");
+		Map<String, String> cookiesVals = new HashMap<String, String>();
+		String cookieVal[];
+		boolean cookieMatch = false;
+		
+		for (int i = 0; i < cookies.length; i++) {
+			cookieVal = cookies[i].split("=");
+			
+			if (cookieVal.length == 2) {
+				if (name.equals(cookieVal[0])) {
+					cookieMatch = true;
+					cookiesVals.put(cookieVal[0], value);
+				}
+				else {
+					cookiesVals.put(cookieVal[0], cookieVal[1]);
+				}
+			}
+		}
+		
+		if (!cookieMatch) {
+			cookiesVals.put(name, value);
+		}
+		
+		cookiesString = "";
+		boolean firstCookie = true;
+		for (String cookieName : cookiesVals.keySet()) {
+			cookiesString += (firstCookie ? "" : ";\n") + cookieName + "=" + cookiesVals.get(cookieName);
+			
+			if (firstCookie) {
+				firstCookie = false;
+			}
+		}
+		
+		if (defaultRequestHeaders.get("cookie") == null) {
+			List<String> cookieList = new ArrayList<String>();
+			defaultRequestHeaders.put("cookie", cookieList);
+		}
+		
+		if (defaultRequestHeaders.get("cookie").isEmpty()) {
+			defaultRequestHeaders.get("cookie").add(cookiesString);
+		}
+		else {
+			defaultRequestHeaders.get("cookie").set(0, cookiesString);
+		}
+	}
+
+	/**
 	 * Adds an observer to the observers.
 	 * 
 	 * @param observer	The observer to add to the observers.
