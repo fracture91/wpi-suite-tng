@@ -35,6 +35,7 @@ public class ProjectTest {
 	User u4;
 	
 	User[] team1;
+	String[] support1;
 	
 	@Before
 	public void setUp()
@@ -42,9 +43,9 @@ public class ProjectTest {
 		p1 = new Project("defectTracker", "proj1");
 		p2 = new Project("postBoard", "proj2");
 		
-		u1 = new User("James Bond", "jbond", null, 7);
+		u1 = new User("James Bond", "jbond", "abcde", 7);
 		u2 = new User("Money Penny", "mpenny", null, 2);
-		u3 = new User("Q", "q", null, 1);
+		u3 = new User("Q", "q", "whatup", 1);
 		u4 = new User("M", "m", null, 0);
 		
 		team1 = new User[3];
@@ -52,7 +53,11 @@ public class ProjectTest {
 		team1[1] = u2;
 		team1[2] = u3;
 		
-		p3 = new Project("calendar", "proj3", u1, team1, null);
+		support1 = new String[2];
+		support1[0] = "defecttracker";
+		support1[1] = "postboard";
+		
+		p3 = new Project("calendar", "proj3", u1, team1, support1);
 	}
 	
 	@Test
@@ -172,9 +177,23 @@ public class ProjectTest {
 
 	@Test
 	public void testProjectToJson() {
-		User[] u = {new User("steve","ste","pass",7),new User("tom","t","pas",8)};
-		String[] s = {"core","bugs","chat"};
-		System.out.println(new Project("windows","001",u[0],u,s).toJSON());
-		assert(true);
+		String deflated = p3.toJSON();
+		
+		assertTrue(deflated.startsWith("{"));
+		assertTrue(deflated.endsWith("}"));
+		
+		assertTrue(deflated.contains("name"));
+		assertTrue(deflated.contains("calendar"));
+		assertTrue(deflated.contains("name"));
+		
+		assertTrue(deflated.contains("idNum"));
+		assertTrue(deflated.contains("proj3"));
+		
+		assertTrue(deflated.contains("owner"));
+		assertTrue(deflated.contains(u1.toJSON()));
+		
+		assertTrue(deflated.contains("team"));
+
+		assertTrue(deflated.contains("supportedModules"));
 	}
 }
