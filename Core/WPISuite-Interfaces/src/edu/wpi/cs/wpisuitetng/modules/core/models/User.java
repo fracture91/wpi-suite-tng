@@ -157,14 +157,14 @@ public class User extends AbstractModel
 	 */
 	public static String toJSON(User[] u)
 	{
-		String json ="{";
+		String json ="[";
 		
 		for(User a : u)
 		{
 			json += a.toJSON() + ", ";
 		}
 		
-		json += "}";
+		json += "]";
 				
 		return json;
 		
