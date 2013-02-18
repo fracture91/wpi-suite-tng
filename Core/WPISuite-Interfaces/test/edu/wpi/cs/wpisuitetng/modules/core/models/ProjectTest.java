@@ -178,8 +178,6 @@ public class ProjectTest {
 	@Test
 	public void testProjectToJson() {
 		String deflated = p3.toJSON();
-		System.out.println(deflated);
-		System.out.println(u1.toJSON());
 		
 		assertTrue(deflated.startsWith("{"));
 		assertTrue(deflated.endsWith("}"));
