@@ -77,7 +77,20 @@ public interface Data
 	 * @param changeValue - Value that changeField will be changed to
 	 * @throws WPISuiteException 
 	 */
-	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException;
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, 
+			String changeField, Object changeValue) throws WPISuiteException;
+	
+	/**
+	 * Updates an object in the database.  
+	 * @param anObjectToBeModified - Class of object to be updated
+	 * @param fieldName - Field of object that object is being identified by
+	 * @param uniqueID - Value of fieldName
+	 * @param changeField - Field that will be changed through the update
+	 * @param changeValue - Value that changeField will be changed to
+	 * @throws WPISuiteException 
+	 */
+	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, 
+			String changeField, Object changeValue, Project aProject) throws WPISuiteException;
 	
 	/**
 	 * Retrieves all objects of the the same class as aSample in the database
@@ -109,10 +122,24 @@ public interface Data
 	 */
 	public <T> List<Model> deleteAll(T aSample, Project aProject);
 	
-	List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, 
+			final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	
+	List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, 
+			final List<Object> theGivenValueList, final Project aProject) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 	
 	List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
 	
-	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, 
+			final List<Object> theGivenValueList, final Project aProject) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
+	
+	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, 
+			final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, 
+			final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 
+	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, 
+			final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, 
+			final List<Object> orGivenValueList, final Project aProject) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+
+	
 }
