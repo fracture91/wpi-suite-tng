@@ -238,4 +238,42 @@ public class MockDataStore implements Data {
 		return null;
 	}
 
+	@Override
+	public void update(Class anObjectToBeModified, String fieldName,
+			Object uniqueID, String changeField, Object changeValue,
+			Project aProject) throws WPISuiteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Model> andRetrieve(Class anObjectQueried,
+			String[] aFieldNameList, List<Object> theGivenValueList,
+			Project aProject) throws WPISuiteException,
+			IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Model> orRetrieve(Class anObjectQueried,
+			String[] aFieldNameList, List<Object> theGivenValueList,
+			Project aProject) throws WPISuiteException, IllegalAccessException,
+			InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Model> complexRetrieve(Class andanObjectQueried,
+			String[] andFieldNameList, List<Object> andGivenValueList,
+			Class orAnObjectQueried, String[] orFieldNameList,
+			List<Object> orGivenValueList, Project aProject)
+			throws WPISuiteException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
