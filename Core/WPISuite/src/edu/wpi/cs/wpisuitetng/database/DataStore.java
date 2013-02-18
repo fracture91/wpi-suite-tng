@@ -31,6 +31,7 @@ import com.db4o.reflect.jdk.JdkReflector;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class DataStore implements Data {
 
@@ -56,6 +57,7 @@ public class DataStore implements Data {
 			// accessLocalServer
 			ServerConfiguration config = Db4oClientServer.newServerConfiguration();
 			config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+			config.common().objectClass(User.class).storeTransientFields(true); // Enables data persistence for passwords
 			server = Db4oClientServer.openServer(config, WPI_TNG_DB, PORT);
 			server.grantAccess(DB4oUser,DB4oPass);
 

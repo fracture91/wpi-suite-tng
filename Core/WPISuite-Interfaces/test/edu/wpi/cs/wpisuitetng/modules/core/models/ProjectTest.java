@@ -43,9 +43,9 @@ public class ProjectTest {
 		p1 = new Project("defectTracker", "proj1");
 		p2 = new Project("postBoard", "proj2");
 		
-		u1 = new User("James Bond", "jbond", null, 7);
+		u1 = new User("James Bond", "jbond", "abcde", 7);
 		u2 = new User("Money Penny", "mpenny", null, 2);
-		u3 = new User("Q", "q", null, 1);
+		u3 = new User("Q", "q", "whatup", 1);
 		u4 = new User("M", "m", null, 0);
 		
 		team1 = new User[3];

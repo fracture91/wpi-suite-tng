@@ -14,11 +14,8 @@
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
-import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
@@ -30,9 +27,10 @@ public class User extends AbstractModel
 
 	private String name;
 	private String username;
-	private String password;
 	private int idNum;
 	private Role role;
+	
+	transient private String password; // excluded from serialization, still stored.
 	
 	/**
 	 * The primary constructor for a User
@@ -47,8 +45,6 @@ public class User extends AbstractModel
 		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
-		
-		
 	}
 	
 	@Override
