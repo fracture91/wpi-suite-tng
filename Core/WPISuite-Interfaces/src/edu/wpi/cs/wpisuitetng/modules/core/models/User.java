@@ -28,11 +28,11 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 public class User extends AbstractModel
 {
 
-	@Expose private String name;
-	@Expose private String username;
+	private String name;
+	private String username;
 	private String password;
-	@Expose private int idNum;
-	@Expose private Role role;
+	private int idNum;
+	private Role role;
 	
 	/**
 	 * The primary constructor for a User
@@ -142,7 +142,7 @@ public class User extends AbstractModel
 	{
 		String json;
 		
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserSerializer()).create();
 		
 		json = gson.toJson(this, User.class);
 		

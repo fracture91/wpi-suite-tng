@@ -135,4 +135,21 @@ public class UserTest {
 		assertTrue(u1.matchPassword(newPass));
 		assertTrue(u3.matchPassword(newPass));
 	}
+	
+	@Test
+	public void testSerialize()
+	{
+		String serialized = u3.toJSON();
+		
+		assertTrue(serialized.startsWith("{"));
+		assertTrue(serialized.endsWith("}"));
+		
+		assertFalse(serialized.contains("password"));
+		assertTrue(serialized.contains("idNum"));
+		assertTrue(serialized.contains("1"));
+		assertTrue(serialized.contains("username"));
+		assertTrue(serialized.contains("q"));
+		assertTrue(serialized.contains("name"));
+		assertTrue(serialized.contains("Q"));
+	}
 }
