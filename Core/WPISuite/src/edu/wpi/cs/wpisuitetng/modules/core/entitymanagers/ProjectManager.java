@@ -15,6 +15,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.ManagerLayer;
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.AbstractEntityManager;
@@ -326,13 +328,49 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {
-		return gson.toJson(allModules, String[].class);
+	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException 
+	{
+		Project p = getEntity(args[2])[0];
+		String[] names = null;
+		
+		try{
+			names = gson.fromJson(content, String[].class);
+		}catch(JsonSyntaxException j)
+		{
+			throw new BadRequestException("Could not parse JSON");
+		}
+		
+		ArrayList<String> success = new ArrayList<String>();
+		
+		UserManager u = ManagerLayer.getInstance().getUsers();
+		
+		if(args.length > 3)
+		{
+			if("add".equals(args[3]))
+			{
+				for(String person : names)
+				{
+					if(p.addTeamMember(u.getEntity(s, person)[0]))
+						success.add(person);
+				}
+			}
+			else if("remove".equals(args[3]))
+			{
+				for(String person : names)
+				{
+					if(p.removeTeamMember(u.getEntity(s, person)[0]))
+						success.add(person);
+				}
+			}
+		}
+		
+		return gson.toJson(success.toArray(names),String[].class );
 	}
 
 	@Override
-	public String advancedPost(Session s, String string, String content) throws WPISuiteException {
-		throw new NotImplementedException();
+	public String advancedPost(Session s, String string, String content) throws WPISuiteException 
+	{
+		return gson.toJson(allModules, String[].class);
 	}
 
 

@@ -135,8 +135,41 @@ function roleChange()
 	if(user.username == "")
 	{return;}
 	
-	//setup reuqest to POST to /API/Login
+	//setup reuqest to POST to /core/user
 	xml.open('POST','API/core/user/'+user.username,false);
+	//send the request
+	xml.send(juser); 
+}
+
+function teamMember(action)
+{
+	//create new XHR
+	var xml = new XMLHttpRequest();
+	//define behavior for when the response is recieved
+	xml.onreadystatechange = function()
+	{
+		if(xml.readyState == 4)//wait until response is available
+		{
+			document.getElementById("projectteamresponse").innerHTML = xml.statusText;
+		}
+		
+	};
+	
+	document.getElementById("projectteamresponse").innerHTML = action;
+	
+	var proj = document.getElementById("projectteamid").value;
+	var user = document.getElementById("projectteamname").value;
+	
+	if(user == "")
+	{return;}
+	
+	//make the user name into a json array of 1 string
+	var users = new Array(1);
+	users[0] = user;
+	var juser = JSON.stringify(users);
+	
+	//setup reuqest to POST to /API/Login
+	xml.open('PUT','API/Advanced/core/project/'+proj+'/'+action,false);
 	//send the request
 	xml.send(juser); 
 }
@@ -155,5 +188,10 @@ Role:<select id="roleselector"><option value="USER">User</option><option value="
 <input type="button" value="Submit" onclick="roleChange()"><span id="rolechangeresponse"></span>
 
 <%= createModelField(coreprojecttitle, coreprojectpath, coreproject, coreprojectlength) %>
+<h4>Team Members:</h4>
+Project idNum:<input type="text" id="projectteamid"></input><br>
+Username:<input type="text" id="projectteamname"></input><br>
+<input type="button" value="Add Team Member" onclick="teamMember('add')"><input type="button" value="Remove Team Member" onclick="teamMember('remove')"><span id="projectteamresponse"></span>
+
 </body>
 </html>
