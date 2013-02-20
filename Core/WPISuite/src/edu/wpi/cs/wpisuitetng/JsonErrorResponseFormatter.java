@@ -36,7 +36,10 @@ public class JsonErrorResponseFormatter implements ErrorResponseFormatter {
 		json.append("statusCode : " + e.getStatus());
 		json.append(", ");
 		
-		json.append("message : \"" + e.getMessage() + "\"");
+		if(e.getMessage() != null)
+		{
+			json.append("message : \"" + e.getMessage() + "\"");
+		}
 		
 		json.append("}");
 		
