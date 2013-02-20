@@ -14,6 +14,8 @@ package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import java.lang.reflect.Type;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Set;
 
 import com.google.gson.JsonDeserializationContext;
@@ -31,37 +33,47 @@ import com.google.gson.JsonParseException;
  */
 public class UserDeserializer implements JsonDeserializer<User> {
 
+	private static final Logger logger = Logger.getLogger(UserDeserializer.class.getName());
 	
 	@Override
 	public User deserialize(JsonElement userElement, Type userType,
 			JsonDeserializationContext context) throws JsonParseException {
 		 JsonObject deflated = userElement.getAsJsonObject();
 		 
-		 // check for the unique identifier <idNum> field.
-		 if(!deflated.has("idNum"))
+		 if(!deflated.has("username"))
 		 {
-			 throw new JsonParseException("The serialized User did not contain the required idNum field.");
+			 throw new JsonParseException("The serialized User did not contain the required username field.");
 		 }
 		 
 		 // for all other attributes: instantiate as null, fill in if given.
 		 
-		 int idNum = deflated.get("idNum").getAsInt();
-		 String username = null;
+		 int idNum = 0;
+		 String username = deflated.get("username").getAsString();
 		 String name = null;
+		 String password = null;
 		 
-		 if(deflated.has("username"))
+		 if(deflated.has("idNum") && !deflated.get("idNum").getAsString().equals(""))
 		 {
-			 username = deflated.get("username").getAsString();
+			 try{
+				 idNum = deflated.get("idNum").getAsInt();
+			 }catch(java.lang.NumberFormatException e){
+				 logger.log(Level.FINER,"User transmitted with String in iDnum field");
+			 }
 		 }
 		 
-		 if(deflated.has("name"))
+		 if(deflated.has("password") && !deflated.get("password").getAsString().equals(""))
+		 {
+			 password = deflated.get("password").getAsString();
+		 }
+		 
+		 if(deflated.has("name")  && !deflated.get("name").getAsString().equals(""))
 		 {
 			 name = deflated.get("name").getAsString();
 		 }
 		 
-		 User inflated = new User(name, username, null, idNum);
+		 User inflated = new User(name, username, password, idNum);
 		 
-		 if(deflated.has("role"))
+		 if(deflated.has("role")  && !deflated.get("role").getAsString().equals(""))
 		 {
 			 Role r = Role.valueOf(deflated.get("role").getAsString());
 			 inflated.setRole(r);

@@ -14,11 +14,8 @@
 package edu.wpi.cs.wpisuitetng.modules.core.models;
 
 import com.google.gson.*;
-import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.Model;
-
 /**
  * The Data Model representation of a User. Implements
  * 	database interaction and serializing.
@@ -28,11 +25,12 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 public class User extends AbstractModel
 {
 
-	@Expose private String name;
-	@Expose private String username;
-	private String password;
-	@Expose private int idNum;
-	@Expose private Role role;
+	private String name;
+	private String username;
+	private int idNum;
+	private Role role;
+	
+	transient private String password; // excluded from serialization, still stored.
 	
 	/**
 	 * The primary constructor for a User
@@ -47,8 +45,6 @@ public class User extends AbstractModel
 		this.password = password;
 		this.idNum = idNum;
 		this.role = Role.USER;
-		
-		
 	}
 	
 	@Override
@@ -104,6 +100,11 @@ public class User extends AbstractModel
 		this.password = pass;
 	}
 	
+	public String getPassword()
+	{
+		return this.password;
+	}
+	
 	/* Accessors */
 	public String getName()
 	{
@@ -142,7 +143,7 @@ public class User extends AbstractModel
 	{
 		String json;
 		
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserSerializer()).create();
 		
 		json = gson.toJson(this, User.class);
 		
@@ -157,14 +158,14 @@ public class User extends AbstractModel
 	 */
 	public static String toJSON(User[] u)
 	{
-		String json ="{";
+		String json ="[";
 		
 		for(User a : u)
 		{
 			json += a.toJSON() + ", ";
 		}
 		
-		json += "}";
+		json += "]";
 				
 		return json;
 		

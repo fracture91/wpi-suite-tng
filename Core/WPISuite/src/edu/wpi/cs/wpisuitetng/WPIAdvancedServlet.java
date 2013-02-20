@@ -39,7 +39,7 @@ public class WPIAdvancedServlet extends HttpServlet {
         
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
-        
+        response.setStatus(HttpServletResponse.SC_OK);
         try {
 			out.println(ManagerLayer.getInstance().advancedGet(path,request.getCookies()));
 		} catch (WPISuiteException e) {
@@ -62,7 +62,7 @@ public class WPIAdvancedServlet extends HttpServlet {
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        
+        res.setStatus(HttpServletResponse.SC_OK);
         try {
         	out.println(ManagerLayer.getInstance().advancedPost(path,in.readLine(),req.getCookies()));
 		} catch (WPISuiteException e) {
@@ -86,7 +86,7 @@ public class WPIAdvancedServlet extends HttpServlet {
         System.arraycopy(path, 1, path, 0, path.length-1);
         path[path.length-1] = null;
         
-        
+        res.setStatus(HttpServletResponse.SC_OK);
         try {
         	out.println(ManagerLayer.getInstance().advancedPut(path,in.readLine(),req.getCookies()));
 		} catch (WPISuiteException e) {

@@ -66,8 +66,14 @@ public class UserManagerTest {
 	@Test
 	public void testMakeEntity() {
 		User u = null;
+		
+		String jsonUser = temp.toJSON();
+		jsonUser = jsonUser.substring(0, jsonUser.length() - 1);
+		jsonUser += ", \"password\":\"abcde\"}";
+		System.out.println(jsonUser);
+		
 		try {
-			u = test.makeEntity(new Session(temp), json.toJson(temp, User.class));
+			u = test.makeEntity(new Session(temp), jsonUser);
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}
@@ -112,6 +118,7 @@ public class UserManagerTest {
 	}
 
 	@Test
+	@Ignore
 	public void testGetAll() throws WPISuiteException {
 		User[] initList = testWithRealDB.getAll(new Session(temp));
 		int initCount = initList.length;
