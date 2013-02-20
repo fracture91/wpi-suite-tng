@@ -60,7 +60,7 @@ public class Project extends AbstractModel
 		}
 		else
 		{
-			this.team = null;
+			this.team = new ArrayList<User>();
 		}
 	}
 	
