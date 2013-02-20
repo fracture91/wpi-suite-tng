@@ -44,10 +44,12 @@ public class UserManagerTest {
 	UserManager test;
 	UserManager testWithRealDB;
 	User temp;
+	User admin;
 	User secondUser;
 	User conflict;
 	Gson json;
 	Session tempSession;
+	Session adminSession;
 	
 	@Before
 	public void setUp()
@@ -58,6 +60,9 @@ public class UserManagerTest {
 		secondUser = new User ("Sam", "sammy","trouty", 1);
 		conflict = new User("steve", "steve",null, 0);
 		tempSession = new Session(temp);
+		admin = new User("adam","adam","password",4);
+		admin.setRole(Role.ADMIN);
+		adminSession = new Session(admin);
 		json = new Gson();
 	}
 	
@@ -282,7 +287,7 @@ public class UserManagerTest {
 				return null;
 			}
 			}
-		).deleteEntity(null, temp.getUsername());
+		).deleteEntity(adminSession, temp.getUsername());
 	}
 	
 	@Test
@@ -360,7 +365,7 @@ public class UserManagerTest {
 				return null;
 			}
 			}
-		).deleteEntity(null, temp.getUsername());
+		).deleteEntity(adminSession, temp.getUsername());
 	}
 
 	@Test
@@ -389,8 +394,8 @@ public class UserManagerTest {
 	public void testUpdate() throws WPISuiteException
 	{
 		Session ses = null;
-		String updateString = "{ \"idNum\": 99, \"role\": \"ADMIN\",  \"name\": \"zach\" }";
-		User newTemp = this.test.update(ses, temp, updateString);
+		String updateString = "{ \"idNum\": 99, \"role\":\"ADMIN\",  \"username\": \"zach\", \"name\": \"zach\" }";
+		User newTemp = this.test.update(adminSession, temp, updateString);
 		
 		// TODO: find a way to retrieve the User from storage to run assertions on.
 		
