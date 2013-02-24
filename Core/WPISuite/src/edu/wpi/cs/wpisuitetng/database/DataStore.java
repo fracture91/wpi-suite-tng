@@ -102,6 +102,22 @@ public class DataStore implements Data {
 	 * Saves a Model into the database
 	 * @param Model to save
 	 */
+	public <T> boolean save(T aModel, int depth){
+		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		
+		theDB.store(aModel);
+		theDB.activate(aModel, depth);
+		System.out.println("Stored " + aModel);
+		logger.log(Level.FINE, "Saving model [" + aModel + "]");
+		theDB.commit();
+		return true;
+	}
+	
+	/**
+	 * Saves a Model into the database
+	 * @param Model to save
+	 */
 	public <T> boolean save(T aModel, Project aProject){
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));

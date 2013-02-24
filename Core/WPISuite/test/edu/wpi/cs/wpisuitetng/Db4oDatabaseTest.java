@@ -16,7 +16,10 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -26,6 +29,11 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectChangeset;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectStatus;
+import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.FieldChange;
 
 public class Db4oDatabaseTest {
 	
@@ -206,6 +214,101 @@ Data db = DataStore.getTestDataStore();
 		
 		List<Model> me = db.complexRetrieve(firstUser.getClass(), list, objlist, firstUser.getClass(), orList, orObjList);
 		assertEquals(me, first);
+	}
+	
+	public class Person{
+		public String name;
+		public Person boss;
+		public int id;
+		
+		public Person(String aName, Person aBoss, int anId){
+			name = aName;
+			boss = aBoss;
+			id = anId;
+			
+		}
+		
+		public String getName(){
+			return name;
+			
+		}
+		
+		public Person getBoss(){
+			return boss;
+		}
+		
+		public int getId(){
+			return id;
+		}
+		
+	}
+	
+	@Test
+	public void testSaveAndRetrieveDbDepth() throws WPISuiteException{
+		Data db = DataStore.getTestDataStore();
+		
+		/*
+		Person per1 = new Person("One", null,1);
+		Person per2 = new Person("Two", null,2);
+		Person per3 = new Person("Three", null,3);
+		Person per4 = new Person("Four", null,4);
+		Person per5 = new Person("Five", null,5);
+		Person per6 = new Person("Six", null,6);
+		Person per7 = new Person("Seven", null,7);
+		
+		per1.boss = per2;
+		per2.boss = per3;
+		per3.boss = per4;
+		per4.boss = per5;
+		per5.boss = per6;
+		per6.boss = per7;
+		
+		db.deleteAll(per1);
+		db.save(per1);
+		db.retrieve(per1.getClass(), "id", 2);
+		return;
+		*/
+		
+		Defect def1 = new Defect();
+		db.deleteAll(def1);
+		List<DefectEvent> cs1 = new ArrayList<DefectEvent>();
+		DefectChangeset ev1 = new DefectChangeset();
+		ev1.setDate(new Date());
+		User Joe = new User("Joe", "j", "pword", 0);
+		FieldChange<Integer> fc = new FieldChange<Integer>(-1, 5);
+		FieldChange<Integer> fc2 = new FieldChange<Integer>(5, 10);
+		FieldChange<Integer> fc3 = new FieldChange<Integer>(10, 15);
+		FieldChange<Integer> fc4 = new FieldChange<Integer>(15, 20);
+		FieldChange<Integer> fc5 = new FieldChange<Integer>(20, 25);
+		FieldChange<Integer> fc6 = new FieldChange<Integer>(25, 30);
+		FieldChange<Date> fc8 = new FieldChange<Date>(def1.getCreationDate(), new Date());
+		FieldChange<User> fc9 = new FieldChange<User>(def1.getCreator(), Joe);
+		FieldChange<String> fc10 = new FieldChange<String>(def1.getTitle(), "New one");
+		FieldChange<String> fc11 = new FieldChange<String>(def1.getDescription(), "New desc");
+		DefectStatus df1 = DefectStatus.CONFIRMED;
+		DefectStatus df2 = DefectStatus.NEW;
+		FieldChange<DefectStatus> fc7 = new FieldChange<DefectStatus>(df2, df1);
+		HashMap<String, FieldChange<?>> changes = new HashMap<String, FieldChange<?>>();
+		changes.put("id", fc);
+		changes.put("id", fc2);
+		changes.put("id", fc3);
+		changes.put("id", fc4);
+		changes.put("id", fc5);
+		changes.put("id", fc6);
+		changes.put("Status", fc7);
+		changes.put("lastModifiedDate", fc8);
+		changes.put("creationDate", fc8);
+		changes.put("creator", fc9);
+		changes.put("assignee", fc9);
+		changes.put("title", fc10);
+		changes.put("description", fc11);
+		ev1.setChanges(changes);
+		cs1.add(ev1);
+		def1.setDescription("Test");
+		def1.setEvents(cs1);
+		db.save(def1);
+		db.retrieve(def1.getClass(), "id", -1);
+		
 	}
 
 }

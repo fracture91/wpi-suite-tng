@@ -30,6 +30,14 @@ public interface Data
 	
 	/**
 	 * Saves aTNG passed into the database
+	 * @param aModel - The model to be saved
+	 * @param depth - Depth to which the object should be saved
+	 * @return true if save was successful, false otherwise
+	 */
+	public <T> boolean save(T aModel, int depth);
+	
+	/**
+	 * Saves aTNG passed into the database
 	 * @param aModel - the Model to save
 	 * @param aProject - the Project the model is associated with 
 	 * @return true if save was successful, false otherwise
