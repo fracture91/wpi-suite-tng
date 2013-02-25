@@ -10,7 +10,7 @@
  *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.authentication;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

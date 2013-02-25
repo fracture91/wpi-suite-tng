@@ -10,7 +10,7 @@
  *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.authentication;
 
 /**
  * Interface for password hashing and cryptography mechanism. This system has two 
