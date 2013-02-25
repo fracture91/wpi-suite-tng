@@ -27,11 +27,14 @@ public class CommentManagerTest {
 	Data db;
 	CommentManager manager;
 	
+	String mockSsid;
+	
 	@Before
 	public void setUp() throws Exception {
+		mockSsid = "abc123";
 		bob = new User("bob", "bob", "1234", 1);
 		testProject = new Project("test", "1");
-		defaultSession = new Session(bob, testProject);
+		defaultSession = new Session(bob, testProject, mockSsid);
 		defect = new Defect(1, "title", "description", bob);
 		goodComment = new Comment(1, bob, "this defect is stupid, and so are you");
 		

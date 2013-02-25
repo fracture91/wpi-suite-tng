@@ -26,13 +26,15 @@ public class CommentValidatorTest {
 	User bob;
 	Project testProject;
 	Session defaultSession;
+	String mockSsid;
 	Comment goodNewComment;
 	
 	@Before
 	public void setUp() throws Exception {
 		bob = new User("bob", "bob", "1234", 1);
 		testProject = new Project("test", "1");
-		defaultSession = new Session(bob, testProject);
+		mockSsid = "abc123";
+		defaultSession = new Session(bob, testProject, mockSsid);
 		defect = new Defect(1, "title", "description", bob);
 		
 		User bobCopy = new User(null, "bob", null, -1);

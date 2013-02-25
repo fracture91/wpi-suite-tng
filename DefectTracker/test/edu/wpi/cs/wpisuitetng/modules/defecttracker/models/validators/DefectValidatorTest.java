@@ -39,11 +39,12 @@ public class DefectValidatorTest {
 	List<DefectEvent> ignoredEvents;
 	Project testProject;
 	Session defaultSession;
+	String mockSsid;
 	Data db;
 	DefectValidator validator;
 	Defect otherDefect;
 	Project otherProject;
-	
+		
 	@Before
 	public void setUp() {
 		invalidUser = new User("idontexist", "blah", "1234", 99);
@@ -60,7 +61,8 @@ public class DefectValidatorTest {
 		otherProject = new Project("other", "2");
 		
 		testProject = new Project("test", "1");
-		defaultSession = new Session(bob, testProject);
+		mockSsid = "abc123";
+		defaultSession = new Session(bob, testProject, mockSsid);
 		
 		//need copies to simulate db4o cross-container problem
 		tagCopy = new Tag("tag");
@@ -275,7 +277,7 @@ public class DefectValidatorTest {
 	@Test
 	public void testGoodUpdatedDefect() {
 		// make sure users other than creator can update
-		checkNoIssues(new Session(new User(null, "someguy", null, 50), testProject), goodUpdatedDefect,
+		checkNoIssues(new Session(new User(null, "someguy", null, 50), testProject, mockSsid), goodUpdatedDefect,
 				Mode.EDIT);
 		assertEquals("A changed title", goodUpdatedDefect.getTitle());
 		assertEquals("A changed description", goodUpdatedDefect.getDescription());
