@@ -132,8 +132,7 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
 
-		// This module does not all PostBoardMessages to be deleted, so throw
-		// an exception
+		// This module does not allow PostBoardMessages to be deleted, so throw an exception
 		throw new WPISuiteException();
 	}
 
@@ -145,8 +144,7 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 
-		// This module does not all PostBoardMessages to be deleted, so throw
-		// an exception
+		// This module does not allow PostBoardMessages to be deleted, so throw an exception
 		throw new WPISuiteException();
 	}
 
@@ -156,7 +154,7 @@ public class PostBoardEntityManager implements EntityManager<PostBoardMessage> {
 	@Override
 	public int Count() throws WPISuiteException {
 		// Return the number of PostBoardMessages currently in the database
-		return getAll(null).length;
+		return db.retrieveAll(new PostBoardMessage(null)).size();
 	}
 
 	@Override

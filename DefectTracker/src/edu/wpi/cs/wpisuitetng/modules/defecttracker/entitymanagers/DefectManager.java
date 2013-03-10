@@ -128,7 +128,7 @@ public class DefectManager implements EntityManager<Defect> {
 	public int Count() {
 		// TODO: there must be a faster way to do this with db4o
 		// note that this is not project-specific - ids are unique across projects
-		return db.retrieveAll(new Defect()).toArray(new Defect[0]).length;
+		return db.retrieveAll(new Defect()).size();
 	}
 
 	@Override
