@@ -50,12 +50,4 @@
   	<servlet-name>AdvancedAPI</servlet-name>
   	<url-pattern>/API/Advanced/*</url-pattern>
   </servlet-mapping>
-  <servlet>
-  	<servlet-name>debug</servlet-name>
-  	<servlet-class>edu.wpi.cs.wpisuitetng.WPISuiteDebug</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>debug</servlet-name>
-  	<url-pattern>/debug/*</url-pattern>
-  </servlet-mapping>
 </web-app>

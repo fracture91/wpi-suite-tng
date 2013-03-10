@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.wpi.cs.wpisuitetng.authentication.Authenticator;
+import edu.wpi.cs.wpisuitetng.authentication.BasicAuth;
 import edu.wpi.cs.wpisuitetng.exceptions.*;
 
 /**

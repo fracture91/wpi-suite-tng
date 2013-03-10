@@ -11,11 +11,14 @@
  *******************************************************************************/
 
 
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.authentication;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.wpi.cs.wpisuitetng.ManagerLayer;
+import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.SessionManager;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;

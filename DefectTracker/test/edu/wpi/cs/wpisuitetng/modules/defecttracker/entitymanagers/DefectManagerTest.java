@@ -34,6 +34,7 @@ public class DefectManagerTest {
 	User existingUser;
 	Defect existingDefect;
 	Session defaultSession;
+	String mockSsid;
 	DefectManager manager;
 	Defect newDefect;
 	User bob;
@@ -50,7 +51,8 @@ public class DefectManagerTest {
 		admin.setRole(Role.ADMIN);
 		testProject = new Project("test", "1");
 		otherProject = new Project("other", "2");
-		adminSession = new Session(admin, testProject);
+		mockSsid = "abc123";
+		adminSession = new Session(admin, testProject, mockSsid);
 		
 		existingUser = new User("joe", "joe", "1234", 2);
 		existingDefect = new Defect(1, "An existing defect", "", existingUser);
@@ -67,7 +69,7 @@ public class DefectManagerTest {
 		goodUpdatedDefect.getTags().add(tag);
 		goodUpdatedDefect.setStatus(DefectStatus.CONFIRMED);
 		
-		defaultSession = new Session(existingUser, testProject);
+		defaultSession = new Session(existingUser, testProject, mockSsid);
 		newDefect = new Defect(-1, "A new defect", "A description", existingUser);
 		
 		db = new MockData(new HashSet<Object>());

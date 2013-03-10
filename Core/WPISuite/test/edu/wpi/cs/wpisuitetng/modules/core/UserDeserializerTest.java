@@ -97,7 +97,7 @@ public class UserDeserializerTest {
 		assertTrue(inflated.getUsername().equals("twack"));
 		assertTrue(inflated.getRole().equals(Role.ADMIN));
 		
-		assertFalse(inflated.matchPassword("abcde"));
+		assertTrue(inflated.matchPassword("abcde"));
 		assertFalse(inflated.matchPassword(null));
 	}
 	
@@ -107,14 +107,13 @@ public class UserDeserializerTest {
 	 */
 	public void deserializeUserMissingFields()
 	{
-		String jsonUser ="{\"name\":\"Tyler\", \"idNum\":2}";
+		String jsonUser ="{\"username\":\"Tyler\", \"idNum\":2}";
 		Gson deserializer = this.gson.create();
 		
 		User inflated = deserializer.fromJson(jsonUser, User.class);
 		
 		assertEquals(2, inflated.getIdNum());
-		assertEquals(null, inflated.getUsername());
-		assertTrue(inflated.getName().equals("Tyler"));
+		assertTrue(inflated.getUsername().equals("Tyler"));
 		
 		assertFalse(inflated.matchPassword(null));
 	}
@@ -122,11 +121,11 @@ public class UserDeserializerTest {
 	@Test(expected=JsonParseException.class)
 	/**
 	 * Tests error handling in the deserializer -- an exception should be thrown if
-	 * 	the user fails to include the Unique Identifier field (User->idNum)
+	 * 	the user fails to include the Unique Identifier field (User->username)
 	 */
 	public void deserializeUserMissingId()
 	{
-		String jsonUser ="{\"name\":\"Tyler\", \"username\":\"twack\", \"password\":\"abcde\"}";
+		String jsonUser ="{\"name\":\"Tyler\", \"idNum\":2, \"password\":\"abcde\"}";
 		Gson deserializer = this.gson.create();
 		
 		User inflated = deserializer.fromJson(jsonUser, User.class); // exception expected.

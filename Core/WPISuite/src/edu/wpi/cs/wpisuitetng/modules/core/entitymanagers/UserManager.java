@@ -23,16 +23,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
+import edu.wpi.cs.wpisuitetng.authentication.PasswordCryptographer;
+import edu.wpi.cs.wpisuitetng.authentication.Sha256Password;
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.PasswordCryptographer;
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.Sha256Password;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.DatabaseException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.SerializationException;
+import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
@@ -96,7 +97,9 @@ public class UserManager implements EntityManager<User> {
 			String hashedPassword = this.passwordHash.generateHash(newPassword);
 
 			p.setPassword(hashedPassword);
-
+			
+			p.setRole(Role.USER);
+			
 			save(s,p);
 		}
 		else
@@ -182,10 +185,20 @@ public class UserManager implements EntityManager<User> {
 	@Override
 	public boolean deleteEntity(Session s1 ,String id) throws WPISuiteException {
 
-		Model m = data.delete(data.retrieve(user, "username", id).get(0));
-		logger.log(Level.INFO, "UserManager deleting user <" + id + ">");
+		if(s1.getUser().getRole().equals(Role.ADMIN))
+		{
+			Model m = data.delete(data.retrieve(user, "username", id).get(0));
+			logger.log(Level.INFO, "UserManager deleting user <" + id + ">");
+			return (m != null) ? true : false;
+		}
+		else
+		{
+			logger.log(Level.WARNING,"User: "+s1.getUser().getUsername()+"attempted to delete: "+id);
+			throw new UnauthorizedException("Delete not authorized");
+		}
 		
-		return (m != null) ? true : false;
+		
+		
 		
 	}
 
@@ -230,28 +243,49 @@ public class UserManager implements EntityManager<User> {
 			throw new SerializationException("Error inflating the changeset: " + e.getMessage());
 		}
 
-		// Resolve differences toUpdate using changes, field-by-field.
-		toUpdate.setIdNum(changes.getIdNum()); // TODO: check if IDnums exist... should we even be updating the IdNum ever?
-
-		if(changes.getName() != null)
+		
+		if(s.getUser().getUsername().equals(toUpdate.getUsername()) || s.getUser().getRole().equals(Role.ADMIN))
 		{
-			toUpdate.setName(changes.getName());
+			// Resolve differences toUpdate using changes, field-by-field.
+			toUpdate.setIdNum(changes.getIdNum()); 
+	
+			if(changes.getName() != null)
+			{
+				toUpdate.setName(changes.getName());
+			}
+	
+			//shouldn't be able to change unique identifier
+			/*if(changes.getUsername() != null)
+			{
+				toUpdate.setUserName(changes.getUsername());
+			}*/
+			
+			if(changes.getPassword() != null)
+			{
+				String encryptedPass = this.passwordHash.generateHash(changes.getPassword());
+				toUpdate.setPassword(encryptedPass);
+			}
+	
+			if((changes.getRole() != null))
+			{
+				if(s.getUser().getRole().equals(Role.ADMIN))
+				{
+					toUpdate.setRole(changes.getRole());
+				}
+				else
+				{
+					logger.log(Level.WARNING,"User: "+s.getUser().getUsername()+" attempted unauthorized priveledge elevation");
+				}
+			}
+	
+			// save the changes back
+			this.save(s, toUpdate);
 		}
-
-		//shouldn't be able to change unique identifier
-		/*if(changes.getUsername() != null)
+		else
 		{
-			toUpdate.setUserName(changes.getUsername());
-		}*/
-
-		if(!changes.getRole().equals(toUpdate.getRole()))
-		{
-			toUpdate.setRole(changes.getRole());
+			logger.log(Level.WARNING, "Access denied to user: "+s.getUser().getUsername());
+			throw new UnauthorizedException("Users accessible only by Admins and themselves");
 		}
-
-		// save the changes back
-		this.save(s, toUpdate);
-
 		return toUpdate;
 	}
 
@@ -291,7 +325,7 @@ public class UserManager implements EntityManager<User> {
 	{
 		logger.log(Level.FINE, "Attempting username parsing...");
 		
-		if(!serializedUser.contains("username"))
+		if(serializedUser == null || !serializedUser.contains("username"))
 		{
 			throw new JsonParseException("The given JSON string did not contain a username field.");
 		}
