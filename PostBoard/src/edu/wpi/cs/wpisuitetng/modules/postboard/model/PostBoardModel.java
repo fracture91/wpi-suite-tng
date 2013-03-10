@@ -26,7 +26,7 @@ import javax.swing.AbstractListModel;
  * @author Chris Casola
  *
  */
-@SuppressWarnings({ "serial", "rawtypes" })
+@SuppressWarnings({"serial"})
 public class PostBoardModel extends AbstractListModel {
 	
 	/** The list of messages on the board */

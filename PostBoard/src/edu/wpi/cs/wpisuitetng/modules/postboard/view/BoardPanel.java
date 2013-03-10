@@ -36,7 +36,7 @@ import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardModel;
  * @author Chris Casola
  *
  */
-@SuppressWarnings({"serial", "rawtypes", "unchecked" })
+@SuppressWarnings({"serial"})
 public class BoardPanel extends JPanel {
 
 	/** A list box to display all the message on the board */
