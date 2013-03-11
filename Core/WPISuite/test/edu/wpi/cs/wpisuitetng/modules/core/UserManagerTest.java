@@ -50,6 +50,7 @@ public class UserManagerTest {
 	Gson json;
 	Session tempSession;
 	Session adminSession;
+	String mockSsid = "abc123";
 	
 	@Before
 	public void setUp()
@@ -59,10 +60,10 @@ public class UserManagerTest {
 		temp = new User("test","test","test",0);
 		secondUser = new User ("Sam", "sammy","trouty", 1);
 		conflict = new User("steve", "steve",null, 0);
-		tempSession = new Session(temp);
+		tempSession = new Session(temp, mockSsid);
 		admin = new User("adam","adam","password",4);
 		admin.setRole(Role.ADMIN);
-		adminSession = new Session(admin);
+		adminSession = new Session(admin, mockSsid);
 		json = new Gson();
 	}
 	
@@ -78,7 +79,7 @@ public class UserManagerTest {
 		System.out.println(jsonUser);
 		
 		try {
-			u = test.makeEntity(new Session(temp), jsonUser);
+			u = test.makeEntity(new Session(temp, mockSsid), jsonUser);
 		} catch (WPISuiteException e) {
 			fail("unexpected exception");
 		}
@@ -125,14 +126,14 @@ public class UserManagerTest {
 	@Test
 	@Ignore
 	public void testGetAll() throws WPISuiteException {
-		User[] initList = testWithRealDB.getAll(new Session(temp));
+		User[] initList = testWithRealDB.getAll(new Session(temp, mockSsid));
 		int initCount = initList.length;
 		
 		testWithRealDB.save(tempSession, temp);
 		testWithRealDB.save(tempSession, secondUser);
-		User[] myList = testWithRealDB.getAll(new Session(temp));
+		User[] myList = testWithRealDB.getAll(new Session(temp, mockSsid));
 		assertEquals(initCount + 2, myList.length);
-		testWithRealDB.deleteAll(new Session(temp));
+		testWithRealDB.deleteAll(new Session(temp, mockSsid));
 	}
 
 	@Test(expected = WPISuiteException.class)
@@ -372,10 +373,10 @@ public class UserManagerTest {
 	public void testDeleteAll() throws WPISuiteException {
 		testWithRealDB.save(tempSession, temp);
 		testWithRealDB.save(tempSession, secondUser);
-		User[] myList = testWithRealDB.getAll(new Session(temp));
-		testWithRealDB.deleteAll(new Session(temp));
+		User[] myList = testWithRealDB.getAll(new Session(temp, mockSsid));
+		testWithRealDB.deleteAll(new Session(temp, mockSsid));
 		
-		myList = testWithRealDB.getAll(new Session(temp));
+		myList = testWithRealDB.getAll(new Session(temp, mockSsid));
 		assertEquals(1, myList.length);
 		assertEquals(myList[0], null);
 	}

@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2013 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Andrew Hurle
+ *    Tyler Wack
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
 import static org.junit.Assert.*;
@@ -27,11 +40,14 @@ public class CommentManagerTest {
 	Data db;
 	CommentManager manager;
 	
+	String mockSsid;
+	
 	@Before
 	public void setUp() throws Exception {
+		mockSsid = "abc123";
 		bob = new User("bob", "bob", "1234", 1);
 		testProject = new Project("test", "1");
-		defaultSession = new Session(bob, testProject);
+		defaultSession = new Session(bob, testProject, mockSsid);
 		defect = new Defect(1, "title", "description", bob);
 		goodComment = new Comment(1, bob, "this defect is stupid, and so are you");
 		
