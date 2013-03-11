@@ -174,7 +174,7 @@ public class SessionManagerTest {
 		SessionManager sessions = manager.getSessions();
 		ProjectManager projects = manager.getProjects();
 		
-		String originalSsid = new Session(u2).getSessionId();
+		String originalSsid = "abc123";
 		
 		String projectId = "proj1";
 		

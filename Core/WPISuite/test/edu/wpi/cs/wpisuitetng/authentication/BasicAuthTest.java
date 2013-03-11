@@ -10,12 +10,13 @@
  *    twack
  *******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng;
+package edu.wpi.cs.wpisuitetng.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import edu.wpi.cs.wpisuitetng.authentication.BasicAuth;
 import edu.wpi.cs.wpisuitetng.exceptions.AuthenticationException;
 
 import org.apache.commons.codec.binary.Base64;

@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2013 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Andrew Hurle
+ *    Chris Casola
+ *    Mike Della Donna
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers;
 
 import java.util.Date;
@@ -114,7 +128,7 @@ public class DefectManager implements EntityManager<Defect> {
 	public int Count() {
 		// TODO: there must be a faster way to do this with db4o
 		// note that this is not project-specific - ids are unique across projects
-		return db.retrieveAll(new Defect()).toArray(new Defect[0]).length;
+		return db.retrieveAll(new Defect()).size();
 	}
 
 	@Override
