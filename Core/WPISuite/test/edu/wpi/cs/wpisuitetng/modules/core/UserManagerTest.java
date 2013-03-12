@@ -139,46 +139,74 @@ public class UserManagerTest {
 	@Test(expected = WPISuiteException.class)
 	public void testSaveFail() throws WPISuiteException {
 		new UserManager(new Data(){
-			@Override
-			public <T> boolean save(T aTNG) {return false;}
-			@Override
-			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {return null;}
-			@Override
-			public <T> T delete(T aTNG) {return null;}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
-			@Override
-			public <T> List<T> retrieveAll(T arg0) {
-				return null;
-			}
-			@Override
-			public <T> List<T> deleteAll(T aSample) {
-				return null;
-			}
-			@Override
 
+			@Override
+			public <T> boolean save(T aModel) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
 					throws WPISuiteException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
-			public List<Model> notRetrieve(Class anObjectQueried,
-					String aFieldName, Object theGivenValue) {
+
+			@Override
+			public <T> T delete(T aTNG) {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> boolean save(T aModel, Project aProject) {
+			public void update(Class anObjectToBeModified, String fieldName,
+					Object uniqueID, String changeField, Object changeValue)
+					throws WPISuiteException {
 				// TODO Auto-generated method stub
-				return false;
+				
 			}
+
+			@Override
+			public <T> List<T> retrieveAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
 			@Override
 			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
-							// TODO Auto-generated method stub
+				// TODO Auto-generated method stub
 				return null;
-				}
+			}
+
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public List<Model> andRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
 					throws WPISuiteException, IllegalArgumentException,
@@ -186,6 +214,7 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
 			public List<Model> orRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
@@ -194,11 +223,8 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> List<Model> deleteAll(T aSample, Project aProject) {
-				// TODO Auto-generated method stub
-				return null;
-			}
 			public List<Model> complexRetrieve(Class andanObjectQueried,
 					String[] andFieldNameList, List<Object> andGivenValueList,
 					Class orAnObjectQueried, String[] orFieldNameList,
@@ -207,91 +233,81 @@ public class UserManagerTest {
 					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
-			}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,
-					Object uniqueID, String changeField, Object changeValue,
-					Project aProject) throws WPISuiteException {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public List<Model> andRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalArgumentException, IllegalAccessException,
-					InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> orRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> complexRetrieve(Class andanObjectQueried,
-					String[] andFieldNameList, List<Object> andGivenValueList,
-					Class orAnObjectQueried, String[] orFieldNameList,
-					List<Object> orGivenValueList, Project aProject)
-					throws WPISuiteException, IllegalArgumentException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			}
+			}}
 		).save(null, null);
 	}
 
 	@Test
 	public void testDeleteEntityFail() throws WPISuiteException {
 		new UserManager(new Data(){
-			@Override
-			public <T> boolean save(T aTNG) {return false;}
-			@Override
-			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
-				List<Model> a = new ArrayList<Model>();
-				a.add(temp);
-				return a;
-				}
-			@Override
-			public <T> T delete(T aTNG) {return null;}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
-			@Override
-			public <T> List<T> retrieveAll(T arg0) {
-				return null;
-			}
-			@Override
-			public <T> List<T> deleteAll(T aSample) {
-				return null;
-			}
-			@Override
 
+			@Override
+			public <T> boolean save(T aModel) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
 					throws WPISuiteException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			public List<Model> notRetrieve(Class anObjectQueried,
-					String aFieldName, Object theGivenValue) {
+
+			@Override
+			public <T> T delete(T aTNG) {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> boolean save(T aModel, Project aProject) {
+			public void update(Class anObjectToBeModified, String fieldName,
+					Object uniqueID, String changeField, Object changeValue)
+					throws WPISuiteException {
 				// TODO Auto-generated method stub
-				return false;
+				
 			}
+
+			@Override
+			public <T> List<T> retrieveAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
 			@Override
 			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public List<Model> andRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
 					throws WPISuiteException, IllegalArgumentException,
@@ -299,6 +315,7 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
 			public List<Model> orRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
@@ -307,11 +324,8 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> List<Model> deleteAll(T aSample, Project aProject) {
-				// TODO Auto-generated method stub
-				return null;
-			}
 			public List<Model> complexRetrieve(Class andanObjectQueried,
 					String[] andFieldNameList, List<Object> andGivenValueList,
 					Class orAnObjectQueried, String[] orFieldNameList,
@@ -320,42 +334,7 @@ public class UserManagerTest {
 					InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
-			}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,
-					Object uniqueID, String changeField, Object changeValue,
-					Project aProject) throws WPISuiteException {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public List<Model> andRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalArgumentException, IllegalAccessException,
-					InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> orRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> complexRetrieve(Class andanObjectQueried,
-					String[] andFieldNameList, List<Object> andGivenValueList,
-					Class orAnObjectQueried, String[] orFieldNameList,
-					List<Object> orGivenValueList, Project aProject)
-					throws WPISuiteException, IllegalArgumentException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			}
+			}}
 		).deleteEntity(adminSession, temp.getUsername());
 	}
 	
@@ -363,25 +342,27 @@ public class UserManagerTest {
 	public void testDeleteEntity() throws WPISuiteException
 	{
 		new UserManager(new Data(){
+
 			@Override
-			public <T> boolean save(T aTNG) {return false;}
+			public <T> boolean save(T aModel) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
 			@Override
-			public List<Model> retrieve(Class anObjectQueried,String aFieldName, Object theGivenValue) {
-				List<Model> a = new ArrayList<Model>();
-				a.add(temp);
-				return a;}
+			public <T> boolean save(T aModel, Project aProject) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
 			@Override
-			public <T> T delete(T aTNG) {return aTNG;}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,Object uniqueID, String changeField, Object changeValue) {}
-			@Override
-			public <T> List<T> retrieveAll(T arg0) {
+			public List<Model> retrieve(Class anObjectQueried,
+					String aFieldName, Object theGivenValue)
+					throws WPISuiteException {
+				// TODO Auto-generated method stub
 				return null;
 			}
-			@Override
-			public <T> List<T> deleteAll(T aSample) {
-				return null;
-			}
+
 			@Override
 			public List<Model> retrieve(Class anObjectQueried,
 					String aFieldName, Object theGivenValue, Project theProject)
@@ -389,21 +370,46 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			public List<Model> notRetrieve(Class anObjectQueried,
-					String aFieldName, Object theGivenValue) {
+
+			@Override
+			public <T> T delete(T aTNG) {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> boolean save(T aModel, Project aProject) {
+			public void update(Class anObjectToBeModified, String fieldName,
+					Object uniqueID, String changeField, Object changeValue)
+					throws WPISuiteException {
 				// TODO Auto-generated method stub
-				return false;
+				
 			}
+
+			@Override
+			public <T> List<T> retrieveAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
 			@Override
 			public <T> List<Model> retrieveAll(T aSample, Project aProject) {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
+			@Override
+			public <T> List<T> deleteAll(T aSample) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public <T> List<Model> deleteAll(T aSample, Project aProject) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public List<Model> andRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
 					throws WPISuiteException, IllegalArgumentException,
@@ -411,6 +417,7 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
 			public List<Model> orRetrieve(Class anObjectQueried,
 					String[] aFieldNameList, List<Object> theGivenValueList)
@@ -419,11 +426,8 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
 			@Override
-			public <T> List<Model> deleteAll(T aSample, Project aProject) {
-				// TODO Auto-generated method stub
-				return null;
-			}
 			public List<Model> complexRetrieve(Class andanObjectQueried,
 					String[] andFieldNameList, List<Object> andGivenValueList,
 					Class orAnObjectQueried, String[] orFieldNameList,
@@ -433,42 +437,7 @@ public class UserManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			@Override
-			public void update(Class anObjectToBeModified, String fieldName,
-					Object uniqueID, String changeField, Object changeValue,
-					Project aProject) throws WPISuiteException {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public List<Model> andRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalArgumentException, IllegalAccessException,
-					InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> orRetrieve(Class anObjectQueried,
-					String[] aFieldNameList, List<Object> theGivenValueList,
-					Project aProject) throws WPISuiteException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public List<Model> complexRetrieve(Class andanObjectQueried,
-					String[] andFieldNameList, List<Object> andGivenValueList,
-					Class orAnObjectQueried, String[] orFieldNameList,
-					List<Object> orGivenValueList, Project aProject)
-					throws WPISuiteException, IllegalArgumentException,
-					IllegalAccessException, InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			}
-		).deleteEntity(adminSession, temp.getUsername());
+		}).deleteEntity(adminSession, temp.getUsername());
 	}
 
 	@Test
