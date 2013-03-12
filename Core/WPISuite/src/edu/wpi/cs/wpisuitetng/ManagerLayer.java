@@ -81,21 +81,14 @@ public class ManagerLayer {
 		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		
+		((UserManager)map.get("coreuser")).createAdmin();
+		
 		try {
-			String adminJSON = "{username:\"admin\", name:\"Admin\", password:\"password\", idNum:0, role:\"ADMIN\"}";
-			ssid = sessions.createSession((User)map.get("coreuser").makeEntity(null, adminJSON));
-		} catch (BadRequestException e) {
-			e.printStackTrace();
-		} catch (ConflictException e) {
-			try {
-				ssid = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
-			} catch (NotFoundException e1) {
-				e1.printStackTrace();
-			} catch (WPISuiteException e1) {
-				e1.printStackTrace();
-			}
-		} catch (WPISuiteException e) {
-			e.printStackTrace();
+			ssid = sessions.createSession((User)map.get("coreuser").getEntity(null, "admin")[0]);
+		} catch (NotFoundException e1) {
+			e1.printStackTrace();
+		} catch (WPISuiteException e1) {
+			e1.printStackTrace();
 		}
 		
 		superCookie = sessions.getSession(ssid).toCookie();
