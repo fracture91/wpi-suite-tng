@@ -77,8 +77,20 @@ public interface Data
 	 * @param changeValue - Value that changeField will be changed to
 	 * @throws WPISuiteException 
 	 */
-	public void update(final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException;
+	public void update(@SuppressWarnings("rawtypes") final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue) throws WPISuiteException;
 	
+	/** 
+	 * Updates the given field in every object which has the uniqueID value in a specific project
+	 * @param anObjectToBeModified - Class of object to be updated
+	 * @param fieldName - Field the object will be identified by
+	 * @param uniqueID - Value of fieldName that the object will be identified by
+	 * @param changeField - Field whose value will be changed
+	 * @param changeValue - Value that changeField will be changed to
+	 * @param aProject - The project the object to be updated belongs to
+	 * @throws WPISuiteException 
+	 */
+	public void update(@SuppressWarnings("rawtypes") final Class anObjectToBeModified, String fieldName, Object uniqueID, String changeField, Object changeValue, Project aProject) throws WPISuiteException;
+
 	/**
 	 * Retrieves all objects of the the same class as aSample in the database
 	 * @param aSample - Object whose class will be used 
@@ -109,10 +121,75 @@ public interface Data
 	 */
 	public <T> List<Model> deleteAll(T aSample, Project aProject);
 	
-	List<Model> andRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	/**
+	 * Retrieves objects which match all of the given fields to all of the given values
+	 * @param anObjectQueried - Class of the object to be queried
+	 * @param aFieldName - Array of names of the Field to check in order
+	 * @param theGivenValueList - Array of values the field should equal in order
+	 * @return A List of Models containing all of the models that match all of the given fields
+	 * @throws WPISuiteException
+	 */
+	public List<Model> andRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 	
-	List<Model> orRetrieve(final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
+	/**
+	 * Retrieves objects which match one of the given fields to one of the given values
+	 * @param anObjectQueried - Class of the object to be queried
+	 * @param aFieldName - Array of names of the Field to check in order
+	 * @param theGivenValueList - Array of values the field should equal in order
+	 * @return A List of Models containing all of the models that match one of the given fields
+	 * @throws WPISuiteException
+	 */
+	public List<Model> orRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
 	
-	public List<Model> complexRetrieve(final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	/**
+	 * Retrieves objects which match all of the given "and" fields to all of the given "and" values AND 
+	 * which match one of the given "or" fields to one of the given "or" values 
+	 * @param andAnObjectQueried - Class of the "and" object to be queried
+	 * @param andFieldNameList - Array of names of the "and" Fields to check in order
+	 * @param andGivenValueList - Array of values the "and" fields should equal in order
+	 * @param orObjectQueried - Class of the "or" object to be queried
+	 * @param orFieldNameList - Array of names of the "or" Fields to check in order
+	 * @param orGivenValueList - Array of values the "or" fields should equal in order
+	 * @return A List of Models containing all of the models that match all of the given fields
+	 * @throws WPISuiteException
+	 */
+	public List<Model> complexRetrieve(@SuppressWarnings("rawtypes") final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, @SuppressWarnings("rawtypes") final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * Retrieves objects which match all of the given fields to all of the given values
+	 * @param anObjectQueried - Class of the object to be queried
+	 * @param aFieldName - Array of names of the Field to check in order
+	 * @param theGivenValueList - Array of values the field should equal in order
+	 * @param aProject - Project that all returned models must belong to
+	 * @return A List of Models containing all of the models that match all of the given fields
+	 * @throws WPISuiteException
+	 */
+	public List<Model> andRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList, Project aProject) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * Retrieves objects which match one of the given fields to one of the given values
+	 * @param anObjectQueried - Class of the object to be queried
+	 * @param aFieldName - Array of names of the Field to check in order
+	 * @param theGivenValueList - Array of values the field should equal in order
+	 * @param aProject - Project that all returned models must belong to
+	 * @return A List of Models containing all of the models that match one of the given fields
+	 * @throws WPISuiteException
+	 */
+	public List<Model> orRetrieve(@SuppressWarnings("rawtypes") final Class anObjectQueried, String[] aFieldNameList, final List<Object> theGivenValueList, Project aProject) throws WPISuiteException, IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * Retrieves objects which match all of the given "and" fields to all of the given "and" values AND 
+	 * which match one of the given "or" fields to one of the given "or" values in the given project
+	 * @param andAnObjectQueried - Class of the "and" object to be queried
+	 * @param andFieldNameList - Array of names of the "and" Fields to check in order
+	 * @param andGivenValueList - Array of values the "and" fields should equal in order
+	 * @param orObjectQueried - Class of the "or" object to be queried
+	 * @param orFieldNameList - Array of names of the "or" Fields to check in order
+	 * @param orGivenValueList - Array of values the "or" fields should equal in order
+	 * @param aProject - Project that all returned models must belong to
+	 * @return A List of Models containing all of the models that match all of the given fields in the given Project
+	 * @throws WPISuiteException
+	 */
+	public List<Model> complexRetrieve(@SuppressWarnings("rawtypes") final Class andanObjectQueried, String[] andFieldNameList, final List<Object> andGivenValueList, @SuppressWarnings("rawtypes") final Class orAnObjectQueried, String[] orFieldNameList, final List<Object> orGivenValueList, Project aProject) throws WPISuiteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 
 }
