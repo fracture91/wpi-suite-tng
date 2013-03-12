@@ -8,8 +8,10 @@ import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.defect.DefectPanel.Mode;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.DefectEvent;
@@ -58,8 +60,9 @@ public class DefectValidator {
 	 * @param issues list of errors to add to if user doesn't exist
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The User with the given username, or null if they don't exist
+	 * @throws WPISuiteException 
 	 */
-	User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) {
+	User getExistingUser(String username, List<ValidationIssue> issues, String fieldName) throws WPISuiteException {
 		final List<Model> existingUsers = data.retrieve(User.class, "username", username);
 		if(existingUsers.size() > 0 && existingUsers.get(0) != null) {
 			return (User) existingUsers.get(0);
@@ -73,14 +76,17 @@ public class DefectValidator {
 	 * Return the Defect with the given id if it already exists in the database.
 	 * 
 	 * @param id the id of the Defect
+	 * @param project the project this defect belongs to
 	 * @param issues list of errors to add to if defect doesn't exist
 	 * @param fieldName name of field to use in error if necessary
 	 * @return The Defect with the given id, or null if it doesn't exist
+	 * @throws WPISuiteException 
 	 */
-	Defect getExistingDefect(int id, List<ValidationIssue> issues, String fieldName) {
-		List<Model> oldDefects = data.retrieve(Defect.class, "id", id);
+	Defect getExistingDefect(int id, Project project, List<ValidationIssue> issues, String fieldName)
+			throws WPISuiteException {
+		List<Model> oldDefects = data.retrieve(Defect.class, "id", id, project);
 		if(oldDefects.size() < 1 || oldDefects.get(0) == null) {
-			issues.add(new ValidationIssue("Defect with id does not exist", fieldName));
+			issues.add(new ValidationIssue("Defect with id does not exist in project", fieldName));
 			return null;
 		} else {
 			return (Defect) oldDefects.get(0);
@@ -95,8 +101,9 @@ public class DefectValidator {
 	 * @param defect The defect model to validate
 	 * @param mode The mode to validate for
 	 * @return A list of ValidationIssues (possibly empty)
+	 * @throws WPISuiteException 
 	 */
-	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) {
+	public List<ValidationIssue> validate(Session session, Defect defect, Mode mode) throws WPISuiteException {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
 		if(defect == null) {
 			issues.add(new ValidationIssue("Defect cannot be null"));
@@ -105,7 +112,7 @@ public class DefectValidator {
 		
 		Defect oldDefect = null;
 		if(mode == Mode.EDIT) {
-			oldDefect = getExistingDefect(defect.getId(), issues, "id");
+			oldDefect = getExistingDefect(defect.getId(), session.getProject(), issues, "id");
 		}
 		lastExistingDefect = oldDefect;
 		
@@ -169,7 +176,8 @@ public class DefectValidator {
 					issues.add(new ValidationIssue("Cannot be null", "tags"));
 					break;
 				}
-				List<Model> existingModels = data.retrieve(Tag.class, "name", tag.getName());
+				List<Model> existingModels = data.retrieve(Tag.class, "name", tag.getName(),
+						session.getProject());
 				if(existingModels.size() > 0 && existingModels.get(0) != null) {
 					// make sure we don't insert duplicate tags
 					newTags.add((Tag) existingModels.get(0));

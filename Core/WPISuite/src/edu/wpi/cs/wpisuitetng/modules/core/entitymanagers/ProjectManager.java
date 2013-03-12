@@ -15,6 +15,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.core.entitymanagers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,8 +33,10 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.ManagerLayer;
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.modules.AbstractEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -72,7 +75,7 @@ public class ProjectManager implements EntityManager<Project>{
 	public Project makeEntity(Session s, String content) throws WPISuiteException {	
 		User theUser = s.getUser();
 		
-		logger.log(Level.FINE, "Attempting new Project creation...");
+		logger.log(Level.FINER, "Attempting new Project creation...");
 		
 		Project p;
 		try{
@@ -81,6 +84,10 @@ public class ProjectManager implements EntityManager<Project>{
 			logger.log(Level.WARNING, "Invalid Project entity creation string.");
 			throw new BadRequestException("The entity creation string had invalid format. Entity String: " + content);
 		}
+		
+		 
+		logger.log(Level.FINE, "New project: "+ p.getName() +" submitted by: "+ theUser.getName() );
+		p.setOwner(theUser);
 		
 		if(getEntity(s,p.getIdNum())[0] == null)
 		{
@@ -100,7 +107,7 @@ public class ProjectManager implements EntityManager<Project>{
 			throw new ConflictException("A project with the given ID already exists. Entity String: " + content); 
 		}
 		
-		logger.log(Level.FINE, "Project creation success!");
+		logger.log(Level.FINER, "Project creation success!");
 		return p;
 	}
 
@@ -175,25 +182,26 @@ public class ProjectManager implements EntityManager<Project>{
 		if(s == null){
 			throw new WPISuiteException("Null Session.");
 		}
-		User theUser = s.getUser();
-		if(theUser.getRole().equals(Role.ADMIN) || 
-				model.getPermission(theUser).equals(Permission.WRITE)){
-			if(data.save(model))
-			{
-				logger.log(Level.FINE, "Project Saved :" + model);
-				return ;
-			}
-			else
-			{
-				logger.log(Level.WARNING, "Project Save Failure!");
-				throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
-			}
+		//permissions checking happens in update, create, and delete methods only
+		/*User theUser = s.getUser();
+		if(Role.ADMIN.equals(theUser.getRole()) || 
+				Permission.WRITE.equals(model.getPermission(theUser))){*/
+		if(data.save(model))
+		{
+			logger.log(Level.FINE, "Project Saved :" + model);
+			return ;
 		}
+		/*else
+		{
+			logger.log(Level.WARNING, "Project Save Failure!");
+			throw new DatabaseException("Save failure for Project."); // Session User: " + s.getUsername() + " Project: " + model.getName());
+		}
+		/*}
 		else
 		{
 			logger.log(Level.WARNING, "ProjectManager Save attempted by user with insufficient permission");
 			throw new UnauthorizedException("You do not have the requred permissions to perform this action.");
-		}
+		}*/
 		
 	}
 
@@ -245,7 +253,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		
 		User theUser = s.getUser();
-		if(toUpdate.getPermission(theUser).equals(Permission.WRITE) || 
+		if(theUser.equals(toUpdate.getOwner()) || 
 		   theUser.getRole().equals(Role.ADMIN)){
 		
 			// convert updateString into a Map, then load into the User
@@ -255,7 +263,7 @@ public class ProjectManager implements EntityManager<Project>{
 				Project change = Project.fromJSON(changeSet);
 			
 				// check if the changes contains each field of name
-				if(change.getName() != null)
+				if(change.getName() != null && !change.getName().equals(""))
 				{
 					// check for conflict for changing the project name
 					Project isConflict = getEntityByName(s, change.getName())[0];
@@ -265,6 +273,11 @@ public class ProjectManager implements EntityManager<Project>{
 					}
 					
 					toUpdate.setName(change.getName());
+				}
+				
+				if(change.getOwner() != null)
+				{
+					toUpdate.setOwner(change.getOwner());
 				}
 			}
 			catch(ConflictException e)
@@ -293,7 +306,25 @@ public class ProjectManager implements EntityManager<Project>{
 
 	@Override
 	public Project update(Session s, String content) throws WPISuiteException {
-		return null;
+		Project[] p = null;
+		
+		String id = AbstractEntityManager.parseFieldFromJSON(content, "idNum");
+		
+		if(id.equalsIgnoreCase(""))
+		{
+			throw new NotFoundException("No (blank) Project id given.");
+		}
+		else
+		{
+			p = data.retrieve(project, "idNum", id).toArray(p);
+			
+			if(p[0] == null)
+			{
+				throw new NotFoundException("Project with id <" + id + "> not found.");
+			}
+		}
+		
+		return update(s, p[0], content);
 	}
 
 	public void setAllModules(String[] mods)
@@ -302,13 +333,49 @@ public class ProjectManager implements EntityManager<Project>{
 	}
 	
 	@Override
-	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException {
-		return gson.toJson(allModules, String[].class);
+	public String advancedPut(Session s, String[] args, String content) throws WPISuiteException 
+	{
+		Project p = getEntity(args[2])[0];
+		String[] names = null;
+		
+		try{
+			names = gson.fromJson(content, String[].class);
+		}catch(JsonSyntaxException j)
+		{
+			throw new BadRequestException("Could not parse JSON");
+		}
+		
+		ArrayList<String> success = new ArrayList<String>();
+		
+		UserManager u = ManagerLayer.getInstance().getUsers();
+		
+		if(args.length > 3)
+		{
+			if("add".equals(args[3]))
+			{
+				for(String person : names)
+				{
+					if(p.addTeamMember(u.getEntity(s, person)[0]))
+						success.add(person);
+				}
+			}
+			else if("remove".equals(args[3]))
+			{
+				for(String person : names)
+				{
+					if(p.removeTeamMember(u.getEntity(s, person)[0]))
+						success.add(person);
+				}
+			}
+		}
+		
+		return gson.toJson(success.toArray(names),String[].class );
 	}
 
 	@Override
-	public String advancedPost(Session s, String string, String content) throws WPISuiteException {
-		throw new NotImplementedException();
+	public String advancedPost(Session s, String string, String content) throws WPISuiteException 
+	{
+		return gson.toJson(allModules, String[].class);
 	}
 
 

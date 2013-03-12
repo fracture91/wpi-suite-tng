@@ -36,6 +36,7 @@ public class DefectManager implements EntityManager<Defect> {
 		db = data;
 		validator = new DefectValidator(db);
 		updateMapper = new ModelMapper();
+		updateMapper.getBlacklist().add("project"); // never allow project changing
 	}
 
 	@Override
@@ -48,10 +49,13 @@ public class DefectManager implements EntityManager<Defect> {
 		List<ValidationIssue> issues = validator.validate(s, newDefect, Mode.CREATE);
 		if(issues.size() > 0) {
 			// TODO: pass errors to client through exception
+			for (ValidationIssue issue : issues) {
+				System.out.println("Validation issue: " + issue.getMessage());
+			}
 			throw new BadRequestException();
 		}
 
-		if(!db.save(newDefect)) {
+		if(!db.save(newDefect, s.getProject())) {
 			throw new WPISuiteException();
 		}
 		return newDefect;
@@ -65,7 +69,7 @@ public class DefectManager implements EntityManager<Defect> {
 		}
 		Defect[] defects = null;
 		try {
-			defects = db.retrieve(Defect.class, "id", intId).toArray(new Defect[0]);
+			defects = db.retrieve(Defect.class, "id", intId, s.getProject()).toArray(new Defect[0]);
 		} catch (WPISuiteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,15 +82,15 @@ public class DefectManager implements EntityManager<Defect> {
 
 	@Override
 	public Defect[] getAll(Session s) {
-		return db.retrieveAll(new Defect()).toArray(new Defect[0]);
+		return db.retrieveAll(new Defect(), s.getProject()).toArray(new Defect[0]);
 	}
 
 	@Override
 	public void save(Session s, Defect model) {
-		db.save(model);
+		db.save(model, s.getProject());
 	}
 
-	private void ensureRole(Session session, Role role) throws UnauthorizedException {
+	private void ensureRole(Session session, Role role) throws WPISuiteException {
 		User user = (User) db.retrieve(User.class, "username", session.getUsername()).get(0);
 		if(!user.getRole().equals(role)) {
 			throw new UnauthorizedException();
@@ -94,22 +98,23 @@ public class DefectManager implements EntityManager<Defect> {
 	}
 	
 	@Override
-	public boolean deleteEntity(Session s, String id) throws NotFoundException, UnauthorizedException {
+	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
 		// TODO: are nested objects deleted?  Dates should be, but Users shouldn't!
 		ensureRole(s, Role.ADMIN);
 		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 	
 	@Override
-	public void deleteAll(Session s) throws UnauthorizedException {
+	public void deleteAll(Session s) throws WPISuiteException {
 		ensureRole(s, Role.ADMIN);
-		db.deleteAll(new Defect());
+		db.deleteAll(new Defect(), s.getProject());
 	}
 	
 	@Override
 	public int Count() {
 		// TODO: there must be a faster way to do this with db4o
-		return getAll(null).length;
+		// note that this is not project-specific - ids are unique across projects
+		return db.retrieveAll(new Defect()).toArray(new Defect[0]).length;
 	}
 
 	@Override
@@ -147,7 +152,7 @@ public class DefectManager implements EntityManager<Defect> {
 			// add changeset to Defect events, save to database
 			existingDefect.getEvents().add(changeset);
 			// TODO: events field doesn't persist without explicit save - is this a bug?
-			if(!db.save(existingDefect) || !db.save(existingDefect.getEvents())) {
+			if(!db.save(existingDefect, session.getProject()) || !db.save(existingDefect.getEvents())) {
 				throw new WPISuiteException();
 			}
 		}

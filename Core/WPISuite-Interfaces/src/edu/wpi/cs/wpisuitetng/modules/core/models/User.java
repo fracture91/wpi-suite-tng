@@ -100,6 +100,11 @@ public class User extends AbstractModel
 		this.password = pass;
 	}
 	
+	public String getPassword()
+	{
+		return this.password;
+	}
+	
 	/* Accessors */
 	public String getName()
 	{

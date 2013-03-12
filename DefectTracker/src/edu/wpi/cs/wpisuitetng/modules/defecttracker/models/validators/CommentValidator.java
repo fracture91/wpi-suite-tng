@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Comment;
 import edu.wpi.cs.wpisuitetng.modules.defecttracker.models.Defect;
@@ -34,8 +35,9 @@ public class CommentValidator {
 	 * @param session The session to validate against
 	 * @param comment The Comment model to validate
 	 * @return A list of ValidationIssues (possibly empty)
+	 * @throws WPISuiteException 
 	 */
-	public List<ValidationIssue> validate(Session session, Comment comment) {
+	public List<ValidationIssue> validate(Session session, Comment comment) throws WPISuiteException {
 		List<ValidationIssue> issues = new ArrayList<ValidationIssue>();
 		if(comment == null) {
 			issues.add(new ValidationIssue("Comment cannot be null"));
@@ -55,7 +57,8 @@ public class CommentValidator {
 			}
 		}
 		
-		lastExistingDefect = defectValidator.getExistingDefect(comment.getDefectId(), issues, "defectId");
+		lastExistingDefect = defectValidator.getExistingDefect(comment.getDefectId(), session.getProject(),
+				issues, "defectId");
 		
 		String body = comment.getBody();
 		if(body == null || body.length() < 1 || body.length() > 10000) {

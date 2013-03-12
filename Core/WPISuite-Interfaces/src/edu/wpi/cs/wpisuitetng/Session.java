@@ -39,20 +39,20 @@ public class Session {
 	 * Default constructor. Initializes the loginTime field to the time of construction.
 	 * @param user	the username field for the user.
 	 */
-	public Session(User user)
+	public Session(User user, String ssid)
 	{
 		this.user = user;
 		this.loginTime = new Date();
 		this.project = null;
-		this.ssid = this.generateSessionId();
+		this.ssid = ssid;
 	}
 	
-	public Session(User user, Project p)
+	public Session(User user, Project p, String ssid)
 	{
 		this.user = user;
 		this.loginTime = new Date();
 		this.project = p;
-		this.ssid = this.generateSessionId();
+		this.ssid = ssid;
 	}
 	
 	public String getUsername()
@@ -103,24 +103,5 @@ public class Session {
 	{
 		String header = "WPISUITE-" + getUsername();
 		return new Cookie(header, this.ssid);
-	}
-	
-	/**
-	 * Generates the Session ID as a random long. If the SSID has already been
-	 * 	instantiated then that value is returned.
-	 * @return	a long
-	 */
-	public String generateSessionId()
-	{
-		if(this.ssid != null)
-		{
-			return this.ssid;
-		}
-		
-		Random rand = new Random();
-
-		long ssid = rand.nextLong();
-		
-		return String.valueOf(ssid);
 	}
 }

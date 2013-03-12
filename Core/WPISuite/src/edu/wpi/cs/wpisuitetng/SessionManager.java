@@ -14,6 +14,7 @@ package edu.wpi.cs.wpisuitetng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,8 +98,8 @@ public class SessionManager {
 		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
-		Session ses = new Session(user);
-		String ssid = ses.getSessionId();
+		String ssid = this.generateUniqueSessionId();
+		Session ses = new Session(user, ssid);
 		sessions.put(ssid, ses);
 		
 		return ssid;
@@ -114,11 +115,32 @@ public class SessionManager {
 		// ignore the possibility of duplicate sessions per-user.
 		
 		// add session
-		Session ses = new Session(user, p);
-		String ssid = ses.getSessionId();
+		String ssid = this.generateUniqueSessionId();
+		Session ses = new Session(user, p, ssid);
 		sessions.put(ssid, ses);
 		
 		return ssid;
+	}
+	
+	/**
+	 * Generates the Session ID as a random long. If the SSID has already been
+	 * 	instantiated then that value is returned.
+	 * @return	a long
+	 */
+	public String generateUniqueSessionId()
+	{
+		Random rand = new Random();
+		long randomId = rand.nextLong();
+		String ssid = String.valueOf(randomId);
+		
+		if(this.sessionExists(ssid))
+		{
+			return this.generateUniqueSessionId();
+		}
+		else
+		{
+			return ssid;	
+		}
 	}
 	
 	/**

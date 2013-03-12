@@ -62,17 +62,18 @@ public class Network {
 	}
 	
 	/**
-	 * Returns the default network configuration. Note: this does not return a copy. Any modifications made 
-	 * to the NetworkConfiguration returned by this method will affect the default network configuration.
+	 * Returns a copy of the default NetworkConfiguration.
 	 * 
 	 * @return	The default NetworkConfiguration.
+	 * 
+	 * @throws RuntimeException if the defaultNetworkConfiguration is null.
 	 */
 	public NetworkConfiguration getDefaultNetworkConfiguration() {
 		if (defaultNetworkConfiguration == null) {
-			// TODO should we log it or throw an exception?
+			throw new RuntimeException("Default network configuration is null.");
 		}
 		
-		return defaultNetworkConfiguration;
+		return new NetworkConfiguration(defaultNetworkConfiguration);
 	}
 	
 	/**

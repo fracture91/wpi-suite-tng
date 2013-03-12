@@ -277,9 +277,8 @@ public class DataStore implements Data {
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 
 		ArrayList<Model> result = new ArrayList<Model>(); 
-		List<T> allResults = theDB.queryByExample(aSample.getClass());
-		for(Iterator iterator = result.iterator(); iterator.hasNext();){
-			Model theModel = (Model)iterator.next();
+		List<Model> allResults = theDB.queryByExample(aSample.getClass());
+		for(Model theModel : allResults) {
 			if(theModel.getProject() != null &&
 					theModel.getProject().getIdNum().equalsIgnoreCase(aProject.getIdNum())){
 				result.add(theModel);

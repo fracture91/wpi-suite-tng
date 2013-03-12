@@ -81,11 +81,4 @@ public class Comment extends DefectEvent {
 		Gson parser = new Gson();
 		return parser.fromJson(json, Comment.class);
 	}
-
-	@Override
-	public String getProjectName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

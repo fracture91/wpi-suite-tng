@@ -32,7 +32,9 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class SessionTest {
 	Session ses1;
+	String ssid1 = "abc";
 	Session ses2;
+	String ssid2 = "def";
 	User u1;
 	User u2;
 	
@@ -40,10 +42,10 @@ public class SessionTest {
 	public void setUp()
 	{
 		this.u1 = new User("Prometheus", "twack", null, 0);
-		this.ses1 = new Session(u1);
+		this.ses1 = new Session(u1, ssid1);
 		
 		this.u2 = new User("Bob", "caveman", null, 1);
-		this.ses2 = new Session(u2);
+		this.ses2 = new Session(u2, ssid2);
 	}
 	
 	/* Testing Session accessors */
@@ -95,34 +97,10 @@ public class SessionTest {
 	}
 	
 	@Test
-	/**
-	 * Tests that the SessionId generation consistently returns the same value 
-	 */
-	public void testGenerateSSIDConsistent()
-	{
-		String ssid = ses1.generateSessionId();
-		
-		assertTrue(ses1.generateSessionId().equals(ssid));
-	}
-	
-	@Test
-	/**
-	 * Tests the getSessionId function 
-	 */
-	public void testGetSSID()
-	{
-		String ssid = ses1.getSessionId();
-		
-		String generated = ses1.generateSessionId();
-		
-		assertTrue(ssid.equals(generated));
-	}
-	
-	@Test
 	public void testGetProject()
 	{
 		Project p1 = new Project("defectTracker", "proj1");
-		Session projectSes = new Session(u2, p1);
+		Session projectSes = new Session(u2, p1, ssid1);
 		
 		assertTrue(p1.equals(projectSes.getProject()));
 	}
