@@ -340,5 +340,38 @@ public class UserManager implements EntityManager<User> {
 		logger.log(Level.FINE, "Username parsing success!");
 		return username;
 	}
+	
+	/**
+	 * Creates an Admin user if one does not exist
+	 */
+	public User createAdmin()
+	{
+		logger.log(Level.INFO, "Adding an admin");
+
+		User p = new User("Admin", "admin", "password", 0);
+
+		try {
+			if(getEntity(null,p.getUsername())[0] == null)
+			{
+				String newPassword = "password";
+				String hashedPassword = this.passwordHash.generateHash(newPassword);
+
+				p.setPassword(hashedPassword);
+				
+				p.setRole(Role.ADMIN);
+				
+				save(null,p);
+			}
+			else
+			{
+				p = getEntity(null,p.getUsername())[0];
+			}
+		} catch (WPISuiteException e) {
+		}
+
+		logger.log(Level.INFO, "Admin creation success!");
+		
+		return p;
+	}
 
 }
