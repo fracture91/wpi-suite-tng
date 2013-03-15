@@ -213,7 +213,7 @@ public class ProjectManager implements EntityManager<Project>{
 		}
 		User theUser = s1.getUser();
 		Project[] model = this.getEntity(id);
-		if(model[0].getPermission(theUser).equals(Permission.WRITE) || 
+		if(Permission.WRITE.equals(model[0].getPermission(theUser)) || 
 		   theUser.getRole().equals(Role.ADMIN)){
 			Model m = data.delete(data.retrieve(project, "idNum", id).get(0));
 			logger.log(Level.INFO, "ProjectManager deleting project <" + id + ">");
