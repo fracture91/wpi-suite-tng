@@ -58,6 +58,10 @@ public class WPICoreServlet extends HttpServlet
 			out.println(ManagerLayer.getInstance().read(path,req.getCookies()));
 		} catch (WPISuiteException e) {
 			res.setStatus(e.getStatus());
+			out.write(this.reponseFormatter.formatContent(e));
+			out.flush();
+			out.close();
+			return;
 		}
        
         out.close();
