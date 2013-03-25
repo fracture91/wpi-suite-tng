@@ -83,8 +83,18 @@ public class RequestActor extends Thread {
 
 			// get the response body
 			String responseBody = "";
+			InputStream in;
+			
+			// get input or error stream depending on response code
+			if (connection.getResponseCode() < 400) {
+				in = connection.getInputStream();
+			}
+			else {
+				in = connection.getErrorStream();
+			}
+			
+			// read the InputStream
 			try {
-				InputStream in = connection.getInputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
 				String line;
 				try {
@@ -103,7 +113,7 @@ public class RequestActor extends Thread {
 				}
 			}
 			catch (IOException e) {
-				// do nothing, received a 400, or 500 status code
+				// TODO recieved exception
 			}
 			
 			// get the response headers
