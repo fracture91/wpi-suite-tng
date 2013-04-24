@@ -118,9 +118,7 @@ public class AuthenticatorTest {
 	 * @throws AuthenticationException
 	 */
 	public void testLoginFailureBadPass() throws AuthenticationException, WPISuiteException
-	{		
-		assertEquals(0, this.sessions.sessionCount());
-		
+	{				
 		// generate login token with incorrect password
 		String badToken = BasicAuth.generateBasicAuth(this.u.getUsername(), "letsgetweird");
 		
@@ -134,9 +132,7 @@ public class AuthenticatorTest {
 	 * @throws AuthenticationException
 	 */
 	public void testLoginFailureBadUsername() throws AuthenticationException, WPISuiteException
-	{
-		assertEquals(0, this.sessions.sessionCount());
-		
+	{	
 		// generate login token with non-existent username
 		String badToken = BasicAuth.generateBasicAuth("wargarblargle", "jayms");
 		
