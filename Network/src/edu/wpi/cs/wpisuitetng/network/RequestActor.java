@@ -80,31 +80,6 @@ public class RequestActor extends Thread {
 			else {
 				connection.connect();
 			}
-
-			// get the response body
-			String responseBody = "";
-			try {
-				InputStream in = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
-				String line;
-				try {
-					while((line = reader.readLine()) != null) {
-						responseBody += line + "\n";
-					}
-				} catch (SocketTimeoutException e) {
-					// Note: this will be thrown if a read takes longer than 5 seconds
-					exceptionRecv = e;
-					responseBodyReadTimeout = true;
-				}
-				finally {
-					if (reader != null) {
-						reader.close();
-					}
-				}
-			}
-			catch (IOException e) {
-				// do nothing, received a 400, or 500 status code
-			}
 			
 			// get the response headers
 			Map<String, List<String>> responseHeaders = connection.getHeaderFields();
@@ -114,6 +89,36 @@ public class RequestActor extends Thread {
 			
 			// get the response message
 			String responseMessage = connection.getResponseMessage();
+
+			// get the response body
+			String responseBody = "";
+			InputStream in;
+			
+			if (responseCode < 400) {	// if the request succeeds, get the InputStream
+				in = connection.getInputStream();
+			}
+			else {	// if the request fails, get the ErrorStream
+				in = connection.getErrorStream();
+			}
+			
+			// read response body
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1);
+			String line;
+			try {
+				while((line = reader.readLine()) != null) {
+					responseBody += line + "\n";
+				}
+			} catch (SocketTimeoutException e) {	// if there is a timeout while reading the body
+				exceptionRecv = e;
+				responseBodyReadTimeout = true;
+			} catch (IOException e) {	// if readLine() fails
+				exceptionRecv = e;
+			}
+			finally {	// make sure that the BufferedReader is closed
+				if (reader != null) {
+					reader.close();
+				}
+			}
 			
 			// create Response
 			ResponseModel response = new Response(responseCode, responseMessage, responseHeaders, responseBody);
