@@ -193,7 +193,7 @@ public class TestRequest {
 	}
 
 	/**
-	 * Test that communication works. DummyServer must be running on port 8080 for this test to work.
+	 * Test that communication works.
 	 */
 	@Test
 	public void testRequestCommunication() {
@@ -234,5 +234,41 @@ public class TestRequest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Test to ensure that the response body can be read when a status code of 400 or above is received.
+	 */
+	@Test
+	public void testRequestResponseCode400Plus() {
+		// The response body
+		String body = "Some error";
+
+		DummyServer server = new DummyServer(port);
+
+		// Construct and configure a canned response for the server to return
+		ResponseModel cannedResponse = new ResponseModel();
+		cannedResponse.setStatusCode(400);	// status code: 400
+		cannedResponse.setBody(body);	// body: "Some error"
+
+		// Make a new POST Request.
+		Request manualRequest = new Request(config, null, HttpMethod.POST);	 // construct the Request
+		manualRequest.setBody(body);	// set the request body to send to the server
+		manualRequest.clearAsynchronous();	// make this request synchronously so that the test is blocked
+
+		// set the canned response and start the server
+		server.setResponse(cannedResponse);
+		server.start();
+
+		// Send the request!
+		manualRequest.send();
+
+		assertTrue(manualRequest.getResponse().getBody().contains(body));	// check that the message in the body was read
+		assertEquals(400, manualRequest.getResponse().getStatusCode());
+
+		assertTrue(body.equals(server.getLastReceived().getBody()));
+		assertEquals(manualRequest.getHttpMethod(), server.getLastReceived().getHttpMethod());
+
+		server.stop();
 	}
 }
